@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Chris Faust\\Documents\\UTL\\9no\\inte901\\Server\\Server\\Server.csproj": {}
+    "C:\\Dev\\Server\\Server\\Server.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Chris Faust\\Documents\\UTL\\9no\\inte901\\Server\\Server\\Server.csproj": {
+    "C:\\Dev\\Server\\Server\\Server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Chris Faust\\Documents\\UTL\\9no\\inte901\\Server\\Server\\Server.csproj",
+        "projectUniqueName": "C:\\Dev\\Server\\Server\\Server.csproj",
         "projectName": "Server",
-        "projectPath": "C:\\Users\\Chris Faust\\Documents\\UTL\\9no\\inte901\\Server\\Server\\Server.csproj",
-        "packagesPath": "C:\\Users\\Chris Faust\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Chris Faust\\Documents\\UTL\\9no\\inte901\\Server\\Server\\obj\\",
+        "projectPath": "C:\\Dev\\Server\\Server\\Server.csproj",
+        "packagesPath": "C:\\Users\\urieh\\.nuget\\packages\\",
+        "outputPath": "C:\\Dev\\Server\\Server\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Chris Faust\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\urieh\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -45,6 +45,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.6, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.6, )"
@@ -81,6 +85,10 @@
               "target": "Package",
               "version": "[8.0.6, )"
             },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[7.6.2, )"
+            },
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[8.0.4, )"
@@ -88,6 +96,14 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[7.6.2, )"
+            },
+            "dotenv.net": {
+              "target": "Package",
+              "version": "[3.1.3, )"
             }
           },
           "imports": [
@@ -109,7 +125,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.205/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
