@@ -57,34 +57,6 @@
           "SelectedChildIndex": 8,
           "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "TokenService.cs",
-              "DocumentMoniker": "C:\\Dev\\Server\\Server\\lib\\TokenService.cs",
-              "RelativeDocumentMoniker": "Server\\lib\\TokenService.cs",
-              "ToolTip": "C:\\Dev\\Server\\Server\\lib\\TokenService.cs",
-              "RelativeToolTip": "Server\\lib\\TokenService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABgAAAArAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-21T18:25:57.008Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": ".env",
-              "DocumentMoniker": "C:\\Dev\\Server\\Server\\.env",
-              "RelativeDocumentMoniker": "Server\\.env",
-              "ToolTip": "C:\\Dev\\Server\\Server\\.env",
-              "RelativeToolTip": "Server\\.env",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAABCAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-06-21T18:15:34.068Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
             },
@@ -106,16 +78,41 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "TokenService.cs",
+              "DocumentMoniker": "C:\\Dev\\Server\\Server\\lib\\TokenService.cs",
+              "RelativeDocumentMoniker": "Server\\lib\\TokenService.cs",
+              "ToolTip": "C:\\Dev\\Server\\Server\\lib\\TokenService.cs",
+              "RelativeToolTip": "Server\\lib\\TokenService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABgAAAArAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-21T18:25:57.008Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": ".env",
+              "DocumentMoniker": "C:\\Dev\\Server\\Server\\.env",
+              "RelativeDocumentMoniker": "Server\\.env",
+              "ToolTip": "C:\\Dev\\Server\\Server\\.env",
+              "RelativeToolTip": "Server\\.env",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAABCAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-06-21T18:15:34.068Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 8,
-              "Title": "Server",
+              "Title": "Server.csproj",
               "DocumentMoniker": "C:\\Dev\\Server\\Server\\Server.csproj",
               "RelativeDocumentMoniker": "Server\\Server.csproj",
               "ToolTip": "C:\\Dev\\Server\\Server\\Server.csproj",
               "RelativeToolTip": "Server\\Server.csproj",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2024-06-21T18:15:24.455Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-21T18:15:24.455Z"
             },
             {
               "$type": "Document",
@@ -125,7 +122,7 @@
               "RelativeDocumentMoniker": "Server\\Controllers\\HomeController.cs",
               "ToolTip": "C:\\Dev\\Server\\Server\\Controllers\\HomeController.cs",
               "RelativeToolTip": "Server\\Controllers\\HomeController.cs",
-              "ViewState": "AQIAAA0AAAAAAAAAAAAQwBEAAAAlAAAA",
+              "ViewState": "AQIAAAgAAAAAAAAAAAAAwAkAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-21T18:23:49.776Z",
               "EditorCaption": ""
@@ -140,8 +137,7 @@
               "RelativeToolTip": "Server\\lib\\TokenRequiredAttribute.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAACQAAAA0AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-21T18:18:34.771Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-21T18:18:34.771Z"
             },
             {
               "$type": "Document",
@@ -153,8 +149,7 @@
               "RelativeToolTip": "Server\\appsettings.json",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAWAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-06-21T18:11:48.12Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-21T18:11:48.12Z"
             },
             {
               "$type": "Document",
@@ -166,8 +161,7 @@
               "RelativeToolTip": "Server\\Program.cs",
               "ViewState": "AQIAAD8AAAAAAAAAAAAAAD8AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-21T18:11:46.35Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-21T18:11:46.35Z"
             },
             {
               "$type": "Document",
@@ -179,8 +173,7 @@
               "RelativeToolTip": "Server\\Controllers\\AccountController.cs",
               "ViewState": "AQIAABIAAAAAAAAAAAA1wDIAAAAdAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-21T18:27:37.023Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-21T18:27:37.023Z"
             },
             {
               "$type": "Document",
@@ -192,8 +185,7 @@
               "RelativeToolTip": "Server\\Server.http",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
-              "WhenOpened": "2024-06-21T18:11:45.606Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-21T18:11:45.606Z"
             },
             {
               "$type": "Document",
@@ -205,8 +197,7 @@
               "RelativeToolTip": "Server\\WeatherForecast.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-21T18:11:43.584Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-21T18:11:43.584Z"
             },
             {
               "$type": "Document",
@@ -218,8 +209,7 @@
               "RelativeToolTip": "Server\\lib\\jwt.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAUAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-21T18:08:33.356Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-21T18:08:33.356Z"
             }
           ]
         }
