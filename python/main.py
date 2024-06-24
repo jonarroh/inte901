@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request, send_file
 from PIL import Image
 import os
-import rembg
 from io import BytesIO
 
 app = Flask(__name__)
@@ -18,38 +17,25 @@ def convert_images():
     for filename in os.listdir(STATIC_FOLDER):
         if filename.lower().endswith(('.png', '.jpg', '.jpeg')):
             filepath = os.path.join(STATIC_FOLDER, filename)
-            img = Image.open(filepath).convert('RGB')
+            img = Image.open(filepath)
+            
+            # If image has an alpha channel, ensure it's preserved
+            if img.mode in ('RGBA', 'LA') or (img.mode == 'P' and 'transparency' in img.info):
+                img = img.convert('RGBA')
+            else:
+                img = img.convert('RGB')
+            
             webp_filename = os.path.splitext(filename)[0] + '.webp'
             webp_filepath = os.path.join(STATIC_FOLDER, webp_filename)
             img.save(webp_filepath, 'webp')
             converted_images.append(webp_filename)
             # Remove the original image
             os.remove(filepath)
+            
+
+
     return jsonify({'message': 'Images have been converted to .webp format.', 'converted_images': converted_images})
 
-
-@app.route('/remove-bg', methods=['GET'])
-def remove_bg():
-    filename = request.args.get('filename')
-    if not filename:
-        return jsonify({'error': 'Filename query parameter is required.'}), 400
-
-    filepath = os.path.join(STATIC_FOLDER, filename)
-    if not os.path.exists(filepath):
-        return jsonify({'error': 'File not found.'}), 404
-
-    try:
-        input_image = Image.open(filepath)
-        output_image = rembg.remove(input_image)
-
-        output_buffer = BytesIO()
-        output_image.save(output_buffer, format='PNG')
-        output_buffer.seek(0)
-
-        return send_file(output_buffer, mimetype='image/png', as_attachment=True, download_name=f"no_bg_{filename}")
-
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':
