@@ -39,6 +39,14 @@ export class LoginComponent {
           validator: V.minLength(4),
           message: 'El nombre de usuario debe tener al menos 4 caracteres',
         },
+        {
+          validator: V.maxLength(20),
+          message: 'El nombre de usuario debe tener menos de 20 caracteres',
+        },
+        {
+          validator: V.pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/),
+          message: 'El nombre de usuario debe de ser un correo electrónico',
+        },
       ],
     }),
     password: createFormField('', {
@@ -50,6 +58,10 @@ export class LoginComponent {
         {
           validator: V.minLength(8),
           message: 'La contraseña debe tener al menos 8 caracteres',
+        },
+        {
+          validator: V.maxLength(20),
+          message: 'La contraseña debe tener menos de 20 caracteres',
         },
       ],
     }),
