@@ -17,17 +17,18 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
-    "lib": [
-      "ES2022",
-      "dom"
-    ],
+    "lib": ["ES2022", "dom"],
     "paths": {
       "@spartan-ng/ui-button-helm": [
         ".\\src/components/ui-button-helm/src/index.ts"
       ],
       "@spartan-ng/ui-input-helm": [
         ".\\src/components/ui-input-helm/src/index.ts"
-      ]
+      ],
+      "@spartan-ng/ui-label-helm": [
+        ".\\src/components/ui-label-helm/src/index.ts"
+      ],
+      "~/*": ["./src/*"]
     }
   },
   "angularCompilerOptions": {
