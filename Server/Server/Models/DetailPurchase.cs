@@ -1,21 +1,40 @@
 ﻿namespace Server.Models
 {
-	public class DetailPurchase
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+
+    public class DetailPurchase
 	{
+		[Key]
 		public int? Id { get; set; }
+
+		[Required]
 		public int? IdPurchase { get; set; }
+
+		[Required]
 		public int? IdProduct { get; set; }
+
+		[Required]
 		public int? Quantity { get; set; }
+
+		[Required]
 		public decimal? PriceSingle { get; set; }
-		public String? Presentation { get; set; }
+
+		[Required]
+		public string? Presentation { get; set; }
+
+		[Required]
 		public DateTime? Expiration { get; set; }
-		public String? UnitType { get; set; }
-		public DateTime? Created_at { get; set; }
 
-		// Relacion con la tabla Purchase muchos a muchos
-		public ICollection<Purchase>? Purchases { get; set; }
+		[Required]
+		public string? UnitType { get; set; }
 
-		// Relacion con la tabla Product muchos a muchos
-		public ICollection<Product>? Products { get; set; }
-	}
+		[Required]
+		public DateTime? CreatedAt { get; set; }
+
+        public Purchase Purchase { get; set; }
+
+        public Producto Product { get; set; }
+    }
 }

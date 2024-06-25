@@ -10,7 +10,7 @@
 		public int? IdDetailOrder { get; set; }
 		public int? IdOrder { get; set; }
 		public int? IdProduct { get; set; }
-		public String? NameProduct { get; set; }
+		public string? NameProduct { get; set; }
 		public int? Quantity { get; set; }
 		public decimal? PriceSingle { get; set; }
 		public int? Status { get; set; }

@@ -13,6 +13,9 @@ namespace Server
         public DbSet<User> Users { get; set; }
         public DbSet<Direcciones> Direcciones { get; set; }
 
-        
+        public DbSet<Purchase> Purchases { get; set; }
+        public DbSet<DetailPurchase> DetailPurchases { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<DetailOrder> DetailOrders { get; set; }
     }
 }

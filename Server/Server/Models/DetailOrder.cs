@@ -1,21 +1,41 @@
 ﻿namespace Server.Models
 {
-	public class DetailOrder
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+
+    public class DetailOrder
 	{
+		[Key]
 		public int? Id { get; set; }
+
+		[Required]
 		public int? IdOrder { get; set; }
+
+		[Required]
 		public int? IdProduct { get; set; }
-		public String? NameProduct { get; set; }
+
+		[Required]
+		[MaxLength(100)]
+		public string? NameProduct { get; set; }
+
+		[Required]
 		public int? Quantity { get; set; }
+
+		[Required]
 		public decimal? PriceSingle { get; set; }
+
+		[Required]
 		public int? Status { get; set; }
+
+		[Required]
 		public DateTime? DateOrder { get; set; }
+
+		[Required]
 		public long? Ticket { get; set; }
 
-		// Relacion con la tabla Order muchos a muchos
-		public ICollection<Order>? Orders { get; set; }
+        public Order Order { get; set; }
 
-		// Relacion con la tabla Product muchos a muchos
-		public ICollection<Product>? Products { get; set; }
-	}
+        public Producto Product { get; set; }
+    }
 }
