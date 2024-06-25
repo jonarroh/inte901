@@ -1,10 +1,25 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Server.lib; // Asegúrate de incluir el espacio de nombres donde está definido TokenService
+using Server.lib;
+using Server;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configurar la conexión a la base de datos
+var environment = builder.Configuration.GetValue<string>("Environment");
+
+if (environment == "Development")
+{
+    builder.Services.AddDbContext<Context>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection")));
+}
+else if (environment == "Production")
+{
+    builder.Services.AddDbContext<Context>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
+}
 
 // Registrar servicios
 builder.Services.AddSingleton<TokenService>();
@@ -31,11 +46,10 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "My API", Version = "v1" });
 
-    // Configuración de seguridad para Swagger
     var securityScheme = new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
-        Name = "Bearer",
-        Description = "JWT Authorization header using the Bearer scheme",
+        Name = "Authorization",
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
         Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
         Scheme = "bearer",
@@ -65,6 +79,14 @@ builder.Services.AddSwaggerGen(c =>
 // Registrar otros servicios necesarios
 builder.Services.AddControllers();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+});
+
 var app = builder.Build();
 
 // Middleware de desarrollo y Swagger
@@ -77,6 +99,9 @@ if (app.Environment.IsDevelopment())
 
 // Middleware de enrutamiento
 app.UseRouting();
+
+// Habilitar CORS antes de la autenticación y autorización
+app.UseCors("AllowAll");
 
 // Middleware de autenticación y autorización
 app.UseAuthentication();
