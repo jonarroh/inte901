@@ -1,85 +1,18 @@
 import { Component, signal } from '@angular/core';
-import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
-import {
-  createFormField,
-  createFormGroup,
-  SignalInputDirective,
-  V,
-} from 'ng-signal-forms';
 
-import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { FormsModule } from '@angular/forms';
-import { AuthService } from '../auth/auth.service';
-import { Router } from '@angular/router';
+import { RightSeccionComponent } from './right-seccion/right-seccion.component';
+import { LeftSeccionComponent } from './left-seccion/left-seccion.component';
 
 @Component({
   selector: 'LoginComponent',
   standalone: true,
   imports: [
-    HlmInputDirective,
-    HlmButtonDirective,
-    FormsModule,
-    SignalInputDirective,
+   
+    RightSeccionComponent,
+    LeftSeccionComponent,
   ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
-  providers: [AuthService, Router],
+  templateUrl: './login.component.html'
 })
 export class LoginComponent {
-  constructor(private authService: AuthService, private router: Router) {}
-
-  protected formModel = createFormGroup({
-    username: createFormField('', {
-      validators: [
-        {
-          validator: V.required(),
-          message: 'El nombre de usuario es requerido',
-        },
-        {
-          validator: V.minLength(4),
-          message: 'El nombre de usuario debe tener al menos 4 caracteres',
-        },
-        {
-          validator: V.maxLength(20),
-          message: 'El nombre de usuario debe tener menos de 20 caracteres',
-        },
-        {
-          validator: V.pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/),
-          message: 'El nombre de usuario debe de ser un correo electrónico',
-        },
-      ],
-    }),
-    password: createFormField('', {
-      validators: [
-        {
-          validator: V.required(),
-          message: 'La contraseña es requerida',
-        },
-        {
-          validator: V.minLength(8),
-          message: 'La contraseña debe tener al menos 8 caracteres',
-        },
-        {
-          validator: V.maxLength(20),
-          message: 'La contraseña debe tener menos de 20 caracteres',
-        },
-      ],
-    }),
-  });
-
-  login() {
-    console.log(this.formModel.value());
-    if (this.formModel.valid()) {
-      console.log('Login');
-      this.authService.login(this.formModel.value()).subscribe(
-        (res) => {
-          console.log('Login successful', res);
-          this.router.navigate(['test']);
-        },
-        (error) => {
-          console.error('Error during login', error);
-        }
-      );
-    }
-  }
+  
 }
