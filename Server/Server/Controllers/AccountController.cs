@@ -1,7 +1,10 @@
 ﻿namespace Server.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
     using Server.lib;
+    using System.Security.Cryptography;
+    using System.Text;
     using System.Threading.Tasks;
 
     [ApiController]
@@ -9,28 +12,59 @@
     public class AccountController : ControllerBase
     {
         private readonly TokenService _tokenService;
+        private readonly Context _context;
 
-        public AccountController(TokenService tokenService)
+        public AccountController(TokenService tokenService, Context context)
         {
             _tokenService = tokenService;
+            _context = context;
         }
+
+ 
 
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest loginRequest)
         {
-            // Aquí deberías validar las credenciales del usuario.
-            // Para simplificar, asumimos que las credenciales son válidas y que los datos del usuario son correctos.
+            if (loginRequest == null)
+            {
+                return BadRequest(new { message = "Invalid login request" });
+            }
 
             string email = loginRequest.Email ?? throw new ArgumentNullException(nameof(loginRequest.Email));
-            string role = loginRequest.Role ?? throw new ArgumentNullException(nameof(loginRequest.Role));
+            string password = loginRequest.Password ?? throw new ArgumentNullException(nameof(loginRequest.Password));
 
-            string token = _tokenService.CreateToken(email, role);
+            // Encontrar el usuario en la base de datos
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+
+            if (user == null)
+            {
+                return NotFound(new { message = "No se encontró el usuario" });
+            }
+
+            // Verificar la contraseña
+            if (user.Password != StringToSha256(password))
+            {
+                return Unauthorized(new { message = "Usuario o contraseña incorrectos" });
+            }
+
+            // Crear el token
+            string token = _tokenService.CreateToken(email, user.Role);
 
             // Almacenar el token en las cookies
             Response.Cookies.Append("token", token, new CookieOptions { HttpOnly = true, Secure = true });
 
-            return Ok(new { message = "Logged in successfully", jwtToken = token });
+            return Ok(new { jwtToken = token });
         }
+
+        public static string StringToSha256(string str)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(str));
+                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+            }
+        }
+
 
         [HttpGet("logout")]
         public IActionResult Logout()
@@ -52,8 +86,6 @@
     {
         public string? Email { get; set; } 
         public string? Password { get; set; }
-
-        public string? Role { get; set; }
 
     }
 

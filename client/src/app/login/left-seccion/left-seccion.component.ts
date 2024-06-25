@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
@@ -12,11 +12,19 @@ import {
 
 import { Router } from '@angular/router';
 import { AuthService } from '~/app/auth/auth.service';
+import { LoaderCircle, LucideAngularModule } from 'lucide-angular';
+
+
+interface ResponseLogin{
+  message?: string;
+  jwtToken?: string;
+}
 
 @Component({
   selector: 'left-seccion',
   standalone: true,
   imports: [
+    LucideAngularModule,
     FormsModule,
     HlmInputDirective,
     HlmButtonDirective,
@@ -29,6 +37,9 @@ import { AuthService } from '~/app/auth/auth.service';
 export class LeftSeccionComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
+  disabled = signal(false);
+  res = signal<ResponseLogin | null>(null);
+
   protected formModel = createFormGroup({
     username: createFormField('', {
       validators: [
@@ -37,17 +48,9 @@ export class LeftSeccionComponent {
           message: 'El nombre de usuario es requerido',
         },
         {
-          validator: V.minLength(4),
-          message: 'El nombre de usuario debe tener al menos 4 caracteres',
-        },
-        {
-          validator: V.maxLength(20),
-          message: 'El nombre de usuario debe tener menos de 20 caracteres',
-        },
-        {
-          validator: V.pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/),
-          message: 'El nombre de usuario debe de ser un correo electrónico',
-        },
+          validator: V.maxLength(50),
+          message: 'El nombre de usuario debe tener menos de 50 caracteres',
+        }
       ],
     }),
     password: createFormField('', {
@@ -57,31 +60,46 @@ export class LeftSeccionComponent {
           message: 'La contraseña es requerida',
         },
         {
-          validator: V.minLength(8),
-          message: 'La contraseña debe tener al menos 8 caracteres',
-        },
-        {
           validator: V.maxLength(20),
           message: 'La contraseña debe tener menos de 20 caracteres',
         },
+        
       ],
     }),
   });
 
   login() {
+    console.log('Login');
     console.log(this.formModel.value());
-    if (this.formModel.valid()) {
-      console.log('Login');
-      this.authService.login(this.formModel.value()).subscribe(
-        (res) => {
-          console.log('Login successful', res);
-          this.router.navigate(['test']);
+    console.log(this.formModel.valid());
+    console.log(this.formModel.errors());
+    
+
+    if (this.formModel.valid()) { // Cambiado a verificar si el formulario es válido
+      this.disabled.set(true);
+      console.log(this.formModel.value());
+      
+      this.authService.login(this.formModel.value()).subscribe({
+        next: (response) => {
+          this.router.navigate(['/test']);
         },
-        (error) => {
-          console.error('Error during login', error);
+        error: (error) => {
+          this.disabled.set(false);
+          this.res.set(error.error);
+          console.error(error.error.message);
+          setTimeout(() => {
+            this.res.set(null);
+          }
+          , 2000);
+        },
+        complete: () => {
+          this.disabled.set(false);
         }
-      );
+      });
+    } else {
+      console.error("Formulario no es válido:", this.formModel.errorsArray());
     }
+}
+
   }
 
-}
