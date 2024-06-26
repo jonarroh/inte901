@@ -1,3 +1,16 @@
-.vs/
+/bin/
+/obj/
+/.vscode/
+/.vs/
+/*.user
+/*.suo
 
-Server/obj/
+# Ignore specific cache files
+**/cache/
+*.cache
+*.temp
+*.tmp
+
+# Ignore other common temporary and cache files
+*.log
+*.dat
