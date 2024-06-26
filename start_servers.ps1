@@ -9,7 +9,7 @@ Start-Process powershell -ArgumentList "python main.py" -NoNewWindow -PassThru
 # Moverse a la carpeta del proyecto
 Set-Location -Path ..\client
 
-Start-Process powershell -ArgumentList "bunx ng serve" -NoNewWindow -PassThru
+Start-Process powershell -ArgumentList "npm run dev" -NoNewWindow -PassThru
 
 
 
