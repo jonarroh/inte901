@@ -5,6 +5,6 @@
     "\\Server\\Server",
     "\\Server\\Server\\Controllers"
   ],
-  "SelectedNode": "\\Server\\Server\\Program.cs",
+  "SelectedNode": "\\Server\\Server\\Controllers\\AccountController.cs",
   "PreviewInSolutionExplorer": false
 }
