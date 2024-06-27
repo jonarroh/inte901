@@ -1,10 +1,11 @@
 ﻿namespace Server.Models
 {
-    using Server.Models.Usuario.Server.Models.Usuario;
+   
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-	using System.ComponentModel.DataAnnotations.Schema;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Server.Models.Usuario.Server.Models.Usuario;
 
 	public class Order
     {
@@ -13,8 +14,8 @@
         [Required]
         public DateTime? OrderDate { get; set; }
         public int? IdClient { get; set; }
-        [ForeignKey("IdUser")]
         [Required]
+        [ForeignKey("User")]
         public int? IdUser { get; set; }
         [Required]
         public float? Total { get; set; }

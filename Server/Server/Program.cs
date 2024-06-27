@@ -10,15 +10,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Configurar la conexión a la base de datos
 var environment = builder.Configuration.GetValue<string>("Environment");
 
-if (environment == "Development")
+if (environment == "D")
 {
     builder.Services.AddDbContext<Context>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection")));
 }
-else if (environment == "Production")
+else if (environment == "P")
 {
     builder.Services.AddDbContext<Context>(options =>
-        options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionProd")));
 }
 
 // Registrar servicios
