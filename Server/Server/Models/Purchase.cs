@@ -17,11 +17,8 @@
         [ForeignKey("IdUser")]
         public int? IdUser { get; set; }
         public DateTime? CreatedAt { get; set; }
-
         public ICollection<DetailPurchase>? DetailPurchases { get; set; }
-
         public Proveedor? Proveedor { get; set; }
-
 		public User? User { get; set; }
 	}
 }
