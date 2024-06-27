@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server;
 using Server.Models;
+using Server.Models.DTO;
 
 namespace Server.Controllers
 {
@@ -23,30 +24,68 @@ namespace Server.Controllers
 
         // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
+        [Route("allOrders")]
+        public async Task<IActionResult> GetOrders()
         {
-            return await _context.Orders.ToListAsync();
+            try
+            {
+                var ordenes = await _context.Orders.ToListAsync();
+
+                if (ordenes == null)
+                {
+                    return BadRequest("No hay ordenes registradas");
+                }
+
+                return Ok(ordenes);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(int? id)
+        [Route("oneOrder")]
+        public async Task<IActionResult> GetOrder(int? id)
         {
-            var order = await _context.Orders.FindAsync(id);
-
-            if (order == null)
+            try
             {
-                return NotFound();
-            }
+                var order = await _context.Orders.FindAsync(id);
 
-            return order;
+                if (order == null)
+                {
+                    return BadRequest("No existe la orden");
+                }
+
+                return Ok(order);
+            } catch(Exception ex)
+            {
+                return NotFound($"{ex.Message}");
+            }
         }
 
         // PUT: api/Orders/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(int? id, Order order)
+        [Route("updateOrder")]
+        public async Task<IActionResult> PutOrder(int? id, [FromBody] Order order)
         {
+            try
+            {
+                var orden = await _context.Orders.FindAsync(id);
+
+                if (orden == null)
+                {
+                    return BadRequest("No existe la orden");
+                }
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
             //if (id != order.Id)
             //{
             //    return BadRequest();
@@ -69,25 +108,49 @@ namespace Server.Controllers
             //        throw;
             //    }
             //}
-
-            return NoContent();
         }
 
         // POST: api/Orders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
+        [Route("addOrder")]
+        public async Task<IActionResult> PostOrder([FromBody]  OrderDTO ordertdo)
         {
-            //_context.Orders.Add(order);
-            //await _context.SaveChangesAsync();
+            try
+            {
+                if (ordertdo == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
 
-            return CreatedAtAction("GetOrder", new { id = order.Id }, order);
+            return Ok($"Orden creada correctamente, {ordertdo.NameProduct}");
         }
 
         // DELETE: api/Orders/5
         [HttpDelete("{id}")]
+        [Route("deleteOrder")]
         public async Task<IActionResult> DeleteOrder(int? id)
         {
+            try
+            {
+                var orden = _context.Orders.FindAsync(id);
+
+                if (orden == null)
+                {
+                    return BadRequest("No existe la orden");
+                }
+
+                return NoContent() ;
+            }
+            catch(Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
             //var order = await _context.Orders.FindAsync(id);
             //if (order == null)
             //{
@@ -96,8 +159,6 @@ namespace Server.Controllers
 
             //_context.Orders.Remove(order);
             //await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
         private bool OrderExists(int? id)
