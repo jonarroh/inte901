@@ -1,0 +1,18 @@
+<nav class="grid grid-cols-3 items-center bg-background p-6 w-full">
+  <div class="flex items-center flex-shrink-0 text-white">
+    <span class="font-semibold text-xl tracking-tight">
+      <a routerLink="/home" class="cursor-pointer text-2xl font-bold text-accent">
+        Heaven 
+      </a>
+    </span>
+  </div>
+  <div class="col-span-2 md:col-span-1">
+    <input type="text" class="bg-gray-200 rounded-lg p-2 w-full" placeholder="Search" hlmInput />
+  </div>
+  <div class="flex items-center gap-x-4 justify-self-end">
+    <lucide-icon name="shopping-cart"></lucide-icon>
+    <div>
+      <nav-icon [isLogged]="isLogged()"></nav-icon>
+    </div>
+  </div>
+</nav>
