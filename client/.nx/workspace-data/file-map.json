@@ -15,8 +15,11 @@
     "@spartan-ng/ui-label-brain": "0.0.1-alpha.352",
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",
-    "lucide-angular": "^0.394.0",
+    "i": "^0.3.7",
+    "lucide-angular": "^0.396.0",
+    "ng-signal-forms": "^1.12.0",
     "rxjs": "~7.8.0",
+    "tailwindcss-animated": "^1.1.2",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3",
     "@angular-devkit/build-angular": "^18.0.5",
@@ -46,6 +49,9 @@
     ],
     "@spartan-ng/ui-label-helm": [
       ".\\src/components/ui-label-helm/src/index.ts"
+    ],
+    "~/*": [
+      "./src/*"
     ]
   },
   "nxJsonPlugins": [],
@@ -54,39 +60,39 @@
       "client": [
         {
           "file": ".editorconfig",
-          "hash": "17241496168097493888"
+          "hash": "6686520031028425313"
         },
         {
           "file": ".gitignore",
-          "hash": "10175894702052279752"
+          "hash": "18168400278403753650"
         },
         {
           "file": ".vscode/extensions.json",
-          "hash": "11934160580685414355"
+          "hash": "5331566439708925252"
         },
         {
           "file": ".vscode/launch.json",
-          "hash": "17406702432687230417"
+          "hash": "17038929134016848735"
         },
         {
           "file": ".vscode/tasks.json",
-          "hash": "10093397977228577162"
+          "hash": "5336636969995539451"
         },
         {
           "file": "README.md",
-          "hash": "17605914219748551614"
+          "hash": "8099390361528775691"
         },
         {
           "file": "angular.json",
-          "hash": "17510721075616768480"
+          "hash": "16139402353923564114"
         },
         {
           "file": "bun.lockb",
-          "hash": "4540309912730569581"
+          "hash": "2062114155706218778"
         },
         {
           "file": "package.json",
-          "hash": "5854082504881577124",
+          "hash": "6152805280469471767",
           "deps": [
             "npm:@angular-devkit/build-angular",
             "npm:@angular/cli",
@@ -118,8 +124,11 @@
             "npm:@spartan-ng/ui-label-brain",
             "npm:class-variance-authority",
             "npm:clsx",
+            "npm:i",
             "npm:lucide-angular",
+            "npm:ng-signal-forms",
             "npm:rxjs",
+            "npm:tailwindcss-animated",
             "npm:tslib",
             "npm:zone.js"
           ]
@@ -130,39 +139,135 @@
         },
         {
           "file": "src/app/app.component.html",
-          "hash": "17385897758380840601"
+          "hash": "17816966185630879015"
         },
         {
           "file": "src/app/app.component.spec.ts",
-          "hash": "8982914096599258101"
+          "hash": "8242827432376774000"
         },
         {
           "file": "src/app/app.component.ts",
-          "hash": "4077979503345522930"
+          "hash": "795173809656269039"
         },
         {
           "file": "src/app/app.config.ts",
-          "hash": "5548986198782384011"
+          "hash": "16488434779053647351"
         },
         {
           "file": "src/app/app.routes.ts",
-          "hash": "16351927065134808888"
+          "hash": "12190179576587992164"
         },
         {
-          "file": "src/app/login/login.component.css",
+          "file": "src/app/auth/auth.service.ts",
+          "hash": "17924122032151082687"
+        },
+        {
+          "file": "src/app/auth/login.guard.ts",
+          "hash": "8580554288043520204"
+        },
+        {
+          "file": "src/app/auth/route.guard.ts",
+          "hash": "17143101480113914486"
+        },
+        {
+          "file": "src/app/home/home.component.html",
+          "hash": "1699384753088792051"
+        },
+        {
+          "file": "src/app/home/home.component.ts",
+          "hash": "731046607777516803"
+        },
+        {
+          "file": "src/app/home/navbar/navbar.component.html",
+          "hash": "10643517797336338867"
+        },
+        {
+          "file": "src/app/home/navbar/navbar.component.ts",
+          "hash": "731656097485199588"
+        },
+        {
+          "file": "src/app/landing-page/footer/footer.component.css",
           "hash": "3244421341483603138"
         },
         {
-          "file": "src/app/login/login.component.html",
-          "hash": "18175757655383823634"
+          "file": "src/app/landing-page/footer/footer.component.html",
+          "hash": "76009102197237629"
         },
         {
-          "file": "src/app/login/login.component.spec.ts",
-          "hash": "6185592977640098781"
+          "file": "src/app/landing-page/footer/footer.component.spec.ts",
+          "hash": "6523126951382397383"
+        },
+        {
+          "file": "src/app/landing-page/footer/footer.component.ts",
+          "hash": "3521874537805433061"
+        },
+        {
+          "file": "src/app/landing-page/header/header.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/landing-page/header/header.component.html",
+          "hash": "230919607254221805"
+        },
+        {
+          "file": "src/app/landing-page/header/header.component.spec.ts",
+          "hash": "14720898316259393382"
+        },
+        {
+          "file": "src/app/landing-page/header/header.component.ts",
+          "hash": "4868529381131887200"
+        },
+        {
+          "file": "src/app/landing-page/landing-page.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/landing-page/landing-page.component.html",
+          "hash": "7414896721707768099"
+        },
+        {
+          "file": "src/app/landing-page/landing-page.component.ts",
+          "hash": "15603949445469919284"
+        },
+        {
+          "file": "src/app/login/left-seccion/left-seccion.component.html",
+          "hash": "10892622179872990024"
+        },
+        {
+          "file": "src/app/login/left-seccion/left-seccion.component.ts",
+          "hash": "1196726838615930050"
+        },
+        {
+          "file": "src/app/login/login.component.html",
+          "hash": "11658957141885050073"
         },
         {
           "file": "src/app/login/login.component.ts",
-          "hash": "10785377330251674169"
+          "hash": "10336952488022607027"
+        },
+        {
+          "file": "src/app/login/right-seccion/right-seccion.component.html",
+          "hash": "5886944080886684078"
+        },
+        {
+          "file": "src/app/login/right-seccion/right-seccion.component.ts",
+          "hash": "5518129065229862228"
+        },
+        {
+          "file": "src/app/test/test.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/test/test.component.html",
+          "hash": "10061070156527962308"
+        },
+        {
+          "file": "src/app/test/test.component.spec.ts",
+          "hash": "11359226618441834377"
+        },
+        {
+          "file": "src/app/test/test.component.ts",
+          "hash": "15797618039975197176"
         },
         {
           "file": "src/assets/.gitkeep",
@@ -174,7 +279,7 @@
         },
         {
           "file": "src/components/ui-button-helm/src/lib/hlm-button.directive.ts",
-          "hash": "7054297396447512678"
+          "hash": "7464221709800319373"
         },
         {
           "file": "src/components/ui-input-helm/src/index.ts",
@@ -194,11 +299,15 @@
         },
         {
           "file": "src/index.html",
-          "hash": "10727473434864545363"
+          "hash": "5001567952168560198"
+        },
+        {
+          "file": "src/lib/endpoint.ts",
+          "hash": "2436879563256251929"
         },
         {
           "file": "src/main.ts",
-          "hash": "4169901790405087765"
+          "hash": "4927504514031276065"
         },
         {
           "file": "src/styles.css",
@@ -206,19 +315,19 @@
         },
         {
           "file": "tailwind.config.js",
-          "hash": "5687270654389930819"
+          "hash": "7104482582894714495"
         },
         {
           "file": "tsconfig.app.json",
-          "hash": "13119632651406065538"
+          "hash": "17337579397915052279"
         },
         {
           "file": "tsconfig.json",
-          "hash": "11531412793845224324"
+          "hash": "11449773753853979140"
         },
         {
           "file": "tsconfig.spec.json",
-          "hash": "5122839733245053999"
+          "hash": "15575553540147145788"
         }
       ]
     },

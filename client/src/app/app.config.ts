@@ -1,7 +1,7 @@
 import { ApplicationConfig,importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
-import {LucideAngularModule, icons} from "lucide-angular";
+import {LucideAngularModule, icons } from "lucide-angular";
 
 import { routes } from './app.routes';
 

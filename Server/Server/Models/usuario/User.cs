@@ -33,6 +33,9 @@
 
             public DateTime CreatedAt { get; set; }
 
+            [MaxLength(100)]
+            public string? Token { get; set; }
+
             // Navigation property for the related addresses
             public ICollection<Direcciones> Direcciones { get; set; }
         }
