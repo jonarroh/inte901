@@ -4,6 +4,7 @@ import { TestComponent } from './test/test.component';
 import { AuthGuard } from './auth/login.guard';
 import { AuthenticatedGuard } from './auth/route.guard';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { HomeComponent } from './home/home.component';
 
 export const routes: Routes = [
   {
@@ -16,14 +17,12 @@ export const routes: Routes = [
     component: TestComponent,
     canActivate: [AuthenticatedGuard], // Este guardia protege las rutas autenticadas
   },
-  // {
-  //   path: '',
-  //   redirectTo: '/login',
-  //   pathMatch: 'full',
-  // },
   {
     path: '',
     component: LandingPageComponent
   },
-  // Otras rutas
+  {
+    path:'products',
+    component: HomeComponent
+  }
 ];

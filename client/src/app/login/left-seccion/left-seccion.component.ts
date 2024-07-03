@@ -1,7 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
-import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import {
   createFormField,
   createFormGroup,
@@ -20,6 +19,7 @@ interface ResponseLogin{
   jwtToken?: string;
 }
 
+import { HlmInputDirective } from '~/components/ui-input-helm/src';
 @Component({
   selector: 'left-seccion',
   standalone: true,

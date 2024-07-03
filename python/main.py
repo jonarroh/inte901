@@ -37,6 +37,28 @@ def convert_images():
     return jsonify({'message': 'Images have been converted to .webp format.', 'converted_images': converted_images})
 
 
+@app.route('/clipProduct', methods=['POST', 'GET'])
+def clipProduct():
+    convert_images = []
+    to_width = 200
+    to_height = 200
+
+    for filename in os.listdir(os.path.join(STATIC_FOLDER, 'productos')):
+        print(filename)
+        if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')):
+            filepath = os.path.join(STATIC_FOLDER, 'productos', filename)
+            img = Image.open(filepath)
+            # Obtener las dimensiones de la imagen
+            width, height = img.size
+            # Redimensionar la imagen
+            img = img.resize((to_width, to_height))
+            # Guardar la imagen
+            img.save(filepath)
+            convert_images.append(filename)
+
+    return jsonify({'message': 'Images have been clipped.', 'clipped_images': convert_images})
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
