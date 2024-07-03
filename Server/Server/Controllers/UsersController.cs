@@ -10,6 +10,7 @@ using Server.Models.Usuario.Server.Models.Usuario;
 using Server.lib;
 using System.Security.Cryptography;
 using System.Text;
+using Server.Models.DTO;
 
 namespace Server.Controllers
 {
@@ -124,5 +125,25 @@ namespace Server.Controllers
         {
             return _context.Users.Any(e => e.Id == id);
         }
+
+
+        // GET : apiToken
+
+        [HttpPost("token")]
+        public async Task<ActionResult<TokenDto>> Token()
+        {
+            //ver si existe token en las cookies
+            if (Request.Cookies.ContainsKey("token"))
+            {
+                var token = Request.Cookies["token"];
+                var tokenDto = TokenService.ReadToken(token);
+                return tokenDto;
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
     }
 }
