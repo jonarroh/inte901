@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server;
 using Server.Models;
+using Server.Models.DTO;
 
 namespace Server.Controllers
 {
@@ -23,15 +24,51 @@ namespace Server.Controllers
 
         // GET: api/MateriasPrimasProveedores
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MateriaPrimaProveedor>>> GetMateriaPrimaProveedores()
+        public async Task<ActionResult<IEnumerable<MateriaPrimaProveedorDTO>>> GetMateriasPrimasProveedores()
         {
-            return await _context.MateriaPrimaProveedores.ToListAsync();
+            var materiasPrimasProveedores = await _context.MateriaPrimaProveedores
+                .Select(mpp => new MateriaPrimaProveedorDTO
+                {
+                    Id = mpp.Id,
+                    MateriaPrimaId = mpp.MateriaPrimaId,
+                    ProveedorId = mpp.ProveedorId
+                })
+                .ToListAsync();
+
+            return Ok(materiasPrimasProveedores);
         }
 
         // GET: api/MateriasPrimasProveedores/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<MateriaPrimaProveedor>> GetMateriaPrimaProveedor(int? id)
+        public async Task<ActionResult<MateriaPrimaProveedorDTO>> GetMateriaPrimaProveedor(int id)
         {
+            var materiaPrimaProveedor = await _context.MateriaPrimaProveedores
+                .Where(mpp => mpp.Id == id)
+                .Select(mpp => new MateriaPrimaProveedorDTO
+                {
+                    Id = mpp.Id,
+                    MateriaPrimaId = mpp.MateriaPrimaId,
+                    ProveedorId = mpp.ProveedorId
+                })
+                .FirstOrDefaultAsync();
+
+            if (materiaPrimaProveedor == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(materiaPrimaProveedor);
+        }
+
+        // PUT: api/MateriasPrimasProveedores/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutMateriaPrimaProveedor(int id, MateriaPrimaProveedorDTO materiaPrimaProveedorDto)
+        {
+            if (id != materiaPrimaProveedorDto.Id)
+            {
+                return BadRequest();
+            }
+
             var materiaPrimaProveedor = await _context.MateriaPrimaProveedores.FindAsync(id);
 
             if (materiaPrimaProveedor == null)
@@ -39,18 +76,8 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            return materiaPrimaProveedor;
-        }
-
-        // PUT: api/MateriasPrimasProveedores/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutMateriaPrimaProveedor(int? id, MateriaPrimaProveedor materiaPrimaProveedor)
-        {
-            if (id != materiaPrimaProveedor.Id)
-            {
-                return BadRequest();
-            }
+            materiaPrimaProveedor.MateriaPrimaId = materiaPrimaProveedorDto.MateriaPrimaId;
+            materiaPrimaProveedor.ProveedorId = materiaPrimaProveedorDto.ProveedorId;
 
             _context.Entry(materiaPrimaProveedor).State = EntityState.Modified;
 
@@ -74,21 +101,29 @@ namespace Server.Controllers
         }
 
         // POST: api/MateriasPrimasProveedores
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<MateriaPrimaProveedor>> PostMateriaPrimaProveedor(MateriaPrimaProveedor materiaPrimaProveedor)
+        public async Task<ActionResult<MateriaPrimaProveedorDTO>> PostMateriaPrimaProveedor(MateriaPrimaProveedorDTO materiaPrimaProveedorDto)
         {
+            var materiaPrimaProveedor = new MateriaPrimaProveedor
+            {
+                MateriaPrimaId = materiaPrimaProveedorDto.MateriaPrimaId,
+                ProveedorId = materiaPrimaProveedorDto.ProveedorId
+            };
+
             _context.MateriaPrimaProveedores.Add(materiaPrimaProveedor);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMateriaPrimaProveedor", new { id = materiaPrimaProveedor.Id }, materiaPrimaProveedor);
+            materiaPrimaProveedorDto.Id = materiaPrimaProveedor.Id;
+
+            return CreatedAtAction("GetMateriaPrimaProveedor", new { id = materiaPrimaProveedorDto.Id }, materiaPrimaProveedorDto);
         }
 
         // DELETE: api/MateriasPrimasProveedores/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMateriaPrimaProveedor(int? id)
+        public async Task<IActionResult> DeleteMateriaPrimaProveedor(int id)
         {
             var materiaPrimaProveedor = await _context.MateriaPrimaProveedores.FindAsync(id);
+
             if (materiaPrimaProveedor == null)
             {
                 return NotFound();
@@ -100,7 +135,7 @@ namespace Server.Controllers
             return NoContent();
         }
 
-        private bool MateriaPrimaProveedorExists(int? id)
+        private bool MateriaPrimaProveedorExists(int id)
         {
             return _context.MateriaPrimaProveedores.Any(e => e.Id == id);
         }
