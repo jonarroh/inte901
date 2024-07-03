@@ -22,63 +22,17 @@ namespace Server.Controllers
             _context = context;
         }
 
-        // GET: api/Productos
+        // GET: api/Producto
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductoDTO>>> GetProductos()
+        public async Task<ActionResult<IEnumerable<Producto>>> GetProductos()
         {
-            var productos = await _context.Productos
-                .Select(p => new ProductoDTO
-                {
-                    Id = p.Id,
-                    Nombre = p.Nombre,
-                    Precio = p.Precio,
-                    Descripcion = p.Descripcion,
-                    Estatus = p.Estatus,
-                    Tipo = p.Tipo,
-                    CantidadXReceta = p.CantidadXReceta,
-                    CreatedAt = p.CreatedAt
-                })
-                .ToListAsync();
-
-            return Ok(productos);
+            return await _context.Productos.ToListAsync();
         }
 
-        // GET: api/Productos/5
+        // GET: api/Producto/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductoDTO>> GetProducto(int id)
+        public async Task<ActionResult<Producto>> GetProducto(int id)
         {
-            var producto = await _context.Productos
-                .Where(p => p.Id == id)
-                .Select(p => new ProductoDTO
-                {
-                    Id = p.Id,
-                    Nombre = p.Nombre,
-                    Precio = p.Precio,
-                    Descripcion = p.Descripcion,
-                    Estatus = p.Estatus,
-                    Tipo = p.Tipo,
-                    CantidadXReceta = p.CantidadXReceta,
-                    CreatedAt = p.CreatedAt
-                })
-                .FirstOrDefaultAsync();
-
-            if (producto == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(producto);
-        }
-
-        // PUT: api/Productos/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProducto(int id, ProductoDTO productoDto)
-        {
-            if (id != productoDto.Id)
-            {
-                return BadRequest();
-            }
-
             var producto = await _context.Productos.FindAsync(id);
 
             if (producto == null)
@@ -86,13 +40,31 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            producto.Nombre = productoDto.Nombre;
-            producto.Precio = productoDto.Precio;
-            producto.Descripcion = productoDto.Descripcion;
-            producto.Estatus = productoDto.Estatus;
-            producto.Tipo = productoDto.Tipo;
-            producto.CantidadXReceta = productoDto.CantidadXReceta;
-            producto.CreatedAt = productoDto.CreatedAt;
+            return producto;
+        }
+
+        // PUT: api/Producto/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutProducto(int id, ProductoDTO productoDTO)
+        {
+            if (id != productoDTO.Id)
+            {
+                return BadRequest();
+            }
+
+            var producto = await _context.Productos.FindAsync(id);
+            if (producto == null)
+            {
+                return NotFound();
+            }
+
+            producto.Nombre = productoDTO.Nombre;
+            producto.Precio = productoDTO.Precio;
+            producto.Descripcion = productoDTO.Descripcion;
+            producto.Estatus = productoDTO.Estatus;
+            producto.Tipo = productoDTO.Tipo;
+            producto.CantidadXReceta = productoDTO.CantidadXReceta;
+            producto.CreatedAt = productoDTO.CreatedAt;
 
             _context.Entry(producto).State = EntityState.Modified;
 
@@ -115,35 +87,32 @@ namespace Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Productos
+        // POST: api/Producto
         [HttpPost]
-        public async Task<ActionResult<ProductoDTO>> PostProducto(ProductoDTO productoDto)
+        public async Task<ActionResult<Producto>> PostProducto(ProductoDTO productoDTO)
         {
             var producto = new Producto
             {
-                Nombre = productoDto.Nombre,
-                Precio = productoDto.Precio,
-                Descripcion = productoDto.Descripcion,
-                Estatus = productoDto.Estatus,
-                Tipo = productoDto.Tipo,
-                CantidadXReceta = productoDto.CantidadXReceta,
-                CreatedAt = productoDto.CreatedAt
+                Nombre = productoDTO.Nombre,
+                Precio = productoDTO.Precio,
+                Descripcion = productoDTO.Descripcion,
+                Estatus = productoDTO.Estatus,
+                Tipo = productoDTO.Tipo,
+                CantidadXReceta = productoDTO.CantidadXReceta,
+                CreatedAt = productoDTO.CreatedAt ?? DateTime.Now
             };
 
             _context.Productos.Add(producto);
             await _context.SaveChangesAsync();
 
-            productoDto.Id = producto.Id;
-
-            return CreatedAtAction("GetProducto", new { id = productoDto.Id }, productoDto);
+            return CreatedAtAction("GetProducto", new { id = producto.Id }, producto);
         }
 
-        // DELETE: api/Productos/5
+        // DELETE: api/Producto/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProducto(int id)
         {
             var producto = await _context.Productos.FindAsync(id);
-
             if (producto == null)
             {
                 return NotFound();

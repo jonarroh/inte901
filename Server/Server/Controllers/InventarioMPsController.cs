@@ -24,61 +24,15 @@ namespace Server.Controllers
 
         // GET: api/InventarioMP
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<InventarioMPDTO>>> GetInventarioMPs()
+        public async Task<ActionResult<IEnumerable<InventarioMP>>> GetInventarioMPs()
         {
-            var inventarioMPs = await _context.InventarioMPs
-                .Select(im => new InventarioMPDTO
-                {
-                    Id = im.Id,
-                    IdMateriaPrima = im.IdMateriaPrima,
-                    UnidadMedida = im.UnidadMedida,
-                    Cantidad = im.Cantidad,
-                    IdCompra = im.IdCompra,
-                    Caducidad = im.Caducidad,
-                    Estatus = im.Estatus,
-                    CreatedAt = im.CreatedAt
-                })
-                .ToListAsync();
-
-            return Ok(inventarioMPs);
+            return await _context.InventarioMPs.ToListAsync();
         }
 
         // GET: api/InventarioMP/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<InventarioMPDTO>> GetInventarioMP(int id)
+        public async Task<ActionResult<InventarioMP>> GetInventarioMP(int id)
         {
-            var inventarioMP = await _context.InventarioMPs
-                .Where(im => im.Id == id)
-                .Select(im => new InventarioMPDTO
-                {
-                    Id = im.Id,
-                    IdMateriaPrima = im.IdMateriaPrima,
-                    UnidadMedida = im.UnidadMedida,
-                    Cantidad = im.Cantidad,
-                    IdCompra = im.IdCompra,
-                    Caducidad = im.Caducidad,
-                    Estatus = im.Estatus,
-                    CreatedAt = im.CreatedAt
-                })
-                .FirstOrDefaultAsync();
-
-            if (inventarioMP == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(inventarioMP);
-        }
-
-        // PUT: api/InventarioMP/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutInventarioMP(int id, InventarioMPDTO inventarioMPDto)
-        {
-            if (id != inventarioMPDto.Id)
-            {
-                return BadRequest();
-            }
-
             var inventarioMP = await _context.InventarioMPs.FindAsync(id);
 
             if (inventarioMP == null)
@@ -86,13 +40,30 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            inventarioMP.IdMateriaPrima = inventarioMPDto.IdMateriaPrima;
-            inventarioMP.UnidadMedida = inventarioMPDto.UnidadMedida;
-            inventarioMP.Cantidad = inventarioMPDto.Cantidad;
-            inventarioMP.IdCompra = inventarioMPDto.IdCompra;
-            inventarioMP.Caducidad = inventarioMPDto.Caducidad;
-            inventarioMP.Estatus = inventarioMPDto.Estatus;
-            inventarioMP.CreatedAt = inventarioMPDto.CreatedAt;
+            return inventarioMP;
+        }
+
+        // PUT: api/InventarioMP/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutInventarioMP(int id, InventarioMPDTO inventarioMPDTO)
+        {
+            if (id != inventarioMPDTO.Id)
+            {
+                return BadRequest();
+            }
+
+            var inventarioMP = await _context.InventarioMPs.FindAsync(id);
+            if (inventarioMP == null)
+            {
+                return NotFound();
+            }
+
+            inventarioMP.IdMateriaPrima = inventarioMPDTO.IdMateriaPrima;
+            inventarioMP.UnidadMedida = inventarioMPDTO.UnidadMedida;
+            inventarioMP.Cantidad = inventarioMPDTO.Cantidad;
+            inventarioMP.IdCompra = inventarioMPDTO.IdCompra;
+            inventarioMP.Caducidad = inventarioMPDTO.Caducidad;
+            inventarioMP.Estatus = inventarioMPDTO.Estatus;
 
             _context.Entry(inventarioMP).State = EntityState.Modified;
 
@@ -117,25 +88,23 @@ namespace Server.Controllers
 
         // POST: api/InventarioMP
         [HttpPost]
-        public async Task<ActionResult<InventarioMPDTO>> PostInventarioMP(InventarioMPDTO inventarioMPDto)
+        public async Task<ActionResult<InventarioMP>> PostInventarioMP(InventarioMPDTO inventarioMPDTO)
         {
             var inventarioMP = new InventarioMP
             {
-                IdMateriaPrima = inventarioMPDto.IdMateriaPrima,
-                UnidadMedida = inventarioMPDto.UnidadMedida,
-                Cantidad = inventarioMPDto.Cantidad,
-                IdCompra = inventarioMPDto.IdCompra,
-                Caducidad = inventarioMPDto.Caducidad,
-                Estatus = inventarioMPDto.Estatus,
-                CreatedAt = inventarioMPDto.CreatedAt
+                IdMateriaPrima = inventarioMPDTO.IdMateriaPrima,
+                UnidadMedida = inventarioMPDTO.UnidadMedida,
+                Cantidad = inventarioMPDTO.Cantidad,
+                IdCompra = inventarioMPDTO.IdCompra,
+                Caducidad = inventarioMPDTO.Caducidad,
+                Estatus = inventarioMPDTO.Estatus,
+                CreatedAt = inventarioMPDTO.CreatedAt ?? DateTime.Now
             };
 
             _context.InventarioMPs.Add(inventarioMP);
             await _context.SaveChangesAsync();
 
-            inventarioMPDto.Id = inventarioMP.Id;
-
-            return CreatedAtAction("GetInventarioMP", new { id = inventarioMPDto.Id }, inventarioMPDto);
+            return CreatedAtAction("GetInventarioMP", new { id = inventarioMP.Id }, inventarioMP);
         }
 
         // DELETE: api/InventarioMP/5
@@ -143,7 +112,6 @@ namespace Server.Controllers
         public async Task<IActionResult> DeleteInventarioMP(int id)
         {
             var inventarioMP = await _context.InventarioMPs.FindAsync(id);
-
             if (inventarioMP == null)
             {
                 return NotFound();

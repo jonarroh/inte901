@@ -22,65 +22,17 @@ namespace Server.Controllers
             _context = context;
         }
 
-        // GET: api/Ingredientes
+        // GET: api/Ingrediente
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<IngredienteDTO>>> GetIngredientes()
+        public async Task<ActionResult<IEnumerable<Ingrediente>>> GetIngredientes()
         {
-            var ingredientes = await _context.Ingredientes
-                .Select(i => new IngredienteDTO
-                {
-                    Id = i.Id,
-                    IdProducto = i.IdProducto,
-                    IdMateriaPrima = i.IdMateriaPrima,
-                    Cantidad = i.Cantidad,
-                    UnidadMedida = i.UnidadMedida,
-                    Estatus = i.Estatus,
-                    CreatedAt = i.CreatedAt,
-                    UpdatedAt = i.UpdatedAt,
-                    DeletedAt = i.DeletedAt
-                })
-                .ToListAsync();
-
-            return Ok(ingredientes);
+            return await _context.Ingredientes.ToListAsync();
         }
 
-        // GET: api/Ingredientes/5
+        // GET: api/Ingrediente/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<IngredienteDTO>> GetIngrediente(int id)
+        public async Task<ActionResult<Ingrediente>> GetIngrediente(int id)
         {
-            var ingrediente = await _context.Ingredientes
-                .Where(i => i.Id == id)
-                .Select(i => new IngredienteDTO
-                {
-                    Id = i.Id,
-                    IdProducto = i.IdProducto,
-                    IdMateriaPrima = i.IdMateriaPrima,
-                    Cantidad = i.Cantidad,
-                    UnidadMedida = i.UnidadMedida,
-                    Estatus = i.Estatus,
-                    CreatedAt = i.CreatedAt,
-                    UpdatedAt = i.UpdatedAt,
-                    DeletedAt = i.DeletedAt
-                })
-                .FirstOrDefaultAsync();
-
-            if (ingrediente == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(ingrediente);
-        }
-
-        // PUT: api/Ingredientes/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutIngrediente(int id, IngredienteDTO ingredienteDto)
-        {
-            if (id != ingredienteDto.Id)
-            {
-                return BadRequest();
-            }
-
             var ingrediente = await _context.Ingredientes.FindAsync(id);
 
             if (ingrediente == null)
@@ -88,14 +40,30 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            ingrediente.IdProducto = ingredienteDto.IdProducto;
-            ingrediente.IdMateriaPrima = ingredienteDto.IdMateriaPrima;
-            ingrediente.Cantidad = ingredienteDto.Cantidad;
-            ingrediente.UnidadMedida = ingredienteDto.UnidadMedida;
-            ingrediente.Estatus = ingredienteDto.Estatus;
-            ingrediente.CreatedAt = ingredienteDto.CreatedAt;
-            ingrediente.UpdatedAt = DateTime.Now;
-            ingrediente.DeletedAt = ingredienteDto.DeletedAt;
+            return ingrediente;
+        }
+
+        // PUT: api/Ingrediente/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutIngrediente(int id, IngredienteDTO ingredienteDTO)
+        {
+            if (id != ingredienteDTO.Id)
+            {
+                return BadRequest();
+            }
+
+            var ingrediente = await _context.Ingredientes.FindAsync(id);
+            if (ingrediente == null)
+            {
+                return NotFound();
+            }
+
+            ingrediente.IdProducto = ingredienteDTO.IdProducto;
+            ingrediente.IdMateriaPrima = ingredienteDTO.IdMateriaPrima;
+            ingrediente.Cantidad = ingredienteDTO.Cantidad;
+            ingrediente.UnidadMedida = ingredienteDTO.UnidadMedida;
+            ingrediente.Estatus = ingredienteDTO.Estatus;
+            ingrediente.UpdatedAt = ingredienteDTO.UpdatedAt;
 
             _context.Entry(ingrediente).State = EntityState.Modified;
 
@@ -118,36 +86,31 @@ namespace Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Ingredientes
+        // POST: api/Ingrediente
         [HttpPost]
-        public async Task<ActionResult<IngredienteDTO>> PostIngrediente(IngredienteDTO ingredienteDto)
+        public async Task<ActionResult<Ingrediente>> PostIngrediente(IngredienteDTO ingredienteDTO)
         {
             var ingrediente = new Ingrediente
             {
-                IdProducto = ingredienteDto.IdProducto,
-                IdMateriaPrima = ingredienteDto.IdMateriaPrima,
-                Cantidad = ingredienteDto.Cantidad,
-                UnidadMedida = ingredienteDto.UnidadMedida,
-                Estatus = ingredienteDto.Estatus,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = ingredienteDto.UpdatedAt,
-                DeletedAt = ingredienteDto.DeletedAt
+                IdProducto = ingredienteDTO.IdProducto,
+                IdMateriaPrima = ingredienteDTO.IdMateriaPrima,
+                Cantidad = ingredienteDTO.Cantidad,
+                UnidadMedida = ingredienteDTO.UnidadMedida,
+                Estatus = ingredienteDTO.Estatus,
+                CreatedAt = ingredienteDTO.CreatedAt ?? DateTime.Now
             };
 
             _context.Ingredientes.Add(ingrediente);
             await _context.SaveChangesAsync();
 
-            ingredienteDto.Id = ingrediente.Id;
-
-            return CreatedAtAction("GetIngrediente", new { id = ingredienteDto.Id }, ingredienteDto);
+            return CreatedAtAction("GetIngrediente", new { id = ingrediente.Id }, ingrediente);
         }
 
-        // DELETE: api/Ingredientes/5
+        // DELETE: api/Ingrediente/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteIngrediente(int id)
         {
             var ingrediente = await _context.Ingredientes.FindAsync(id);
-
             if (ingrediente == null)
             {
                 return NotFound();

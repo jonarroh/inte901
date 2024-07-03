@@ -22,59 +22,17 @@ namespace Server.Controllers
             _context = context;
         }
 
-        // GET: api/MateriasPrimas
+        // GET: api/MateriaPrima
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MateriaPrimaDTO>>> GetMateriasPrimas()
+        public async Task<ActionResult<IEnumerable<MateriaPrima>>> GetMateriasPrimas()
         {
-            var materiasPrimas = await _context.MateriasPrimas
-                .Select(mp => new MateriaPrimaDTO
-                {
-                    Id = mp.Id,
-                    Material = mp.Material,
-                    Estatus = mp.Estatus,
-                    CreatedAt = mp.CreatedAt,
-                    UpdatedAt = mp.UpdatedAt,
-                    DeletedAt = mp.DeletedAt
-                })
-                .ToListAsync();
-
-            return Ok(materiasPrimas);
+            return await _context.MateriasPrimas.ToListAsync();
         }
 
-        // GET: api/MateriasPrimas/5
+        // GET: api/MateriaPrima/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<MateriaPrimaDTO>> GetMateriaPrima(int id)
+        public async Task<ActionResult<MateriaPrima>> GetMateriaPrima(int id)
         {
-            var materiaPrima = await _context.MateriasPrimas
-                .Where(mp => mp.Id == id)
-                .Select(mp => new MateriaPrimaDTO
-                {
-                    Id = mp.Id,
-                    Material = mp.Material,
-                    Estatus = mp.Estatus,
-                    CreatedAt = mp.CreatedAt,
-                    UpdatedAt = mp.UpdatedAt,
-                    DeletedAt = mp.DeletedAt
-                })
-                .FirstOrDefaultAsync();
-
-            if (materiaPrima == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(materiaPrima);
-        }
-
-        // PUT: api/MateriasPrimas/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutMateriaPrima(int id, MateriaPrimaDTO materiaPrimaDto)
-        {
-            if (id != materiaPrimaDto.Id)
-            {
-                return BadRequest();
-            }
-
             var materiaPrima = await _context.MateriasPrimas.FindAsync(id);
 
             if (materiaPrima == null)
@@ -82,11 +40,28 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            materiaPrima.Material = materiaPrimaDto.Material;
-            materiaPrima.Estatus = materiaPrimaDto.Estatus;
-            materiaPrima.CreatedAt = materiaPrimaDto.CreatedAt;
-            materiaPrima.UpdatedAt = DateTime.Now;
-            materiaPrima.DeletedAt = materiaPrimaDto.DeletedAt;
+            return materiaPrima;
+        }
+
+        // PUT: api/MateriaPrima/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutMateriaPrima(int id, MateriaPrimaDTO materiaPrimaDTO)
+        {
+            if (id != materiaPrimaDTO.Id)
+            {
+                return BadRequest();
+            }
+
+            var materiaPrima = await _context.MateriasPrimas.FindAsync(id);
+            if (materiaPrima == null)
+            {
+                return NotFound();
+            }
+
+            materiaPrima.Material = materiaPrimaDTO.Material;
+            materiaPrima.Estatus = materiaPrimaDTO.Estatus;
+            materiaPrima.UpdatedAt = materiaPrimaDTO.UpdatedAt ?? DateTime.Now;
+            materiaPrima.DeletedAt = materiaPrimaDTO.DeletedAt;
 
             _context.Entry(materiaPrima).State = EntityState.Modified;
 
@@ -109,33 +84,30 @@ namespace Server.Controllers
             return NoContent();
         }
 
-        // POST: api/MateriasPrimas
+        // POST: api/MateriaPrima
         [HttpPost]
-        public async Task<ActionResult<MateriaPrimaDTO>> PostMateriaPrima(MateriaPrimaDTO materiaPrimaDto)
+        public async Task<ActionResult<MateriaPrima>> PostMateriaPrima(MateriaPrimaDTO materiaPrimaDTO)
         {
             var materiaPrima = new MateriaPrima
             {
-                Material = materiaPrimaDto.Material,
-                Estatus = materiaPrimaDto.Estatus,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = materiaPrimaDto.UpdatedAt,
-                DeletedAt = materiaPrimaDto.DeletedAt
+                Material = materiaPrimaDTO.Material,
+                Estatus = materiaPrimaDTO.Estatus,
+                CreatedAt = materiaPrimaDTO.CreatedAt ?? DateTime.Now,
+                UpdatedAt = materiaPrimaDTO.UpdatedAt,
+                DeletedAt = materiaPrimaDTO.DeletedAt
             };
 
             _context.MateriasPrimas.Add(materiaPrima);
             await _context.SaveChangesAsync();
 
-            materiaPrimaDto.Id = materiaPrima.Id;
-
-            return CreatedAtAction("GetMateriaPrima", new { id = materiaPrimaDto.Id }, materiaPrimaDto);
+            return CreatedAtAction("GetMateriaPrima", new { id = materiaPrima.Id }, materiaPrima);
         }
 
-        // DELETE: api/MateriasPrimas/5
+        // DELETE: api/MateriaPrima/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMateriaPrima(int id)
         {
             var materiaPrima = await _context.MateriasPrimas.FindAsync(id);
-
             if (materiaPrima == null)
             {
                 return NotFound();

@@ -22,57 +22,17 @@ namespace Server.Controllers
             _context = context;
         }
 
-        // GET: api/InventarioPostres
+        // GET: api/InventarioPostre
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<InventarioPostreDTO>>> GetInventarioPostres()
+        public async Task<ActionResult<IEnumerable<InventarioPostre>>> GetInventarioPostres()
         {
-            var inventarioPostres = await _context.InventarioPostres
-                .Select(ip => new InventarioPostreDTO
-                {
-                    IdPostre = ip.IdPostre,
-                    IdProducto = ip.IdProducto,
-                    Cantidad = ip.Cantidad,
-                    Estatus = ip.Estatus,
-                    CreatedAt = ip.CreatedAt
-                })
-                .ToListAsync();
-
-            return Ok(inventarioPostres);
+            return await _context.InventarioPostres.ToListAsync();
         }
 
-        // GET: api/InventarioPostres/5
+        // GET: api/InventarioPostre/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<InventarioPostreDTO>> GetInventarioPostre(int id)
+        public async Task<ActionResult<InventarioPostre>> GetInventarioPostre(int id)
         {
-            var inventarioPostre = await _context.InventarioPostres
-                .Where(ip => ip.IdPostre == id)
-                .Select(ip => new InventarioPostreDTO
-                {
-                    IdPostre = ip.IdPostre,
-                    IdProducto = ip.IdProducto,
-                    Cantidad = ip.Cantidad,
-                    Estatus = ip.Estatus,
-                    CreatedAt = ip.CreatedAt
-                })
-                .FirstOrDefaultAsync();
-
-            if (inventarioPostre == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(inventarioPostre);
-        }
-
-        // PUT: api/InventarioPostres/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutInventarioPostre(int id, InventarioPostreDTO inventarioPostreDto)
-        {
-            if (id != inventarioPostreDto.IdPostre)
-            {
-                return BadRequest();
-            }
-
             var inventarioPostre = await _context.InventarioPostres.FindAsync(id);
 
             if (inventarioPostre == null)
@@ -80,10 +40,28 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            inventarioPostre.IdProducto = inventarioPostreDto.IdProducto;
-            inventarioPostre.Cantidad = inventarioPostreDto.Cantidad;
-            inventarioPostre.Estatus = inventarioPostreDto.Estatus;
-            inventarioPostre.CreatedAt = inventarioPostreDto.CreatedAt;
+            return inventarioPostre;
+        }
+
+        // PUT: api/InventarioPostre/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutInventarioPostre(int id, InventarioPostreDTO inventarioPostreDTO)
+        {
+            if (id != inventarioPostreDTO.IdPostre)
+            {
+                return BadRequest();
+            }
+
+            var inventarioPostre = await _context.InventarioPostres.FindAsync(id);
+            if (inventarioPostre == null)
+            {
+                return NotFound();
+            }
+
+            inventarioPostre.IdProducto = inventarioPostreDTO.IdProducto;
+            inventarioPostre.Cantidad = inventarioPostreDTO.Cantidad;
+            inventarioPostre.Estatus = inventarioPostreDTO.Estatus;
+            inventarioPostre.CreatedAt = inventarioPostreDTO.CreatedAt ?? inventarioPostre.CreatedAt;
 
             _context.Entry(inventarioPostre).State = EntityState.Modified;
 
@@ -106,32 +84,29 @@ namespace Server.Controllers
             return NoContent();
         }
 
-        // POST: api/InventarioPostres
+        // POST: api/InventarioPostre
         [HttpPost]
-        public async Task<ActionResult<InventarioPostreDTO>> PostInventarioPostre(InventarioPostreDTO inventarioPostreDto)
+        public async Task<ActionResult<InventarioPostre>> PostInventarioPostre(InventarioPostreDTO inventarioPostreDTO)
         {
             var inventarioPostre = new InventarioPostre
             {
-                IdProducto = inventarioPostreDto.IdProducto,
-                Cantidad = inventarioPostreDto.Cantidad,
-                Estatus = inventarioPostreDto.Estatus,
-                CreatedAt = inventarioPostreDto.CreatedAt
+                IdProducto = inventarioPostreDTO.IdProducto,
+                Cantidad = inventarioPostreDTO.Cantidad,
+                Estatus = inventarioPostreDTO.Estatus,
+                CreatedAt = inventarioPostreDTO.CreatedAt ?? DateTime.Now
             };
 
             _context.InventarioPostres.Add(inventarioPostre);
             await _context.SaveChangesAsync();
 
-            inventarioPostreDto.IdPostre = inventarioPostre.IdPostre;
-
-            return CreatedAtAction("GetInventarioPostre", new { id = inventarioPostreDto.IdPostre }, inventarioPostreDto);
+            return CreatedAtAction("GetInventarioPostre", new { id = inventarioPostre.IdPostre }, inventarioPostre);
         }
 
-        // DELETE: api/InventarioPostres/5
+        // DELETE: api/InventarioPostre/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteInventarioPostre(int id)
         {
             var inventarioPostre = await _context.InventarioPostres.FindAsync(id);
-
             if (inventarioPostre == null)
             {
                 return NotFound();
