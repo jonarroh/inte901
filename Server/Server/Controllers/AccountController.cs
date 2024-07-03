@@ -48,7 +48,7 @@
             }
 
             // Crear el token
-            string token = _tokenService.CreateToken(email, user.Role);
+            string token = _tokenService.CreateToken(email, user.Role, user.Id);
 
             // Almacenar el token en las cookies
             Response.Cookies.Append("token", token, new CookieOptions { HttpOnly = true, Secure = true });

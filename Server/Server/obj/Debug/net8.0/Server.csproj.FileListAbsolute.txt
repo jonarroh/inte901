@@ -177,8 +177,6 @@ C:\Dev\Server\Server\bin\Debug\net8.0\Microsoft.OpenApi.dll
 C:\Dev\Server\Server\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
 C:\Dev\Server\Server\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
 C:\Dev\Server\Server\bin\Debug\net8.0\Mono.TextTemplating.dll
-C:\Dev\Server\Server\bin\Debug\net8.0\Npgsql.dll
-C:\Dev\Server\Server\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\Dev\Server\Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Dev\Server\Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Dev\Server\Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
