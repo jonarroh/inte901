@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +13,7 @@ using Server.Models.DTO;
 
 namespace Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class OrdersController : ControllerBase
     {
@@ -24,6 +26,7 @@ namespace Server.Controllers
 
         // GET: api/Orders
         [HttpGet]
+        //[Authorize]
         [Route("allOrders")]
         public async Task<IActionResult> GetOrders()
         {
@@ -31,12 +34,15 @@ namespace Server.Controllers
             {
                 var ordenes = await _context.Orders.ToListAsync();
 
-                if (ordenes == null)
-                {
-                    return BadRequest("No hay ordenes registradas");
-                }
+                Random rnd = new Random();
+                int ticket = rnd.Next(10000000, 99999999);
 
-                return Ok(ordenes);
+                //if (ordenes == null || ordenes.Count() == 0)
+                //{
+                //    return BadRequest("No hay ordenes registradas");
+                //}
+
+                return Ok(ticket);
             }
             catch (Exception ex)
             {
@@ -45,8 +51,9 @@ namespace Server.Controllers
         }
 
         // GET: api/Orders/5
-        [HttpGet("{id}")]
-        [Route("oneOrder")]
+        [HttpGet]
+        //[Authorize]
+        [Route("oneOrder/{id}")]
         public async Task<IActionResult> GetOrder(int? id)
         {
             try
@@ -65,10 +72,28 @@ namespace Server.Controllers
             }
         }
 
+        [HttpGet]
+        //[Authorize]
+        [Route("orderDetail/{id}")]
+        public async Task<IActionResult> GetDetail(int? id)
+        {
+            try
+            {
+                var detail = await _context.DetailOrders.FindAsync(id);
+
+                return Ok(detail);
+            }
+            catch (Exception ex)
+            {
+                return NotFound($"{ex.Message}");
+            }
+        }
+
         // PUT: api/Orders/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        [Route("updateOrder")]
+        [HttpPut]
+        //[Authorize]
+        [Route("updateOrder/{id}")]
         public async Task<IActionResult> PutOrder(int? id, [FromBody] Order order)
         {
             try
@@ -110,30 +135,66 @@ namespace Server.Controllers
             //}
         }
 
+
         // POST: api/Orders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        //[Authorize]
         [Route("addOrder")]
-        public async Task<IActionResult> PostOrder([FromBody]  OrderDTO ordertdo)
+        public async Task<IActionResult> PostOrder(OrderDTO ordertdo)
         {
             try
             {
-                if (ordertdo == null)
+                Random rnd = new Random();
+                int ticket;
+                bool ticketExists;
+
+                do
                 {
-                    return NotFound();
-                }
+                    ticket = rnd.Next(10000000, 99999999);
+                    ticketExists = await _context.DetailOrders.AnyAsync(d => d.Ticket == ticket);
+                } while (ticketExists);
+
+                var orden = new Order
+                {
+                    OrderDate = DateTime.Now,
+                    IdClient = ordertdo.IdClient,
+                    IdUser = 1,
+                    Total = ordertdo.Total,
+                };
+
+                //await _context.Orders.AddAsync(orden);
+                //await _context.SaveChangesAsync();
+
+                var detail = new DetailOrder
+                {
+                    IdOrder = ordertdo.IdOrder,
+                    IdProduct = ordertdo.IdProduct,
+                    NameProduct = ordertdo.NameProduct,
+                    Quantity = ordertdo.Quantity,
+                    PriceSingle = ordertdo.PriceSingle,
+                    Status = 0,
+                    DateOrder = orden.OrderDate,
+                    Ticket = ticket,
+                };
+
+                //await _context.DetailOrders.AddAsync(detail);
+                //await _context.SaveChangesAsync();
+
+                Console.WriteLine($"{orden.Id}, {orden.IdClient}, {orden.IdUser}, {orden.Total}");
+                Console.WriteLine($"{detail.IdOrder}, {detail.NameProduct}, {detail.Ticket}");
+                return Ok($"Orden creada correctamente");
             }
             catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }
-
-            return Ok($"Orden creada correctamente, {ordertdo.NameProduct}");
         }
 
         // DELETE: api/Orders/5
-        [HttpDelete("{id}")]
-        [Route("deleteOrder")]
+        [HttpDelete]
+        //[Authorize]
+        [Route("deleteOrder/{id}")]
         public async Task<IActionResult> DeleteOrder(int? id)
         {
             try
