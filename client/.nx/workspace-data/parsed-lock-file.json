@@ -1953,9 +1953,9 @@
         "hash": "sha512-5gRPk7pKuaIB+tmH+yKd2aQTRpqlf1E4f/mC+tawIm/CGJemZcHZpp2ic8oD83nKgUPMEd0fNanrnFljiruuyA=="
       }
     },
-    "npm:@esbuild/linux-x64@0.21.3": {
+    "npm:@esbuild/linux-x64": {
       "type": "npm",
-      "name": "npm:@esbuild/linux-x64@0.21.3",
+      "name": "npm:@esbuild/linux-x64",
       "data": {
         "version": "0.21.3",
         "packageName": "@esbuild/linux-x64",
@@ -2115,9 +2115,9 @@
         "hash": "sha512-0MBh53o6XtI6ctDnRMeQ+xoCN8kD2qI1rY1KgF/xdWQwoFeKou7puvDfV8/Wv4Ctx2rRpET/gGdz3YlNtNACSA=="
       }
     },
-    "npm:@esbuild/win32-x64": {
+    "npm:@esbuild/win32-x64@0.21.3": {
       "type": "npm",
-      "name": "npm:@esbuild/win32-x64",
+      "name": "npm:@esbuild/win32-x64@0.21.3",
       "data": {
         "version": "0.21.3",
         "packageName": "@esbuild/win32-x64",
@@ -2394,18 +2394,18 @@
         "hash": "sha512-uEBGCQIChsixpykL0pjCxfF64btv64vzsb1NoM5u0qvabKvKEvErhXGoqovyldDu9u1T/fswD8Kf6ih0vJEvDQ=="
       }
     },
-    "npm:@lmdb/lmdb-linux-x64@3.0.8": {
+    "npm:@lmdb/lmdb-linux-x64": {
       "type": "npm",
-      "name": "npm:@lmdb/lmdb-linux-x64@3.0.8",
+      "name": "npm:@lmdb/lmdb-linux-x64",
       "data": {
         "version": "3.0.8",
         "packageName": "@lmdb/lmdb-linux-x64",
         "hash": "sha512-6v0B4sa9ulNezmDZtVpLjNHmA0qZzUl3001YJ2RF0naxsuv/Jq/xEwNYpOzfcdizHfpCE0oBkWzk/r+Slr+0zw=="
       }
     },
-    "npm:@lmdb/lmdb-win32-x64": {
+    "npm:@lmdb/lmdb-win32-x64@3.0.8": {
       "type": "npm",
-      "name": "npm:@lmdb/lmdb-win32-x64",
+      "name": "npm:@lmdb/lmdb-win32-x64@3.0.8",
       "data": {
         "version": "3.0.8",
         "packageName": "@lmdb/lmdb-win32-x64",
@@ -2448,18 +2448,18 @@
         "hash": "sha512-YxQL+ax0XqBJDZiKimS2XQaf+2wDGVa1enVRGzEvLLVFeqa5kx2bWbtcSXgsxjQB7nRqqIGFIcLteF/sHeVtQg=="
       }
     },
-    "npm:@msgpackr-extract/msgpackr-extract-linux-x64@3.0.3": {
+    "npm:@msgpackr-extract/msgpackr-extract-linux-x64": {
       "type": "npm",
-      "name": "npm:@msgpackr-extract/msgpackr-extract-linux-x64@3.0.3",
+      "name": "npm:@msgpackr-extract/msgpackr-extract-linux-x64",
       "data": {
         "version": "3.0.3",
         "packageName": "@msgpackr-extract/msgpackr-extract-linux-x64",
         "hash": "sha512-cvwNfbP07pKUfq1uH+S6KJ7dT9K8WOE4ZiAcsrSes+UY55E/0jLYc+vq+DO7jlmqRb5zAggExKm0H7O/CBaesg=="
       }
     },
-    "npm:@msgpackr-extract/msgpackr-extract-win32-x64": {
+    "npm:@msgpackr-extract/msgpackr-extract-win32-x64@3.0.3": {
       "type": "npm",
-      "name": "npm:@msgpackr-extract/msgpackr-extract-win32-x64",
+      "name": "npm:@msgpackr-extract/msgpackr-extract-win32-x64@3.0.3",
       "data": {
         "version": "3.0.3",
         "packageName": "@msgpackr-extract/msgpackr-extract-win32-x64",
@@ -2754,18 +2754,18 @@
         "hash": "sha512-JMuBbg2Zqdz4N7i+hiJGr2QdsDarDZ8vyzzeoevFq3b8nhZfqKh/lno7+Y0WkXNpH7aT05GHaUA1r1NXf/5BeQ=="
       }
     },
-    "npm:@nx/nx-linux-x64-gnu@19.3.1": {
+    "npm:@nx/nx-linux-x64-gnu": {
       "type": "npm",
-      "name": "npm:@nx/nx-linux-x64-gnu@19.3.1",
+      "name": "npm:@nx/nx-linux-x64-gnu",
       "data": {
         "version": "19.3.1",
         "packageName": "@nx/nx-linux-x64-gnu",
         "hash": "sha512-cVmDMtolaqK7PziWxvjus1nCyj2wMNM+N0/4+rBEjG4v47gTtBxlZJoxK02jApdV+XELehsTjd0Z/xVfO4Rl1Q=="
       }
     },
-    "npm:@nx/nx-linux-x64-musl@19.3.1": {
+    "npm:@nx/nx-linux-x64-musl": {
       "type": "npm",
-      "name": "npm:@nx/nx-linux-x64-musl@19.3.1",
+      "name": "npm:@nx/nx-linux-x64-musl",
       "data": {
         "version": "19.3.1",
         "packageName": "@nx/nx-linux-x64-musl",
@@ -2781,9 +2781,9 @@
         "hash": "sha512-q+2aaRXarh/+HOOW/JXRwEnEEwPdGipsfzXBPDuDDJ7aOYKuyG7g1DlSERKdzI/aEBP+joneZbcbZHaDcEv2xw=="
       }
     },
-    "npm:@nx/nx-win32-x64-msvc": {
+    "npm:@nx/nx-win32-x64-msvc@19.3.1": {
       "type": "npm",
-      "name": "npm:@nx/nx-win32-x64-msvc",
+      "name": "npm:@nx/nx-win32-x64-msvc@19.3.1",
       "data": {
         "version": "19.3.1",
         "packageName": "@nx/nx-win32-x64-msvc",
@@ -2934,18 +2934,18 @@
         "hash": "sha512-0UyyRHyDN42QL+NbqevXIIUnKA47A+45WyasO+y2bGJ1mhQrfrtXUpTxCOrfxCR4esV3/RLYyucGVPiUsO8xjg=="
       }
     },
-    "npm:@rollup/rollup-linux-x64-gnu@4.18.0": {
+    "npm:@rollup/rollup-linux-x64-gnu": {
       "type": "npm",
-      "name": "npm:@rollup/rollup-linux-x64-gnu@4.18.0",
+      "name": "npm:@rollup/rollup-linux-x64-gnu",
       "data": {
         "version": "4.18.0",
         "packageName": "@rollup/rollup-linux-x64-gnu",
         "hash": "sha512-xuglR2rBVHA5UsI8h8UbX4VJ470PtGCf5Vpswh7p2ukaqBGFTnsfzxUBetoWBWymHMxbIG0Cmx7Y9qDZzr648w=="
       }
     },
-    "npm:@rollup/rollup-linux-x64-musl@4.18.0": {
+    "npm:@rollup/rollup-linux-x64-musl": {
       "type": "npm",
-      "name": "npm:@rollup/rollup-linux-x64-musl@4.18.0",
+      "name": "npm:@rollup/rollup-linux-x64-musl",
       "data": {
         "version": "4.18.0",
         "packageName": "@rollup/rollup-linux-x64-musl",
@@ -2970,9 +2970,9 @@
         "hash": "sha512-Txjh+IxBPbkUB9+SXZMpv+b/vnTEtFyfWZgJ6iyCmt2tdx0OF5WhFowLmnh8ENGNpfUlUZkdI//4IEmhwPieNg=="
       }
     },
-    "npm:@rollup/rollup-win32-x64-msvc": {
+    "npm:@rollup/rollup-win32-x64-msvc@4.18.0": {
       "type": "npm",
-      "name": "npm:@rollup/rollup-win32-x64-msvc",
+      "name": "npm:@rollup/rollup-win32-x64-msvc@4.18.0",
       "data": {
         "version": "4.18.0",
         "packageName": "@rollup/rollup-win32-x64-msvc",
@@ -6570,6 +6570,15 @@
         "hash": "sha512-Y93lCzHYgGWdrJ66yIktxiaGULYc6oGiABxhcO5AufBeOyoIdZF7bIfLaOrbM0iGIOXQQgxxRrFEnb+Y6w1n4A=="
       }
     },
+    "npm:i": {
+      "type": "npm",
+      "name": "npm:i",
+      "data": {
+        "version": "0.3.7",
+        "packageName": "i",
+        "hash": "sha512-FYz4wlXgkQwIPqhzC5TdNMLSE5+GS1IIDJZY/1ZiEPCT2S3COUVZeT5OW4BmW4r5LHLQuOosSwsvnroG9GR59Q=="
+      }
+    },
     "npm:iconv-lite@0.4.24": {
       "type": "npm",
       "name": "npm:iconv-lite@0.4.24",
@@ -7627,9 +7636,9 @@
       "type": "npm",
       "name": "npm:lucide-angular",
       "data": {
-        "version": "0.394.0",
+        "version": "0.396.0",
         "packageName": "lucide-angular",
-        "hash": "sha512-APx7KQDqcIVtHh5mG8yN015wa6+ZMRhIhV93xBXR1cHgwAVTHCCqAoRai+RT2rXT88I9EWkegCGAnRltIGjIwA=="
+        "hash": "sha512-xMrbNA69wr3FKQV2ieAn6q1f1DsZNc1toJSV953ZeAms/HRiSaAyCxHlHZv0GAockJbi6HcBr6gqgLivggYIqA=="
       }
     },
     "npm:magic-string@0.30.8": {
@@ -8134,6 +8143,15 @@
         "version": "2.6.2",
         "packageName": "neo-async",
         "hash": "sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw=="
+      }
+    },
+    "npm:ng-signal-forms": {
+      "type": "npm",
+      "name": "npm:ng-signal-forms",
+      "data": {
+        "version": "1.12.0",
+        "packageName": "ng-signal-forms",
+        "hash": "sha512-YqJPHCU05c50R2ILV/Vx2JE2LkEq4tKLKza8Tceo9uTRDrP3un+AYsTLwNSECWJKHHt4GnE7wpykD9B59Cp56Q=="
       }
     },
     "npm:nice-napi@1.0.2": {
@@ -10494,6 +10512,15 @@
         "hash": "sha512-bl6mpH3T7I3UFxuvDEXLxy/VuFxBk5bbzplh7tXI68mwMokNYd1t9qPBHlnyTwfa4JGC4zP516I1hYYtQ/vspA=="
       }
     },
+    "npm:tailwindcss-animated": {
+      "type": "npm",
+      "name": "npm:tailwindcss-animated",
+      "data": {
+        "version": "1.1.2",
+        "packageName": "tailwindcss-animated",
+        "hash": "sha512-SI4owS5ojserhgEYIZA/uFVdNjU2GMB2P3sjtjmFA52VxoUi+Hht6oR5+RdT+CxrX9cNNYEa+vbTWHvN9zbj3w=="
+      }
+    },
     "npm:tapable": {
       "type": "npm",
       "name": "npm:tapable",
@@ -12534,12 +12561,12 @@
       "type": "static"
     },
     {
-      "source": "npm:@angular/common@17.3.0",
+      "source": "npm:@angular/common@18.0.0",
       "target": "npm:tslib",
       "type": "static"
     },
     {
-      "source": "npm:@angular/common@18.0.0",
+      "source": "npm:@angular/common",
       "target": "npm:tslib",
       "type": "static"
     },
@@ -12690,6 +12717,11 @@
     },
     {
       "source": "npm:@angular/core@18.0.0",
+      "target": "npm:tslib",
+      "type": "static"
+    },
+    {
+      "source": "npm:@angular/core",
       "target": "npm:tslib",
       "type": "static"
     },
@@ -22650,7 +22682,7 @@
     },
     {
       "source": "npm:esbuild",
-      "target": "npm:@esbuild/linux-x64@0.21.3",
+      "target": "npm:@esbuild/linux-x64",
       "type": "static"
     },
     {
@@ -22660,7 +22692,7 @@
     },
     {
       "source": "npm:esbuild",
-      "target": "npm:@esbuild/win32-x64",
+      "target": "npm:@esbuild/win32-x64@0.21.3",
       "type": "static"
     },
     {
@@ -25925,12 +25957,12 @@
     },
     {
       "source": "npm:lmdb",
-      "target": "npm:@lmdb/lmdb-linux-x64@3.0.8",
+      "target": "npm:@lmdb/lmdb-linux-x64",
       "type": "static"
     },
     {
       "source": "npm:lmdb",
-      "target": "npm:@lmdb/lmdb-win32-x64",
+      "target": "npm:@lmdb/lmdb-win32-x64@3.0.8",
       "type": "static"
     },
     {
@@ -26480,12 +26512,12 @@
     },
     {
       "source": "npm:msgpackr-extract",
-      "target": "npm:@msgpackr-extract/msgpackr-extract-linux-x64@3.0.3",
+      "target": "npm:@msgpackr-extract/msgpackr-extract-linux-x64",
       "type": "static"
     },
     {
       "source": "npm:msgpackr-extract",
-      "target": "npm:@msgpackr-extract/msgpackr-extract-win32-x64",
+      "target": "npm:@msgpackr-extract/msgpackr-extract-win32-x64@3.0.3",
       "type": "static"
     },
     {
@@ -26521,6 +26553,11 @@
     {
       "source": "npm:needle",
       "target": "npm:sax",
+      "type": "static"
+    },
+    {
+      "source": "npm:ng-signal-forms",
+      "target": "npm:tslib",
       "type": "static"
     },
     {
@@ -26965,17 +27002,17 @@
     },
     {
       "source": "npm:nx",
-      "target": "npm:@nx/nx-linux-x64-gnu@19.3.1",
+      "target": "npm:@nx/nx-linux-x64-gnu",
       "type": "static"
     },
     {
       "source": "npm:nx",
-      "target": "npm:@nx/nx-linux-x64-musl@19.3.1",
+      "target": "npm:@nx/nx-linux-x64-musl",
       "type": "static"
     },
     {
       "source": "npm:nx",
-      "target": "npm:@nx/nx-win32-x64-msvc",
+      "target": "npm:@nx/nx-win32-x64-msvc@19.3.1",
       "type": "static"
     },
     {
@@ -27180,17 +27217,17 @@
     },
     {
       "source": "npm:nx",
-      "target": "npm:@nx/nx-linux-x64-gnu@19.3.1",
+      "target": "npm:@nx/nx-linux-x64-gnu",
       "type": "static"
     },
     {
       "source": "npm:nx",
-      "target": "npm:@nx/nx-linux-x64-musl@19.3.1",
+      "target": "npm:@nx/nx-linux-x64-musl",
       "type": "static"
     },
     {
       "source": "npm:nx",
-      "target": "npm:@nx/nx-win32-x64-msvc",
+      "target": "npm:@nx/nx-win32-x64-msvc@19.3.1",
       "type": "static"
     },
     {
@@ -28760,17 +28797,17 @@
     },
     {
       "source": "npm:rollup",
-      "target": "npm:@rollup/rollup-win32-x64-msvc",
+      "target": "npm:@rollup/rollup-win32-x64-msvc@4.18.0",
       "type": "static"
     },
     {
       "source": "npm:rollup",
-      "target": "npm:@rollup/rollup-linux-x64-gnu@4.18.0",
+      "target": "npm:@rollup/rollup-linux-x64-gnu",
       "type": "static"
     },
     {
       "source": "npm:rollup",
-      "target": "npm:@rollup/rollup-linux-x64-musl@4.18.0",
+      "target": "npm:@rollup/rollup-linux-x64-musl",
       "type": "static"
     },
     {
@@ -28850,17 +28887,17 @@
     },
     {
       "source": "npm:rollup",
-      "target": "npm:@rollup/rollup-win32-x64-msvc",
+      "target": "npm:@rollup/rollup-win32-x64-msvc@4.18.0",
       "type": "static"
     },
     {
       "source": "npm:rollup",
-      "target": "npm:@rollup/rollup-linux-x64-gnu@4.18.0",
+      "target": "npm:@rollup/rollup-linux-x64-gnu",
       "type": "static"
     },
     {
       "source": "npm:rollup",
-      "target": "npm:@rollup/rollup-linux-x64-musl@4.18.0",
+      "target": "npm:@rollup/rollup-linux-x64-musl",
       "type": "static"
     },
     {
@@ -29916,6 +29953,116 @@
     {
       "source": "npm:tailwind-merge",
       "target": "npm:@babel/runtime@7.24.7",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:arg",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:dlv",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:jiti",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:is-glob",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:postcss",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:resolve",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:sucrase",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:chokidar",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:fast-glob",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:lilconfig",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:didyoumean",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:micromatch",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:picocolors",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:postcss-js",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:glob-parent",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:object-hash",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:normalize-path",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:postcss-import",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:postcss-nested",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:@alloc/quick-lru",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:postcss-load-config",
+      "type": "static"
+    },
+    {
+      "source": "npm:tailwindcss",
+      "target": "npm:postcss-selector-parser",
       "type": "static"
     },
     {
