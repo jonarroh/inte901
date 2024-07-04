@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "AF+rfL59StiR0G/OzqxZBOexxb4jpl+hMZNp4sFadDWA1tf9h+xDDvo8pibUlukq9CMm3pkSL5j2wPm2AOFfuQ==",
+  "dgSpecHash": "QkMvPRJ6hhBMC4/GXxSvLhmLluoFLvM6ihhNZxrTC1QDcQWAeJpTBkcNavy55DjEHT28Uchc/uTfndBGEE0rqQ==",
   "success": true,
   "projectFilePath": "C:\\Dev\\Server\\Server\\Server.csproj",
   "expectedPackageFiles": [
@@ -119,8 +119,6 @@
     "C:\\Users\\urieh\\.nuget\\packages\\microsoft.win32.systemevents\\7.0.0\\microsoft.win32.systemevents.7.0.0.nupkg.sha512",
     "C:\\Users\\urieh\\.nuget\\packages\\mono.texttemplating\\2.3.1\\mono.texttemplating.2.3.1.nupkg.sha512",
     "C:\\Users\\urieh\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
-    "C:\\Users\\urieh\\.nuget\\packages\\npgsql\\8.0.3\\npgsql.8.0.3.nupkg.sha512",
-    "C:\\Users\\urieh\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\8.0.4\\npgsql.entityframeworkcore.postgresql.8.0.4.nupkg.sha512",
     "C:\\Users\\urieh\\.nuget\\packages\\nuget.common\\6.9.1\\nuget.common.6.9.1.nupkg.sha512",
     "C:\\Users\\urieh\\.nuget\\packages\\nuget.configuration\\6.9.1\\nuget.configuration.6.9.1.nupkg.sha512",
     "C:\\Users\\urieh\\.nuget\\packages\\nuget.dependencyresolver.core\\6.9.1\\nuget.dependencyresolver.core.6.9.1.nupkg.sha512",

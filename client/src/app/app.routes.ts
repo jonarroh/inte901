@@ -22,7 +22,7 @@ export const routes: Routes = [
     component: LandingPageComponent
   },
   {
-    path:'home',
+    path:'products',
     component: HomeComponent
   }
 ];

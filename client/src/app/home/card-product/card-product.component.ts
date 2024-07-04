@@ -1,11 +1,16 @@
 import { NgClass } from '@angular/common';
 import { Component,input, computed } from '@angular/core';
 
+import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
+
+type FilterProduct = 'All' | 'Postre' | 'Bebida';
+
 @Component({
   selector: 'card-product',
   standalone: true,
   imports: [
-    NgClass
+    NgClass,
+    HlmBadgeDirective
   ],
   templateUrl: './card-product.component.html'
 })
@@ -18,6 +23,8 @@ export class CardProductComponent {
   price = input.required<number>();
   category = input.required<string>();
   id = input.required<number>();
+
+  canSee: FilterProduct = 'All';
 
 
 

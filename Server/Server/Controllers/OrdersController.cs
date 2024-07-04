@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server;
 using Server.Models;
+using Server.Models.DTO;
 
 namespace Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class OrdersController : ControllerBase
     {
@@ -23,30 +26,91 @@ namespace Server.Controllers
 
         // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
+        //[Authorize]
+        [Route("allOrders")]
+        public async Task<IActionResult> GetOrders()
         {
-            return await _context.Orders.ToListAsync();
+            try
+            {
+                var ordenes = await _context.Orders.ToListAsync();
+
+                Random rnd = new Random();
+                int ticket = rnd.Next(10000000, 99999999);
+
+                //if (ordenes == null || ordenes.Count() == 0)
+                //{
+                //    return BadRequest("No hay ordenes registradas");
+                //}
+
+                return Ok(ticket);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         // GET: api/Orders/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(int? id)
+        [HttpGet]
+        //[Authorize]
+        [Route("oneOrder/{id}")]
+        public async Task<IActionResult> GetOrder(int? id)
         {
-            var order = await _context.Orders.FindAsync(id);
-
-            if (order == null)
+            try
             {
-                return NotFound();
-            }
+                var order = await _context.Orders.FindAsync(id);
 
-            return order;
+                if (order == null)
+                {
+                    return BadRequest("No existe la orden");
+                }
+
+                return Ok(order);
+            } catch(Exception ex)
+            {
+                return NotFound($"{ex.Message}");
+            }
+        }
+
+        [HttpGet]
+        //[Authorize]
+        [Route("orderDetail/{id}")]
+        public async Task<IActionResult> GetDetail(int? id)
+        {
+            try
+            {
+                var detail = await _context.DetailOrders.FindAsync(id);
+
+                return Ok(detail);
+            }
+            catch (Exception ex)
+            {
+                return NotFound($"{ex.Message}");
+            }
         }
 
         // PUT: api/Orders/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(int? id, Order order)
+        [HttpPut]
+        //[Authorize]
+        [Route("updateOrder/{id}")]
+        public async Task<IActionResult> PutOrder(int? id, [FromBody] Order order)
         {
+            try
+            {
+                var orden = await _context.Orders.FindAsync(id);
+
+                if (orden == null)
+                {
+                    return BadRequest("No existe la orden");
+                }
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
             //if (id != order.Id)
             //{
             //    return BadRequest();
@@ -69,25 +133,85 @@ namespace Server.Controllers
             //        throw;
             //    }
             //}
-
-            return NoContent();
         }
+
 
         // POST: api/Orders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
+        //[Authorize]
+        [Route("addOrder")]
+        public async Task<IActionResult> PostOrder(OrderDTO ordertdo)
         {
-            //_context.Orders.Add(order);
-            //await _context.SaveChangesAsync();
+            try
+            {
+                Random rnd = new Random();
+                int ticket;
+                bool ticketExists;
 
-            return CreatedAtAction("GetOrder", new { id = order.Id }, order);
+                do
+                {
+                    ticket = rnd.Next(10000000, 99999999);
+                    ticketExists = await _context.DetailOrders.AnyAsync(d => d.Ticket == ticket);
+                } while (ticketExists);
+
+                var orden = new Order
+                {
+                    OrderDate = DateTime.Now,
+                    IdClient = ordertdo.IdClient,
+                    IdUser = 1,
+                    Total = ordertdo.Total,
+                };
+
+                //await _context.Orders.AddAsync(orden);
+                //await _context.SaveChangesAsync();
+
+                var detail = new DetailOrder
+                {
+                    IdOrder = ordertdo.IdOrder,
+                    IdProduct = ordertdo.IdProduct,
+                    NameProduct = ordertdo.NameProduct,
+                    Quantity = ordertdo.Quantity,
+                    PriceSingle = ordertdo.PriceSingle,
+                    Status = 0,
+                    DateOrder = orden.OrderDate,
+                    Ticket = ticket,
+                };
+
+                //await _context.DetailOrders.AddAsync(detail);
+                //await _context.SaveChangesAsync();
+
+                Console.WriteLine($"{orden.Id}, {orden.IdClient}, {orden.IdUser}, {orden.Total}");
+                Console.WriteLine($"{detail.IdOrder}, {detail.NameProduct}, {detail.Ticket}");
+                return Ok($"Orden creada correctamente");
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         // DELETE: api/Orders/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        //[Authorize]
+        [Route("deleteOrder/{id}")]
         public async Task<IActionResult> DeleteOrder(int? id)
         {
+            try
+            {
+                var orden = _context.Orders.FindAsync(id);
+
+                if (orden == null)
+                {
+                    return BadRequest("No existe la orden");
+                }
+
+                return NoContent() ;
+            }
+            catch(Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
             //var order = await _context.Orders.FindAsync(id);
             //if (order == null)
             //{
@@ -96,8 +220,6 @@ namespace Server.Controllers
 
             //_context.Orders.Remove(order);
             //await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
         private bool OrderExists(int? id)
