@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Server.Models;
 using Server.Models.Usuario.Server.Models.Usuario;
+using Server.Models.DTO;
 
 namespace Server
 {

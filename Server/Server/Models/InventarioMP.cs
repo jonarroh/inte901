@@ -17,8 +17,8 @@ namespace Server.Models
         [MaxLength(100)]
         public string? Cantidad { get; set; }
         public int? IdCompra { get; set; }
-        //[ForeignKey("IdCompra")]
-        //public Compra Compra { get; set; }
+        [ForeignKey("IdCompra")]
+        public Purchase? Compra { get; set; }
         [Required]
         public DateTime? Caducidad { get; set; }
         [Required]
