@@ -66,7 +66,7 @@ namespace Server.Controllers
         }
 
 
-        private string ocultaNumero(string CardNumber)
+        private static string ocultaNumero(string CardNumber)
         {
             return "**** **** **** " + CardNumber.Substring(CardNumber.Length - 4);
         }

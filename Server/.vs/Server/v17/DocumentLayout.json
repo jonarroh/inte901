@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Dev\\Server\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\dev\\server\\server\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\dev\\server\\server\\models\\dto\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\models\\dto\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\dev\\server\\server\\controllers\\materiasprimasproveedorescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\controllers\\materiasprimasproveedorescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -23,10 +31,6 @@
       "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\controllers\\creditcardscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\dev\\server\\server\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\dev\\server\\server\\models\\dto\\creditcarddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\models\\dto\\creditcarddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -37,10 +41,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\dev\\server\\server\\models\\dto\\tokendto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\models\\dto\\tokendto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\dev\\server\\server\\models\\dto\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\models\\dto\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\dev\\server\\server\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -218,8 +218,28 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 13,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{fbcae063-e2c0-4ab1-a516-996ea3dafb72}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 41,
@@ -247,33 +267,13 @@
               "IsPinned": true
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{fbcae063-e2c0-4ab1-a516-996ea3dafb72}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:129:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "MateriasPrimasProveedoresController.cs",
               "DocumentMoniker": "C:\\Dev\\Server\\Server\\Controllers\\MateriasPrimasProveedoresController.cs",
               "RelativeDocumentMoniker": "Server\\Controllers\\MateriasPrimasProveedoresController.cs",
-              "ToolTip": "C:\\Dev\\Server\\Server\\Controllers\\MateriasPrimasProveedoresController.cs*",
-              "RelativeToolTip": "Server\\Controllers\\MateriasPrimasProveedoresController.cs*",
+              "ToolTip": "C:\\Dev\\Server\\Server\\Controllers\\MateriasPrimasProveedoresController.cs",
+              "RelativeToolTip": "Server\\Controllers\\MateriasPrimasProveedoresController.cs",
               "ViewState": "AQIAAG4AAAAAAAAAAAAkwHQAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-04T19:42:00.808Z",
@@ -281,7 +281,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "MateriasPrimasController.cs",
               "DocumentMoniker": "C:\\Dev\\Server\\Server\\Controllers\\MateriasPrimasController.cs",
               "RelativeDocumentMoniker": "Server\\Controllers\\MateriasPrimasController.cs",
@@ -293,7 +293,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "ProveedoresController.cs",
               "DocumentMoniker": "C:\\Dev\\Server\\Server\\Controllers\\ProveedoresController.cs",
               "RelativeDocumentMoniker": "Server\\Controllers\\ProveedoresController.cs",
@@ -305,19 +305,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 1,
               "Title": "UserDTO.cs",
               "DocumentMoniker": "C:\\Dev\\Server\\Server\\Models\\DTO\\UserDTO.cs",
               "RelativeDocumentMoniker": "Server\\Models\\DTO\\UserDTO.cs",
               "ToolTip": "C:\\Dev\\Server\\Server\\Models\\DTO\\UserDTO.cs",
               "RelativeToolTip": "Server\\Models\\DTO\\UserDTO.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAYAAAA",
+              "ViewState": "AQIAAAQAAAAAAAAAAAAzwA0AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-04T13:53:46.76Z"
+              "WhenOpened": "2024-07-04T13:53:46.76Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "CreditCardDTO.cs",
               "DocumentMoniker": "C:\\Dev\\Server\\Server\\Models\\DTO\\CreditCardDTO.cs",
               "RelativeDocumentMoniker": "Server\\Models\\DTO\\CreditCardDTO.cs",
@@ -329,7 +330,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "CreditCardsController.cs",
               "DocumentMoniker": "C:\\Dev\\Server\\Server\\Controllers\\CreditCardsController.cs",
               "RelativeDocumentMoniker": "Server\\Controllers\\CreditCardsController.cs",
@@ -341,19 +342,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Dev\\Server\\Server\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "Server\\Controllers\\UsersController.cs",
               "ToolTip": "C:\\Dev\\Server\\Server\\Controllers\\UsersController.cs",
               "RelativeToolTip": "Server\\Controllers\\UsersController.cs",
-              "ViewState": "AQIAABQAAAAAAAAAAAAAwDgAAAAyAAAA",
+              "ViewState": "AQIAADYAAAAAAAAAAAAYwEQAAAAXAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T02:48:07.019Z"
+              "WhenOpened": "2024-06-25T02:48:07.019Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "IngredientesController.cs",
               "DocumentMoniker": "C:\\Dev\\Server\\Server\\Controllers\\IngredientesController.cs",
               "RelativeDocumentMoniker": "Server\\Controllers\\IngredientesController.cs",
@@ -389,7 +391,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "PurchaseDTO.cs",
               "DocumentMoniker": "C:\\Dev\\Server\\Server\\Models\\DTO\\PurchaseDTO.cs",
               "RelativeDocumentMoniker": "Server\\Models\\DTO\\PurchaseDTO.cs",
@@ -425,7 +427,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "TokenDto.cs",
               "DocumentMoniker": "C:\\Dev\\Server\\Server\\Models\\DTO\\TokenDto.cs",
               "RelativeDocumentMoniker": "Server\\Models\\DTO\\TokenDto.cs",
