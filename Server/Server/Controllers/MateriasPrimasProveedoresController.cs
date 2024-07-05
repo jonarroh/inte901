@@ -114,6 +114,29 @@ namespace Server.Controllers
             return NoContent();
         }
 
+        [HttpPost]
+        [Route("Bulk")]
+        public async Task<ActionResult<IEnumerable<MateriaPrimaProveedor>>> PostMateriaPrimaProveedores(List<MateriaPrimaProveedorDTO> materiaPrimaProveedorDTOs)
+        {
+            List<MateriaPrimaProveedor> materiaPrimaProveedores = new List<MateriaPrimaProveedor>();
+
+            foreach (MateriaPrimaProveedorDTO materiaPrimaProveedorDTO in materiaPrimaProveedorDTOs)
+            {
+                var materiaPrimaProveedor = new MateriaPrimaProveedor
+                {
+                    MateriaPrimaId = materiaPrimaProveedorDTO.MateriaPrimaId,
+                    ProveedorId = materiaPrimaProveedorDTO.ProveedorId
+                };
+
+                materiaPrimaProveedores.Add(materiaPrimaProveedor);
+            }
+
+            _context.MateriaPrimaProveedores.AddRange(materiaPrimaProveedores);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetMateriaPrimaProveedores", materiaPrimaProveedores);
+        }
+
         private bool MateriaPrimaProveedorExists(int id)
         {
             return _context.MateriaPrimaProveedores.Any(e => e.Id == id);

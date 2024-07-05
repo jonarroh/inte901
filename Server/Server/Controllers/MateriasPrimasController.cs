@@ -119,6 +119,45 @@ namespace Server.Controllers
             return NoContent();
         }
 
+        // POST: api/MateriaPrima/bulk
+        [HttpPost]
+        [Route("bulk")]
+        public async Task<ActionResult<MateriaPrimaDTO[]>> PostMateriasPrimas(MateriaPrimaDTO[] materiasPrimas)
+        {
+            var materia = new List<MateriaPrima>();
+            foreach (var materiaPrimaDTO in materiasPrimas)
+            {
+                var materiaPrima = new MateriaPrima
+                {
+                    Material = materiaPrimaDTO.Material,
+                    Estatus = materiaPrimaDTO.Estatus,
+                    CreatedAt = materiaPrimaDTO.CreatedAt ?? DateTime.Now,
+                    UpdatedAt = materiaPrimaDTO.UpdatedAt,
+                    DeletedAt = materiaPrimaDTO.DeletedAt
+                };
+                materia.Add(materiaPrima);
+            }
+
+            _context.MateriasPrimas.AddRange(materia);
+            await _context.SaveChangesAsync();
+
+            var materiasPrimasDTO = new List<MateriaPrimaDTO>();
+            foreach (var materiaPrima in materiasPrimas)
+            {
+                materiasPrimasDTO.Add(new MateriaPrimaDTO
+                {
+                    Id = materiaPrima.Id,
+                    Material = materiaPrima.Material,
+                    Estatus = materiaPrima.Estatus,
+                    CreatedAt = materiaPrima.CreatedAt,
+                    UpdatedAt = materiaPrima.UpdatedAt,
+                    DeletedAt = materiaPrima.DeletedAt
+                });
+            }
+
+            return CreatedAtAction("GetMateriaPrima", materiasPrimasDTO);
+        }
+
         private bool MateriaPrimaExists(int id)
         {
             return _context.MateriasPrimas.Any(e => e.Id == id);

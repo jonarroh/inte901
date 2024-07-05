@@ -27,15 +27,48 @@ namespace Server.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
         {
             var users = await _context.Users.ToListAsync();
-            //agregarle las direcciones a cada usuario
+
+            // Agregar direcciones a cada usuario
             foreach (var user in users)
             {
                 user.Direcciones = await _context.Direcciones.Where(d => d.UserId == user.Id).ToListAsync();
             }
-            return users;
+
+            var usersDTO = new List<UserDTO>();
+
+            foreach (var u in users)
+            {
+                var userDTO = new UserDTO
+                {
+                    Id = u.Id,
+                    Name = u.Name,
+                    LastName = u.LastName,
+                    Email = u.Email,
+                    Role = u.Role,
+                    Direcciones = u.Direcciones,
+                    CreditCards = await _context.CreditCard.Where(c => c.UserId == u.Id).Select(c => new CreditCardDTO
+                    {
+                        Id = c.Id,
+                        CardHolderName = c.CardHolderName,
+                        CardNumber = ocultaNumero(c.CardNumber),
+                        ExpiryDate = c.ExpiryDate,
+                        UserId = c.UserId
+                    }).ToListAsync()
+                };
+
+                usersDTO.Add(userDTO);
+            }
+
+            return Ok(usersDTO);
+        }
+
+
+        private string ocultaNumero(string CardNumber)
+        {
+            return "**** **** **** " + CardNumber.Substring(CardNumber.Length - 4);
         }
 
         // GET: api/Users/5

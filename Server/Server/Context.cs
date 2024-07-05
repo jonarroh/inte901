@@ -24,5 +24,6 @@ namespace Server
         public DbSet<DetailPurchase> DetailPurchases { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<DetailOrder> DetailOrders { get; set; }
+        public DbSet<CreditCard> CreditCard { get; set; } = default!;
     }
 }

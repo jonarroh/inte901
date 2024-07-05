@@ -38,6 +38,8 @@
 
             // Navigation property for the related addresses
             public ICollection<Direcciones> Direcciones { get; set; }
+
+            public ICollection<CreditCard> CreditCards { get; set; }
         }
 
     }

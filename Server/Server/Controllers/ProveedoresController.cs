@@ -127,6 +127,30 @@ namespace Server.Controllers
             return NoContent();
         }
 
+        //POST: api/Proveedor/Bulk
+        [HttpPost]
+        [Route("Bulk")]
+        public async Task<ActionResult<IEnumerable<Proveedor>>> PostProveedores(List<ProveedorDTO> proveedoresDTO)
+        {
+            var proveedores = proveedoresDTO.Select(proveedorDTO => new Proveedor
+            {
+                NombreEmpresa = proveedorDTO.NombreEmpresa,
+                DireccionEmpresa = proveedorDTO.DireccionEmpresa,
+                TelefonoEmpresa = proveedorDTO.TelefonoEmpresa,
+                NombreEncargado = proveedorDTO.NombreEncargado,
+                Estatus = proveedorDTO.Estatus,
+                CreatedAt = proveedorDTO.CreatedAt ?? DateTime.Now,
+                UpdatedAt = proveedorDTO.UpdatedAt,
+                DeletedAt = proveedorDTO.DeletedAt,
+                IdUsuario = proveedorDTO.IdUsuario
+            });
+
+            _context.Proveedores.AddRange(proveedores);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetProveedores", proveedores);
+        }
+
         private bool ProveedorExists(int id)
         {
             return _context.Proveedores.Any(e => e.Id == id);

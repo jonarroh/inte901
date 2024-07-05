@@ -106,6 +106,28 @@ namespace Server.Controllers
             return CreatedAtAction("GetIngrediente", new { id = ingrediente.Id }, ingrediente);
         }
 
+        [HttpPost]
+        [Route("Bulk")]
+        public async Task<ActionResult<IEnumerable<Ingrediente>>> PostIngredientes(List<IngredienteDTO> ingredientesDTO)
+        {
+            var ingredientes = ingredientesDTO.Select(ingredienteDTO => new Ingrediente
+            {
+                IdProducto = ingredienteDTO.IdProducto,
+                IdMateriaPrima = ingredienteDTO.IdMateriaPrima,
+                Cantidad = ingredienteDTO.Cantidad,
+                UnidadMedida = ingredienteDTO.UnidadMedida,
+                Estatus = ingredienteDTO.Estatus,
+                CreatedAt = ingredienteDTO.CreatedAt ?? DateTime.Now
+            });
+
+            _context.Ingredientes.AddRange(ingredientes);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetIngredientes", ingredientes);
+        }
+
+
+
         // DELETE: api/Ingrediente/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteIngrediente(int id)
