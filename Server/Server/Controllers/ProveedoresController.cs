@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server;
 using Server.Models;
+using Server.Models.DTO;
 
 namespace Server.Controllers
 {
@@ -21,16 +22,16 @@ namespace Server.Controllers
             _context = context;
         }
 
-        // GET: api/Proveedores
+        // GET: api/Proveedor
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Proveedor>>> GetProveedores()
         {
             return await _context.Proveedores.ToListAsync();
         }
 
-        // GET: api/Proveedores/5
+        // GET: api/Proveedor/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Proveedor>> GetProveedor(int? id)
+        public async Task<ActionResult<Proveedor>> GetProveedor(int id)
         {
             var proveedor = await _context.Proveedores.FindAsync(id);
 
@@ -42,15 +43,29 @@ namespace Server.Controllers
             return proveedor;
         }
 
-        // PUT: api/Proveedores/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/Proveedor/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProveedor(int? id, Proveedor proveedor)
+        public async Task<IActionResult> PutProveedor(int id, ProveedorDTO proveedorDTO)
         {
-            if (id != proveedor.Id)
+            if (id != proveedorDTO.Id)
             {
                 return BadRequest();
             }
+
+            var proveedor = await _context.Proveedores.FindAsync(id);
+            if (proveedor == null)
+            {
+                return NotFound();
+            }
+
+            proveedor.NombreEmpresa = proveedorDTO.NombreEmpresa;
+            proveedor.DireccionEmpresa = proveedorDTO.DireccionEmpresa;
+            proveedor.TelefonoEmpresa = proveedorDTO.TelefonoEmpresa;
+            proveedor.NombreEncargado = proveedorDTO.NombreEncargado;
+            proveedor.Estatus = proveedorDTO.Estatus;
+            proveedor.UpdatedAt = proveedorDTO.UpdatedAt ?? DateTime.Now;
+            proveedor.DeletedAt = proveedorDTO.DeletedAt;
+            proveedor.IdUsuario = proveedorDTO.IdUsuario;
 
             _context.Entry(proveedor).State = EntityState.Modified;
 
@@ -73,20 +88,32 @@ namespace Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Proveedores
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/Proveedor
         [HttpPost]
-        public async Task<ActionResult<Proveedor>> PostProveedor(Proveedor proveedor)
+        public async Task<ActionResult<Proveedor>> PostProveedor(ProveedorDTO proveedorDTO)
         {
+            var proveedor = new Proveedor
+            {
+                NombreEmpresa = proveedorDTO.NombreEmpresa,
+                DireccionEmpresa = proveedorDTO.DireccionEmpresa,
+                TelefonoEmpresa = proveedorDTO.TelefonoEmpresa,
+                NombreEncargado = proveedorDTO.NombreEncargado,
+                Estatus = proveedorDTO.Estatus,
+                CreatedAt = proveedorDTO.CreatedAt ?? DateTime.Now,
+                UpdatedAt = proveedorDTO.UpdatedAt,
+                DeletedAt = proveedorDTO.DeletedAt,
+                IdUsuario = proveedorDTO.IdUsuario
+            };
+
             _context.Proveedores.Add(proveedor);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetProveedor", new { id = proveedor.Id }, proveedor);
         }
 
-        // DELETE: api/Proveedores/5
+        // DELETE: api/Proveedor/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProveedor(int? id)
+        public async Task<IActionResult> DeleteProveedor(int id)
         {
             var proveedor = await _context.Proveedores.FindAsync(id);
             if (proveedor == null)
@@ -100,7 +127,31 @@ namespace Server.Controllers
             return NoContent();
         }
 
-        private bool ProveedorExists(int? id)
+        //POST: api/Proveedor/Bulk
+        [HttpPost]
+        [Route("Bulk")]
+        public async Task<ActionResult<IEnumerable<Proveedor>>> PostProveedores(List<ProveedorDTO> proveedoresDTO)
+        {
+            var proveedores = proveedoresDTO.Select(proveedorDTO => new Proveedor
+            {
+                NombreEmpresa = proveedorDTO.NombreEmpresa,
+                DireccionEmpresa = proveedorDTO.DireccionEmpresa,
+                TelefonoEmpresa = proveedorDTO.TelefonoEmpresa,
+                NombreEncargado = proveedorDTO.NombreEncargado,
+                Estatus = proveedorDTO.Estatus,
+                CreatedAt = proveedorDTO.CreatedAt ?? DateTime.Now,
+                UpdatedAt = proveedorDTO.UpdatedAt,
+                DeletedAt = proveedorDTO.DeletedAt,
+                IdUsuario = proveedorDTO.IdUsuario
+            });
+
+            _context.Proveedores.AddRange(proveedores);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetProveedores", proveedores);
+        }
+
+        private bool ProveedorExists(int id)
         {
             return _context.Proveedores.Any(e => e.Id == id);
         }
