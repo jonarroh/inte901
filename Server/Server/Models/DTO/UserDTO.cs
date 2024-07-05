@@ -10,8 +10,8 @@
         public string Role { get; set; }
         public string? Token { get; set; }
 
-        public ICollection<Direcciones> Direcciones { get; set; }
+        public ICollection<Direcciones>? Direcciones { get; set; }
 
-        public ICollection<CreditCardDTO> CreditCards { get; set; }
+        public ICollection<CreditCardDTO>? CreditCards { get; set; }
     }
 }

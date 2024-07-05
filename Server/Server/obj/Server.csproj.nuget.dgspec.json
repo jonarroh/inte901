@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Dev\\Server\\Server\\Server.csproj": {}
+    "C:\\Users\\esbre\\inte901\\Server\\Server\\Server.csproj": {}
   },
   "projects": {
-    "C:\\Dev\\Server\\Server\\Server.csproj": {
+    "C:\\Users\\esbre\\inte901\\Server\\Server\\Server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Dev\\Server\\Server\\Server.csproj",
+        "projectUniqueName": "C:\\Users\\esbre\\inte901\\Server\\Server\\Server.csproj",
         "projectName": "Server",
-        "projectPath": "C:\\Dev\\Server\\Server\\Server.csproj",
-        "packagesPath": "C:\\Users\\urieh\\.nuget\\packages\\",
-        "outputPath": "C:\\Dev\\Server\\Server\\obj\\",
+        "projectPath": "C:\\Users\\esbre\\inte901\\Server\\Server\\Server.csproj",
+        "packagesPath": "C:\\Users\\esbre\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\esbre\\inte901\\Server\\Server\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\urieh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\esbre\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
