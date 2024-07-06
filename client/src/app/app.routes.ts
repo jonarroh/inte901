@@ -5,6 +5,7 @@ import { AuthGuard } from './auth/login.guard';
 import { AuthenticatedGuard } from './auth/route.guard';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { HomeComponent } from './home/home.component';
+import { RegisterComponent } from './register/register.component';
 
 export const routes: Routes = [
   {
@@ -24,5 +25,9 @@ export const routes: Routes = [
   {
     path:'products',
     component: HomeComponent
+  },
+  {
+    path: 'register',
+    component: RegisterComponent
   }
 ];
