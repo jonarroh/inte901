@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
-import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
+import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import { FormsModule } from '@angular/forms';
-import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
+import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { SignalInputDirective, V, createFormField, createFormGroup } from 'ng-signal-forms';
 import { RegisterService } from '../register.service';
 import { Router } from '@angular/router';
