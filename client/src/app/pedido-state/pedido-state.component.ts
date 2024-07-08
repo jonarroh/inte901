@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
+import { NavbarComponent } from '../home/navbar/navbar.component';
 
 @Component({
   selector: 'app-pedido-state',
   standalone: true,
-  imports: [],
+  imports: [
+    NavbarComponent
+  ],
   templateUrl: './pedido-state.component.html',
   styleUrl: './pedido-state.component.css'
 })

@@ -6,6 +6,7 @@ import { AuthenticatedGuard } from './auth/route.guard';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
+import { PedidoStateComponent } from './pedido-state/pedido-state.component';
 
 export const routes: Routes = [
   {
@@ -29,5 +30,9 @@ export const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent
+  },
+  {
+    path: 'estatus',
+    component: PedidoStateComponent
   }
 ];
