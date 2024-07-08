@@ -111,28 +111,6 @@ namespace Server.Controllers
             {
                 return NotFound(ex.Message);
             }
-            //if (id != order.Id)
-            //{
-            //    return BadRequest();
-            //}
-
-            //_context.Entry(order).State = EntityState.Modified;
-
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!OrderExists(id))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
         }
 
 
@@ -145,6 +123,11 @@ namespace Server.Controllers
         {
             try
             {
+                if (ordertdo == null)
+                {
+                    return BadRequest("Order data is null.");
+                }
+
                 Random rnd = new Random();
                 int ticket;
                 bool ticketExists;
@@ -157,36 +140,43 @@ namespace Server.Controllers
 
                 var orden = new Order
                 {
-                    OrderDate = DateTime.Now,
                     IdClient = ordertdo.IdClient,
-                    IdUser = 1,
+                    IdUser = ordertdo.IdUser,
                     Total = ordertdo.Total,
+                    OrderDate = DateTime.Now,
+                    Status = "Pendiente"
                 };
 
-                //await _context.Orders.AddAsync(orden);
-                //await _context.SaveChangesAsync();
-
-                var detail = new DetailOrder
+                foreach (var d in ordertdo.DetailOrders)
                 {
-                    IdOrder = ordertdo.IdOrder,
-                    IdProduct = ordertdo.IdProduct,
-                    NameProduct = ordertdo.NameProduct,
-                    Quantity = ordertdo.Quantity,
-                    PriceSingle = ordertdo.PriceSingle,
-                    Status = 0,
-                    DateOrder = orden.OrderDate,
-                    Ticket = ticket,
-                };
+                    var detail = new DetailOrder
+                    {
+                        IdOrder = orden.Id,
+                        IdProduct = d.IdProduct,
+                        NameProduct = d.NameProduct,
+                        Quantity = d.Quantity,
+                        PriceSingle = d.PriceSingle,
+                        Status = d.Status,
+                        DateOrder = DateTime.Now,
+                        Ticket = ticket,
+                        Ingredients = d.Ingredients,
+                    };
 
-                //await _context.DetailOrders.AddAsync(detail);
+                    orden.DetailOrders.Add(detail);
+
+                    //_context.DetailOrders.Add(detail);
+                }
+
+                //_context.Orders.Add(orden);
+
                 //await _context.SaveChangesAsync();
 
-                Console.WriteLine($"{orden.Id}, {orden.IdClient}, {orden.IdUser}, {orden.Total}");
-                Console.WriteLine($"{detail.IdOrder}, {detail.NameProduct}, {detail.Ticket}");
-                return Ok($"Orden creada correctamente");
+                Console.WriteLine(ordertdo);
+                return Ok(ordertdo);
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return NotFound(ex.Message);
             }
         }
