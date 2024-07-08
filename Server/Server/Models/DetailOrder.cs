@@ -35,6 +35,7 @@
 
 		[Required]
 		public long? Ticket { get; set; }
+        public string Ingredients { get; set; } = string.Empty;
 
         public Order Order { get; set; }
 
