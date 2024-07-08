@@ -124,6 +124,37 @@ namespace Server.Controllers
             return NoContent();
         }
 
+        //POst: api/Producto/Bulk
+
+        [HttpPost]
+        [Route("Bulk")]
+        public async Task<ActionResult<IEnumerable<Producto>>>
+            PostProductos(List<ProductoDTO> productosDTO)
+        {
+            List<Producto> productos = new List<Producto>();
+
+            foreach (var productoDTO in productosDTO)
+            {
+                var producto = new Producto
+                {
+                    Nombre = productoDTO.Nombre,
+                    Precio = productoDTO.Precio,
+                    Descripcion = productoDTO.Descripcion,
+                    Estatus = productoDTO.Estatus,
+                    Tipo = productoDTO.Tipo,
+                    CantidadXReceta = productoDTO.CantidadXReceta,
+                    CreatedAt = productoDTO.CreatedAt ?? DateTime.Now
+                };
+
+                productos.Add(producto);
+            }
+
+            _context.Productos.AddRange(productos);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetProductos", productos);
+        }
+
         private bool ProductoExists(int id)
         {
             return _context.Productos.Any(e => e.Id == id);

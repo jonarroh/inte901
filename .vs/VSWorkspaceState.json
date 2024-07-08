@@ -6,6 +6,6 @@
     "\\Server\\Server\\Controllers",
     "\\Server\\Server\\lib"
   ],
-  "SelectedNode": "\\Server\\Server.sln",
+  "SelectedNode": "\\Server\\Server\\Controllers\\MateriasPrimasProveedoresController.cs",
   "PreviewInSolutionExplorer": false
 }
