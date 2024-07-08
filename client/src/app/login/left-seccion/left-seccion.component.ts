@@ -35,6 +35,7 @@ import { HlmInputDirective } from '~/components/ui-input-helm/src';
   templateUrl: './left-seccion.component.html'
 })
 export class LeftSeccionComponent {
+  
   constructor(private authService: AuthService, private router: Router) {}
 
   disabled = signal(false);
