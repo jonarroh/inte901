@@ -1,2 +1,11 @@
-<p>product-detail works! {{productoId}}
-</p>
+<home-navbar></home-navbar>
+@if (isLoading) {
+  
+<hlm-skeleton class='h-4 w-[250px]' />
+
+}@else {
+  <p>product-detail works! {{productoId}}
+  </p>
+}
+
+

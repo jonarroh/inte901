@@ -2,8 +2,13 @@ from flask import Flask, jsonify, request, send_file
 from PIL import Image
 import os
 from io import BytesIO
+from controller.models import models
+from controller.ridge import rid
+
 
 app = Flask(__name__)
+app.register_blueprint(models)
+app.register_blueprint(rid)
 
 STATIC_FOLDER = 'static'
 
@@ -62,3 +67,4 @@ def clipProduct():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    
