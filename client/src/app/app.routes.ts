@@ -12,6 +12,7 @@ import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 import { PedidoStateComponent } from './pedido-state/pedido-state.component';
 
 import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { PlaceComponent } from './place/place.component';
 
 
 export const routes: Routes = [
@@ -46,5 +47,9 @@ export const routes: Routes = [
   {
     path:'products/:id',
     component: ProductDetailComponent
+  },
+  {
+    path:'place',
+    component: PlaceComponent
   }
 ];
