@@ -16,8 +16,7 @@ export const routes: Routes = [
   },
   {
     path: 'test',
-    component: TestComponent,
-    canActivate: [AuthenticatedGuard], // Este guardia protege las rutas autenticadas
+    component: TestComponent// Este guardia protege las rutas autenticadas
   },
   {
     path: '',
