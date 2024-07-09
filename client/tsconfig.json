@@ -48,6 +48,33 @@
       ],
       "@spartan-ng/ui-command-helm": [
         "./src/components/ui-command-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-popover-helm": [
+        "./src/components/ui-popover-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-carousel-helm": [
+        "./src/components/ui-carousel-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-dialog-helm": [
+        "./src/components/ui-dialog-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-sonner-helm": [
+        "./src/components/ui-sonner-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-tabs-helm": [
+        "./src/components/ui-tabs-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-skeleton-helm": [
+        "./src/components/ui-skeleton-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-table-helm": [
+        "./src/components/ui-table-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-hovercard-helm": [
+        "./src/components/ui-hovercard-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-sheet-helm": [
+        "./src/components/ui-sheet-helm/src/index.ts"
       ]
     }
   },

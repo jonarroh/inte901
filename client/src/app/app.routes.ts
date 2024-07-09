@@ -9,6 +9,11 @@ import { RegisterComponent } from './register/register.component';
 import { NavComponent } from './layout/nav/nav.component';
 import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 
+import { PedidoStateComponent } from './pedido-state/pedido-state.component';
+
+import { ProductDetailComponent } from './product-detail/product-detail.component';
+
+
 export const routes: Routes = [
   {
     path: 'login',
@@ -17,8 +22,7 @@ export const routes: Routes = [
   },
   {
     path: 'test',
-    component: TestComponent,
-    canActivate: [AuthenticatedGuard], // Este guardia protege las rutas autenticadas
+    component: TestComponent// Este guardia protege las rutas autenticadas
   },
   {
     path: '',
@@ -35,5 +39,12 @@ export const routes: Routes = [
   {
     path: 'home',
     component: NavComponent
+  },{
+    path: 'estatus',
+    component: PedidoStateComponent
+  },
+  {
+    path:'products/:id',
+    component: ProductDetailComponent
   }
 ];

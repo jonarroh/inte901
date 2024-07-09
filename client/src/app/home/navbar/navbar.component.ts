@@ -9,6 +9,7 @@ import { ProductosService } from '../services/productos.service';
 import { NgFor, NgIf } from '@angular/common';
 import { Producto } from '~/lib/types';
 import { FormsModule } from '@angular/forms';
+import { CartComponent } from '~/app/cart/cart.component';
 
 
 
@@ -23,8 +24,8 @@ import { FormsModule } from '@angular/forms';
     HlmCommandImports,
     NgIf,
     NgFor,
-    FormsModule
-  
+    FormsModule,
+    CartComponent
   ],
   providers: [ProductosService],
   templateUrl: './navbar.component.html',
@@ -39,7 +40,18 @@ export class NavbarComponent {
   currentFilter = 'Todo';
 
   constructor(private productService: ProductosService) {
-    this.items = this.productService.getProductos();
+    this.productService.getProductos().subscribe({
+      next: (productos) => {
+        this.items = productos;
+        this.filteredItems = productos;
+      },
+      error: (error) => {
+        console.error('Error al cargar los productos', error);
+      },
+      complete: () => {
+        console.log('Productos cargados correctamente');
+      }
+    })
   }
 
   toggleDropdown() {
