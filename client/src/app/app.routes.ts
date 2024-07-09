@@ -6,6 +6,8 @@ import { AuthenticatedGuard } from './auth/route.guard';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
+import { NavComponent } from './layout/nav/nav.component';
+import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 
 import { PedidoStateComponent } from './pedido-state/pedido-state.component';
 
@@ -35,6 +37,9 @@ export const routes: Routes = [
     component: RegisterComponent
   },
   {
+    path: 'home',
+    component: NavComponent
+  },{
     path: 'estatus',
     component: PedidoStateComponent
   },
