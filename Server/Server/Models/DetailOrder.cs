@@ -28,9 +28,6 @@
 		public decimal? PriceSingle { get; set; }
 
 		[Required]
-		public int? Status { get; set; }
-
-		[Required]
 		public DateTime? DateOrder { get; set; }
 
 		[Required]

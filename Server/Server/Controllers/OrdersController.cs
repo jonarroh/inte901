@@ -173,7 +173,6 @@ namespace Server.Controllers
                     NameProduct = ordertdo.NameProduct,
                     Quantity = ordertdo.Quantity,
                     PriceSingle = ordertdo.PriceSingle,
-                    Status = 0,
                     DateOrder = orden.OrderDate,
                     Ticket = ticket,
                 };

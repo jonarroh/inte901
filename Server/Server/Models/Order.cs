@@ -22,5 +22,8 @@
         public float? Total { get; set; }
         public ICollection<DetailOrder>? DetailOrders { get; set; }
         public User? User { get; set; }
+
+        [Required]
+        public String Status { get; set; }
     }
 }
