@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
+import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 
 @Component({
   selector: 'app-inicio',
