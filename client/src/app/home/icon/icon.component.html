@@ -1,0 +1,49 @@
+@if (!isLogged()) {     
+  <button class="bg-transparent" [brnMenuTriggerFor]="menu">
+    <hlm-avatar>
+      <img src='http://127.0.0.1:5000/static/users/1.webp' alt='logo' hlmAvatarImage />
+      <span class='text-white bg-destructive' hlmAvatarFallback>RG</span>
+    </hlm-avatar>
+  </button>
+  <ng-template #menu >
+    <hlm-menu class="bg-white px-4 py-2">
+      <hlm-menu-label>
+        Mi cuenta
+      </hlm-menu-label>
+      <hlm-menu-separator />
+      <hlm-menu-group class="flex items-center gap-6">
+        <lucide-icon name="settings"></lucide-icon>
+        <span>
+          Configuración
+        </span>        
+        <hlm-menu-separator />
+      </hlm-menu-group>
+      <hlm-menu-group class="flex items-center gap-6">
+        <lucide-icon name="shopping-cart"></lucide-icon>
+        <span>
+          Carrito de compras
+        </span>        
+        <hlm-menu-separator />
+      </hlm-menu-group>
+      <hlm-menu-group class="flex items-center gap-6">
+        <lucide-icon name="history"></lucide-icon>
+        <span>
+          Historial de compras
+        </span>        
+        <hlm-menu-separator />
+      </hlm-menu-group>
+      <hlm-menu-group class="flex items-center gap-6">
+        <lucide-icon name="log-out"></lucide-icon>
+        <button hlmMenuItem (triggered)="logout()" class="hover:text-gray-200">
+          <hlm-icon name="lucideUndo2" hlmMenuIcon />
+          Reset
+        </button>       
+        <hlm-menu-separator />
+      </hlm-menu-group>
+    </hlm-menu>
+  </ng-template>
+} @else {
+<a routerLink="/login" class="cursor-pointer text-white hover:text-gray-200">
+  no user
+</a>
+}

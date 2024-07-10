@@ -10,6 +10,7 @@
 	public class Order
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? Id { get; set; }
         [Required]
         public DateTime? OrderDate { get; set; }
@@ -19,7 +20,12 @@
         public int? IdUser { get; set; }
         [Required]
         public float? Total { get; set; }
+        public string Status { get; set; }
         public ICollection<DetailOrder>? DetailOrders { get; set; }
         public User? User { get; set; }
+        public Order()
+        {
+            DetailOrders = new List<DetailOrder>();
+        }
     }
 }

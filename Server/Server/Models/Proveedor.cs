@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Server.Models.Usuario.Server.Models.Usuario;
 
 namespace Server.Models
 {
@@ -31,7 +32,7 @@ namespace Server.Models
         public int? IdUsuario { get; set; }
         [ForeignKey("IdUsuario")]
 
-        //public Usuario Usuario { get; set; }
+        public User? Usuario { get; set; }
 
         public ICollection<MateriaPrimaProveedor>? MateriaPrimaProveedores { get; set; }
 

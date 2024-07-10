@@ -4,6 +4,16 @@ import { TestComponent } from './test/test.component';
 import { AuthGuard } from './auth/login.guard';
 import { AuthenticatedGuard } from './auth/route.guard';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { HomeComponent } from './home/home.component';
+import { RegisterComponent } from './register/register.component';
+import { NavComponent } from './layout/nav/nav.component';
+import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
+
+import { PedidoStateComponent } from './pedido-state/pedido-state.component';
+
+import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { PlaceComponent } from './place/place.component';
+
 
 export const routes: Routes = [
   {
@@ -13,17 +23,33 @@ export const routes: Routes = [
   },
   {
     path: 'test',
-    component: TestComponent,
-    canActivate: [AuthenticatedGuard], // Este guardia protege las rutas autenticadas
+    component: TestComponent// Este guardia protege las rutas autenticadas
   },
-  // {
-  //   path: '',
-  //   redirectTo: '/login',
-  //   pathMatch: 'full',
-  // },
   {
     path: '',
     component: LandingPageComponent
   },
-  // Otras rutas
+  {
+    path:'products',
+    component: HomeComponent
+  },
+  {
+    path: 'register',
+    component: RegisterComponent
+  },
+  {
+    path: 'home',
+    component: NavComponent
+  },{
+    path: 'estatus',
+    component: PedidoStateComponent
+  },
+  {
+    path:'products/:id',
+    component: ProductDetailComponent
+  },
+  {
+    path:'place',
+    component: PlaceComponent
+  }
 ];

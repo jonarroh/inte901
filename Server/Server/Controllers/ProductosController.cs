@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server;
 using Server.Models;
+using Server.Models.DTO;
 
 namespace Server.Controllers
 {
@@ -21,16 +22,16 @@ namespace Server.Controllers
             _context = context;
         }
 
-        // GET: api/Productos
+        // GET: api/Producto
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Producto>>> GetProductos()
         {
             return await _context.Productos.ToListAsync();
         }
 
-        // GET: api/Productos/5
+        // GET: api/Producto/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Producto>> GetProducto(int? id)
+        public async Task<ActionResult<Producto>> GetProducto(int id)
         {
             var producto = await _context.Productos.FindAsync(id);
 
@@ -42,15 +43,28 @@ namespace Server.Controllers
             return producto;
         }
 
-        // PUT: api/Productos/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/Producto/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProducto(int? id, Producto producto)
+        public async Task<IActionResult> PutProducto(int id, ProductoDTO productoDTO)
         {
-            if (id != producto.Id)
+            if (id != productoDTO.Id)
             {
                 return BadRequest();
             }
+
+            var producto = await _context.Productos.FindAsync(id);
+            if (producto == null)
+            {
+                return NotFound();
+            }
+
+            producto.Nombre = productoDTO.Nombre;
+            producto.Precio = productoDTO.Precio;
+            producto.Descripcion = productoDTO.Descripcion;
+            producto.Estatus = productoDTO.Estatus;
+            producto.Tipo = productoDTO.Tipo;
+            producto.CantidadXReceta = productoDTO.CantidadXReceta;
+            producto.CreatedAt = productoDTO.CreatedAt;
 
             _context.Entry(producto).State = EntityState.Modified;
 
@@ -73,20 +87,30 @@ namespace Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Productos
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/Producto
         [HttpPost]
-        public async Task<ActionResult<Producto>> PostProducto(Producto producto)
+        public async Task<ActionResult<Producto>> PostProducto(ProductoDTO productoDTO)
         {
+            var producto = new Producto
+            {
+                Nombre = productoDTO.Nombre,
+                Precio = productoDTO.Precio,
+                Descripcion = productoDTO.Descripcion,
+                Estatus = productoDTO.Estatus,
+                Tipo = productoDTO.Tipo,
+                CantidadXReceta = productoDTO.CantidadXReceta,
+                CreatedAt = productoDTO.CreatedAt ?? DateTime.Now
+            };
+
             _context.Productos.Add(producto);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetProducto", new { id = producto.Id }, producto);
         }
 
-        // DELETE: api/Productos/5
+        // DELETE: api/Producto/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProducto(int? id)
+        public async Task<IActionResult> DeleteProducto(int id)
         {
             var producto = await _context.Productos.FindAsync(id);
             if (producto == null)
@@ -100,7 +124,38 @@ namespace Server.Controllers
             return NoContent();
         }
 
-        private bool ProductoExists(int? id)
+        //POst: api/Producto/Bulk
+
+        [HttpPost]
+        [Route("Bulk")]
+        public async Task<ActionResult<IEnumerable<Producto>>>
+            PostProductos(List<ProductoDTO> productosDTO)
+        {
+            List<Producto> productos = new List<Producto>();
+
+            foreach (var productoDTO in productosDTO)
+            {
+                var producto = new Producto
+                {
+                    Nombre = productoDTO.Nombre,
+                    Precio = productoDTO.Precio,
+                    Descripcion = productoDTO.Descripcion,
+                    Estatus = productoDTO.Estatus,
+                    Tipo = productoDTO.Tipo,
+                    CantidadXReceta = productoDTO.CantidadXReceta,
+                    CreatedAt = productoDTO.CreatedAt ?? DateTime.Now
+                };
+
+                productos.Add(producto);
+            }
+
+            _context.Productos.AddRange(productos);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetProductos", productos);
+        }
+
+        private bool ProductoExists(int id)
         {
             return _context.Productos.Any(e => e.Id == id);
         }

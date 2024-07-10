@@ -10,6 +10,7 @@ using Server.Models.Usuario.Server.Models.Usuario;
 using Server.lib;
 using System.Security.Cryptography;
 using System.Text;
+using Server.Models.DTO;
 
 namespace Server.Controllers
 {
@@ -26,15 +27,48 @@ namespace Server.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
         {
             var users = await _context.Users.ToListAsync();
-            //agregarle las direcciones a cada usuario
+
+            // Agregar direcciones a cada usuario
             foreach (var user in users)
             {
                 user.Direcciones = await _context.Direcciones.Where(d => d.UserId == user.Id).ToListAsync();
             }
-            return users;
+
+            var usersDTO = new List<UserDTO>();
+
+            foreach (var u in users)
+            {
+                var userDTO = new UserDTO
+                {
+                    Id = u.Id,
+                    Name = u.Name,
+                    LastName = u.LastName,
+                    Email = u.Email,
+                    Role = u.Role,
+                    Direcciones = u.Direcciones,
+                    CreditCards = await _context.CreditCard.Where(c => c.UserId == u.Id).Select(c => new CreditCardDTO
+                    {
+                        Id = c.Id,
+                        CardHolderName = c.CardHolderName,
+                        CardNumber = ocultaNumero(c.CardNumber),
+                        ExpiryDate = c.ExpiryDate,
+                        UserId = c.UserId
+                    }).ToListAsync()
+                };
+
+                usersDTO.Add(userDTO);
+            }
+
+            return Ok(usersDTO);
+        }
+
+
+        private static string ocultaNumero(string CardNumber)
+        {
+            return "**** **** **** " + CardNumber.Substring(CardNumber.Length - 4);
         }
 
         // GET: api/Users/5
@@ -124,5 +158,25 @@ namespace Server.Controllers
         {
             return _context.Users.Any(e => e.Id == id);
         }
+
+
+        // GET : apiToken
+
+        [HttpPost("token")]
+        public async Task<ActionResult<TokenDto>> Token()
+        {
+            //ver si existe token en las cookies
+            if (Request.Cookies.ContainsKey("token"))
+            {
+                var token = Request.Cookies["token"];
+                var tokenDto = TokenService.ReadToken(token);
+                return tokenDto;
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server;
 using Server.Models;
+using Server.Models.DTO;
 
 namespace Server.Controllers
 {
@@ -21,14 +22,14 @@ namespace Server.Controllers
             _context = context;
         }
 
-        // GET: api/MateriasPrimas
+        // GET: api/MateriaPrima
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MateriaPrima>>> GetMateriasPrimas()
         {
             return await _context.MateriasPrimas.ToListAsync();
         }
 
-        // GET: api/MateriasPrimas/5
+        // GET: api/MateriaPrima/5
         [HttpGet("{id}")]
         public async Task<ActionResult<MateriaPrima>> GetMateriaPrima(int id)
         {
@@ -42,15 +43,25 @@ namespace Server.Controllers
             return materiaPrima;
         }
 
-        // PUT: api/MateriasPrimas/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/MateriaPrima/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMateriaPrima(int id, MateriaPrima materiaPrima)
+        public async Task<IActionResult> PutMateriaPrima(int id, MateriaPrimaDTO materiaPrimaDTO)
         {
-            if (id != materiaPrima.Id)
+            if (id != materiaPrimaDTO.Id)
             {
                 return BadRequest();
             }
+
+            var materiaPrima = await _context.MateriasPrimas.FindAsync(id);
+            if (materiaPrima == null)
+            {
+                return NotFound();
+            }
+
+            materiaPrima.Material = materiaPrimaDTO.Material;
+            materiaPrima.Estatus = materiaPrimaDTO.Estatus;
+            materiaPrima.UpdatedAt = materiaPrimaDTO.UpdatedAt ?? DateTime.Now;
+            materiaPrima.DeletedAt = materiaPrimaDTO.DeletedAt;
 
             _context.Entry(materiaPrima).State = EntityState.Modified;
 
@@ -73,18 +84,26 @@ namespace Server.Controllers
             return NoContent();
         }
 
-        // POST: api/MateriasPrimas
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/MateriaPrima
         [HttpPost]
-        public async Task<ActionResult<MateriaPrima>> PostMateriaPrima(MateriaPrima materiaPrima)
+        public async Task<ActionResult<MateriaPrima>> PostMateriaPrima(MateriaPrimaDTO materiaPrimaDTO)
         {
+            var materiaPrima = new MateriaPrima
+            {
+                Material = materiaPrimaDTO.Material,
+                Estatus = materiaPrimaDTO.Estatus,
+                CreatedAt = materiaPrimaDTO.CreatedAt ?? DateTime.Now,
+                UpdatedAt = materiaPrimaDTO.UpdatedAt,
+                DeletedAt = materiaPrimaDTO.DeletedAt
+            };
+
             _context.MateriasPrimas.Add(materiaPrima);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetMateriaPrima", new { id = materiaPrima.Id }, materiaPrima);
         }
 
-        // DELETE: api/MateriasPrimas/5
+        // DELETE: api/MateriaPrima/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMateriaPrima(int id)
         {
@@ -98,6 +117,45 @@ namespace Server.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        // POST: api/MateriaPrima/bulk
+        [HttpPost]
+        [Route("bulk")]
+        public async Task<ActionResult<MateriaPrimaDTO[]>> PostMateriasPrimas(MateriaPrimaDTO[] materiasPrimas)
+        {
+            var materia = new List<MateriaPrima>();
+            foreach (var materiaPrimaDTO in materiasPrimas)
+            {
+                var materiaPrima = new MateriaPrima
+                {
+                    Material = materiaPrimaDTO.Material,
+                    Estatus = materiaPrimaDTO.Estatus,
+                    CreatedAt = materiaPrimaDTO.CreatedAt ?? DateTime.Now,
+                    UpdatedAt = materiaPrimaDTO.UpdatedAt,
+                    DeletedAt = materiaPrimaDTO.DeletedAt
+                };
+                materia.Add(materiaPrima);
+            }
+
+            _context.MateriasPrimas.AddRange(materia);
+            await _context.SaveChangesAsync();
+
+            var materiasPrimasDTO = new List<MateriaPrimaDTO>();
+            foreach (var materiaPrima in materiasPrimas)
+            {
+                materiasPrimasDTO.Add(new MateriaPrimaDTO
+                {
+                    Id = materiaPrima.Id,
+                    Material = materiaPrima.Material,
+                    Estatus = materiaPrima.Estatus,
+                    CreatedAt = materiaPrima.CreatedAt,
+                    UpdatedAt = materiaPrima.UpdatedAt,
+                    DeletedAt = materiaPrima.DeletedAt
+                });
+            }
+
+            return CreatedAtAction("GetMateriaPrima", materiasPrimasDTO);
         }
 
         private bool MateriaPrimaExists(int id)

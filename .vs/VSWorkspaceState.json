@@ -3,8 +3,9 @@
     "",
     "\\Server",
     "\\Server\\Server",
-    "\\Server\\Server\\Controllers"
+    "\\Server\\Server\\Controllers",
+    "\\Server\\Server\\lib"
   ],
-  "SelectedNode": "\\Server\\Server\\Controllers\\AccountController.cs",
+  "SelectedNode": "\\Server\\Server\\Controllers\\MateriasPrimasProveedoresController.cs",
   "PreviewInSolutionExplorer": false
 }
