@@ -1,12 +1,8 @@
-<<<<<<< HEAD
-﻿using System;
+
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Server.Models.Usuario.Server.Models.Usuario;
-=======
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
->>>>>>> 88e1a8911d75b8a665bdfee0c40e377ed0b4f7b7
 
 namespace Server.Models
 {
@@ -14,7 +10,6 @@ namespace Server.Models
     {
         [Key]
         [Required]
-<<<<<<< HEAD
         public int idReserva { get; set; }
 
         [ForeignKey("DetailReserva")]
@@ -33,7 +28,6 @@ namespace Server.Models
 
         public virtual DetailReserva DetailReserva { get; set; }
         public virtual User Usuario { get; set; }
-=======
         public int? idReserva {  get; set; }
 
         [ForeignKey("DetalleReservaId")]
@@ -45,7 +39,5 @@ namespace Server.Models
 
         [Required]
         public string? estatus { get; set; }
-
->>>>>>> 88e1a8911d75b8a665bdfee0c40e377ed0b4f7b7
     }
 }
