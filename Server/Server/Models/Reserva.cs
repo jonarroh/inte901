@@ -1,4 +1,3 @@
-
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -28,16 +27,5 @@ namespace Server.Models
 
         public virtual DetailReserva DetailReserva { get; set; }
         public virtual User Usuario { get; set; }
-        public int? idReserva {  get; set; }
-
-        [ForeignKey("DetalleReservaId")]
-        public int? idDetailReser { get; set; }
-
-        [Required]
-        [ForeignKey("UsuarioId")]
-        public int? idUsuario { get; set; }
-
-        [Required]
-        public string? estatus { get; set; }
     }
 }
