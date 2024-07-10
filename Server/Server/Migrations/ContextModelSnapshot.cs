@@ -95,10 +95,6 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int?>("Status")
-                        .IsRequired()
-                        .HasColumnType("int");
-
                     b.Property<long?>("Ticket")
                         .IsRequired()
                         .HasColumnType("bigint");
@@ -424,6 +420,10 @@ namespace Server.Migrations
                     b.Property<DateTime?>("OrderDate")
                         .IsRequired()
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<float?>("Total")
                         .IsRequired()

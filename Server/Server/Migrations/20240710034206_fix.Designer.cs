@@ -12,8 +12,8 @@ using Server;
 namespace Server.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240704143037_creditCardsa")]
-    partial class creditCardsa
+    [Migration("20240710034206_fix")]
+    partial class fix
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -95,10 +95,6 @@ namespace Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("Quantity")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Status")
                         .IsRequired()
                         .HasColumnType("int");
 
@@ -422,6 +418,10 @@ namespace Server.Migrations
                     b.Property<DateTime?>("OrderDate")
                         .IsRequired()
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<float?>("Total")
                         .IsRequired()

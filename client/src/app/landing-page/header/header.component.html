@@ -1,19 +1,60 @@
 <main>
-    <header class="py-3 px-10 flex items-center fixed top-0 w-full justify-between z-40 text-white">
+    <header class="py-3 px-10 flex items-center fixed top-0 w-full justify-between z-40 text-white" id="landing-header">
         
         <div class="flex flex-grow basis-auto">
-            <img src="/python/static/logo.webp" alt="logo-heaven">
+            <img style="max-width:50px" src="http://127.0.0.1:5000/static/logo.webp" alt="logo-heaven">
         </div>
 
         <nav class="flex flex-grow basis-auto">
-            <ul class="flex text-md [&>li>a]:inline-block [&>li>a]:px-4 [&>li>a]:py-2">
-                <li><a href="#"><lucide-icon name="house"></lucide-icon> Inicio</a></li>
-                <li><a href="#"><lucide-icon name="badge-info"></lucide-icon> Sobre nosotros</a></li>
-                <li><a href="#"><lucide-icon name="store"></lucide-icon> Comprar</a></li>
-                <li><a href="#"><lucide-icon name="menu"></lucide-icon> Menú</a></li>
+            <ul class="flex text-lg [&>li>a]:text-current [&>li>a]:inline-block [&>li>a]:px-2 [&>li>a]:py-2 items-center justify-center">
+                <li class="pe-2 flex items-center">
+                    <lucide-icon name="house"/> 
+                    <a href="#">Inicio</a>
+                </li>
+                <li class="pe-2 flex items-center">
+                    <lucide-icon name="badge-info"/> 
+                    <a href="#">Sobre nosotros</a>
+                </li>
+                <li class="pe-2 flex items-center">
+                    <lucide-icon name="store"/> 
+                    <a href="#">Comprar</a>
+                </li>
+                <li class="relative flex items-center group">
+                    <lucide-icon name="menu"/> 
+                    <a href="" class="group-hover:block me-6">Menú</a>
+                    <ul class="absolute left-0 top-full hidden mt-2 w-full bg-white shadow-lg group-hover:block min-w-full">
+                        <li><a href="#" class="block px-2 py-2 text-gray-800 hover:bg-gray-100">Opción 1</a></li>
+                        <li><a href="#" class="block px-2 py-2 text-gray-800 hover:bg-gray-100">Opción 2</a></li>
+                        <li><a href="#" class="block px-2 py-2 text-gray-800 hover:bg-gray-100">Opción 3</a></li>
+                    </ul>
+                </li>
             </ul>
         </nav>
-
-
+        
     </header>
 </main>
+
+
+<script>
+
+    const headerEl = document.querySelector("#landing-header")
+    
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px', 
+        threshold: 0.9,
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            const {isIntersecting} = entry 
+            if (isIntersecting) {
+                const color = entry.target.getAttribute("data-header-color")
+                headerEl.style.color = color;
+            }
+        })
+    }, observerOptions)
+
+    const sectionsElements = document.querySelectorAll(".landing-section")
+    sectionsElements.forEach((section) => observer.observe(section))
+</script>

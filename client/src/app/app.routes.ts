@@ -2,18 +2,14 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { TestComponent } from './test/test.component';
 import { AuthGuard } from './auth/login.guard';
-import { AuthenticatedGuard } from './auth/route.guard';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
-import { NavComponent } from './layout/nav/nav.component';
-import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
-
+import { AdminComponent } from './admin/admin.component';
+import { VentasComponent } from './admin/ventas/ventas.component';
 import { PedidoStateComponent } from './pedido-state/pedido-state.component';
-
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { PlaceComponent } from './place/place.component';
-
 
 export const routes: Routes = [
   {
@@ -23,14 +19,14 @@ export const routes: Routes = [
   },
   {
     path: 'test',
-    component: TestComponent// Este guardia protege las rutas autenticadas
+    component: TestComponent // Este guardia protege las rutas autenticadas
   },
   {
     path: '',
     component: LandingPageComponent
   },
   {
-    path:'products',
+    path: 'products',
     component: HomeComponent
   },
   {
@@ -38,18 +34,26 @@ export const routes: Routes = [
     component: RegisterComponent
   },
   {
-    path: 'home',
-    component: NavComponent
-  },{
+    path: 'admin',
+    component: AdminComponent,
+    children: [
+
+      {
+        path: 'ventas',
+        component: VentasComponent
+      }
+    ]
+  },
+  {
     path: 'estatus',
     component: PedidoStateComponent
   },
   {
-    path:'products/:id',
+    path: 'products/:id',
     component: ProductDetailComponent
   },
   {
-    path:'place',
+    path: 'place',
     component: PlaceComponent
   }
 ];
