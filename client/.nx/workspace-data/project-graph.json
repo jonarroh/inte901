@@ -271,15 +271,6 @@
         "hash": "sha512-JnS6jbLl2RxsvGFUOBGeoyviNLEjZKRhn3uK4Ein3DENPv0BeSFMjif9Dp4ReUCnqoD4QQVG0X/r1GFaqHn2pw=="
       }
     },
-    "npm:@angular/common@18.0.0": {
-      "type": "npm",
-      "name": "npm:@angular/common@18.0.0",
-      "data": {
-        "version": "18.0.0",
-        "packageName": "@angular/common",
-        "hash": "sha512-s43ZcOhXTUlkdOPMiMtr4Pz1qKIS8nClXhaahY0JBQZYGsOSn7NR42SoEeB8/ixktfY60s3SLhizXTKMAYtOTA=="
-      }
-    },
     "npm:@angular/common": {
       "type": "npm",
       "name": "npm:@angular/common",
@@ -287,6 +278,15 @@
         "version": "18.0.4",
         "packageName": "@angular/common",
         "hash": "sha512-7WxZKLzSu5QtyLGrtlZrtUQlP3WfDR++yHr5jF9DJZ3IY35UutwiPCegCcq4Qh5X2xWqnRKGm20TLlKVoj0t5Q=="
+      }
+    },
+    "npm:@angular/common@18.0.0": {
+      "type": "npm",
+      "name": "npm:@angular/common@18.0.0",
+      "data": {
+        "version": "18.0.0",
+        "packageName": "@angular/common",
+        "hash": "sha512-s43ZcOhXTUlkdOPMiMtr4Pz1qKIS8nClXhaahY0JBQZYGsOSn7NR42SoEeB8/ixktfY60s3SLhizXTKMAYtOTA=="
       }
     },
     "npm:@angular/compiler@17.3.0": {
@@ -2566,6 +2566,42 @@
         "hash": "sha512-x0fWaQtYp4E6sktbsdAqnehxDgEc/VwM7uLsRCYWaiGu0ykYdZPiS8zCWdnjHwyiumousxfBm4SO31eXqwEZhQ=="
       }
     },
+    "npm:@ng-icons/core": {
+      "type": "npm",
+      "name": "npm:@ng-icons/core",
+      "data": {
+        "version": "25.6.1",
+        "packageName": "@ng-icons/core",
+        "hash": "sha512-o6vCttlzXvDZRYiOKOULr7fsX8gY/DwwxzBSrBQzwa/at+pC0xRoe6uczJ9Ato+y1EDWP/PlrEMAQfvokBA6tQ=="
+      }
+    },
+    "npm:@ng-icons/lucide": {
+      "type": "npm",
+      "name": "npm:@ng-icons/lucide",
+      "data": {
+        "version": "26.5.0",
+        "packageName": "@ng-icons/lucide",
+        "hash": "sha512-rW6iZo2LBlFvnpBLWs400mrKn/34PKt5R+Yfd6ZJz9lxq2TMJfNeJv/V4ylG9vYG3RkPa+KEJ+Q6/8IOceT0NA=="
+      }
+    },
+    "npm:@ngneat/overview": {
+      "type": "npm",
+      "name": "npm:@ngneat/overview",
+      "data": {
+        "version": "5.1.1",
+        "packageName": "@ngneat/overview",
+        "hash": "sha512-Dz7yylhS08Mo+A8SXo7KyJBJMxD18Oq/G5v/ndvd5C8Gi3uOrAiXUjxvqRCPMxrg03FlkvEsD5/4TvMKtrUfAQ=="
+      }
+    },
+    "npm:@ngneat/until-destroy": {
+      "type": "npm",
+      "name": "npm:@ngneat/until-destroy",
+      "data": {
+        "version": "10.0.0",
+        "packageName": "@ngneat/until-destroy",
+        "hash": "sha512-xXFAabQ4YVJ82LYxdgUlaKZyR3dSbxqG3woSyaclzxfCgWMEDweCcM/GGYbNiHJa0WwklI98RXHvca+UyCxpeg=="
+      }
+    },
     "npm:@ngtools/webpack@17.3.8": {
       "type": "npm",
       "name": "npm:@ngtools/webpack@17.3.8",
@@ -2582,6 +2618,15 @@
         "version": "18.0.5",
         "packageName": "@ngtools/webpack",
         "hash": "sha512-Dx386WZZn0RwUaBHQYhDW8oi254SxEu8Ty5LHnStqBP6xXdcnsdGel+h9qvJ67He9iu8Rj0PB64EFE4PiklMdQ=="
+      }
+    },
+    "npm:@ngxpert/cmdk": {
+      "type": "npm",
+      "name": "npm:@ngxpert/cmdk",
+      "data": {
+        "version": "1.0.0",
+        "packageName": "@ngxpert/cmdk",
+        "hash": "sha512-PmZEKINJxWbGEE4GJ+iyB881z2YWETL1s8l2snqnmmVKCzTZjQruCY0JA8rLIAmLz6m9jlXUVj3Ox05i216tCQ=="
       }
     },
     "npm:@nodelib/fs.scandir": {
@@ -3178,6 +3223,24 @@
         "hash": "sha512-QyNHnqKyB1+VcZ5Pv2AzM2HK04LdGt+EqAO16V+ZepaFYuAWB4N6DPdvb9/PXmFV6cSdLdhpn6MCdQjS3lhAkw=="
       }
     },
+    "npm:@spartan-ng/ui-avatar-brain": {
+      "type": "npm",
+      "name": "npm:@spartan-ng/ui-avatar-brain",
+      "data": {
+        "version": "0.0.1-alpha.352",
+        "packageName": "@spartan-ng/ui-avatar-brain",
+        "hash": "sha512-SBue5MPcqV1y8nmsdDGdPDQ7KfGE7ncZH71QfEPPvMKXyIHhndQesVdduPiyFE7I+Qsm38tCvK4R0r0B899aFw=="
+      }
+    },
+    "npm:@spartan-ng/ui-command-brain": {
+      "type": "npm",
+      "name": "npm:@spartan-ng/ui-command-brain",
+      "data": {
+        "version": "0.0.1-alpha.352",
+        "packageName": "@spartan-ng/ui-command-brain",
+        "hash": "sha512-8JxaxweBjlLdwanpaCVVEmjYd8g6G8qRUnnqHPJUL3RG32I2gnfHX77Fwu8PsbPD2Fmm0Tk1FiwdDwKPfdcmFw=="
+      }
+    },
     "npm:@spartan-ng/ui-core": {
       "type": "npm",
       "name": "npm:@spartan-ng/ui-core",
@@ -3187,6 +3250,15 @@
         "hash": "sha512-shsMlB89S6QgCjLZ7Q5pWlRAUIGIWG3z/fIdaRb4Drepi4Wuvd+R3DUp5KM0NlraHqbj5huETW/9Tm3IxuZhzA=="
       }
     },
+    "npm:@spartan-ng/ui-dialog-brain": {
+      "type": "npm",
+      "name": "npm:@spartan-ng/ui-dialog-brain",
+      "data": {
+        "version": "0.0.1-alpha.352",
+        "packageName": "@spartan-ng/ui-dialog-brain",
+        "hash": "sha512-nS8uitcb+N6B9ULszlQQgHkCVb3w2XAgB0ySPgaznzPVEryZnKpRMFKLzrTVkj32q0bo5C+LV1SgEvK8sZ/QrA=="
+      }
+    },
     "npm:@spartan-ng/ui-label-brain": {
       "type": "npm",
       "name": "npm:@spartan-ng/ui-label-brain",
@@ -3194,6 +3266,24 @@
         "version": "0.0.1-alpha.352",
         "packageName": "@spartan-ng/ui-label-brain",
         "hash": "sha512-8Q9L47jNfwYpsRlbM4j8TFM1L8VkK/3dx+C/wsubNhPNigG63qpEmDfjLdpoYB+lo6vcPKX8M05doz3v4Ljpng=="
+      }
+    },
+    "npm:@spartan-ng/ui-menu-brain": {
+      "type": "npm",
+      "name": "npm:@spartan-ng/ui-menu-brain",
+      "data": {
+        "version": "0.0.1-alpha.352",
+        "packageName": "@spartan-ng/ui-menu-brain",
+        "hash": "sha512-/Vjig4odCfnbYGpzTbVMR+wHxRfGj/W5HtihAvlcxsclFnmhJEbMeGe7/BoHHbjPw/DN6tKrLUejdHPZuigrXw=="
+      }
+    },
+    "npm:@spartan-ng/ui-popover-brain": {
+      "type": "npm",
+      "name": "npm:@spartan-ng/ui-popover-brain",
+      "data": {
+        "version": "0.0.1-alpha.352",
+        "packageName": "@spartan-ng/ui-popover-brain",
+        "hash": "sha512-fUr7LjHXpY7rE9HdzlPoShqdiawDLFhOf5+0SBTbgl0iI+oFKoCSKJjH3x0jNTNJAXyurNVlPWlvLXFXSQea2Q=="
       }
     },
     "npm:@trysound/sax": {
@@ -5489,6 +5579,33 @@
         "version": "1.4.810",
         "packageName": "electron-to-chromium",
         "hash": "sha512-Kaxhu4T7SJGpRQx99tq216gCq2nMxJo+uuT6uzz9l8TVN2stL7M06MIIXAtr9jsrLs2Glflgf2vMQRepxawOdQ=="
+      }
+    },
+    "npm:embla-carousel": {
+      "type": "npm",
+      "name": "npm:embla-carousel",
+      "data": {
+        "version": "8.1.6",
+        "packageName": "embla-carousel",
+        "hash": "sha512-9n7FVsbPAs1KD+JmO84DnEDOZMXPBQbLujjMQqvsBRN2CDWwgZ9hRSNapztdPnyJfzOIxowGmj0BUQ8ACYAPkA=="
+      }
+    },
+    "npm:embla-carousel-angular": {
+      "type": "npm",
+      "name": "npm:embla-carousel-angular",
+      "data": {
+        "version": "14.1.1",
+        "packageName": "embla-carousel-angular",
+        "hash": "sha512-SRlx3VtTYoY7nApoeEnqL9b8RnONs7nmg0y2gOlW6ezNT7IpEySRIOly/2cUFwWX68DoRKiiLYhfS3+WK6fh2g=="
+      }
+    },
+    "npm:embla-carousel-reactive-utils": {
+      "type": "npm",
+      "name": "npm:embla-carousel-reactive-utils",
+      "data": {
+        "version": "8.1.6",
+        "packageName": "embla-carousel-reactive-utils",
+        "hash": "sha512-Wg+J2YoqLqkaqsXi7fTJaLmXm6BpgDRJ0EfTdvQ4KE/ip5OsUuKGpJsEQDTt4waGXSDyZhIBlfoQtgGJeyYQ1Q=="
       }
     },
     "npm:emoji-regex": {
@@ -11683,12 +11800,47 @@
       },
       {
         "source": "client",
+        "target": "npm:@ng-icons/core",
+        "type": "static"
+      },
+      {
+        "source": "client",
+        "target": "npm:@ng-icons/lucide",
+        "type": "static"
+      },
+      {
+        "source": "client",
+        "target": "npm:@spartan-ng/ui-avatar-brain",
+        "type": "static"
+      },
+      {
+        "source": "client",
+        "target": "npm:@spartan-ng/ui-command-brain",
+        "type": "static"
+      },
+      {
+        "source": "client",
         "target": "npm:@spartan-ng/ui-core",
         "type": "static"
       },
       {
         "source": "client",
+        "target": "npm:@spartan-ng/ui-dialog-brain",
+        "type": "static"
+      },
+      {
+        "source": "client",
         "target": "npm:@spartan-ng/ui-label-brain",
+        "type": "static"
+      },
+      {
+        "source": "client",
+        "target": "npm:@spartan-ng/ui-menu-brain",
+        "type": "static"
+      },
+      {
+        "source": "client",
+        "target": "npm:@spartan-ng/ui-popover-brain",
         "type": "static"
       },
       {
@@ -11699,6 +11851,11 @@
       {
         "source": "client",
         "target": "npm:clsx",
+        "type": "static"
+      },
+      {
+        "source": "client",
+        "target": "npm:embla-carousel-angular",
         "type": "static"
       },
       {
@@ -12811,16 +12968,16 @@
         "type": "static"
       }
     ],
-    "npm:@angular/common@18.0.0": [
+    "npm:@angular/common": [
       {
-        "source": "npm:@angular/common@18.0.0",
+        "source": "npm:@angular/common",
         "target": "npm:tslib",
         "type": "static"
       }
     ],
-    "npm:@angular/common": [
+    "npm:@angular/common@18.0.0": [
       {
-        "source": "npm:@angular/common",
+        "source": "npm:@angular/common@18.0.0",
         "target": "npm:tslib",
         "type": "static"
       }
@@ -15898,6 +16055,49 @@
         "type": "static"
       }
     ],
+    "npm:@ng-icons/core": [
+      {
+        "source": "npm:@ng-icons/core",
+        "target": "npm:tslib",
+        "type": "static"
+      }
+    ],
+    "npm:@ng-icons/lucide": [
+      {
+        "source": "npm:@ng-icons/lucide",
+        "target": "npm:tslib",
+        "type": "static"
+      }
+    ],
+    "npm:@ngneat/until-destroy": [
+      {
+        "source": "npm:@ngneat/until-destroy",
+        "target": "npm:tslib",
+        "type": "static"
+      }
+    ],
+    "npm:@ngxpert/cmdk": [
+      {
+        "source": "npm:@ngxpert/cmdk",
+        "target": "npm:tslib",
+        "type": "static"
+      },
+      {
+        "source": "npm:@ngxpert/cmdk",
+        "target": "npm:@angular/cdk",
+        "type": "static"
+      },
+      {
+        "source": "npm:@ngxpert/cmdk",
+        "target": "npm:@ngneat/overview",
+        "type": "static"
+      },
+      {
+        "source": "npm:@ngxpert/cmdk",
+        "target": "npm:@ngneat/until-destroy",
+        "type": "static"
+      }
+    ],
     "npm:@nodelib/fs.scandir": [
       {
         "source": "npm:@nodelib/fs.scandir",
@@ -16867,6 +17067,20 @@
         "type": "static"
       }
     ],
+    "npm:@spartan-ng/ui-avatar-brain": [
+      {
+        "source": "npm:@spartan-ng/ui-avatar-brain",
+        "target": "npm:tslib",
+        "type": "static"
+      }
+    ],
+    "npm:@spartan-ng/ui-command-brain": [
+      {
+        "source": "npm:@spartan-ng/ui-command-brain",
+        "target": "npm:tslib",
+        "type": "static"
+      }
+    ],
     "npm:@spartan-ng/ui-core": [
       {
         "source": "npm:@spartan-ng/ui-core",
@@ -16874,9 +17088,30 @@
         "type": "static"
       }
     ],
+    "npm:@spartan-ng/ui-dialog-brain": [
+      {
+        "source": "npm:@spartan-ng/ui-dialog-brain",
+        "target": "npm:tslib",
+        "type": "static"
+      }
+    ],
     "npm:@spartan-ng/ui-label-brain": [
       {
         "source": "npm:@spartan-ng/ui-label-brain",
+        "target": "npm:tslib",
+        "type": "static"
+      }
+    ],
+    "npm:@spartan-ng/ui-menu-brain": [
+      {
+        "source": "npm:@spartan-ng/ui-menu-brain",
+        "target": "npm:tslib",
+        "type": "static"
+      }
+    ],
+    "npm:@spartan-ng/ui-popover-brain": [
+      {
+        "source": "npm:@spartan-ng/ui-popover-brain",
         "target": "npm:tslib",
         "type": "static"
       }
@@ -19060,6 +19295,23 @@
       {
         "source": "npm:ejs",
         "target": "npm:jake",
+        "type": "static"
+      }
+    ],
+    "npm:embla-carousel-angular": [
+      {
+        "source": "npm:embla-carousel-angular",
+        "target": "npm:embla-carousel",
+        "type": "static"
+      },
+      {
+        "source": "npm:embla-carousel-angular",
+        "target": "npm:embla-carousel-reactive-utils",
+        "type": "static"
+      },
+      {
+        "source": "npm:embla-carousel-angular",
+        "target": "npm:tslib",
         "type": "static"
       }
     ],

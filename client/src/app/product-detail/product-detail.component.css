@@ -1,0 +1,12 @@
+.parent {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  }
+  
+  .div1 { grid-area: 1 / 1 / 5 / 4; }
+  .div2 { grid-area: 1 / 4 / 5 / 9; }
+  .div3 { grid-area: 5 / 1 / 7 / 9; }
+  

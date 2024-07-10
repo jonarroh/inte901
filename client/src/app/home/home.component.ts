@@ -22,8 +22,17 @@ export class HomeComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.productos = this.productService.getProductos();
-    console.log(this.productos);
+     this.productService.getProductos().subscribe({
+      complete: () => {
+        console.log('Productos cargados correctamente');
+      },
+      error: (error) => {
+        console.error('Error al cargar los productos', error);
+      },
+      next: (productos) => {
+        this.productos = productos
+      }
+     })
     }
 
 

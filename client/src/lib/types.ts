@@ -80,4 +80,4 @@ export interface Producto {
   inventarioPostres: InventarioPostre[];
 }
 
-export type TipoProducto = 'Postre' | 'Bebida';
+export type TipoProducto = 'Postres' | 'Bebidas'  | 'Comidas';

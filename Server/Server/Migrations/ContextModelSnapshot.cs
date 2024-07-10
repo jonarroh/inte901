@@ -99,6 +99,11 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Ingredients")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
