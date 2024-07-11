@@ -41,7 +41,7 @@ export class HlmThComponent {
 	public readonly userClass = input<ClassValue>('', { alias: 'class' });
 	protected readonly _computedClass = computed(() =>
 		hlm(
-			'flex flex-none h-12 px-4 text-sm items-center font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0',
+			'flex w-auto flex-none h-12 px-4 text-sm items-center font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0',
 			this._columnDef?.class(),
 			this.userClass(),
 		),

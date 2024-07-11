@@ -10,6 +10,7 @@ import { VentasComponent } from './admin/ventas/ventas.component';
 import { PedidoStateComponent } from './pedido-state/pedido-state.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { PlaceComponent } from './place/place.component';
+import { ComprasComponent } from './admin/compras/compras.component';
 
 export const routes: Routes = [
   {
@@ -37,10 +38,12 @@ export const routes: Routes = [
     path: 'admin',
     component: AdminComponent,
     children: [
-
       {
         path: 'ventas',
         component: VentasComponent
+      },{
+        path: 'compras',
+        component: ComprasComponent
       }
     ]
   },
