@@ -81,3 +81,12 @@ export interface Producto {
 }
 
 export type TipoProducto = 'Postres' | 'Bebidas'  | 'Comidas';
+
+export interface Espacio {
+  idEspacio: number;
+  nombre: string;
+  canPersonas: number;
+  precio: number;
+  estatus: string;
+  descripcion: string;
+}
