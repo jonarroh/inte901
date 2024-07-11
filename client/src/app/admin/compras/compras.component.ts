@@ -9,10 +9,12 @@ import {
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { BrnDialogTriggerDirective, BrnDialogContentDirective } from '@spartan-ng/ui-dialog-brain';
+import { HlmTableComponent, HlmTdComponent, HlmThComponent, HlmTrowComponent, HlmCaptionComponent } from '~/components/ui-table-helm/src';
+
 import { from } from 'rxjs';
 
 @Component({
-  selector: 'app-ventas',
+  selector: 'app-compras',
   standalone: true,
   imports: [
     NavComponent,
@@ -25,11 +27,16 @@ import { from } from 'rxjs';
     HlmButtonDirective,
     BrnDialogTriggerDirective,
     BrnDialogContentDirective,
-    HlmInputDirective
+    HlmInputDirective,
+    HlmTableComponent,
+    HlmTdComponent,
+    HlmThComponent,
+    HlmTrowComponent,
+    HlmCaptionComponent
   ],
-  templateUrl: './ventas.component.html',
-  styleUrl: './ventas.component.css'
+  templateUrl: './compras.component.html',
+  styleUrl: './compras.component.css'
 })
-export class VentasComponent {
+export class ComprasComponent {
 
 }
