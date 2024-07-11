@@ -149,16 +149,6 @@ namespace Server.Controllers
 
                 foreach (var d in ordertdo.DetailOrders)
                 {
-<<<<<<< HEAD
-                    IdOrder = ordertdo.IdOrder,
-                    IdProduct = ordertdo.IdProduct,
-                    NameProduct = ordertdo.NameProduct,
-                    Quantity = ordertdo.Quantity,
-                    PriceSingle = ordertdo.PriceSingle,
-                    DateOrder = orden.OrderDate,
-                    Ticket = ticket,
-                };
-=======
                     var detail = new DetailOrder
                     {
                         IdOrder = orden.Id,
@@ -166,7 +156,6 @@ namespace Server.Controllers
                         NameProduct = d.NameProduct,
                         Quantity = d.Quantity,
                         PriceSingle = d.PriceSingle,
-                        Status = d.Status,
                         DateOrder = DateTime.Now,
                         Ticket = ticket,
                         Ingredients = d.Ingredients,
@@ -178,7 +167,7 @@ namespace Server.Controllers
                 }
 
                 //_context.Orders.Add(orden);
->>>>>>> 88e1a8911d75b8a665bdfee0c40e377ed0b4f7b7
+
 
                 //await _context.SaveChangesAsync();
 

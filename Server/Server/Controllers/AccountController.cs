@@ -1,11 +1,9 @@
 ﻿namespace Server.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using Server.lib;
     using System.Security.Cryptography;
     using System.Text;
-    using System.Threading.Tasks;
 
     [ApiController]
     [Route("[controller]")]
@@ -53,7 +51,8 @@
             // Almacenar el token en las cookies
             Response.Cookies.Append("token", token, new CookieOptions { HttpOnly = true, Secure = true });
 
-            return Ok(new { jwtToken = token });
+
+            return Ok(new { jwtToken = token , id = user.Id });
         }
 
         public static string StringToSha256(string str)
