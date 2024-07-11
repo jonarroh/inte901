@@ -35,7 +35,7 @@ import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
     HlmAccordionItemDirective,
     HlmAccordionTriggerDirective,
     BrnAccordionContentComponent,
-    HlmIconComponent,
+    HlmIconComponent
   ],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'
