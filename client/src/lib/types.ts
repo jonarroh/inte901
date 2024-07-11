@@ -113,3 +113,12 @@ export interface User {
   creditCards: CreditCard[];
 }
 
+
+export interface Espacio {
+  idEspacio: number;
+  nombre: string;
+  canPersonas: number;
+  precio: number;
+  estatus: string;
+  descripcion: string;
+}
