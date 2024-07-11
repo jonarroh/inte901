@@ -3,24 +3,24 @@
   <hlm-skeleton class='h-4 w-[250px]' />
 } @else {
   <div class="w-full p-4 bg-gray-100 rounded-lg shadow-md">
-    <span class="text-2xl font-bold text-gray-800">{{ product?.nombre }}</span>
+    <span class="text-2xl font-bold text-gray-800">{{ product.nombre }}</span>
     <brn-separator hlmSeparator class="w-full text-gray-500 bg-gray-300 my-2" />
   </div>
   <div class="parent p-4 bg-white shadow-md rounded-lg">
     <div class="div1 p-4">
-      <img src="{{ img() }}" alt="{{ product?.nombre }}" class="w-full h-auto rounded-md"
+      <img src="{{ img() }}" alt="{{ product.nombre }}" class="w-full h-auto rounded-md"
            (error)="onImageError($event)" />
     </div>
     <div class="div2 p-4">
       <div class="flex flex-col space-y-2">
         <span class="text-xl font-bold text-gray-700">Precio: 
-          <span class="font-normal text-gray-600">$ {{ product?.precio }}</span>
+          <span class="font-normal text-gray-600">$ {{ product.precio }}</span>
         </span>
         <span class="text-xl font-bold text-gray-700">Descripción:
-          <span class="font-normal text-gray-600">{{ product?.descripcion }}</span>
+          <span class="font-normal text-gray-600">{{ product.descripcion }}</span>
         </span>
         <span class="text-xl font-bold text-gray-700">Categoría:
-          <span class="font-normal text-gray-600">{{ product?.tipo }}</span>
+          <span class="font-normal text-gray-600">{{ product.tipo }}</span>
         </span>
         <div hlmAccordion>
           <div hlmAccordionItem>
@@ -30,7 +30,7 @@
             </button>
             <brn-accordion-content hlm class="p-2 bg-gray-50 rounded-lg">
               <div class="flex flex-col space-y-1">
-                @for (item of product?.ingredientes; track $index) {
+                @for (item of product.ingredientes; track $index) {
                   <span class="text-sm text-gray-600">{{ item.materiaPrima.material }}</span>
                 }
                 @empty {
@@ -43,5 +43,9 @@
       </div>
     </div>
     <div class="div3 p-4"></div>
+    
   </div>
+  <product-contador
+  [product]="product"
+  />
 }

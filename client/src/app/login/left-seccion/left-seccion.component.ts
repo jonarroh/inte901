@@ -82,7 +82,10 @@ export class LeftSeccionComponent {
       
       this.authService.login(this.formModel.value()).subscribe({
         next: (response) => {
-          this.router.navigate(['/test']);
+          this.router.navigate(['/products']);
+          localStorage.setItem('token', response.jwtToken);
+          localStorage.setItem('userId', response.id);
+
         },
         error: (error) => {
           this.disabled.set(false);
