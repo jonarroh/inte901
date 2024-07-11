@@ -12,8 +12,8 @@ using Server;
 namespace Server.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240706034050_initial")]
-    partial class initial
+    [Migration("20240710041318_asdfggg")]
+    partial class asdfggg
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -78,6 +78,10 @@ namespace Server.Migrations
                     b.Property<int?>("IdProduct")
                         .IsRequired()
                         .HasColumnType("int");
+
+                    b.Property<string>("Ingredients")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NameProduct")
                         .IsRequired()

@@ -1,1 +1,37 @@
-<p>contador works!</p>
+<div class="bg-background w-screen h-20 flex justify-between items-center sticky bottom-0 px-4">
+  <div class="flex items-center border border-gray-300 rounded space-x-2 p-2 bg-white">
+    
+    @if (contador() == 0) {
+      <button (click)="returnToProducts()" aria-label="Decrementar" class="p-2 bg-white">
+        <lucide-icon name="trash"></lucide-icon>
+      </button>
+
+    }@else {
+      <button (click)="decrement()" aria-label="Decrementar" class="p-2 bg-white">
+        <lucide-icon name="minus"></lucide-icon>
+      </button>
+    }
+
+
+    <input type="text" 
+           [value]="contador()" 
+           class="w-10 h-10 text-center border-none focus:outline-none
+           border border-x-2
+           " 
+           aria-live="polite"
+           readonly>
+    <button (click)="increment()" aria-label="Incrementar" class="p-2 bg-white">
+      <lucide-icon name="plus"></lucide-icon>
+    </button>
+  </div>
+  <div class="flex space-x-2">
+    <button hlmBtn class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+    (click)="agregarAlCarrito()"
+    >
+      Agregar y seguir comprando
+    </button>
+    <button hlmBtn class="px-4 py-2 bg-secondary text-white rounded hover:bg-secondary/20 transition-colors">
+      Agregar e ir a pagar $ 239.00
+    </button>
+  </div>
+</div>

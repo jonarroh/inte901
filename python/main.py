@@ -57,9 +57,41 @@ def clipProduct():
             width, height = img.size
             # Redimensionar la imagen
             img = img.resize((to_width, to_height))
-            # Guardar la imagen
-            img.save(filepath)
-            convert_images.append(filename)
+            # Guardar la imagen, si no esta en formato webp, convertirla
+            if not filename.lower().endswith('.webp'):
+                webp_filename = os.path.splitext(filename)[0] + '.webp'
+                webp_filepath = os.path.join(STATIC_FOLDER, 'productos', webp_filename)
+                img.save(webp_filepath, 'webp')
+                os.remove(filepath)
+                convert_images.append(webp_filename)
+            else:
+                convert_images.append(filename)
+
+    return jsonify({'message': 'Images have been clipped.', 'clipped_images': convert_images})
+
+@app.route('/clipProduct2', methods=['POST', 'GET'])
+def clipProduct2():
+    convert_images = []
+    to_width = 400
+    to_height = 400
+
+    for filename in os.listdir(os.path.join(STATIC_FOLDER, 'productos', 'grande')):
+        print(filename)
+        if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')):
+            filepath = os.path.join(STATIC_FOLDER, 'productos', 'grande', filename)
+            img = Image.open(filepath)
+            # Redimensionar la imagen a 400x400
+            img = img.resize((to_width, to_height), Image.LANCZOS)
+            # Guardar la imagen, si no está en formato webp, convertirla
+            if not filename.lower().endswith('.webp'):
+                webp_filename = os.path.splitext(filename)[0] + '.webp'
+                webp_filepath = os.path.join(STATIC_FOLDER, 'productos', 'grande', webp_filename)
+                img.save(webp_filepath, 'webp', quality=90)  # Ajusta la calidad según sea necesario
+                os.remove(filepath)
+                convert_images.append(webp_filename)
+            else:
+                img.save(filepath, quality=90)  # Guardar la imagen con alta calidad
+                convert_images.append(filename)
 
     return jsonify({'message': 'Images have been clipped.', 'clipped_images': convert_images})
 

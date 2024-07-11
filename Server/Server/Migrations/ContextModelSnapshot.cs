@@ -76,6 +76,10 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
+                    b.Property<string>("Ingredients")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NameProduct")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -98,11 +102,6 @@ namespace Server.Migrations
                     b.Property<long?>("Ticket")
                         .IsRequired()
                         .HasColumnType("bigint");
-
-                    b.Property<string>("Ingredients")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 

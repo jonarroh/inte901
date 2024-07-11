@@ -7,8 +7,17 @@
   class="bg-white p-4 w-96 h-screen overflow-y-auto"
   >
       <hlm-sheet-header class="flex flex-col items-center bg-white/75">
-          <h3 hlmSheetTitle>Edit Profile</h3>
-          <p hlmSheetDescription>Make changes to your profile here. Click save when you're done.</p>
+          <h3 hlmSheetTitle>Carrito de compra</h3>
+         @for (item of items; track $index) {
+          <div class="flex items-center justify-between w-full p-2 border-b border-gray-200">
+            {{item.nombre}} {{item.quantity}} {{item.precio *item.quantity}}
+          </div>  
+         } 
+         @empty {
+          <div class="flex items-center justify-center w-full p-2 border-b border-gray-200">
+            No hay productos en el carrito
+          </div>
+         }
       </hlm-sheet-header>
   </hlm-sheet-content>
 </hlm-sheet>

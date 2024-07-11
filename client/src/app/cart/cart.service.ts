@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Producto } from '~/lib/types';
 
+export interface ProductoWithQuantity extends Producto {
+  quantity: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,19 +21,19 @@ export class CartService {
     }
   }
 
-  private get cart(): Producto[] {
+  private get cart(): ProductoWithQuantity[] {
     return JSON.parse(localStorage.getItem(this.storageKey) || '[]');
   }
 
-  private set cart(items: Producto[]) {
+  private set cart(items: ProductoWithQuantity[]) {
     localStorage.setItem(this.storageKey, JSON.stringify(items));
   }
 
-  getItems(): Producto[] {
+  getItems(): ProductoWithQuantity[] {
     return this.cart;
   }
 
-  addItem(item: Producto): void {
+  addItem(item: ProductoWithQuantity): void {
     const cart = this.cart;
     cart.push(item);
     this.cart = cart;
