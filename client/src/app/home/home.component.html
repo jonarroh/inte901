@@ -5,7 +5,7 @@
 <hlm-skeleton class='h-full w-full' />
 
   } @else {
-    <div class="grid grid-cols-3 gap-4 p-4 mt-8"> 
+    <div class="grid grid-cols-3 mt-8"> 
       @for (producto of productos; track $index) {
         <card-product
         [id]="producto.id"

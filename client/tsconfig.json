@@ -81,6 +81,9 @@
       ],
       "@spartan-ng/ui-accordion-helm": [
         "./src/components/ui-accordion-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-select-helm": [
+        "./src/components/ui-select-helm/src/index.ts"
       ]
     }
   },
