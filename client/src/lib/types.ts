@@ -81,3 +81,44 @@ export interface Producto {
 }
 
 export type TipoProducto = 'Postres' | 'Bebidas'  | 'Comidas';
+
+export interface Address {
+  id: number;
+  calle: string;
+  colonia: string;
+  ciudad: string;
+  estado: string;
+  pais: string;
+  codigoPostal: string;
+  userId: number;
+}
+
+export interface CreditCard {
+  id: number;
+  cardNumber: string;
+  expiryDate: string;
+  cardHolderName: string;
+  userId: number;
+}
+
+export interface User {
+  id: number;
+  name: string;
+  lastName: string;
+  email: string;
+  password: string;
+  role: string;
+  token: string;
+  direcciones: Address[];
+  creditCards: CreditCard[];
+}
+
+
+export interface Espacio {
+  idEspacio: number;
+  nombre: string;
+  canPersonas: number;
+  precio: number;
+  estatus: string;
+  descripcion: string;
+}

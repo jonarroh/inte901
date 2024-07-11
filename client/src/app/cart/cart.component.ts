@@ -10,6 +10,7 @@ import {
   HlmSheetTitleDirective,
 } from '@spartan-ng/ui-sheet-helm';
 import { LucideAngularModule } from 'lucide-angular';
+import { CartService } from './cart.service';
 
 
 @Component({
@@ -31,5 +32,11 @@ import { LucideAngularModule } from 'lucide-angular';
   styleUrl: './cart.component.css'
 })
 export class CartComponent {
+
+  constructor(private cartService: CartService) {}
+
+  get items() {
+    return this.cartService.getItems();
+  }
 
 }
