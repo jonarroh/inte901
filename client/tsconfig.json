@@ -84,6 +84,15 @@
       ],
       "@spartan-ng/ui-select-helm": [
         "./src/components/ui-select-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-scrollarea-helm": [
+        "./src/components/ui-scrollarea-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-checkbox-helm": [
+        "./src/components/ui-checkbox-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-typography-helm": [
+        "./src/components/ui-typography-helm/src/index.ts"
       ]
     }
   },
