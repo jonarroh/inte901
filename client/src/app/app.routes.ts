@@ -56,7 +56,7 @@ export const routes: Routes = [
     component: ProductDetailComponent
   },
   {
-    path: 'place',
+    path: 'places',
     component: PlaceComponent
   }
 ];
