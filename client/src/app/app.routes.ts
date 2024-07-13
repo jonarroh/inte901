@@ -10,9 +10,14 @@ import { VentasComponent } from './admin/ventas/ventas.component';
 import { PedidoStateComponent } from './pedido-state/pedido-state.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { PlaceComponent } from './place/place.component';
+
+import { DescriptionPlaceComponent } from './place/description-place/description-place.component';
 import { ComprasComponent } from './admin/compras/compras.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { AuthenticatedGuard } from './auth/route.guard';
+
+
+
 
 export const routes: Routes = [
   {
@@ -43,7 +48,8 @@ export const routes: Routes = [
       {
         path: 'ventas',
         component: VentasComponent
-      },{
+      },
+      {
         path: 'compras',
         component: ComprasComponent
       }
@@ -62,8 +68,13 @@ export const routes: Routes = [
     component: PlaceComponent
   },
   {
+<<<<<<< HEAD
+    path: 'description/:id',
+    component: DescriptionPlaceComponent
+=======
     path:'checkout',
     component: CheckoutComponent,
     canActivate: [AuthenticatedGuard]
+>>>>>>> 794e55d6d95b03e017aca7a867425a51c153934d
   }
 ];

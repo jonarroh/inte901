@@ -11,7 +11,11 @@ export class PlaceServiceService {
 
   constructor(private http: HttpClient){}
 
-  getPlaces():Observable<any[]>{
+  getPlaces(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
+  }
+
+  getPlaceById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 }
