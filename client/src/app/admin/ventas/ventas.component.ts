@@ -6,8 +6,8 @@ import {
   HlmDialogTitleDirective,
   HlmDialogDescriptionDirective,
 } from '~/components/ui-dialog-helm/src';
-import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
+import { HlmButtonDirective } from '~/components/ui-button-helm/src';
+import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import { BrnDialogTriggerDirective, BrnDialogContentDirective } from '@spartan-ng/ui-dialog-brain';
 import { from } from 'rxjs';
 

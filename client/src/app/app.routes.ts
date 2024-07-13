@@ -11,6 +11,8 @@ import { PedidoStateComponent } from './pedido-state/pedido-state.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { PlaceComponent } from './place/place.component';
 import { ComprasComponent } from './admin/compras/compras.component';
+import { CheckoutComponent } from './checkout/checkout.component';
+import { AuthenticatedGuard } from './auth/route.guard';
 
 export const routes: Routes = [
   {
@@ -58,5 +60,10 @@ export const routes: Routes = [
   {
     path: 'places',
     component: PlaceComponent
+  },
+  {
+    path:'checkout',
+    component: CheckoutComponent,
+    canActivate: [AuthenticatedGuard]
   }
 ];

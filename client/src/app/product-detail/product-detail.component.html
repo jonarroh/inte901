@@ -1,6 +1,6 @@
 <home-navbar></home-navbar>
-@if (isLoading) {
-  <hlm-skeleton class='h-4 w-[250px]' />
+@if (isLoading()) {
+  <hlm-skeleton class='h-3 w-50' />
 } @else {
   <div class="w-full p-4 bg-gray-100 rounded-lg shadow-md">
     <span class="text-2xl font-bold text-gray-800">{{ product.nombre }}</span>
@@ -43,7 +43,6 @@
       </div>
     </div>
     <div class="div3 p-4"></div>
-    
   </div>
   <product-contador
   [product]="product"
