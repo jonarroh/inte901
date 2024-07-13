@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { NavbarComponent } from './navbar/navbar.component';
 import { ProductosService } from './services/productos.service';
 import { Producto } from '~/lib/types';
 import { CardProductComponent } from './card-product/card-product.component';
 
+import { HlmSkeletonComponent } from '@spartan-ng/ui-skeleton-helm';
+
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
-    NavbarComponent,CardProductComponent
+    NavbarComponent,CardProductComponent,HlmSkeletonComponent
   ],
   providers: [ProductosService],
   templateUrl: './home.component.html'
@@ -16,6 +18,7 @@ import { CardProductComponent } from './card-product/card-product.component';
 export class HomeComponent implements OnInit {
 
   protected productos: Producto[] = [];
+  isLoading = signal(true);
 
   constructor(private productService: ProductosService) {
     
@@ -25,6 +28,7 @@ export class HomeComponent implements OnInit {
      this.productService.getProductos().subscribe({
       complete: () => {
         console.log('Productos cargados correctamente');
+        this.isLoading.update(() => false);
       },
       error: (error) => {
         console.error('Error al cargar los productos', error);

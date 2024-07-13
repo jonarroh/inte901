@@ -149,7 +149,6 @@ namespace Server.Controllers
 
                 foreach (var d in ordertdo.DetailOrders)
                 {
-
                     var detail = new DetailOrder
                     {
                         IdOrder = orden.Id,

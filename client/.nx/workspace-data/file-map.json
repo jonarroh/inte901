@@ -13,19 +13,30 @@
     "@angular/router": "18.0.4",
     "@ng-icons/core": "^25.1.0",
     "@ng-icons/lucide": "^26.3.0",
+    "@spartan-ng/ui-accordion-brain": "0.0.1-alpha.352",
     "@spartan-ng/ui-avatar-brain": "0.0.1-alpha.352",
+    "@spartan-ng/ui-checkbox-brain": "0.0.1-alpha.352",
+    "@spartan-ng/ui-collapsible-brain": "0.0.1-alpha.352",
     "@spartan-ng/ui-command-brain": "0.0.1-alpha.352",
     "@spartan-ng/ui-core": "0.0.1-alpha.352",
     "@spartan-ng/ui-dialog-brain": "0.0.1-alpha.352",
+    "@spartan-ng/ui-hovercard-brain": "0.0.1-alpha.352",
     "@spartan-ng/ui-label-brain": "0.0.1-alpha.352",
     "@spartan-ng/ui-menu-brain": "0.0.1-alpha.352",
     "@spartan-ng/ui-popover-brain": "0.0.1-alpha.352",
+    "@spartan-ng/ui-select-brain": "0.0.1-alpha.352",
+    "@spartan-ng/ui-separator-brain": "0.0.1-alpha.352",
+    "@spartan-ng/ui-sheet-brain": "0.0.1-alpha.352",
+    "@spartan-ng/ui-table-brain": "0.0.1-alpha.352",
+    "@spartan-ng/ui-tabs-brain": "0.0.1-alpha.352",
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",
     "embla-carousel-angular": "^14.0.0",
     "i": "^0.3.7",
     "lucide-angular": "^0.396.0",
     "ng-signal-forms": "^1.12.0",
+    "ngx-scrollbar": "^13.0.1",
+    "ngx-sonner": "^2.0.0",
     "rxjs": "~7.8.0",
     "tailwindcss-animated": "^1.1.2",
     "tslib": "^2.3.0",
@@ -84,6 +95,39 @@
     ],
     "@spartan-ng/ui-dialog-helm": [
       "./src/components/ui-dialog-helm/src/index.ts"
+    ],
+    "@spartan-ng/ui-sonner-helm": [
+      "./src/components/ui-sonner-helm/src/index.ts"
+    ],
+    "@spartan-ng/ui-tabs-helm": [
+      "./src/components/ui-tabs-helm/src/index.ts"
+    ],
+    "@spartan-ng/ui-skeleton-helm": [
+      "./src/components/ui-skeleton-helm/src/index.ts"
+    ],
+    "@spartan-ng/ui-table-helm": [
+      "./src/components/ui-table-helm/src/index.ts"
+    ],
+    "@spartan-ng/ui-hovercard-helm": [
+      "./src/components/ui-hovercard-helm/src/index.ts"
+    ],
+    "@spartan-ng/ui-sheet-helm": [
+      "./src/components/ui-sheet-helm/src/index.ts"
+    ],
+    "@spartan-ng/ui-separator-helm": [
+      "./src/components/ui-separator-helm/src/index.ts"
+    ],
+    "@spartan-ng/ui-accordion-helm": [
+      "./src/components/ui-accordion-helm/src/index.ts"
+    ],
+    "@spartan-ng/ui-select-helm": [
+      "./src/components/ui-select-helm/src/index.ts"
+    ],
+    "@spartan-ng/ui-scrollarea-helm": [
+      "./src/components/ui-scrollarea-helm/src/index.ts"
+    ],
+    "@spartan-ng/ui-checkbox-helm": [
+      "./src/components/ui-checkbox-helm/src/index.ts"
     ]
   },
   "nxJsonPlugins": [],
@@ -120,11 +164,11 @@
         },
         {
           "file": "bun.lockb",
-          "hash": "7377522616825376633"
+          "hash": "7297644427783931125"
         },
         {
           "file": "package.json",
-          "hash": "15304436390751981399",
+          "hash": "18093840589502200220",
           "deps": [
             "npm:@angular-devkit/build-angular",
             "npm:@angular/cli",
@@ -154,19 +198,30 @@
             "npm:@angular/router",
             "npm:@ng-icons/core",
             "npm:@ng-icons/lucide",
+            "npm:@spartan-ng/ui-accordion-brain",
             "npm:@spartan-ng/ui-avatar-brain",
+            "npm:@spartan-ng/ui-checkbox-brain",
+            "npm:@spartan-ng/ui-collapsible-brain",
             "npm:@spartan-ng/ui-command-brain",
             "npm:@spartan-ng/ui-core",
             "npm:@spartan-ng/ui-dialog-brain",
+            "npm:@spartan-ng/ui-hovercard-brain",
             "npm:@spartan-ng/ui-label-brain",
             "npm:@spartan-ng/ui-menu-brain",
             "npm:@spartan-ng/ui-popover-brain",
+            "npm:@spartan-ng/ui-select-brain",
+            "npm:@spartan-ng/ui-separator-brain",
+            "npm:@spartan-ng/ui-sheet-brain",
+            "npm:@spartan-ng/ui-table-brain",
+            "npm:@spartan-ng/ui-tabs-brain",
             "npm:class-variance-authority",
             "npm:clsx",
             "npm:embla-carousel-angular",
             "npm:i",
             "npm:lucide-angular",
             "npm:ng-signal-forms",
+            "npm:ngx-scrollbar",
+            "npm:ngx-sonner",
             "npm:rxjs",
             "npm:tailwindcss-animated",
             "npm:tslib",
@@ -174,20 +229,60 @@
           ]
         },
         {
+          "file": "src/app/admin/admin.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/admin/admin.component.html",
+          "hash": "6004652840524398660"
+        },
+        {
+          "file": "src/app/admin/admin.component.ts",
+          "hash": "3972921831627200836"
+        },
+        {
+          "file": "src/app/admin/componentes/nav/nav.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/admin/componentes/nav/nav.component.html",
+          "hash": "14396053858700414646"
+        },
+        {
+          "file": "src/app/admin/componentes/nav/nav.component.spec.ts",
+          "hash": "5562687131271163288"
+        },
+        {
+          "file": "src/app/admin/componentes/nav/nav.component.ts",
+          "hash": "10324351868809316360"
+        },
+        {
+          "file": "src/app/admin/ventas/ventas.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/admin/ventas/ventas.component.html",
+          "hash": "15293240464091826341"
+        },
+        {
+          "file": "src/app/admin/ventas/ventas.component.spec.ts",
+          "hash": "18152138091844153645"
+        },
+        {
+          "file": "src/app/admin/ventas/ventas.component.ts",
+          "hash": "14548983038473549595"
+        },
+        {
           "file": "src/app/app.component.css",
           "hash": "3244421341483603138"
         },
         {
           "file": "src/app/app.component.html",
-          "hash": "17816966185630879015"
-        },
-        {
-          "file": "src/app/app.component.spec.ts",
-          "hash": "8242827432376774000"
+          "hash": "3639209439741473049"
         },
         {
           "file": "src/app/app.component.ts",
-          "hash": "795173809656269039"
+          "hash": "5064556558597684836"
         },
         {
           "file": "src/app/app.config.ts",
@@ -195,7 +290,7 @@
         },
         {
           "file": "src/app/app.routes.ts",
-          "hash": "1692754517880260437"
+          "hash": "7919065264082386641"
         },
         {
           "file": "src/app/auth/auth.service.ts",
@@ -210,28 +305,72 @@
           "hash": "17143101480113914486"
         },
         {
+          "file": "src/app/cart/cart.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/cart/cart.component.html",
+          "hash": "2323525450964772542"
+        },
+        {
+          "file": "src/app/cart/cart.component.ts",
+          "hash": "6407276558115027961"
+        },
+        {
+          "file": "src/app/cart/cart.service.ts",
+          "hash": "4532022576643187334"
+        },
+        {
+          "file": "src/app/dashboard/dashboard.module.ts",
+          "hash": "4661565923039696781"
+        },
+        {
+          "file": "src/app/dashboard/dashboard.service.spec.ts",
+          "hash": "11005531818438098833"
+        },
+        {
+          "file": "src/app/dashboard/dashboard.service.ts",
+          "hash": "13269477549766752002"
+        },
+        {
+          "file": "src/app/dashboard/dashboard/dashboard.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/dashboard/dashboard/dashboard.component.html",
+          "hash": "4894489786295920269"
+        },
+        {
+          "file": "src/app/dashboard/dashboard/dashboard.component.spec.ts",
+          "hash": "12180417360760794088"
+        },
+        {
+          "file": "src/app/dashboard/dashboard/dashboard.component.ts",
+          "hash": "246616145337752280"
+        },
+        {
           "file": "src/app/home/card-product/card-product.component.html",
-          "hash": "11547587786310895260"
+          "hash": "13445804893760146118"
         },
         {
           "file": "src/app/home/card-product/card-product.component.ts",
-          "hash": "13075328534139033849"
+          "hash": "13239007498373268775"
         },
         {
           "file": "src/app/home/home.component.html",
-          "hash": "17023042739215203399"
+          "hash": "5415693518260671888"
         },
         {
           "file": "src/app/home/home.component.ts",
-          "hash": "1950577577261142066"
+          "hash": "6961999479750319831"
         },
         {
           "file": "src/app/home/icon/icon.component.html",
-          "hash": "11925394490096104532"
+          "hash": "8411391192982891157"
         },
         {
           "file": "src/app/home/icon/icon.component.ts",
-          "hash": "16558876234847396270"
+          "hash": "2831293378598626498"
         },
         {
           "file": "src/app/home/navbar/navbar.component.css",
@@ -239,19 +378,35 @@
         },
         {
           "file": "src/app/home/navbar/navbar.component.html",
-          "hash": "12093138373301980283"
+          "hash": "5098517801424003215"
         },
         {
           "file": "src/app/home/navbar/navbar.component.ts",
-          "hash": "3343533500637281549"
-        },
-        {
-          "file": "src/app/home/services/cart.service.ts",
-          "hash": "1545232653719787815"
+          "hash": "13068075965892237836"
         },
         {
           "file": "src/app/home/services/productos.service.ts",
-          "hash": "16794151112631557027"
+          "hash": "1651017750269746142"
+        },
+        {
+          "file": "src/app/home/services/user.service.ts",
+          "hash": "16891336664383584577"
+        },
+        {
+          "file": "src/app/landing-page/calidad/calidad.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/landing-page/calidad/calidad.component.html",
+          "hash": "14502059990124709544"
+        },
+        {
+          "file": "src/app/landing-page/calidad/calidad.component.spec.ts",
+          "hash": "8792752375742605840"
+        },
+        {
+          "file": "src/app/landing-page/calidad/calidad.component.ts",
+          "hash": "2168260025095256300"
         },
         {
           "file": "src/app/landing-page/footer/footer.component.css",
@@ -259,7 +414,7 @@
         },
         {
           "file": "src/app/landing-page/footer/footer.component.html",
-          "hash": "76009102197237629"
+          "hash": "16422944258908880624"
         },
         {
           "file": "src/app/landing-page/footer/footer.component.spec.ts",
@@ -275,7 +430,7 @@
         },
         {
           "file": "src/app/landing-page/header/header.component.html",
-          "hash": "230919607254221805"
+          "hash": "11757979531792562847"
         },
         {
           "file": "src/app/landing-page/header/header.component.spec.ts",
@@ -286,16 +441,64 @@
           "hash": "4868529381131887200"
         },
         {
+          "file": "src/app/landing-page/inicio/inicio.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/landing-page/inicio/inicio.component.html",
+          "hash": "16434746902331178274"
+        },
+        {
+          "file": "src/app/landing-page/inicio/inicio.component.spec.ts",
+          "hash": "8257361680440200160"
+        },
+        {
+          "file": "src/app/landing-page/inicio/inicio.component.ts",
+          "hash": "8004166142758527351"
+        },
+        {
           "file": "src/app/landing-page/landing-page.component.css",
           "hash": "3244421341483603138"
         },
         {
           "file": "src/app/landing-page/landing-page.component.html",
-          "hash": "7414896721707768099"
+          "hash": "1524637943882716155"
         },
         {
           "file": "src/app/landing-page/landing-page.component.ts",
-          "hash": "15603949445469919284"
+          "hash": "10946681134347629317"
+        },
+        {
+          "file": "src/app/landing-page/section-prod/section-prod.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/landing-page/section-prod/section-prod.component.html",
+          "hash": "4709752655981296492"
+        },
+        {
+          "file": "src/app/landing-page/section-prod/section-prod.component.spec.ts",
+          "hash": "9930051727759716744"
+        },
+        {
+          "file": "src/app/landing-page/section-prod/section-prod.component.ts",
+          "hash": "180841844945718539"
+        },
+        {
+          "file": "src/app/landing-page/valores/valores.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/landing-page/valores/valores.component.html",
+          "hash": "14676634479766854670"
+        },
+        {
+          "file": "src/app/landing-page/valores/valores.component.spec.ts",
+          "hash": "2229505893746739028"
+        },
+        {
+          "file": "src/app/landing-page/valores/valores.component.ts",
+          "hash": "18095923142042684606"
         },
         {
           "file": "src/app/login/left-seccion/left-seccion.component.html",
@@ -303,7 +506,7 @@
         },
         {
           "file": "src/app/login/left-seccion/left-seccion.component.ts",
-          "hash": "8057786769757127321"
+          "hash": "2362860172829263944"
         },
         {
           "file": "src/app/login/login.component.html",
@@ -322,12 +525,56 @@
           "hash": "5518129065229862228"
         },
         {
+          "file": "src/app/orden/orden-service.service.spec.ts",
+          "hash": "7152355058454264277"
+        },
+        {
+          "file": "src/app/orden/orden-service.service.ts",
+          "hash": "8852773570008220999"
+        },
+        {
+          "file": "src/app/orden/orden-table/orden-table.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/orden/orden-table/orden-table.component.html",
+          "hash": "17497809143221166817"
+        },
+        {
+          "file": "src/app/orden/orden-table/orden-table.component.spec.ts",
+          "hash": "17377184758309969345"
+        },
+        {
+          "file": "src/app/orden/orden-table/orden-table.component.ts",
+          "hash": "3780633049051235085"
+        },
+        {
+          "file": "src/app/orden/orden.module.ts",
+          "hash": "31684694329328265"
+        },
+        {
+          "file": "src/app/orden/orden/orden.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/orden/orden/orden.component.html",
+          "hash": "4055606894390288348"
+        },
+        {
+          "file": "src/app/orden/orden/orden.component.spec.ts",
+          "hash": "5160947833487295733"
+        },
+        {
+          "file": "src/app/orden/orden/orden.component.ts",
+          "hash": "3037012465663054819"
+        },
+        {
           "file": "src/app/pedido-state/pedido-state.component.css",
           "hash": "3244421341483603138"
         },
         {
           "file": "src/app/pedido-state/pedido-state.component.html",
-          "hash": "14605260580302423028"
+          "hash": "10929592349120907540"
         },
         {
           "file": "src/app/pedido-state/pedido-state.component.spec.ts",
@@ -335,7 +582,155 @@
         },
         {
           "file": "src/app/pedido-state/pedido-state.component.ts",
-          "hash": "9436232426817104252"
+          "hash": "10271005654907039049"
+        },
+        {
+          "file": "src/app/pedido-state/process-state/process-state.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/pedido-state/process-state/process-state.component.html",
+          "hash": "4991989444091310372"
+        },
+        {
+          "file": "src/app/pedido-state/process-state/process-state.component.spec.ts",
+          "hash": "15285402168988167197"
+        },
+        {
+          "file": "src/app/pedido-state/process-state/process-state.component.ts",
+          "hash": "4375887379870492184"
+        },
+        {
+          "file": "src/app/pedido-state/products-list/products-list.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/pedido-state/products-list/products-list.component.html",
+          "hash": "15779838749560266913"
+        },
+        {
+          "file": "src/app/pedido-state/products-list/products-list.component.spec.ts",
+          "hash": "17188726540776664527"
+        },
+        {
+          "file": "src/app/pedido-state/products-list/products-list.component.ts",
+          "hash": "291986993345062426"
+        },
+        {
+          "file": "src/app/place/description-place/description-place.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/place/description-place/description-place.component.html",
+          "hash": "1059470972221469883"
+        },
+        {
+          "file": "src/app/place/description-place/description-place.component.spec.ts",
+          "hash": "12309967773408726680"
+        },
+        {
+          "file": "src/app/place/description-place/description-place.component.ts",
+          "hash": "8104313603471139574"
+        },
+        {
+          "file": "src/app/place/galery-place/galery-place.component.css",
+          "hash": "7768016330665486860"
+        },
+        {
+          "file": "src/app/place/galery-place/galery-place.component.html",
+          "hash": "4020258059212473763"
+        },
+        {
+          "file": "src/app/place/galery-place/galery-place.component.spec.ts",
+          "hash": "12231480313050143877"
+        },
+        {
+          "file": "src/app/place/galery-place/galery-place.component.ts",
+          "hash": "6995998909296715876"
+        },
+        {
+          "file": "src/app/place/place-service.service.spec.ts",
+          "hash": "4849862961351058003"
+        },
+        {
+          "file": "src/app/place/place-service.service.ts",
+          "hash": "4360286346197045597"
+        },
+        {
+          "file": "src/app/place/place.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/place/place.component.html",
+          "hash": "8551334541752037296"
+        },
+        {
+          "file": "src/app/place/place.component.spec.ts",
+          "hash": "13140354964679777604"
+        },
+        {
+          "file": "src/app/place/place.component.ts",
+          "hash": "10243043279612001177"
+        },
+        {
+          "file": "src/app/product-detail/contador/contador.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/product-detail/contador/contador.component.html",
+          "hash": "15411916605325176375"
+        },
+        {
+          "file": "src/app/product-detail/contador/contador.component.spec.ts",
+          "hash": "12630018685980047747"
+        },
+        {
+          "file": "src/app/product-detail/contador/contador.component.ts",
+          "hash": "10765879091538509712"
+        },
+        {
+          "file": "src/app/product-detail/product-detail.component.css",
+          "hash": "10343856046998373489"
+        },
+        {
+          "file": "src/app/product-detail/product-detail.component.html",
+          "hash": "4173887666539722185"
+        },
+        {
+          "file": "src/app/product-detail/product-detail.component.spec.ts",
+          "hash": "1689808568434232329"
+        },
+        {
+          "file": "src/app/product-detail/product-detail.component.ts",
+          "hash": "10662276327632725800"
+        },
+        {
+          "file": "src/app/proveedores/proveedores.module.ts",
+          "hash": "46069910995628613"
+        },
+        {
+          "file": "src/app/proveedores/proveedores.service.spec.ts",
+          "hash": "7641829306330098207"
+        },
+        {
+          "file": "src/app/proveedores/proveedores.service.ts",
+          "hash": "9963395148663823710"
+        },
+        {
+          "file": "src/app/proveedores/proveedores/proveedores.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/proveedores/proveedores/proveedores.component.html",
+          "hash": "7034249438165166736"
+        },
+        {
+          "file": "src/app/proveedores/proveedores/proveedores.component.spec.ts",
+          "hash": "11907030797654849264"
+        },
+        {
+          "file": "src/app/proveedores/proveedores/proveedores.component.ts",
+          "hash": "5794234483778728849"
         },
         {
           "file": "src/app/register/form/form.component.css",
@@ -351,7 +746,7 @@
         },
         {
           "file": "src/app/register/form/form.component.ts",
-          "hash": "15810445029396036159"
+          "hash": "834959603915713096"
         },
         {
           "file": "src/app/register/interfaces/type.ts",
@@ -382,12 +777,28 @@
           "hash": "3520249832914615612"
         },
         {
+          "file": "src/app/reserves/reserves.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/reserves/reserves.component.html",
+          "hash": "4216210985441246696"
+        },
+        {
+          "file": "src/app/reserves/reserves.component.spec.ts",
+          "hash": "15446027063525220326"
+        },
+        {
+          "file": "src/app/reserves/reserves.component.ts",
+          "hash": "12040924757257691680"
+        },
+        {
           "file": "src/app/test/test.component.css",
           "hash": "3244421341483603138"
         },
         {
           "file": "src/app/test/test.component.html",
-          "hash": "10061070156527962308"
+          "hash": "13642482875100647091"
         },
         {
           "file": "src/app/test/test.component.spec.ts",
@@ -395,11 +806,67 @@
         },
         {
           "file": "src/app/test/test.component.ts",
-          "hash": "15797618039975197176"
+          "hash": "6244680952590582416"
+        },
+        {
+          "file": "src/app/usuarios/usuarios.module.ts",
+          "hash": "10244910122481403744"
+        },
+        {
+          "file": "src/app/usuarios/usuarios.service.spec.ts",
+          "hash": "18265742050625232585"
+        },
+        {
+          "file": "src/app/usuarios/usuarios.service.ts",
+          "hash": "15933707308237655074"
+        },
+        {
+          "file": "src/app/usuarios/usuarios/usuarios.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/usuarios/usuarios/usuarios.component.html",
+          "hash": "8135506604419946706"
+        },
+        {
+          "file": "src/app/usuarios/usuarios/usuarios.component.spec.ts",
+          "hash": "904240528107546223"
+        },
+        {
+          "file": "src/app/usuarios/usuarios/usuarios.component.ts",
+          "hash": "1603815390968001414"
         },
         {
           "file": "src/assets/.gitkeep",
           "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/assets/imagenpedido.jpg",
+          "hash": "9263163313315598655"
+        },
+        {
+          "file": "src/components/ui-accordion-helm/src/index.ts",
+          "hash": "6903111936815807769"
+        },
+        {
+          "file": "src/components/ui-accordion-helm/src/lib/hlm-accordion-content.directive.ts",
+          "hash": "6519533733752044371"
+        },
+        {
+          "file": "src/components/ui-accordion-helm/src/lib/hlm-accordion-icon.directive.ts",
+          "hash": "13557260489213543701"
+        },
+        {
+          "file": "src/components/ui-accordion-helm/src/lib/hlm-accordion-item.directive.ts",
+          "hash": "10351726784450440875"
+        },
+        {
+          "file": "src/components/ui-accordion-helm/src/lib/hlm-accordion-trigger.directive.ts",
+          "hash": "17675834415969736865"
+        },
+        {
+          "file": "src/components/ui-accordion-helm/src/lib/hlm-accordion.directive.ts",
+          "hash": "3164492673693622327"
         },
         {
           "file": "src/components/ui-avatar-helm/src/index.ts",
@@ -451,7 +918,7 @@
         },
         {
           "file": "src/components/ui-button-helm/src/lib/hlm-button.directive.ts",
-          "hash": "7464221709800319373"
+          "hash": "14575391426727603551"
         },
         {
           "file": "src/components/ui-carousel-helm/src/index.ts",
@@ -467,15 +934,27 @@
         },
         {
           "file": "src/components/ui-carousel-helm/src/lib/hlm-carousel-next.component.ts",
-          "hash": "919083970978512939"
+          "hash": "2195637190411565766"
         },
         {
           "file": "src/components/ui-carousel-helm/src/lib/hlm-carousel-previous.component.ts",
-          "hash": "3048055123162667790"
+          "hash": "7048311454529542271"
         },
         {
           "file": "src/components/ui-carousel-helm/src/lib/hlm-carousel.component.ts",
           "hash": "3916071061509395385"
+        },
+        {
+          "file": "src/components/ui-checkbox-helm/src/index.ts",
+          "hash": "17713349125185817560"
+        },
+        {
+          "file": "src/components/ui-checkbox-helm/src/lib/hlm-checkbox-checkicon.component.ts",
+          "hash": "4951566343371807688"
+        },
+        {
+          "file": "src/components/ui-checkbox-helm/src/lib/hlm-checkbox.component.ts",
+          "hash": "12212766048013791681"
         },
         {
           "file": "src/components/ui-command-helm/src/index.ts",
@@ -572,6 +1051,14 @@
         {
           "file": "src/components/ui-dialog-helm/src/lib/hlm-dialog.service.ts",
           "hash": "6172892527299412933"
+        },
+        {
+          "file": "src/components/ui-hovercard-helm/src/index.ts",
+          "hash": "8060148645644534703"
+        },
+        {
+          "file": "src/components/ui-hovercard-helm/src/lib/hlm-hover-card-content.component.ts",
+          "hash": "2753858320010757796"
         },
         {
           "file": "src/components/ui-icon-helm/src/index.ts",
@@ -674,12 +1161,172 @@
           "hash": "4642794107278251436"
         },
         {
+          "file": "src/components/ui-scrollarea-helm/src/index.ts",
+          "hash": "12349259645201853689"
+        },
+        {
+          "file": "src/components/ui-scrollarea-helm/src/lib/hlm-scroll-area.component.ts",
+          "hash": "6298412834217937533"
+        },
+        {
+          "file": "src/components/ui-select-helm/src/index.ts",
+          "hash": "14018309011524926443"
+        },
+        {
+          "file": "src/components/ui-select-helm/src/lib/hlm-select-content.directive.ts",
+          "hash": "4049320611198806980"
+        },
+        {
+          "file": "src/components/ui-select-helm/src/lib/hlm-select-group.directive.ts",
+          "hash": "9542696212381775805"
+        },
+        {
+          "file": "src/components/ui-select-helm/src/lib/hlm-select-label.directive.ts",
+          "hash": "10703297612296859893"
+        },
+        {
+          "file": "src/components/ui-select-helm/src/lib/hlm-select-option.component.ts",
+          "hash": "13316740413463585327"
+        },
+        {
+          "file": "src/components/ui-select-helm/src/lib/hlm-select-scroll-down.component.ts",
+          "hash": "18388335638678817748"
+        },
+        {
+          "file": "src/components/ui-select-helm/src/lib/hlm-select-scroll-up.component.ts",
+          "hash": "1824479695256739848"
+        },
+        {
+          "file": "src/components/ui-select-helm/src/lib/hlm-select-trigger.component.ts",
+          "hash": "6556120096587069232"
+        },
+        {
+          "file": "src/components/ui-select-helm/src/lib/hlm-select-value.directive.ts",
+          "hash": "1440526127885385790"
+        },
+        {
+          "file": "src/components/ui-select-helm/src/lib/hlm-select.directive.ts",
+          "hash": "2275226726307479160"
+        },
+        {
+          "file": "src/components/ui-separator-helm/src/index.ts",
+          "hash": "11009445571986260606"
+        },
+        {
+          "file": "src/components/ui-separator-helm/src/lib/hlm-separator.directive.ts",
+          "hash": "1948996755155265181"
+        },
+        {
+          "file": "src/components/ui-sheet-helm/src/index.ts",
+          "hash": "2450176343920516083"
+        },
+        {
+          "file": "src/components/ui-sheet-helm/src/lib/hlm-sheet-close.directive.ts",
+          "hash": "4141389270955510611"
+        },
+        {
+          "file": "src/components/ui-sheet-helm/src/lib/hlm-sheet-content.component.ts",
+          "hash": "9433109302679206223"
+        },
+        {
+          "file": "src/components/ui-sheet-helm/src/lib/hlm-sheet-description.directive.ts",
+          "hash": "16641419392120261000"
+        },
+        {
+          "file": "src/components/ui-sheet-helm/src/lib/hlm-sheet-footer.component.ts",
+          "hash": "5678401408925096666"
+        },
+        {
+          "file": "src/components/ui-sheet-helm/src/lib/hlm-sheet-header.component.ts",
+          "hash": "12094398171191215155"
+        },
+        {
+          "file": "src/components/ui-sheet-helm/src/lib/hlm-sheet-overlay.directive.ts",
+          "hash": "14003300468473110451"
+        },
+        {
+          "file": "src/components/ui-sheet-helm/src/lib/hlm-sheet-title.directive.ts",
+          "hash": "15484753473319835853"
+        },
+        {
+          "file": "src/components/ui-sheet-helm/src/lib/hlm-sheet.component.ts",
+          "hash": "15152727456882381011"
+        },
+        {
+          "file": "src/components/ui-skeleton-helm/src/index.ts",
+          "hash": "6658956960379025064"
+        },
+        {
+          "file": "src/components/ui-skeleton-helm/src/lib/hlm-skeleton.component.ts",
+          "hash": "12747442148173382983"
+        },
+        {
+          "file": "src/components/ui-sonner-helm/src/index.ts",
+          "hash": "2983469189356423803"
+        },
+        {
+          "file": "src/components/ui-sonner-helm/src/lib/hlm-toaster.component.ts",
+          "hash": "4617776657832011291"
+        },
+        {
+          "file": "src/components/ui-table-helm/src/index.ts",
+          "hash": "10469680382427192649"
+        },
+        {
+          "file": "src/components/ui-table-helm/src/lib/hlm-caption.component.ts",
+          "hash": "7371483930197080077"
+        },
+        {
+          "file": "src/components/ui-table-helm/src/lib/hlm-table.component.ts",
+          "hash": "10871754739613388511"
+        },
+        {
+          "file": "src/components/ui-table-helm/src/lib/hlm-table.directive.ts",
+          "hash": "11306128400321269706"
+        },
+        {
+          "file": "src/components/ui-table-helm/src/lib/hlm-td.component.ts",
+          "hash": "16649668457900922353"
+        },
+        {
+          "file": "src/components/ui-table-helm/src/lib/hlm-th.component.ts",
+          "hash": "6090256936716140355"
+        },
+        {
+          "file": "src/components/ui-table-helm/src/lib/hlm-trow.component.ts",
+          "hash": "648155726487399582"
+        },
+        {
+          "file": "src/components/ui-tabs-helm/src/index.ts",
+          "hash": "1841781438202689908"
+        },
+        {
+          "file": "src/components/ui-tabs-helm/src/lib/hlm-tabs-content.directive.ts",
+          "hash": "10064466872576940982"
+        },
+        {
+          "file": "src/components/ui-tabs-helm/src/lib/hlm-tabs-list.component.ts",
+          "hash": "17759047605200209248"
+        },
+        {
+          "file": "src/components/ui-tabs-helm/src/lib/hlm-tabs-paginated-list.component.ts",
+          "hash": "14220862335853513349"
+        },
+        {
+          "file": "src/components/ui-tabs-helm/src/lib/hlm-tabs-trigger.directive.ts",
+          "hash": "4956256829117943839"
+        },
+        {
+          "file": "src/components/ui-tabs-helm/src/lib/hlm-tabs.component.ts",
+          "hash": "15246156594866139857"
+        },
+        {
           "file": "src/favicon.ico",
           "hash": "3988961587069885523"
         },
         {
           "file": "src/index.html",
-          "hash": "5001567952168560198"
+          "hash": "12554578305489431072"
         },
         {
           "file": "src/lib/endpoint.ts",
@@ -687,7 +1334,7 @@
         },
         {
           "file": "src/lib/types.ts",
-          "hash": "6985834978751416874"
+          "hash": "7565657422628854017"
         },
         {
           "file": "src/main.ts",
@@ -699,7 +1346,7 @@
         },
         {
           "file": "tailwind.config.js",
-          "hash": "7104482582894714495"
+          "hash": "12418026679120560027"
         },
         {
           "file": "tsconfig.app.json",
@@ -707,7 +1354,7 @@
         },
         {
           "file": "tsconfig.json",
-          "hash": "13851523679895026040"
+          "hash": "9987373199512773216"
         },
         {
           "file": "tsconfig.spec.json",

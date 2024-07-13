@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Server.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class asdfggg : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -230,6 +230,7 @@ namespace Server.Migrations
                     PriceSingle = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     DateOrder = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Ticket = table.Column<long>(type: "bigint", nullable: false),
+                    Ingredients = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false)
                 },
