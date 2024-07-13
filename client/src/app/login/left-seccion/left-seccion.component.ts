@@ -20,6 +20,7 @@ interface ResponseLogin{
 }
 
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
+import { UserService } from '~/app/home/services/user.service';
 @Component({
   selector: 'left-seccion',
   standalone: true,
@@ -36,7 +37,7 @@ import { HlmInputDirective } from '~/components/ui-input-helm/src';
 })
 export class LeftSeccionComponent {
   
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router,private userService: UserService) {}
 
   disabled = signal(false);
   res = signal<ResponseLogin | null>(null);
@@ -85,6 +86,17 @@ export class LeftSeccionComponent {
           this.router.navigate(['/products']);
           localStorage.setItem('token', response.jwtToken);
           localStorage.setItem('userId', response.id);
+          this.userService.getUser(response.id).subscribe({
+            next: (user) => {
+              this.userService.saveUserData(user);
+            },
+            complete: () => {
+              console.log('Usuario cargado correctamente', this.userService.userData()?.id);
+            },
+            error: (error) => {
+              console.error('Error al cargar el usuario', error);
+            }
+          });
 
         },
         error: (error) => {
