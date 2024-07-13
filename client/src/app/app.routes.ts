@@ -10,11 +10,12 @@ import { VentasComponent } from './admin/ventas/ventas.component';
 import { PedidoStateComponent } from './pedido-state/pedido-state.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { PlaceComponent } from './place/place.component';
-<<<<<<< HEAD
+
 import { DescriptionPlaceComponent } from './place/description-place/description-place.component';
-=======
 import { ComprasComponent } from './admin/compras/compras.component';
->>>>>>> 22bf5ed63d4cf108635f143c35eb1a45a41cef6a
+
+
+
 
 export const routes: Routes = [
   {
@@ -45,7 +46,8 @@ export const routes: Routes = [
       {
         path: 'ventas',
         component: VentasComponent
-      },{
+      },
+      {
         path: 'compras',
         component: ComprasComponent
       }
