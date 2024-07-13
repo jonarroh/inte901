@@ -10,6 +10,7 @@ import { VentasComponent } from './admin/ventas/ventas.component';
 import { PedidoStateComponent } from './pedido-state/pedido-state.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { PlaceComponent } from './place/place.component';
+import { DescriptionPlaceComponent } from './place/description-place/description-place.component';
 
 export const routes: Routes = [
   {
@@ -55,5 +56,9 @@ export const routes: Routes = [
   {
     path: 'place',
     component: PlaceComponent
+  },
+  {
+    path: 'description/:id',
+    component: DescriptionPlaceComponent
   }
 ];
