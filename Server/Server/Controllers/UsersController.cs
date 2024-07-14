@@ -73,7 +73,7 @@ namespace Server.Controllers
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public async Task<ActionResult<UserDTO>> GetUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
 
@@ -82,7 +82,26 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            return user;
+            var userDTO = new UserDTO
+            {
+                Id = user.Id,
+                Name = user.Name,
+                LastName = user.LastName,
+                Email = user.Email,
+                Role = user.Role,
+                Direcciones = await _context.Direcciones.Where(d => d.UserId == user.Id).ToListAsync(),
+                CreditCards = await _context.CreditCard.Where(c => c.UserId == user.Id).Select(c => new CreditCardDTO
+                {
+                    Id = c.Id,
+                    CardHolderName = c.CardHolderName,
+                    CardNumber = ocultaNumero(c.CardNumber),
+                    ExpiryDate = c.ExpiryDate,
+                    UserId = c.UserId
+                }).ToListAsync()
+            };
+
+            return userDTO;
+
         }
 
         // PUT: api/Users/5

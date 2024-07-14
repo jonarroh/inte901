@@ -22,5 +22,7 @@ namespace Server.Models
         public ICollection<MateriaPrimaProveedor>? MateriaPrimaProveedores { get; set; }
         public ICollection<InventarioMP>? InventarioMps { get; set; }
         public ICollection<Ingrediente>? Ingredientes { get; set; }
+
+        
     }
 }
