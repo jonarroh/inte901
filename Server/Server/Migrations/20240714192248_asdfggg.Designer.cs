@@ -12,7 +12,7 @@ using Server;
 namespace Server.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240710041318_asdfggg")]
+    [Migration("20240714192248_asdfggg")]
     partial class asdfggg
     {
         /// <inheritdoc />
@@ -281,10 +281,10 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Cantidad")
+                    b.Property<float?>("Cantidad")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("real");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -324,10 +324,9 @@ namespace Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("IdPostre"));
 
-                    b.Property<string>("Cantidad")
+                    b.Property<float?>("Cantidad")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("real");
 
                     b.Property<DateTime?>("CreatedAt")
                         .IsRequired()
