@@ -11,6 +11,14 @@ import { PedidoStateComponent } from './pedido-state/pedido-state.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { PlaceComponent } from './place/place.component';
 
+import { DescriptionPlaceComponent } from './place/description-place/description-place.component';
+import { ComprasComponent } from './admin/compras/compras.component';
+import { CheckoutComponent } from './checkout/checkout.component';
+import { AuthenticatedGuard } from './auth/route.guard';
+
+
+
+
 export const routes: Routes = [
   {
     path: 'login',
@@ -37,10 +45,13 @@ export const routes: Routes = [
     path: 'admin',
     component: AdminComponent,
     children: [
-
       {
         path: 'ventas',
         component: VentasComponent
+      },
+      {
+        path: 'compras',
+        component: ComprasComponent
       }
     ]
   },
@@ -53,7 +64,18 @@ export const routes: Routes = [
     component: ProductDetailComponent
   },
   {
-    path: 'place',
+    path: 'places',
     component: PlaceComponent
+  },
+  {
+    path: 'places/:id',
+    component: DescriptionPlaceComponent
+  },
+
+  {
+    path:'checkout',
+    component: CheckoutComponent,
+    canActivate: [AuthenticatedGuard]
+
   }
 ];

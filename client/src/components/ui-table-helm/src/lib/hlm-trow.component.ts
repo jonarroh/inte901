@@ -19,7 +19,7 @@ export class HlmTrowComponent {
 	public readonly userClass = input<ClassValue>('', { alias: 'class' });
 	protected _computedClass = computed(() =>
 		hlm(
-			'flex flex border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted',
+			'flex w-full border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted',
 			this.userClass(),
 		),
 	);
