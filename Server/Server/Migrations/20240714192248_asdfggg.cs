@@ -106,7 +106,7 @@ namespace Server.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     IdProducto = table.Column<int>(type: "int", nullable: true),
                     ProductoId = table.Column<int>(type: "int", nullable: true),
-                    Cantidad = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Cantidad = table.Column<float>(type: "real", nullable: false),
                     Estatus = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -345,7 +345,7 @@ namespace Server.Migrations
                     IdMateriaPrima = table.Column<int>(type: "int", nullable: true),
                     MateriaPrimaId = table.Column<int>(type: "int", nullable: true),
                     UnidadMedida = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Cantidad = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Cantidad = table.Column<float>(type: "real", maxLength: 100, nullable: false),
                     IdCompra = table.Column<int>(type: "int", nullable: true),
                     Caducidad = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Estatus = table.Column<int>(type: "int", nullable: false),

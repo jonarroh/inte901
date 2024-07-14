@@ -278,10 +278,10 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Cantidad")
+                    b.Property<float?>("Cantidad")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("real");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -321,10 +321,9 @@ namespace Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("IdPostre"));
 
-                    b.Property<string>("Cantidad")
+                    b.Property<float?>("Cantidad")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("real");
 
                     b.Property<DateTime?>("CreatedAt")
                         .IsRequired()

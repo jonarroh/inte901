@@ -15,7 +15,7 @@ namespace Server.Models
         public string? UnidadMedida { get; set; }
         [Required]
         [MaxLength(100)]
-        public string? Cantidad { get; set; }
+        public float? Cantidad { get; set; }
         public int? IdCompra { get; set; }
         [ForeignKey("IdCompra")]
         public Purchase? Compra { get; set; }
