@@ -1,9 +1,10 @@
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file, url_for
 from PIL import Image
 import os
 from io import BytesIO
 from controller.models import models
 from controller.ridge import rid
+import qrcode
 
 
 app = Flask(__name__)
@@ -123,7 +124,41 @@ def upload_file():
     else:
         return jsonify({'message': 'Error uploading image'})
     
+
+
+@app.route('/generate_qr_order', methods=['POST'])
+def generate_qr():
+    # Obtener el string del request
+    data = request.json.get('data')
+    id = request.json.get('id')
+    qr_orders_folder = os.path.join(STATIC_FOLDER, 'qr-orders')
     
+    if not data:
+        return {"error": "No data provided"}, 400
+
+    # Crear un código QR
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill='black', back_color='white')
+
+    # Generar un nombre de archivo único para evitar colisiones
+    
+    filename = f"{id}.png"
+    filepath = os.path.join(qr_orders_folder, filename)
+
+    # Guardar la imagen en el directorio 'static/qr-orders'
+    img.save(filepath)
+
+    # Devolver la URL del archivo guardado
+    file_url = url_for('static', filename=f'qr-orders/{filename}', _external=True)
+    return jsonify({"file_url": file_url})
 
 
 
