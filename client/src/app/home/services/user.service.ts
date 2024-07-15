@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal, Signal } from '@angular/core';
-import { User } from '~/lib/types';
+import { User, UserEditDTO } from '~/lib/types';
 
 const defaultUser: User = {
   id: 0,
@@ -22,6 +22,8 @@ export class UserService {
   private storageKey = 'userData';
 
   userId = localStorage.getItem('userId') ?? null;
+
+  imgUrl = signal<string | null>(`http://localhost:5000/static/users/${this.userId}.webp`);
 
   userData = signal<User>(this.loadUserDataFromLocalStorage() || defaultUser);
 
@@ -50,6 +52,7 @@ export class UserService {
   saveUserData(userData: User) {
     this.userData.set(userData);
     localStorage.setItem(this.storageKey, JSON.stringify(userData));
+    localStorage.setItem('userId', userData.id.toString());
   }
 
   clearUserData() {
@@ -57,4 +60,41 @@ export class UserService {
     localStorage.removeItem(this.storageKey);
     localStorage.removeItem('userId');
   }
+
+
+  editTempImage(image: File) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.imgUrl.set(e.target?.result as string);
+    };
+    reader.readAsDataURL(image);
+  }
+
+
+  updateUser(userData: UserEditDTO) {
+    console.log(userData.Image);
+    const formData = new FormData();
+    formData.append('Id', userData.id.toString());
+    formData.append('Name', userData.name);
+    formData.append('LastName', userData.lastName);
+    formData.append('Email', userData.email);
+    if (userData.newPassword && userData.actualPassword) {
+      formData.append('NewPassword', userData.newPassword);
+      formData.append('ActualPassword', userData.actualPassword);
+    }
+    if (userData.Image) {
+      formData.append('Image', userData.Image);
+    }
+    if (userData.direcciones) {
+      formData.append('Direcciones', JSON.stringify(userData.direcciones));
+    }
+    if (userData.creditCards) {
+      formData.append('CreditCards', JSON.stringify(userData.creditCards));
+    }
+
+    return this.http.put<User>(`${this.endpoint}/${userData.id}`, formData);
+  }
+
+
+  
 }

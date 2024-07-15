@@ -143,3 +143,16 @@ export interface Order {
   orderDate: string;
   detailOrders: DetailOrder[];
 }
+
+
+export interface UserEditDTO{
+  id: number;
+  name: string;
+  lastName: string;
+  email: string;
+  newPassword: string | undefined;
+  Image: File | undefined;
+  actualPassword: string | undefined;
+  direcciones: Address[] | undefined;
+  creditCards: CreditCard[] | undefined;
+}

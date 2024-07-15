@@ -15,6 +15,7 @@ import { DescriptionPlaceComponent } from './place/description-place/description
 import { ComprasComponent } from './admin/compras/compras.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { AuthenticatedGuard } from './auth/route.guard';
+import { EditUserComponent } from './edit-user/edit-user.component';
 
 
 
@@ -76,6 +77,10 @@ export const routes: Routes = [
     path:'checkout',
     component: CheckoutComponent,
     canActivate: [AuthenticatedGuard]
-
+  },
+  {
+    path: 'profile',
+    component: EditUserComponent,
+    canActivate: [AuthenticatedGuard]
   }
 ];
