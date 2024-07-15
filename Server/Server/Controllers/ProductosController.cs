@@ -40,8 +40,25 @@ namespace Server.Controllers
                 return NotFound();
             }
 
+            //al producto agregarle los ingredientes
+            var ingredientes = await _context.Ingredientes
+                .Where(i => i.IdProducto == producto.Id)
+                .ToListAsync();
+
+            //a los ingredientes agregarle las materias primas
+            foreach (var ingrediente in ingredientes)
+            {
+                ingrediente.MateriaPrima = await _context.MateriasPrimas.FindAsync(ingrediente.IdMateriaPrima);
+            }
+
+            producto.Ingredientes = ingredientes;
+
+
+
             return producto;
         }
+
+
 
         // PUT: api/Producto/5
         [HttpPut("{id}")]

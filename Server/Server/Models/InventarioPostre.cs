@@ -11,8 +11,7 @@ namespace Server.Models
         public int? IdProducto { get; set; }
         public Producto? Producto { get; set; }
         [Required]
-        [MaxLength(100)]
-        public string? Cantidad { get; set; }
+        public float? Cantidad { get; set; }
         [Required]
         public int? Estatus { get; set; } = 1;
         [Required]
