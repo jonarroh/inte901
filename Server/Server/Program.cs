@@ -23,6 +23,7 @@ else if (environment == "P")
 
 // Registrar servicios
 builder.Services.AddSingleton<TokenService>();
+builder.Services.AddHttpClient<IHttpCDNService, HttpCDNService>();
 
 // Configurar autenticación JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -98,12 +99,6 @@ if (app.Environment.IsDevelopment())
         c.ConfigObject.AdditionalItems.Add("syntaxHighlight", false);
         c.DefaultModelExpandDepth(2);
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
-
-       
-
-
-
-
     });
 }
 

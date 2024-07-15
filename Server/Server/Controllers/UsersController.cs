@@ -19,10 +19,12 @@ namespace Server.Controllers
     public class UsersController : ControllerBase
     {
         private readonly Context _context;
+        private readonly IHttpCDNService _cdnService;
 
-        public UsersController(Context context)
+        public UsersController(Context context, IHttpCDNService cdnService)
         {
             _context = context;
+            _cdnService = cdnService;
         }
 
         // GET: api/Users
@@ -107,15 +109,50 @@ namespace Server.Controllers
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        public async Task<ActionResult<UserDTO>> PutUser(int id, [FromForm] UserEditDTO userEditDto)
         {
-            if (id != user.Id)
+            if (id != userEditDto.Id)
             {
                 return BadRequest();
             }
-            _context.Entry(user).State = EntityState.Modified;
 
-            
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Actualiza las propiedades del usuario
+            user.Name = userEditDto.Name;
+            user.LastName = userEditDto.LastName;
+            user.Email = userEditDto.Email;
+
+            if (!string.IsNullOrEmpty(userEditDto.NewPassword) && !string.IsNullOrEmpty(userEditDto.ActualPassword))
+            {
+                // Lógica para cambiar la contraseña, por ejemplo, verificar la contraseña actual y actualizar con la nueva
+                if (user.Password == userEditDto.ActualPassword) // Ejemplo, asegúrate de tener una verificación segura
+                {
+                    user.Password = userEditDto.NewPassword;
+                }
+                else
+                {
+                    return BadRequest("Contraseña actual incorrecta");
+                }
+            }
+
+            if (userEditDto.Image != null)
+            {
+                var imageUrl = await _cdnService.UploadImageAsync(userEditDto.Image, id);
+                //si se sube la imagen, continuar con la lógica de negocio si no mandar mensaje de error
+
+                if (imageUrl == "Error")
+                {
+                    return BadRequest("Error al subir la imagen");
+                }
+                
+            }
+
+            _context.Entry(user).State = EntityState.Modified;
 
             try
             {
@@ -133,7 +170,25 @@ namespace Server.Controllers
                 }
             }
 
-            return NoContent();
+            var userDTO = new UserDTO
+            {
+                Id = user.Id,
+                Name = user.Name,
+                LastName = user.LastName,
+                Email = user.Email,
+                Role = user.Role,
+                Direcciones = await _context.Direcciones.Where(d => d.UserId == user.Id).ToListAsync(),
+                CreditCards = await _context.CreditCard.Where(c => c.UserId == user.Id).Select(c => new CreditCardDTO
+                {
+                    Id = c.Id,
+                    CardHolderName = c.CardHolderName,
+                    CardNumber = ocultaNumero(c.CardNumber),
+                    ExpiryDate = c.ExpiryDate,
+                    UserId = c.UserId
+                }).ToListAsync()
+            };
+
+            return userDTO;
         }
 
         public static string StringToSha256(string str)
