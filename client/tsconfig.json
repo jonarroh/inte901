@@ -93,6 +93,9 @@
       ],
       "@spartan-ng/ui-typography-helm": [
         "./src/components/ui-typography-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-alertdialog-helm": [
+        "./src/components/ui-alertdialog-helm/src/index.ts"
       ]
     }
   },
