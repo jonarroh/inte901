@@ -97,6 +97,36 @@ def clipProduct2():
 
 
 
+@app.route('/user/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'message': 'No file part'})
+    
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'message': 'No selected file'})
+    
+    if 'id' not in request.form:
+        return jsonify({'message': 'No id part'})
+    
+    id = request.form['id']
+    #hacer la optimizacion de la imagen a webp y guardarla en la carpeta static/users
+
+    if file:
+        img = Image.open(file)
+        # Guardar la imagen en formato webp
+        webp_filename = id + '.webp'
+        webp_filepath = os.path.join(STATIC_FOLDER, 'users', webp_filename)
+
+        img.save(webp_filepath, 'webp', quality=90)
+        return jsonify({'message': 'Image has been uploaded and optimized.'})
+    else:
+        return jsonify({'message': 'Error uploading image'})
+    
+    
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
     
