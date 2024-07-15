@@ -68,9 +68,17 @@ export const routes: Routes = [
     component: PlaceComponent
   },
   {
+
     path: 'description/:id',
     component: DescriptionPlaceComponent
   },{
+
+    path: 'places/:id',
+    component: DescriptionPlaceComponent
+  },
+
+  {
+
     path:'checkout',
     component: CheckoutComponent,
     canActivate: [AuthenticatedGuard]

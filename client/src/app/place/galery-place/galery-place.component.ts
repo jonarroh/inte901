@@ -5,11 +5,12 @@ import { CommonModule, CurrencyPipe, NgFor } from '@angular/common';
 import { Espacio } from '~/lib/types';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-galery-place',
   standalone: true,
   imports: [
-    CommonModule, NgFor, HttpClientModule
+    CommonModule, NgFor
   ],
   templateUrl: './galery-place.component.html',
   styleUrl: './galery-place.component.css',
@@ -28,7 +29,7 @@ export class GaleryPlaceComponent implements OnInit{
   }
 
   verDetalle(id: number): void {
-    this.router.navigate(['/description', id]);
+    this.router.navigate(['/places', id]);
   }
 
 }
