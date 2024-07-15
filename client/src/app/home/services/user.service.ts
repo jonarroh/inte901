@@ -25,7 +25,7 @@ export class UserService {
 
   imgUrl = signal<string | null>(`http://localhost:5000/static/users/${this.userId}.webp`);
 
-  userData = signal<User>(this.loadUserDataFromLocalStorage() || defaultUser);
+  userData = signal(this.loadUserDataFromLocalStorage() || defaultUser);
 
   constructor(private http: HttpClient) {
     window.addEventListener('storage', this.syncUserDataAcrossTabs.bind(this));
@@ -45,11 +45,29 @@ export class UserService {
     return savedUserData ? JSON.parse(savedUserData) : null;
   }
 
+
+  syncUserData() {
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      this.getUser(+userId).subscribe({
+        next: (user) => {
+          this.saveUserData(user);
+          console.log('Usuario cargado correctamente', this.userData()?.id);
+        },
+        error: (error) => {
+          console.error('Error al cargar el usuario', error);
+        }
+      });
+    }
+  }
+
   getUser(id: number) {
     return this.http.get<User>(`${this.endpoint}/${id}`);
   }
 
   saveUserData(userData: User) {
+    this.userData.set(defaultUser);
+    localStorage.removeItem(this.storageKey);
     this.userData.set(userData);
     localStorage.setItem(this.storageKey, JSON.stringify(userData));
     localStorage.setItem('userId', userData.id.toString());

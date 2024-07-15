@@ -1,36 +1,68 @@
+<div class=" w-[calc(100vw-4rem)] h-[calc(100vh-20rem)] flex flex-col justify-center items-center sticky bottom-0 p-8 space-y-8">
+  <h1 class="text-2xl font-bold text-center mb-4">
+    Elige la forma de pago
+  </h1>
 
-<div class="flexw-[calc(100vw-4rem)] h-[calc(100vh-20rem)] flex-col items-center justify-between bg-slate-100">
-<form class="bg-white w-full max-w-3xl mx-auto px-6 py-8 shadow-md rounded-md flex">
-<div class="w-1/2 pr-8 border-r-2 border-slate-300">
-  <label class="text-neutral-800 font-bold text-sm mb-2 block">Numero de tarjeta:</label>
-  <input type="text" class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4" />
-  <div class="flex gap-x-2 mb-4 items-center">
-    <div class="flex-1">
-      <label class="text-neutral-800 font-bold text-sm mb-2 block">Expiración:</label>
-      <input type="text" class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4" />
+  <div class="w-full max-w-md space-y-4">
+    <!-- Envio a domicilio -->
+    <div>
+      <h2 class="text-xl font-semibold mb-2">
+        Pagar con tarjeta
+      </h2>
+      
+      <!-- Lista de direcciones -->
+      @for (card of user().creditCards; track $index) {
+        <div class="flex justify-between items-center border border-black rounded-lg px-4 py-2 my-2">
+          <div class="flex items-center space-x-2">
+            <lucide-icon name="credit-card"></lucide-icon>
+            <span
+            class="truncate w-[200px]"
+            >{{card.cardNumber}}, {{card.expiryDate}}</span>
+
+            
+          </div>
+          <span>{{user().name}} {{user().lastName}}</span>
+          <button
+            hlmBtn
+            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+            (click)="onSelectdCard(card)"
+          >
+            Usar esta tarjeta
+          </button>
+        </div>
+      }
+      @empty {
+        <span class="block text-center text-gray-500 my-4">
+          No tienes tarjetas guardadas
+        </span>
+       
+      }
+      <a class=" text-center text-blue-500 cursor-pointer flex items-center space-x-2"
+      routerLink="/edit/payment"
+      >
+        <lucide-angular name="plus"></lucide-angular>
+        Agregar tarjeta
+      </a>
     </div>
-    <div class="flex-1">
-      <label class="text-neutral-800 font-bold text-sm mb-2 block">CCV:</label>
-      <input type="text" class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4" />
+
+    <!-- Recoger en tienda -->
+    <div>
+      <h2 class="text-xl font-semibold mb-2">
+        Pagar en ventanilla
+      </h2>
+      <div class="flex justify-between items-center border border-black rounded-lg px-4 py-2 my-2">
+        <div class="flex items-center space-x-2">
+          <lucide-icon name="store"></lucide-icon>
+          <span>Heaven</span>
+        </div>
+        <button
+          hlmBtn
+          class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+         (click)="onOrderToStore()"
+        >
+          Usar esta opción
+        </button>
+      </div>
     </div>
   </div>
-
-  <label class="text-neutral-800 font-bold text-sm mb-2 block">Titular de la tarjeta:</label>
-  <input type="text" class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
 </div>
-<div class="w-1/2 pl-8">
-  <div class="w-full h-56" style="perspective: 1000px">
-    <div class="crediCard relative cursor-pointer transition-transform duration-500" style="transform-style: preserve-3d">
-      <div class="w-full m-auto rounded-xl shadow-2xl absolute" style="backface-visibility: hidden">
-        <img src="https://i.ibb.co/B2vQ0xG/Card-1.jpg" class="object-cover w-full h-full" />
-      </div>
-      <div class="w-full m-auto rounded-xl shadow-2xl absolute" style="backface-visibility: hidden; transform: rotateY(180deg)">
-        <img src="https://i.ibb.co/ThGc8mn/Card-2.jpg" class="object-cover w-full h-full" />
-      </div>
-    </div>
-  </div>
- 
-</div>
-</form>
-</div>
-
