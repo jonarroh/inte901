@@ -1,12 +1,12 @@
 <main>
-    <header class="py-3 px-10 flex items-center fixed top-0 w-full justify-between z-40 text-white" id="landing-header">
+    <header class="py-3 px-10 flex items-center fixed top-0 w-full justify-between z-40" id="landing-header">
         
         <div class="flex flex-grow basis-auto">
             <img style="max-width:50px" src="http://127.0.0.1:5000/static/logo.webp" alt="logo-heaven">
         </div>
 
         <nav class="flex flex-grow basis-auto">
-            <ul class="flex text-lg [&>li>a]:text-current [&>li>a]:inline-block [&>li>a]:px-2 [&>li>a]:py-2 items-center justify-center">
+            <ul class="flex text-lg [&>li>a]:transition-colors [&>li>a]:duration-200 [&>li>a]:text-current [&>li>a]:inline-block [&>li>a]:px-2 [&>li>a]:py-2 items-center justify-center">
                 <li class="pe-2 flex items-center">
                     <lucide-icon name="house"/> 
                     <a href="#">Inicio</a>
@@ -32,29 +32,9 @@
         </nav>
         
     </header>
+
+    
+    
 </main>
 
 
-<script>
-
-    const headerEl = document.querySelector("#landing-header")
-    
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px', 
-        threshold: 0.9,
-    }
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            const {isIntersecting} = entry 
-            if (isIntersecting) {
-                const color = entry.target.getAttribute("data-header-color")
-                headerEl.style.color = color;
-            }
-        })
-    }, observerOptions)
-
-    const sectionsElements = document.querySelectorAll(".landing-section")
-    sectionsElements.forEach((section) => observer.observe(section))
-</script>
