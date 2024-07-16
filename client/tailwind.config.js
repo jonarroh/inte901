@@ -26,7 +26,8 @@ module.exports = {
         success: "#F78DB1",
         warning: "#515d8c",
         error: "#E14E64",
-        navhover: "#9C7B5F"
+        navhover: "#9C7B5F",
+        destructive: "#E34242"
       },
     },
   },

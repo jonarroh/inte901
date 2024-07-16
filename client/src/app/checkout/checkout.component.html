@@ -1,0 +1,19 @@
+<home-navbar/>
+<div class="flex  flex-col items-center justify-between p-4 h-[calc(100vh-20rem)]">
+  <div>
+    <router-outlet></router-outlet>
+  </div>
+
+  <div class="flex gap-4 mt-4">
+    <button hlmBtn class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors disabled:opacity-50"
+    (click)="prevStep()" [disabled]="currentStep() === 0"
+    >
+      Anterior
+    </button>
+    <button hlmBtn class="px-4 py-2 bg-secondary text-white rounded hover:bg-secondary/20 transition-colors"
+    (click)="nextStep()" [disabled]="currentStep() === steps.length - 1"
+    >
+      Siguiente
+    </button>
+  </div>
+</div>

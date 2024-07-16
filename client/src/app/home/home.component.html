@@ -1,14 +1,20 @@
 <main>
   <home-navbar></home-navbar>
-  <div class="grid grid-cols-3 gap-4 p-4"> 
-    @for (producto of productos; track $index) {
-      <card-product
-      [id]="producto.id"
-      [title]="producto.nombre"
-      [price]="producto.precio"
-      [category]="producto.tipo"
-      [description]="producto.descripcion"
-      ></card-product>
-    }
-  </div>
+  @if(isLoading()){
+    
+<hlm-skeleton class='h-full w-full' />
+
+  } @else {
+    <div class="grid grid-cols-3 mt-8"> 
+      @for (producto of productos; track $index) {
+        <card-product
+        [id]="producto.id"
+        [title]="producto.nombre"
+        [price]="producto.precio"
+        [category]="producto.tipo"
+        [description]="producto.descripcion"
+        ></card-product>
+      }
+    </div>
+  }
 </main>

@@ -1,0 +1,172 @@
+<home-navbar></home-navbar>
+<section class="px-8 py-12 flex justify-evenly items-center flex-row space-x-8">
+  <div class="flex flex-col items-center space-y-4">
+    <hlm-avatar variant="profile">
+      <img 
+        [src]="imgUrl()"
+        width="250" 
+        alt='logo' 
+        hlmAvatarImage 
+      />
+      <span class='text-black bg-white' hlmAvatarFallback>
+        {{ initials() }}
+      </span>
+    </hlm-avatar>
+    
+    <label class="block mb-2 text-sm font-medium text-gray-900" for="file_input">
+      Cambiar foto de perfil
+    </label>
+    <input 
+      class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" 
+      id="file_input"
+      type="file"
+      (change)="onImageChange($event)"
+      accept="image/png, image/jpeg, image/jpg"
+    />
+  </div>
+
+  <div class="flex flex-col space-y-8">
+    <h2 class="text-2xl font-bold">
+      Mi perfil
+    </h2>
+    <section>
+      <h3 class="text-xl font-semibold mb-4">
+        Datos personales
+      </h3>
+      <form>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="name" class="block mb-2">
+              Nombre
+              <input
+                type="text"
+                id="name"
+                name="name"
+                hlmInput
+                ngModel
+                [formField]="formModel.controls.name"
+                class="block w-full mt-1"
+              />
+            </label>
+            @if (formModel.controls.name.touched()) { 
+              @if(formModel.controls.name.hasError('required')) {
+            <div class="text-red-500 text-sm">La contraseña es requerida</div>
+            } 
+             @else if (formModel.controls.name.hasError('maxLength')) {
+            <div class="text-red-500 text-sm">
+              La contraseña debe tener menos de 50 caracteres
+            </div>
+            } }
+          </div>
+
+          <div>
+            <label for="lastName" class="block mb-2">
+              Apellido
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                hlmInput
+                ngModel
+                [formField]="formModel.controls.lastName"
+                class="block w-full mt-1"
+              />
+            </label>
+            @if (formModel.controls.lastName.touched()) { 
+              @if(formModel.controls.lastName.hasError('required')) {
+            <div class="text-red-500 text-sm">La contraseña es requerida</div>
+            } 
+             @else if (formModel.controls.lastName.hasError('maxLength')) {
+            <div class="text-red-500 text-sm">
+              La contraseña debe tener menos de 50 caracteres
+            </div>
+            } }
+          </div>
+
+          <div>
+            <label for="email" class="block mb-2">
+              Correo electrónico
+              <input
+                type="email"
+                id="email"
+                name="email"
+                hlmInput
+                ngModel
+                [formField]="formModel.controls.email"
+                class="block w-full mt-1"
+              />
+            </label>
+            @if (formModel.controls.email.touched()) { 
+              @if(formModel.controls.email.hasError('required')) {
+            <div class="text-red-500 text-sm">La contraseña es requerida</div>
+            } 
+             @else if (formModel.controls.email.hasError('maxLength')) {
+            <div class="text-red-500 text-sm">
+              La contraseña debe tener menos de 50 caracteres
+            </div>
+            } }
+          </div>
+
+          <div>
+            <label for="ActualPassword" class="block mb-2">
+              Contraseña actual
+              <input
+                type="password"
+                id="ActualPassword"
+                name="ActualPassword"
+                hlmInput
+                ngModel
+                [formField]="formModel.controls.actualPassword"
+                class="block w-full mt-1"
+              />
+            </label>
+          </div>
+
+          <div>
+            <label for="newPassword" class="block mb-2">
+              Nueva contraseña
+              <input
+                type="password"
+                id="newPassword"
+                name="newPassword"
+                hlmInput
+                ngModel
+                [formField]="formModel.controls.newPassword"
+                class="block w-full mt-1"
+              />
+            </label>
+          </div>
+
+        </div>
+        <div class="flex flex-row items-center">
+          <button
+            class="w-80 h-10 bg-secondary text-white rounded-md mt-4 flex justify-center items-center"
+            [disabled]="disabled()"
+            (click)="onSaveData()"
+          >
+            Guardar cambios
+          </button>
+          
+<hlm-alert-dialog>
+  <button id='edit-profile' variant='outline' brnAlertDialogTrigger hlmBtn
+  class="w-80 h-10 bg-error text-white rounded-md mt-4 flex justify-center items-center"
+  >Eliminar cuenta</button>
+  <hlm-alert-dialog-content *brnAlertDialogContent='let ctx'>
+    <hlm-alert-dialog-header>
+      <h3 hlmAlertDialogTitle>¿Estas seguro que deseas eliminar tu cuenta?</h3>
+      <p hlmAlertDialogDescription>
+        Esta acción no se puede deshacer y perderás todos tus datos.
+      </p>
+    </hlm-alert-dialog-header>
+    <hlm-alert-dialog-footer>
+      <button hlmAlertDialogCancel (click)='ctx.close()'>Cancelar</button>
+      <button hlmAlertDialogAction (click)='ctx.close()'>Eliminar cuenta</button>
+    </hlm-alert-dialog-footer>
+  </hlm-alert-dialog-content>
+</hlm-alert-dialog>
+
+        </div>
+      </form>
+    </section>
+  </div>
+</section>

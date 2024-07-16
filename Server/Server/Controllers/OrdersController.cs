@@ -156,7 +156,6 @@ namespace Server.Controllers
                         NameProduct = d.NameProduct,
                         Quantity = d.Quantity,
                         PriceSingle = d.PriceSingle,
-                        Status = d.Status,
                         DateOrder = DateTime.Now,
                         Ticket = ticket,
                         Ingredients = d.Ingredients,
@@ -168,6 +167,7 @@ namespace Server.Controllers
                 }
 
                 //_context.Orders.Add(orden);
+
 
                 //await _context.SaveChangesAsync();
 

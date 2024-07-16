@@ -76,6 +76,10 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
+                    b.Property<string>("Ingredients")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NameProduct")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -95,18 +99,9 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int?>("Status")
-                        .IsRequired()
-                        .HasColumnType("int");
-
                     b.Property<long?>("Ticket")
                         .IsRequired()
                         .HasColumnType("bigint");
-
-                    b.Property<string>("Ingredients")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -283,10 +278,10 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Cantidad")
+                    b.Property<float?>("Cantidad")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("real");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -326,10 +321,9 @@ namespace Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("IdPostre"));
 
-                    b.Property<string>("Cantidad")
+                    b.Property<float?>("Cantidad")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("real");
 
                     b.Property<DateTime?>("CreatedAt")
                         .IsRequired()
@@ -424,6 +418,10 @@ namespace Server.Migrations
                     b.Property<DateTime?>("OrderDate")
                         .IsRequired()
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<float?>("Total")
                         .IsRequired()

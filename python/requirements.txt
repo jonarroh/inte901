@@ -58,9 +58,11 @@ pure-eval==0.2.2
 Pygments==2.18.0
 PyMatting==1.1.12
 pyparsing==3.1.2
+pypng==0.20220715.0
 python-dateutil==2.9.0.post0
 pytz==2024.1
 pyzmq==26.0.3
+qrcode==7.4.2
 referencing==0.35.1
 rembg==2.0.57
 requests==2.32.3

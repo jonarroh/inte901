@@ -1,8 +1,12 @@
-@if (!isLogged()) {     
+@if (isLogged()) {     
   <button class="bg-transparent" [brnMenuTriggerFor]="menu">
     <hlm-avatar>
-      <img src='http://127.0.0.1:5000/static/users/1.webp' alt='logo' hlmAvatarImage />
-      <span class='text-white bg-destructive' hlmAvatarFallback>RG</span>
+      <img 
+      [src]="imgUrl()"
+      alt='logo' hlmAvatarImage />
+      <span class='text-black bg-white' hlmAvatarFallback>
+        {{ initials() }}
+      </span>
     </hlm-avatar>
   </button>
   <ng-template #menu >
@@ -13,9 +17,9 @@
       <hlm-menu-separator />
       <hlm-menu-group class="flex items-center gap-6">
         <lucide-icon name="settings"></lucide-icon>
-        <span>
+        <a routerLink="/profile" class="hover:underline">
           Configuración
-        </span>        
+        </a>        
         <hlm-menu-separator />
       </hlm-menu-group>
       <hlm-menu-group class="flex items-center gap-6">
@@ -43,7 +47,9 @@
     </hlm-menu>
   </ng-template>
 } @else {
-<a routerLink="/login" class="cursor-pointer text-white hover:text-gray-200">
-  no user
+<a routerLink="/login" class="cursor-pointer text-white hover:text-gray-200
+bg-secondary hover:bg-secondary/00 transition-colors 
+" hlmBtn>
+  Iniciar sesión
 </a>
 }

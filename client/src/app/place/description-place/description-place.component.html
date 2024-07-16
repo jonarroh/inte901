@@ -1,1 +1,46 @@
-<p>description-place works!</p>
+<home-navbar></home-navbar>
+
+<div class="w-full flex p-10" style="background-color: white;">
+    <div class="w-3/5" style="background-color: white;">
+        <div class="flex items-center justify-center w-full"
+        >
+            <hlm-carousel class="w-full max-w-md">
+                <hlm-carousel-content>
+                    <hlm-carousel-item *ngFor="let image of images">
+                        <div class="p-1">
+                            <section hlmCard>
+                                <p hlmCardContent class="flex items-center justify-center p-6 aspect-square">
+                                    <img [src]="image" alt="Carousel Image" class="w-full h-full object-cover">
+                                </p>
+                            </section>
+                        </div>
+                    </hlm-carousel-item>
+                </hlm-carousel-content>
+                <button hlm-carousel-previous></button>
+                <button hlm-carousel-next></button>
+            </hlm-carousel>
+        </div>
+    </div>
+
+    <div *ngIf="espacio" class="w-2/5" style="background-color: white; margin-right: 60px;" >
+        <div class="flex flex-col space-y-2 py-2">
+            <span class="font-normal text-gray-600" style="font-size: 40px;">{{ espacio.nombre }}</span>
+
+            <div class="flex space-x-2">
+                <span class="text-xl font-bold text-gray-700">Precio: </span>
+                <span class="font-normal text-gray-600">$ {{ espacio.precio }}</span>
+            </div>
+
+            <div class="flex space-x-2">
+                <span class="text-xl font-bold text-gray-700">Cantidad de personas: </span>
+                <span class="font-normal text-gray-600">{{ espacio.canPersonas }}</span>
+            </div>
+
+            <span class="text-xl font-bold text-gray-700">Descripción: </span>
+            <span class="font-normal text-gray-600">{{ espacio.descripcion }}</span>
+        </div>
+    </div>
+    <div>
+        <button>Reservar</button>
+    </div>
+</div>

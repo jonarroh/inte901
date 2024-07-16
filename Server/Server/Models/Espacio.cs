@@ -6,19 +6,21 @@ namespace Server.Models
     {
         [Key]
         [Required]
-        public int? idEspacio { get; set; }
-        
-        [Required]
-        public string? nombre { get; set; }
+        public int idEspacio { get; set; }
 
         [Required]
-        public int? canPersonas {  get; set; }
-        
-        [Required]
-        public double? precio { get; set; }
+        public string nombre { get; set; }
 
         [Required]
-        public string? estatus { get; set; }
+        public int canPersonas { get; set; }
 
+        [Required]
+        public double precio { get; set; }
+
+        [Required]
+        public string estatus { get; set; }
+
+        [Required]
+        public string descripcion { get; set; }
     }
 }

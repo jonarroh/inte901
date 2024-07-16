@@ -252,15 +252,6 @@
         "hash": "sha512-k0AUZbJc0eyzRexvKlR1sR0qNhe54Om9ln6lRn7y1+gAsg+OwFDyF427fFuzqpZVe/MmpvX3CXWdl0twZAYEiA=="
       }
     },
-    "npm:@angular/forms@17.3.0": {
-      "type": "npm",
-      "name": "npm:@angular/forms@17.3.0",
-      "data": {
-        "version": "17.3.0",
-        "packageName": "@angular/forms",
-        "hash": "sha512-TnLOake1fQCmmGEOZbTjP2gbKerZ/bfEMuiFfoe7R2rUvKl4xHGAHp99bqf7bUyAbB8ZgmPZc9/VHrrts8UNyA=="
-      }
-    },
     "npm:@angular/forms": {
       "type": "npm",
       "name": "npm:@angular/forms",
@@ -3123,6 +3114,15 @@
         "hash": "sha512-QyNHnqKyB1+VcZ5Pv2AzM2HK04LdGt+EqAO16V+ZepaFYuAWB4N6DPdvb9/PXmFV6cSdLdhpn6MCdQjS3lhAkw=="
       }
     },
+    "npm:@spartan-ng/ui-accordion-brain": {
+      "type": "npm",
+      "name": "npm:@spartan-ng/ui-accordion-brain",
+      "data": {
+        "version": "0.0.1-alpha.352",
+        "packageName": "@spartan-ng/ui-accordion-brain",
+        "hash": "sha512-4JO5VEAL7YzMzB6Tgk3LX2Snuydr26oThndld97QU6T+27Wf1HQWPkz+GH22vLlN0KFgUx86mFmRJDUmF61KPw=="
+      }
+    },
     "npm:@spartan-ng/ui-avatar-brain": {
       "type": "npm",
       "name": "npm:@spartan-ng/ui-avatar-brain",
@@ -3130,6 +3130,24 @@
         "version": "0.0.1-alpha.352",
         "packageName": "@spartan-ng/ui-avatar-brain",
         "hash": "sha512-SBue5MPcqV1y8nmsdDGdPDQ7KfGE7ncZH71QfEPPvMKXyIHhndQesVdduPiyFE7I+Qsm38tCvK4R0r0B899aFw=="
+      }
+    },
+    "npm:@spartan-ng/ui-checkbox-brain": {
+      "type": "npm",
+      "name": "npm:@spartan-ng/ui-checkbox-brain",
+      "data": {
+        "version": "0.0.1-alpha.352",
+        "packageName": "@spartan-ng/ui-checkbox-brain",
+        "hash": "sha512-2bCpz+v6TaL/otOwGcWEqoXcq1XDEFSH9qervCY2nhD9SC8pOZgsaHBoDUVfOVMcxemzo8YZd9XO9cE8IifXqw=="
+      }
+    },
+    "npm:@spartan-ng/ui-collapsible-brain": {
+      "type": "npm",
+      "name": "npm:@spartan-ng/ui-collapsible-brain",
+      "data": {
+        "version": "0.0.1-alpha.352",
+        "packageName": "@spartan-ng/ui-collapsible-brain",
+        "hash": "sha512-dVG2jXJgUUKsQ5ib78HIearOywGezLxemHPzSCAZCzVnbPRl/p0h14Gp/asjh9ZqjKIx+w3juFK7b6xyYdiE8w=="
       }
     },
     "npm:@spartan-ng/ui-command-brain": {
@@ -3159,6 +3177,15 @@
         "hash": "sha512-nS8uitcb+N6B9ULszlQQgHkCVb3w2XAgB0ySPgaznzPVEryZnKpRMFKLzrTVkj32q0bo5C+LV1SgEvK8sZ/QrA=="
       }
     },
+    "npm:@spartan-ng/ui-hovercard-brain": {
+      "type": "npm",
+      "name": "npm:@spartan-ng/ui-hovercard-brain",
+      "data": {
+        "version": "0.0.1-alpha.352",
+        "packageName": "@spartan-ng/ui-hovercard-brain",
+        "hash": "sha512-gzSWElsSs7Al5IVKXZDhSjeDD4BNGa6bgt0pUhj2GOgK7jhDw70GoDwCfEbxElDM30UeRJsi0nYWWb8Yx/mJ4A=="
+      }
+    },
     "npm:@spartan-ng/ui-label-brain": {
       "type": "npm",
       "name": "npm:@spartan-ng/ui-label-brain",
@@ -3184,6 +3211,51 @@
         "version": "0.0.1-alpha.352",
         "packageName": "@spartan-ng/ui-popover-brain",
         "hash": "sha512-fUr7LjHXpY7rE9HdzlPoShqdiawDLFhOf5+0SBTbgl0iI+oFKoCSKJjH3x0jNTNJAXyurNVlPWlvLXFXSQea2Q=="
+      }
+    },
+    "npm:@spartan-ng/ui-select-brain": {
+      "type": "npm",
+      "name": "npm:@spartan-ng/ui-select-brain",
+      "data": {
+        "version": "0.0.1-alpha.352",
+        "packageName": "@spartan-ng/ui-select-brain",
+        "hash": "sha512-7GLptSr5OMlUFozNYlWFoXnciW1X3zuq8jX6giFjOWBaVXOOlQCFaMMwoxUSEKLz28js2yChMIQU0v0hss6JBg=="
+      }
+    },
+    "npm:@spartan-ng/ui-separator-brain": {
+      "type": "npm",
+      "name": "npm:@spartan-ng/ui-separator-brain",
+      "data": {
+        "version": "0.0.1-alpha.352",
+        "packageName": "@spartan-ng/ui-separator-brain",
+        "hash": "sha512-YognyeYUyvX/nBupeEJzQFKDDykn+45Pubp3Nf/5sV1io9NscdeiXArY0el3gVQM80aYh97smRclRygGa97JRA=="
+      }
+    },
+    "npm:@spartan-ng/ui-sheet-brain": {
+      "type": "npm",
+      "name": "npm:@spartan-ng/ui-sheet-brain",
+      "data": {
+        "version": "0.0.1-alpha.352",
+        "packageName": "@spartan-ng/ui-sheet-brain",
+        "hash": "sha512-6aGQ6nXoAQUj/IsBhKp4JnFwV6JHqrcYGUwIt32BaTWcFxHQzvDfkAgZN5XOzpLk1t45/0ds7+rt3UZ+ckEEGA=="
+      }
+    },
+    "npm:@spartan-ng/ui-table-brain": {
+      "type": "npm",
+      "name": "npm:@spartan-ng/ui-table-brain",
+      "data": {
+        "version": "0.0.1-alpha.352",
+        "packageName": "@spartan-ng/ui-table-brain",
+        "hash": "sha512-GeT65UCGdZJCX5otbCV73RIoewa7SQbB8D/83f4G9D/wKZTxNrmGoymXF83Rqg2uMUY2cvrinfc9BSTezZ8uLw=="
+      }
+    },
+    "npm:@spartan-ng/ui-tabs-brain": {
+      "type": "npm",
+      "name": "npm:@spartan-ng/ui-tabs-brain",
+      "data": {
+        "version": "0.0.1-alpha.352",
+        "packageName": "@spartan-ng/ui-tabs-brain",
+        "hash": "sha512-KU79zXMxzIMprmDBKEKNBxzijGWRqyJYxb6RwOpKcZdTv4b8uAtMakc9nrSohG0qh0H/W1Zp6yvI5ZQ0RdxWTQ=="
       }
     },
     "npm:@trysound/sax": {
@@ -8271,6 +8343,24 @@
         "hash": "sha512-YqJPHCU05c50R2ILV/Vx2JE2LkEq4tKLKza8Tceo9uTRDrP3un+AYsTLwNSECWJKHHt4GnE7wpykD9B59Cp56Q=="
       }
     },
+    "npm:ngx-scrollbar": {
+      "type": "npm",
+      "name": "npm:ngx-scrollbar",
+      "data": {
+        "version": "13.0.3",
+        "packageName": "ngx-scrollbar",
+        "hash": "sha512-ZpjNm9y7F5OSQh7p4x2PrwRkNl5zARPqPbRdkS5HjP8lHpG7hAFpbsjW+WlsM/6lAL5pesfVRCSlvcRJihM2sg=="
+      }
+    },
+    "npm:ngx-sonner": {
+      "type": "npm",
+      "name": "npm:ngx-sonner",
+      "data": {
+        "version": "2.0.1",
+        "packageName": "ngx-sonner",
+        "hash": "sha512-+z0mc+go1eznziDNBziXy1H8Emsd8HisofC29FW+dEheZzDqfpF8sS0Oe0ZuIXWRGkK/8sk63WrTXIEG1dYEjA=="
+      }
+    },
     "npm:nice-napi@1.0.2": {
       "type": "npm",
       "name": "npm:nice-napi@1.0.2",
@@ -12718,6 +12808,11 @@
       "type": "static"
     },
     {
+      "source": "npm:@angular/common",
+      "target": "npm:tslib",
+      "type": "static"
+    },
+    {
       "source": "npm:@angular/common@18.0.0",
       "target": "npm:tslib",
       "type": "static"
@@ -12908,7 +13003,12 @@
       "type": "static"
     },
     {
-      "source": "npm:@angular/forms@17.3.0",
+      "source": "npm:@angular/core",
+      "target": "npm:tslib",
+      "type": "static"
+    },
+    {
+      "source": "npm:@angular/forms",
       "target": "npm:tslib",
       "type": "static"
     },
@@ -19248,7 +19348,22 @@
       "type": "static"
     },
     {
+      "source": "npm:@spartan-ng/ui-accordion-brain",
+      "target": "npm:tslib",
+      "type": "static"
+    },
+    {
       "source": "npm:@spartan-ng/ui-avatar-brain",
+      "target": "npm:tslib",
+      "type": "static"
+    },
+    {
+      "source": "npm:@spartan-ng/ui-checkbox-brain",
+      "target": "npm:tslib",
+      "type": "static"
+    },
+    {
+      "source": "npm:@spartan-ng/ui-collapsible-brain",
       "target": "npm:tslib",
       "type": "static"
     },
@@ -19268,6 +19383,11 @@
       "type": "static"
     },
     {
+      "source": "npm:@spartan-ng/ui-hovercard-brain",
+      "target": "npm:tslib",
+      "type": "static"
+    },
+    {
       "source": "npm:@spartan-ng/ui-label-brain",
       "target": "npm:tslib",
       "type": "static"
@@ -19279,6 +19399,31 @@
     },
     {
       "source": "npm:@spartan-ng/ui-popover-brain",
+      "target": "npm:tslib",
+      "type": "static"
+    },
+    {
+      "source": "npm:@spartan-ng/ui-select-brain",
+      "target": "npm:tslib",
+      "type": "static"
+    },
+    {
+      "source": "npm:@spartan-ng/ui-separator-brain",
+      "target": "npm:tslib",
+      "type": "static"
+    },
+    {
+      "source": "npm:@spartan-ng/ui-sheet-brain",
+      "target": "npm:tslib",
+      "type": "static"
+    },
+    {
+      "source": "npm:@spartan-ng/ui-table-brain",
+      "target": "npm:tslib",
+      "type": "static"
+    },
+    {
+      "source": "npm:@spartan-ng/ui-tabs-brain",
       "target": "npm:tslib",
       "type": "static"
     },
@@ -26808,6 +26953,16 @@
       "type": "static"
     },
     {
+      "source": "npm:ngx-scrollbar",
+      "target": "npm:tslib",
+      "type": "static"
+    },
+    {
+      "source": "npm:ngx-sonner",
+      "target": "npm:tslib",
+      "type": "static"
+    },
+    {
       "source": "npm:nice-napi@1.0.2",
       "target": "npm:node-addon-api",
       "type": "static"
@@ -29150,6 +29305,11 @@
     {
       "source": "npm:run-parallel",
       "target": "npm:queue-microtask",
+      "type": "static"
+    },
+    {
+      "source": "npm:rxjs",
+      "target": "npm:tslib",
       "type": "static"
     },
     {

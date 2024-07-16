@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Server.Models
 {
@@ -9,6 +10,7 @@ namespace Server.Models
         public int? Id { get; set; }
         public int? IdProducto { get; set; }
         [ForeignKey("ProductoId")]
+        [JsonIgnore]
         public Producto? Producto { get; set; }
         public int? IdMateriaPrima { get; set; }
         [ForeignKey("MateriaPrimaId")]

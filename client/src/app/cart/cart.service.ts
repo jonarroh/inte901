@@ -1,11 +1,19 @@
-import { Injectable } from '@angular/core';
+import { computed, Injectable, Signal, signal } from '@angular/core';
 import { Producto } from '~/lib/types';
+
+export interface ProductoWithQuantity extends Producto {
+  quantity: number;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
   private storageKey = 'shoppingCart';
+  cartSignal = signal<ProductoWithQuantity[]>(this.loadCartFromLocalStorage());
+  total = computed(() => {
+    return this.cartSignal().reduce((acc, item) => acc + item.precio * item.quantity, 0);
+  });
 
   constructor() {
     window.addEventListener('storage', this.syncCartAcrossTabs.bind(this));
@@ -13,35 +21,51 @@ export class CartService {
 
   private syncCartAcrossTabs(event: StorageEvent): void {
     if (event.key === this.storageKey) {
-      this.cart = JSON.parse(event.newValue || '[]');
+      this.cartSignal.set(JSON.parse(event.newValue || '[]'));
     }
   }
 
-  private get cart(): Producto[] {
+  private loadCartFromLocalStorage(): ProductoWithQuantity[] {
     return JSON.parse(localStorage.getItem(this.storageKey) || '[]');
   }
 
-  private set cart(items: Producto[]) {
+  private saveCartToLocalStorage(items: ProductoWithQuantity[]): void {
     localStorage.setItem(this.storageKey, JSON.stringify(items));
+    this.cartSignal.set(items);
   }
 
-  getItems(): Producto[] {
-    return this.cart;
+  getItems(): ProductoWithQuantity[] {
+    return this.cartSignal();
   }
 
-  addItem(item: Producto): void {
-    const cart = this.cart;
-    cart.push(item);
-    this.cart = cart;
+  editItem(index: number, quantity: number): void {
+    const cart = this.cartSignal();
+    cart[index].quantity = quantity;
+    this.saveCartToLocalStorage(cart);
+  }
+
+  getTotal(): Signal<number> {
+    return this.total;
+  }
+
+  addItem(item: ProductoWithQuantity): void {
+    const cart = this.cartSignal();
+    const index = cart.findIndex((cartItem) => cartItem.id === item.id);
+    if (index !== -1) {
+      cart[index].quantity += item.quantity;
+    } else {
+      cart.push(item);
+    }
+    this.saveCartToLocalStorage(cart);
   }
 
   removeItem(index: number): void {
-    const cart = this.cart;
+    const cart = this.cartSignal();
     cart.splice(index, 1);
-    this.cart = cart;
+    this.saveCartToLocalStorage(cart);
   }
 
   clearCart(): void {
-    this.cart = [];
+    this.saveCartToLocalStorage([]);
   }
 }
