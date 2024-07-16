@@ -5,6 +5,7 @@ import { CommonModule, CurrencyPipe, NgFor } from '@angular/common';
 import { Espacio } from '~/lib/types';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-galery-place',
   standalone: true,
