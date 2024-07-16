@@ -6,34 +6,34 @@ namespace Server.lib
 {
     public class CreditCardService
     {
-        public static CreditCard[] creditCards =
+        public static CheckCreditCard[] creditCards =
         [
-            new CreditCard
+            new CheckCreditCard
             {
-                Id = 1,
+                id = 1,
                 CardHolderName = "Juan Perez",
                 CVV = "568",
                 CardNumber = "1234567890123456",
                 ExpiryDate = "12/23",
-                UserId = 1
+                Amount = 1000 
             },
-            new CreditCard
+            new CheckCreditCard
             {
-                Id = 2,
+                id = 2,
                 CVV = "153",
                 CardHolderName = "Maria Lopez",
                 CardNumber = "1234567890123456",
                 ExpiryDate = "12/23",
-                UserId = 2
+                Amount = 500
             },
-            new CreditCard
+            new CheckCreditCard
             {
-                Id = 3,
+                id = 3,
                 CVV = "123",
                 CardHolderName = "Pedro Ramirez",
                 CardNumber = "1234567890123456",
                 ExpiryDate = "12/23",
-                UserId = 3
+                Amount = 2000
             }
         ];
 
@@ -99,15 +99,84 @@ namespace Server.lib
                 throw new ArgumentException("No hay tarjetas en la base de datos.");
             }
 
+            var card = creditCards.FirstOrDefault(card => card.id == id);
 
-            return creditCards.FirstOrDefault(card => card.Id == id);
+            CreditCard creditCard = new CreditCard
+            {
+                CardHolderName = card.CardHolderName,
+                CardNumber = card.CardNumber,
+                CVV = card.CVV,
+                ExpiryDate = card.ExpiryDate,
+                UserId = card.id
+            };
+
+            return creditCard;
         }
 
-        // Agregar método para obtener tarjeta por número de tarjeta
-        public static CreditCard? GetCreditCardByNumber(string cardNumber)
+
+        public static bool IsValidAmount(CreditCard creditCard, decimal amount)
         {
-            return creditCards.FirstOrDefault(card => card.CardNumber == cardNumber);
+            if (creditCard == null)
+            {
+                return false;
+            }
+
+            if (amount <= 0)
+            {
+                return false;
+            }
+
+            // Ver si la tarjeta tiene el monto suficiente
+            return creditCards.Any(card => card.Amount >= amount);
         }
+
+        public string canPay(CreditCard creditCard, decimal amount)
+        {
+            if (creditCard == null)
+            {
+                return "La tarjeta no puede ser nula";
+            }
+
+            if (amount <= 0)
+            {
+                return "El monto debe ser mayor a 0";
+            }
+
+            if (!IsValidCreditCard(creditCard))
+            {
+                return "La tarjeta no es válida";
+            }
+
+            if (!IsCorrectCvv(creditCard))
+            {
+                return "El CVV no es correcto";
+            }
+
+            if (!IsCorrectExpiryDate(creditCard))
+            {
+                return "La fecha de expiración no es correcta";
+            }
+
+            if (!IsValidAmount(creditCard, amount))
+            {
+                return "La tarjeta no tiene el monto suficiente";
+            }
+
+            //ver si el id de la tarjeta y el cvv coinciden
+
+            if (creditCards.Any(card => card.id == creditCard.UserId && card.CVV == creditCard.CVV))
+            {
+                return "La tarjeta es válida";
+            }
+            if (creditCards.Any(card => card.id == creditCard.UserId && card.CVV != creditCard.CVV))
+            {
+                return "El CVV no es correcto";
+            }
+
+            return "La tarjeta es válida";
+        }
+
+
     }
 
    
