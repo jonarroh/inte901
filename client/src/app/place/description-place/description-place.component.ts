@@ -1,12 +1,48 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { PlaceServiceService } from '../place-service.service';
+import { NgIf, NgFor } from '@angular/common';
+import { NavbarComponent } from '~/app/home/navbar/navbar.component';
+import { HlmCarouselComponent, HlmCarouselContentComponent, HlmCarouselItemComponent, HlmCarouselNextComponent, HlmCarouselPreviousComponent } from '~/components/ui-carousel-helm/src';
+import { Espacio } from '../../../lib/types';
 
 @Component({
   selector: 'app-description-place',
   standalone: true,
-  imports: [],
+  imports: [
+    NgIf,
+    NgFor,
+    NavbarComponent,
+    HlmCarouselComponent,
+    HlmCarouselContentComponent,
+    HlmCarouselItemComponent,
+    HlmCarouselNextComponent,
+    HlmCarouselPreviousComponent
+  ],
   templateUrl: './description-place.component.html',
-  styleUrl: './description-place.component.css'
+  styleUrls: ['./description-place.component.css']
 })
-export class DescriptionPlaceComponent {
+export class DescriptionPlaceComponent implements OnInit {
 
+  espacio: any;
+  images: string[] = [];
+  
+  
+
+  constructor(private route: ActivatedRoute, private placeService: PlaceServiceService) {}
+
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.placeService.getPlaceById(Number(id)).subscribe(data => {
+        this.espacio = data;
+        this.images = [
+          `http://localhost:5000/static/places/${id}.webp`, // Imagen dinámica basada en el ID del espacio
+          'http://localhost:5000/static/places/op2.webp',
+          'http://localhost:5000/static/places/op3.webp',
+          'http://localhost:5000/static/places/op4.webp'
+        ];
+      });
+    }
+  }
 }

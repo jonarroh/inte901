@@ -122,3 +122,37 @@ export interface Espacio {
   estatus: string;
   descripcion: string;
 }
+
+export interface DetailOrder {
+  id: number;
+  idProduct: number;
+  nameProduct: string;
+  quantity: number;
+  priceSingle: number;
+  status: number;
+  dateOrder: string;
+  ticket: number;
+  ingredients: string;
+}
+
+export interface Order {
+  id: number;
+  idClient: number;
+  idUser: number;
+  total: number;
+  orderDate: string;
+  detailOrders: DetailOrder[];
+}
+
+
+export interface UserEditDTO{
+  id: number;
+  name: string;
+  lastName: string;
+  email: string;
+  newPassword: string | undefined;
+  Image: File | undefined;
+  actualPassword: string | undefined;
+  direcciones: Address[] | undefined;
+  creditCards: CreditCard[] | undefined;
+}

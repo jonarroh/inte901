@@ -23,6 +23,7 @@ else if (environment == "P")
 
 // Registrar servicios
 builder.Services.AddSingleton<TokenService>();
+builder.Services.AddHttpClient<IHttpCDNService, HttpCDNService>();
 
 // Services
 builder.Services.AddScoped<CreditCardService, CreditCardService >();
@@ -101,12 +102,6 @@ if (app.Environment.IsDevelopment())
         c.ConfigObject.AdditionalItems.Add("syntaxHighlight", false);
         c.DefaultModelExpandDepth(2);
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
-
-       
-
-
-
-
     });
 }
 

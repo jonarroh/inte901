@@ -12,8 +12,8 @@ using Server;
 namespace Server.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240710041318_asdfggg")]
-    partial class asdfggg
+    [Migration("20240713015500_espacios")]
+    partial class espacios
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

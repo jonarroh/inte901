@@ -6,6 +6,7 @@ import {
   HlmDialogTitleDirective,
   HlmDialogDescriptionDirective,
 } from '~/components/ui-dialog-helm/src';
+
 import { FormsModule } from '@angular/forms';
 import { lucideArrowUpDown, lucideChevronDown, lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmButtonModule } from '@spartan-ng/ui-button-helm';
@@ -14,6 +15,7 @@ import { HlmIconComponent, provideIcons } from '@spartan-ng/ui-icon-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
+import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { BrnDialogTriggerDirective, BrnDialogContentDirective } from '@spartan-ng/ui-dialog-brain';
 import { BrnTableModule, PaginatorState, useBrnColumnManager } from '@spartan-ng/ui-table-brain';
 import { HlmTableModule } from '@spartan-ng/ui-table-helm';

@@ -22,6 +22,7 @@ import { User } from '~/lib/types';
   selector: 'nav-icon',
   standalone: true,
   imports: [
+    RouterModule,
     LucideAngularModule,
     HlmMenuComponent,
     HlmMenuGroupComponent,
@@ -43,17 +44,18 @@ import { User } from '~/lib/types';
 })
 export class IconComponent implements OnInit {
 
+  
   isLogged = input.required()
 
   private userData = signal<User | null>(null);
 
-  imgUrl = computed(() => `http://127.0.0.1:5000/static/users/${localStorage.getItem('userId')}.webp`);
+  imgUrl  = this.userService.imgUrl;
   initials = computed(() => this.userData()?.name?.split(' ').map((name) => name[0]).join('') || '');
 
   constructor(private userService: UserService) {}
 
   ngOnInit() {
-    this.userService.getUser().subscribe({
+    this.userService.getUser(Number(localStorage.getItem('userId'))).subscribe({
       next: (user) => {
         this.userData.set(user);
       },

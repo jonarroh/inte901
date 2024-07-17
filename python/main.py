@@ -1,9 +1,10 @@
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file, url_for
 from PIL import Image
 import os
 from io import BytesIO
 from controller.models import models
 from controller.ridge import rid
+import qrcode
 
 
 app = Flask(__name__)
@@ -94,6 +95,70 @@ def clipProduct2():
                 convert_images.append(filename)
 
     return jsonify({'message': 'Images have been clipped.', 'clipped_images': convert_images})
+
+
+
+@app.route('/user/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'message': 'No file part'})
+    
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'message': 'No selected file'})
+    
+    if 'id' not in request.form:
+        return jsonify({'message': 'No id part'})
+    
+    id = request.form['id']
+    #hacer la optimizacion de la imagen a webp y guardarla en la carpeta static/users
+
+    if file:
+        img = Image.open(file)
+        # Guardar la imagen en formato webp
+        webp_filename = id + '.webp'
+        webp_filepath = os.path.join(STATIC_FOLDER, 'users', webp_filename)
+
+        img.save(webp_filepath, 'webp', quality=90)
+        return jsonify({'message': 'Image has been uploaded and optimized.'})
+    else:
+        return jsonify({'message': 'Error uploading image'})
+    
+
+
+@app.route('/generate_qr_order', methods=['POST'])
+def generate_qr():
+    # Obtener el string del request
+    data = request.json.get('data')
+    id = request.json.get('id')
+    qr_orders_folder = os.path.join(STATIC_FOLDER, 'qr-orders')
+    
+    if not data:
+        return {"error": "No data provided"}, 400
+
+    # Crear un código QR
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill='black', back_color='white')
+
+    # Generar un nombre de archivo único para evitar colisiones
+    
+    filename = f"{id}.png"
+    filepath = os.path.join(qr_orders_folder, filename)
+
+    # Guardar la imagen en el directorio 'static/qr-orders'
+    img.save(filepath)
+
+    # Devolver la URL del archivo guardado
+    file_url = url_for('static', filename=f'qr-orders/{filename}', _external=True)
+    return jsonify({"file_url": file_url})
 
 
 
