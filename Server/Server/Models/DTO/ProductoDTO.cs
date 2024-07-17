@@ -9,6 +9,7 @@
         public int? Estatus { get; set; }
         public string Tipo { get; set; }
         public int? CantidadXReceta { get; set; }
+        public string? Temperatura { get; set; }
         public DateTime? CreatedAt { get; set; }
     }
 }
