@@ -34,7 +34,8 @@
 
 		[Required]
 		public DateTime? CreatedAt { get; set; }
-
+		[Required]
+		public string? Status { get; set; } // Pendiente, Cancelado, Entregado
         public Purchase Purchase { get; set; }
 
         public Producto Product { get; set; }

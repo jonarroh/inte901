@@ -37,14 +37,16 @@ namespace Server.lib
             }
         ];
 
-        public static bool IsValidCreditCard(CreditCard creditCard)
+        public bool IsValidCreditCard(CreditCard creditCard)
         {
             return !string.IsNullOrEmpty(creditCard.CardHolderName) &&
                    !string.IsNullOrEmpty(creditCard.CardNumber) &&
-                   !string.IsNullOrEmpty(creditCard.ExpiryDate);
+                   !string.IsNullOrEmpty(creditCard.ExpiryDate) &&
+                   !string.IsNullOrEmpty(creditCard.CVV) &&
+                   !string.IsNullOrEmpty(creditCard.Amount);
         }
 
-        public static bool IsCorrectCvv(CreditCard creditCard)
+        public bool IsCorrectCvv(CreditCard creditCard)
         {
             if (creditCard == null || string.IsNullOrEmpty(creditCard.CVV))
             {
@@ -60,7 +62,7 @@ namespace Server.lib
             return creditCards.Any(card => card.CVV == creditCard.CVV);
         }
 
-        public static bool IsCorrectExpiryDate(CreditCard creditCard)
+        public bool IsCorrectExpiryDate(CreditCard creditCard)
         {
             if (creditCard == null || string.IsNullOrEmpty(creditCard.ExpiryDate))
             {
@@ -84,6 +86,33 @@ namespace Server.lib
             }
 
             return string.Concat(numero.AsSpan()[..4], "********", numero.AsSpan(12, 4));
+        }
+
+        // Agregar método para obtener tarjeta por ID
+        public static CreditCard? GetCreditCardById(int id)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("El ID de la tarjeta debe ser mayor a 0.");
+            }
+
+            if(creditCards == null || creditCards.Length == 0)
+            {
+                throw new ArgumentException("No hay tarjetas en la base de datos.");
+            }
+
+            var card = creditCards.FirstOrDefault(card => card.id == id);
+
+            CreditCard creditCard = new CreditCard
+            {
+                CardHolderName = card.CardHolderName,
+                CardNumber = card.CardNumber,
+                CVV = card.CVV,
+                ExpiryDate = card.ExpiryDate,
+                UserId = card.id
+            };
+
+            return creditCard;
         }
 
         // Agregar método para obtener tarjeta por ID

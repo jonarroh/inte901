@@ -18,8 +18,13 @@
         [ForeignKey("IdUser")]
         public int? IdUser { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public string Status { get; set; } // Pendiente, Aceptada, Declinada, Entregada
         public ICollection<DetailPurchase>? DetailPurchases { get; set; }
         public Proveedor? Proveedor { get; set; }
 		public User? User { get; set; }
+        public Purchase()
+        {
+            DetailPurchases = new List<DetailPurchase>();
+        }
 	}
 }
