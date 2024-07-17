@@ -21,85 +21,57 @@ namespace Server.Controllers
             _context = context;
         }
 
-        // GET: api/Purchases
+        
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Purchase>>> GetPurchases()
+        //[Authorize]
+        [Route("allCompras")]
+        public async Task<IActionResult> GetCompras()
         {
-            return await _context.Purchases.ToListAsync();
-        }
-
-        // GET: api/Purchases/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Purchase>> GetPurchase(int? id)
-        {
-            var purchase = await _context.Purchases.FindAsync(id);
-
-            if (purchase == null)
+            try
             {
-                return NotFound();
+                var compras = await _context.Purchases.ToListAsync();
+
+                if (compras == null || compras.Count == 0)
+                {
+                    return BadRequest("No hay compras encontradas");
+                }
+
+                return Ok(compras);
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
 
-            return purchase;
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
         }
 
-        // PUT: api/Purchases/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPurchase(int? id, Purchase purchase)
+        
+        [HttpGet]
+        //[Authorize]
+        [Route("getCompra/{id}")]
+        public async Task<IActionResult> GetCompra(int? id)
         {
-            //if (id != purchase.Id)
-            //{
-            //    return BadRequest();
-            //}
+            try
+            {
+                var compra = await _context.Purchases.FindAsync(id);
 
-            //_context.Entry(purchase).State = EntityState.Modified;
+                if (compra == null)
+                {
+                    return BadRequest("No se encontro la compra");
+                }
 
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!PurchaseExists(id))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
+                return Ok(compra);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
 
-            return NoContent();
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
         }
 
-        // POST: api/Purchases
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Purchase>> PostPurchase(Purchase purchase)
-        {
-            //_context.Purchases.Add(purchase);
-            //await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPurchase", new { id = purchase.Id }, purchase);
-        }
-
-        // DELETE: api/Purchases/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePurchase(int? id)
-        {
-            //var purchase = await _context.Purchases.FindAsync(id);
-            //if (purchase == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //_context.Purchases.Remove(purchase);
-            //await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
+       
         private bool PurchaseExists(int? id)
         {
             return _context.Purchases.Any(e => e.Id == id);

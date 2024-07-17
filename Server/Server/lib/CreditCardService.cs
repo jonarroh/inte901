@@ -37,14 +37,16 @@ namespace Server.lib
             }
         ];
 
-        public static bool IsValidCreditCard(CreditCard creditCard)
+        public bool IsValidCreditCard(CreditCard creditCard)
         {
             return !string.IsNullOrEmpty(creditCard.CardHolderName) &&
                    !string.IsNullOrEmpty(creditCard.CardNumber) &&
-                   !string.IsNullOrEmpty(creditCard.ExpiryDate);
+                   !string.IsNullOrEmpty(creditCard.ExpiryDate) &&
+                   !string.IsNullOrEmpty(creditCard.CVV) &&
+                   !string.IsNullOrEmpty(creditCard.Amount);
         }
 
-        public static bool IsCorrectCvv(CreditCard creditCard)
+        public bool IsCorrectCvv(CreditCard creditCard)
         {
             if (creditCard == null || string.IsNullOrEmpty(creditCard.CVV))
             {
@@ -60,7 +62,7 @@ namespace Server.lib
             return creditCards.Any(card => card.CVV == creditCard.CVV);
         }
 
-        public static bool IsCorrectExpiryDate(CreditCard creditCard)
+        public bool IsCorrectExpiryDate(CreditCard creditCard)
         {
             if (creditCard == null || string.IsNullOrEmpty(creditCard.ExpiryDate))
             {
@@ -104,7 +106,7 @@ namespace Server.lib
         }
 
         // Agregar método para obtener tarjeta por número de tarjeta
-        public static CreditCard? GetCreditCardByNumber(string cardNumber)
+        public CreditCard? GetCreditCardByNumber(string cardNumber)
         {
             return creditCards.FirstOrDefault(card => card.CardNumber == cardNumber);
         }
