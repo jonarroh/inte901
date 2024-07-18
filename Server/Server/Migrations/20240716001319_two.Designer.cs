@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Server;
 
@@ -11,9 +12,11 @@ using Server;
 namespace Server.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240716001319_two")]
+    partial class two
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -213,6 +216,37 @@ namespace Server.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Direcciones");
+                });
+
+            modelBuilder.Entity("Server.Models.Espacio", b =>
+                {
+                    b.Property<int>("idEspacio")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("idEspacio"));
+
+                    b.Property<int>("canPersonas")
+                        .HasColumnType("int");
+
+                    b.Property<string>("descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("estatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("precio")
+                        .HasColumnType("float");
+
+                    b.HasKey("idEspacio");
+
+                    b.ToTable("Espacios");
                 });
 
             modelBuilder.Entity("Server.Models.Ingrediente", b =>
@@ -465,10 +499,6 @@ namespace Server.Migrations
                     b.Property<decimal?>("Precio")
                         .IsRequired()
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Temperatura")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tipo")
                         .IsRequired()

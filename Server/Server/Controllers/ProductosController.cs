@@ -80,6 +80,7 @@ namespace Server.Controllers
             producto.Descripcion = productoDTO.Descripcion;
             producto.Estatus = productoDTO.Estatus;
             producto.Tipo = productoDTO.Tipo;
+            producto.Temperatura = productoDTO.Temperatura;
             producto.CantidadXReceta = productoDTO.CantidadXReceta;
             producto.CreatedAt = productoDTO.CreatedAt;
 
@@ -116,6 +117,7 @@ namespace Server.Controllers
                 Estatus = productoDTO.Estatus,
                 Tipo = productoDTO.Tipo,
                 CantidadXReceta = productoDTO.CantidadXReceta,
+                Temperatura = productoDTO.Temperatura,
                 CreatedAt = productoDTO.CreatedAt ?? DateTime.Now
             };
 
@@ -160,6 +162,7 @@ namespace Server.Controllers
                     Estatus = productoDTO.Estatus,
                     Tipo = productoDTO.Tipo,
                     CantidadXReceta = productoDTO.CantidadXReceta,
+                    Temperatura = productoDTO.Temperatura,
                     CreatedAt = productoDTO.CreatedAt ?? DateTime.Now
                 };
 

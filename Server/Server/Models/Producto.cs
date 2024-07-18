@@ -26,6 +26,9 @@ namespace Server.Models
         public int? CantidadXReceta { get; set; }
 
         [Required]
+        public string? Temperatura { get; set; }
+
+        [Required]
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
 
         public ICollection<Ingrediente>? Ingredientes { get; set; }
