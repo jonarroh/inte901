@@ -156,3 +156,11 @@ export interface UserEditDTO{
   direcciones: Address[] | undefined;
   creditCards: CreditCard[] | undefined;
 }
+export interface CreditCardWithCvv{
+  cardNumber: string;
+  expiryDate: string;
+  cvv: string;
+  cardHolderName: string;
+  userId: number;
+  id: number;
+}
