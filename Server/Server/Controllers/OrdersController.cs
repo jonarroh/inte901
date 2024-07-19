@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using Server;
 using Server.lib;
 using Server.Models;
@@ -109,7 +110,8 @@ namespace Server.Controllers
                 }
 
                 return Ok(order);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
 
@@ -157,7 +159,9 @@ namespace Server.Controllers
 
                     if (_creditCardService.IsValidCreditCard(tarjeta))
                     {
-                        if (_creditCardService.canPay(tarjeta, ((decimal?)orden.Total)))
+                        decimal amount = (decimal)orden.Total;
+
+                        if (_creditCardService.CardCanPay(tarjeta, amount))
                         {
                             var direccion = new Direcciones
                             {
@@ -195,10 +199,10 @@ namespace Server.Controllers
                             using (HttpClient client = new HttpClient())
                             {
                                 var data = new Dictionary<string, string?>
-                    {
-                        { "id", orden.Id.ToString() },
-                        { "ticket", orden.Ticket.ToString() },
-                    };
+                                {
+                                    { "id", orden.Id.ToString() },
+                                    { "ticket", orden.Ticket.ToString() },
+                                };
 
                                 var content = new FormUrlEncodedContent(data);
 
@@ -276,7 +280,8 @@ namespace Server.Controllers
                 if (responseStatus == "200")
                 {
                     await _context.SaveChangesAsync();
-                } else
+                }
+                else
                 {
                     return NotFound($"Error con el QR, no guardaran los cambios, status: {responseStatus}");
                     //return NotFound("Se produjo un error en el servidor, contacte a soporte");
@@ -318,7 +323,8 @@ namespace Server.Controllers
                 await _context.SaveChangesAsync();
 
                 return Ok();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
 
@@ -364,11 +370,14 @@ namespace Server.Controllers
 
         [HttpPut]
         //[Authorize]
-        [Route("deleteProductFromOrder/{idProduct},{idOrder}")]
-        public async Task<IActionResult> DeleteProductFromOrder(int? idProduct, int? idOrder)
+        [Route("deleteProductFromOrder")]
+        public async Task<IActionResult> DeleteProductFromOrder([FromBody] JObject data)
         {
             try
             {
+                int idOrder = data["id"].ToObject<int>();
+                int idProduct = data["idProduct"].ToObject<int>();
+
                 var orden = await _context.Orders.FindAsync(idOrder);
                 var detailOrder = await _context.DetailOrders.Where(d => d.IdOrder == orden.Id).ToListAsync();
 
@@ -417,7 +426,8 @@ namespace Server.Controllers
                 Console.WriteLine($"Se guaradaron los cambios, {product.Id}, {product.IdProduct}, {product.Order}");
 
                 return Ok();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
 
@@ -429,7 +439,7 @@ namespace Server.Controllers
         [HttpPut]
         // [Authorize]
         [Route("updateProductoFromOrder/{idDetail}")]
-        public async Task<IActionResult> UpdateProductFromOrder(int? idDetail, DetailOrderDTO detaildto)
+        public async Task<IActionResult> UpdateProductFromOrder(int? idDetail, [FromBody] DetailOrderDTO detaildto)
         {
             try
             {
@@ -443,7 +453,8 @@ namespace Server.Controllers
                 await _context.SaveChangesAsync();
 
                 return Ok();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
