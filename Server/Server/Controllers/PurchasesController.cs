@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using Server;
 using Server.Models;
+using Server.Models.DTO;
 
 namespace Server.Controllers
 {
@@ -21,83 +23,213 @@ namespace Server.Controllers
             _context = context;
         }
 
-        // GET: api/Purchases
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Purchase>>> GetPurchases()
+        //[Authorize]
+        [Route("allCompras")]
+        public async Task<IActionResult> GetCompras()
         {
-            return await _context.Purchases.ToListAsync();
-        }
-
-        // GET: api/Purchases/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Purchase>> GetPurchase(int? id)
-        {
-            var purchase = await _context.Purchases.FindAsync(id);
-
-            if (purchase == null)
+            try
             {
-                return NotFound();
+                var compras = await _context.Purchases.OrderByDescending(c => c.Status == "Pendiente").ToListAsync();
+
+                if (compras == null || compras.Count == 0)
+                {
+                    return BadRequest("No hay compras encontradas");
+                }
+
+                return Ok(compras);
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
 
-            return purchase;
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
         }
 
-        // PUT: api/Purchases/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPurchase(int? id, Purchase purchase)
+
+        [HttpGet]
+        //[Authorize]
+        [Route("getCompra/{id}")]
+        public async Task<IActionResult> GetCompra(int? id)
         {
-            //if (id != purchase.Id)
-            //{
-            //    return BadRequest();
-            //}
+            try
+            {
+                var compra = await _context.Purchases.FindAsync(id);
 
-            //_context.Entry(purchase).State = EntityState.Modified;
+                if (compra == null)
+                {
+                    return BadRequest("No se encontro la compra");
+                }
 
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!PurchaseExists(id))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
+                return Ok(compra);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
 
-            return NoContent();
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
         }
 
-        // POST: api/Purchases
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
+        [HttpGet]
+        // [Authorize]
+        [Route("filterCompraByStatus/{status}")]
+        public async Task<IActionResult> FilterCompraByStatus(string? status)
+        {
+            try
+            {
+                var compra = await _context.Purchases.Where(c => c.Status == status).ToListAsync();
+
+                if (compra == null)
+                {
+                    return BadRequest($"No se encontraron compras con el estatus - {status} -");
+                }
+
+                return Ok(compra);
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+
         [HttpPost]
-        public async Task<ActionResult<Purchase>> PostPurchase(Purchase purchase)
+        // [Authorize]
+        [Route("addCompra")]
+        public async Task<IActionResult> AddCompra(PurchaseDTO compradto)
         {
-            //_context.Purchases.Add(purchase);
-            //await _context.SaveChangesAsync();
+            try
+            {
+                if (compradto == null)
+                {
+                    return BadRequest("Campos incompletos, es necesario completar todos los datos.");
+                }
 
-            return CreatedAtAction("GetPurchase", new { id = purchase.Id }, purchase);
+                var compra = new Purchase
+                {
+                    IdProveedor = compradto.IdProveedor,
+                    IdUser = compradto.IdUser,
+                    CreatedAt = DateTime.Now,
+                    Status = "Pendiente"
+                };
+
+                foreach (var item in compradto.Details)
+                {
+                    var detail = new DetailPurchase
+                    {
+                        IdPurchase = compra.Id,
+                        IdProduct = item.IdProduct,
+                        Quantity = item.Quantity,
+                        PriceSingle = item.PriceSingle,
+                        Presentation = item.Presentation,
+                        Expiration = item.Expiration,
+                        UnitType = item.UnitType,
+                        CreatedAt = DateTime.Now,
+                        Status = "Pendiente"
+                    };
+
+                    compra.DetailPurchases?.Add(detail);
+
+                    await _context.DetailPurchases.AddAsync(detail);
+                }
+
+                await _context.Purchases.AddAsync(compra);
+
+                return Ok();
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
         }
 
-        // DELETE: api/Purchases/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePurchase(int? id)
+
+        [HttpPut]
+        // [Authorize]
+        [Route("statusCompra")]
+        public async Task<IActionResult> CancelCompra([FromBody] JObject data)
         {
-            //var purchase = await _context.Purchases.FindAsync(id);
-            //if (purchase == null)
-            //{
-            //    return NotFound();
-            //}
+            try
+            {
+                int idCompra = data["id"].ToObject<int>();
+                string status = data["status"].ToObject<string>();
 
-            //_context.Purchases.Remove(purchase);
-            //await _context.SaveChangesAsync();
+                var compra = await _context.Purchases.FindAsync(idCompra);
+                var detail = await _context.DetailPurchases.Where(d => d.IdPurchase == compra.Id).ToListAsync();
 
-            return NoContent();
+                if (compra == null)
+                {
+                    return BadRequest("No se encontro la compra realizada");
+                }
+
+                if (status == "Cancelada")
+                {
+                    compra.Status = "Cancelada";
+
+                    foreach (var item in detail)
+                    {
+                        item.Status = "Cancelado";
+                    }
+                }
+
+                if (status == "Aceptada")
+                {
+                    compra.Status = "Aceptada";
+                }
+
+                if (status == "Entregada")
+                {
+                    compra.Status = "Entregada";
+
+                    foreach (var item in detail)
+                    {
+                        item.Status = "Entregado";
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+
+        [HttpPut]
+        // [Authorize]
+        [Route("cancelCompraProducto/{idDetail}")]
+        public async Task<IActionResult> CancelCompraProducto(int? idDetail)
+        {
+            try
+            {
+                var detail = await _context.DetailPurchases.FindAsync(idDetail);
+
+                if (detail == null)
+                {
+                    return BadRequest("No se encontro el insumo seleccionado");
+                }
+
+                detail.Status = "Cancelado";
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
         }
 
         private bool PurchaseExists(int? id)

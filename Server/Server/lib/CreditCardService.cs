@@ -37,14 +37,22 @@ namespace Server.lib
             }
         ];
 
-        public static bool IsValidCreditCard(CreditCard creditCard)
+        public bool IsValidCreditCard(CreditCard creditCard)
         {
             return !string.IsNullOrEmpty(creditCard.CardHolderName) &&
                    !string.IsNullOrEmpty(creditCard.CardNumber) &&
-                   !string.IsNullOrEmpty(creditCard.ExpiryDate);
+                   !string.IsNullOrEmpty(creditCard.ExpiryDate) &&
+                   !string.IsNullOrEmpty(creditCard.CVV);
         }
 
-        public static bool IsCorrectCvv(CreditCard creditCard)
+        public bool CardCanPay (CreditCard creditCard, decimal amount)
+        {
+            canPay(creditCard, amount);
+
+            return true;
+        }
+
+        public bool IsCorrectCvv(CreditCard creditCard)
         {
             if (creditCard == null || string.IsNullOrEmpty(creditCard.CVV))
             {
@@ -60,7 +68,7 @@ namespace Server.lib
             return creditCards.Any(card => card.CVV == creditCard.CVV);
         }
 
-        public static bool IsCorrectExpiryDate(CreditCard creditCard)
+        public bool IsCorrectExpiryDate(CreditCard creditCard)
         {
             if (creditCard == null || string.IsNullOrEmpty(creditCard.ExpiryDate))
             {
@@ -113,7 +121,7 @@ namespace Server.lib
             return creditCard;
         }
 
-
+        
         public static bool IsValidAmount(CreditCard creditCard, decimal amount)
         {
             if (creditCard == null)

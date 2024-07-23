@@ -25,6 +25,9 @@ else if (environment == "P")
 builder.Services.AddSingleton<TokenService>();
 builder.Services.AddHttpClient<IHttpCDNService, HttpCDNService>();
 
+// Services
+builder.Services.AddScoped<CreditCardService, CreditCardService >();
+
 // Configurar autenticación JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
