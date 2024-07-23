@@ -42,8 +42,14 @@ namespace Server.lib
             return !string.IsNullOrEmpty(creditCard.CardHolderName) &&
                    !string.IsNullOrEmpty(creditCard.CardNumber) &&
                    !string.IsNullOrEmpty(creditCard.ExpiryDate) &&
-                   !string.IsNullOrEmpty(creditCard.CVV) &&
-                   !string.IsNullOrEmpty(creditCard.Amount);
+                   !string.IsNullOrEmpty(creditCard.CVV);
+        }
+
+        public bool CardCanPay (CreditCard creditCard, decimal amount)
+        {
+            canPay(creditCard, amount);
+
+            return true;
         }
 
         public bool IsCorrectCvv(CreditCard creditCard)
@@ -115,34 +121,7 @@ namespace Server.lib
             return creditCard;
         }
 
-        // Agregar método para obtener tarjeta por ID
-        public static CreditCard? GetCreditCardById(int id)
-        {
-            if (id <= 0)
-            {
-                throw new ArgumentException("El ID de la tarjeta debe ser mayor a 0.");
-            }
-
-            if(creditCards == null || creditCards.Length == 0)
-            {
-                throw new ArgumentException("No hay tarjetas en la base de datos.");
-            }
-
-            var card = creditCards.FirstOrDefault(card => card.id == id);
-
-            CreditCard creditCard = new CreditCard
-            {
-                CardHolderName = card.CardHolderName,
-                CardNumber = card.CardNumber,
-                CVV = card.CVV,
-                ExpiryDate = card.ExpiryDate,
-                UserId = card.id
-            };
-
-            return creditCard;
-        }
-
-
+        
         public static bool IsValidAmount(CreditCard creditCard, decimal amount)
         {
             if (creditCard == null)

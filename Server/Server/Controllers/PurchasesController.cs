@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using Server;
 using Server.Models;
+using Server.Models.DTO;
 
 namespace Server.Controllers
 {
@@ -21,7 +23,7 @@ namespace Server.Controllers
             _context = context;
         }
 
-        
+
         [HttpGet]
         //[Authorize]
         [Route("allCompras")]
@@ -29,7 +31,7 @@ namespace Server.Controllers
         {
             try
             {
-                var compras = await _context.Purchases.ToListAsync();
+                var compras = await _context.Purchases.OrderByDescending(c => c.Status == "Pendiente").ToListAsync();
 
                 if (compras == null || compras.Count == 0)
                 {
@@ -46,7 +48,7 @@ namespace Server.Controllers
             }
         }
 
-        
+
         [HttpGet]
         //[Authorize]
         [Route("getCompra/{id}")]
@@ -71,7 +73,165 @@ namespace Server.Controllers
             }
         }
 
-       
+
+        [HttpGet]
+        // [Authorize]
+        [Route("filterCompraByStatus/{status}")]
+        public async Task<IActionResult> FilterCompraByStatus(string? status)
+        {
+            try
+            {
+                var compra = await _context.Purchases.Where(c => c.Status == status).ToListAsync();
+
+                if (compra == null)
+                {
+                    return BadRequest($"No se encontraron compras con el estatus - {status} -");
+                }
+
+                return Ok(compra);
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+
+        [HttpPost]
+        // [Authorize]
+        [Route("addCompra")]
+        public async Task<IActionResult> AddCompra(PurchaseDTO compradto)
+        {
+            try
+            {
+                if (compradto == null)
+                {
+                    return BadRequest("Campos incompletos, es necesario completar todos los datos.");
+                }
+
+                var compra = new Purchase
+                {
+                    IdProveedor = compradto.IdProveedor,
+                    IdUser = compradto.IdUser,
+                    CreatedAt = DateTime.Now,
+                    Status = "Pendiente"
+                };
+
+                foreach (var item in compradto.Details)
+                {
+                    var detail = new DetailPurchase
+                    {
+                        IdPurchase = compra.Id,
+                        IdProduct = item.IdProduct,
+                        Quantity = item.Quantity,
+                        PriceSingle = item.PriceSingle,
+                        Presentation = item.Presentation,
+                        Expiration = item.Expiration,
+                        UnitType = item.UnitType,
+                        CreatedAt = DateTime.Now,
+                        Status = "Pendiente"
+                    };
+
+                    compra.DetailPurchases?.Add(detail);
+
+                    await _context.DetailPurchases.AddAsync(detail);
+                }
+
+                await _context.Purchases.AddAsync(compra);
+
+                return Ok();
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+
+        [HttpPut]
+        // [Authorize]
+        [Route("statusCompra")]
+        public async Task<IActionResult> CancelCompra([FromBody] JObject data)
+        {
+            try
+            {
+                int idCompra = data["id"].ToObject<int>();
+                string status = data["status"].ToObject<string>();
+
+                var compra = await _context.Purchases.FindAsync(idCompra);
+                var detail = await _context.DetailPurchases.Where(d => d.IdPurchase == compra.Id).ToListAsync();
+
+                if (compra == null)
+                {
+                    return BadRequest("No se encontro la compra realizada");
+                }
+
+                if (status == "Cancelada")
+                {
+                    compra.Status = "Cancelada";
+
+                    foreach (var item in detail)
+                    {
+                        item.Status = "Cancelado";
+                    }
+                }
+
+                if (status == "Aceptada")
+                {
+                    compra.Status = "Aceptada";
+                }
+
+                if (status == "Entregada")
+                {
+                    compra.Status = "Entregada";
+
+                    foreach (var item in detail)
+                    {
+                        item.Status = "Entregado";
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+
+        [HttpPut]
+        // [Authorize]
+        [Route("cancelCompraProducto/{idDetail}")]
+        public async Task<IActionResult> CancelCompraProducto(int? idDetail)
+        {
+            try
+            {
+                var detail = await _context.DetailPurchases.FindAsync(idDetail);
+
+                if (detail == null)
+                {
+                    return BadRequest("No se encontro el insumo seleccionado");
+                }
+
+                detail.Status = "Cancelado";
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
         private bool PurchaseExists(int? id)
         {
             return _context.Purchases.Any(e => e.Id == id);
