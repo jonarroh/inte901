@@ -1,0 +1,11 @@
+.only-border-right {
+  border-right: 1px solid #656565;
+  padding: 0 10px;
+}
+.crediCard:hover {
+  transform: rotateY(-180deg);
+}
+
+.hold{
+  transform: rotateY(180deg);
+}

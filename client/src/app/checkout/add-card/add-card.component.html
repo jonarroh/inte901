@@ -1,37 +1,156 @@
+<home-navbar></home-navbar>
+<section class="flex flex-col items-center justify-between p-4 h-[calc(100vh-3rem)] w-screen">
+  <div class="grid grid-cols-12 w-full h-full">
+    <div class="col-span-4 only-border-right h-full">
+      <div class="mt-8">
+        <h2>Tus Tarjetas</h2>
+        @for (card of user().creditCards; track $index) {
+          <div class="flex justify-between items-center border border-black rounded-lg px-4 py-2 my-2 ">
+            <div class="flex items-center w-full">
+              <lucide-icon name="house"></lucide-icon>
+              <span class="mx-2 truncate w-full">
+                {{card.cardNumber}}, {{card.expiryDate}}
+              </span>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+              <hlm-alert-dialog>
+                <button id='edit-profile' brnAlertDialogTrigger hlmBtn class="bg-white">
+                  <lucide-icon name='trash'></lucide-icon>
+                </button>
+                <hlm-alert-dialog-content *brnAlertDialogContent='let ctx'>
+                  <hlm-alert-dialog-header>
+                    <h3 hlmAlertDialogTitle>¿Estás seguro de que deseas esta tarjeta?</h3>
+                    <p hlmAlertDialogDescription>
+                      Esta acción no se puede deshacer. Esta eliminará la tarjeta de tu cuenta.
+                    </p>
+                  </hlm-alert-dialog-header>
+                  <hlm-alert-dialog-footer>
+                    <button hlmAlertDialogCancel (click)='ctx.close()'>Cancelar</button>
+                    <button hlmAlertDialogAction (click)='ctx.close()' (click)="onDelete(card)">Eliminar tarjeta</button>
+                  </hlm-alert-dialog-footer>
+                </hlm-alert-dialog-content>
+              </hlm-alert-dialog>
+              <button (click)="onClickEdit(card)">
+                <lucide-angular name="pencil"></lucide-angular>
+              </button>
+            </div>
+          </div>
+        }
+        @empty {
+          <div class="text-center text-neutral-500 mt-8">No tienes tarjetas guardadas</div>
+        }
+      </div>
+    </div>
+    
+    <div class="col-span-8 px-4">
+      <h2>Agregar tarjeta</h2>
+      <div>
+        <form class="bg-white w-full max-w-3xl mx-auto px-6 py-8  rounded-md flex flex-col justify-center items-center">
+          <div class="w-full ">
+            <label class="text-neutral-800 font-bold text-sm mb-2 block">Numero de tarjeta:</label>
+            <input
+            maxlength="16"
+            ngModel
+              [ngModelOptions]="{standalone: true}"
+              [formField]="form.controls.cardNumber"
+              placeholder="XXXX XXXX XXXX XXXX"
+            type="text" class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4" />
+            <div class="flex gap-x-2 mb-4 items-center">
+              <div class="flex-1">
+                <label class="text-neutral-800 font-bold text-sm mb-2 block">Expiración:</label>
+                <input 
+                ngModel
+                maxlength="5"
+              [ngModelOptions]="{standalone: true}"
+              [formField]="form.controls.expiryDate"
+              placeholder="MM/YY"
+              (keypress)="putSlahInExpiryDate()"
+                type="text" class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4" />
+              </div>
+              <div class="flex-1">
+                <label class="text-neutral-800 font-bold text-sm mb-2 block">CCV:</label>
+                <input 
+                ngModel
+                maxlength="3"
+                placeholder="XXX"
+                (focus)="flipCard(true)"
+              (blur)="flipCard(false)"
+              [ngModelOptions]="{standalone: true}"
+              [formField]="form.controls.cvv"
+                type="text" class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4" />
+              </div>
+            </div>
+          
+            <label class="text-neutral-800 font-bold text-sm mb-2 block">Titular de la tarjeta:</label>
+            <input 
+            ngModel
+            placeholder="Nombre del titular"
+              [ngModelOptions]="{standalone: true}"
+              [formField]="form.controls.cardHolderName"
+            type="text" class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" 
+            
+            />
+          </div>
+          <div class="w-1/2 flex justify-end mt-4 ">
+            <div class="w-full h-56"
+             style="perspective: 1000px">
+              <div class="crediCard relative cursor-pointer transition-transform duration-500" style="transform-style: preserve-3d"
+              [class.hold]="isFlipped()"
+              >
+                <div class="w-full m-auto rounded-xl  absolute" style="backface-visibility: hidden"
+              
+                [style.backface-visibility]="isFlipped() ? 'hidden' : 'visible'"
+                
+                >
+                  <img src="http://localhost:5000/static/card/front.png"
+                  class="object-cover w-full h-full" />
+                  <div class="absolute top-8 left-6 text-white font-bold text-lg">
+                    {{ form.controls.cardNumber.value() }}
+                  </div>
+                  <div class="absolute bottom-4 left-6 text-white font-bold text-lg">
+                    {{ form.controls.cardHolderName.value() }}
+                  </div>
+                  <div class="absolute bottom-6 right-8 text-white font-bold text-lg">
+                    {{ form.controls.expiryDate.value() }}
+                  </div>
+                </div>
+                <div class="w-full m-auto rounded-xl shadow-2xl absolute" style="backface-visibility: hidden; transform: rotateY(180deg)"
+                
+                >
+                  <img src="http://localhost:5000/static/card/back.jpg"
+                  class="relative object-cover w-full h-full rounded-xl" />
+                  <div class="w-full absolute top-8">
+                    <div  class="px-8 mt-14">
+                      <p id="imageCCVNumber" class="text-black flex items-center pl-4 pr-2  w-14 ml-auto">
+                        {{ form.controls.cvv.value() }}
+                      </p>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="w-full flex justify-between mt-4">
+            <button hlmBtn (click)="isEdit() ? onEdit() : onSave()"
+            
+            >
+              {{ isEdit() ? 'Editar tarjeta' : 'Guardar tarjeta' }}
+            </button>
+            <button>
+              <a hlmBtn class="mt-4"
+              (click)="onClearForm()"
+              variant="destructive"
+              >Cancelar</a>
+            </button>
+          </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</section>
 
-<div class="flexw-[calc(100vw-4rem)] h-[calc(100vh-20rem)] flex-col items-center justify-between bg-slate-100">
-  <form class="bg-white w-full max-w-3xl mx-auto px-6 py-8 shadow-md rounded-md flex">
-  <div class="w-1/2 pr-8 border-r-2 border-slate-300">
-    <label class="text-neutral-800 font-bold text-sm mb-2 block">Numero de tarjeta:</label>
-    <input type="text" class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4" />
-    <div class="flex gap-x-2 mb-4 items-center">
-      <div class="flex-1">
-        <label class="text-neutral-800 font-bold text-sm mb-2 block">Expiración:</label>
-        <input type="text" class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4" />
-      </div>
-      <div class="flex-1">
-        <label class="text-neutral-800 font-bold text-sm mb-2 block">CCV:</label>
-        <input type="text" class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4" />
-      </div>
-    </div>
-  
-    <label class="text-neutral-800 font-bold text-sm mb-2 block">Titular de la tarjeta:</label>
-    <input type="text" class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
-  </div>
-  <div class="w-1/2 pl-8">
-    <div class="w-full h-56" style="perspective: 1000px">
-      <div class="crediCard relative cursor-pointer transition-transform duration-500" style="transform-style: preserve-3d">
-        <div class="w-full m-auto rounded-xl shadow-2xl absolute" style="backface-visibility: hidden">
-          <img src="https://i.ibb.co/B2vQ0xG/Card-1.jpg" class="object-cover w-full h-full" />
-        </div>
-        <div class="w-full m-auto rounded-xl shadow-2xl absolute" style="backface-visibility: hidden; transform: rotateY(180deg)">
-          <img src="https://i.ibb.co/ThGc8mn/Card-2.jpg" class="object-cover w-full h-full" />
-        </div>
-      </div>
-    </div>
-   
-  </div>
-  </form>
-  </div>
+
   
   

@@ -6,42 +6,40 @@
         <h2>Tus direcciones</h2>
         @for (dir of address().direcciones; track $index) {
           <div class="flex justify-between items-center border border-black rounded-lg px-4 py-2 my-2">
-            <div class="flex items-center">
+            <div class="flex items-center w-full">
               <lucide-icon name="house"></lucide-icon>
-              <span>{{dir.calle}}, {{dir.colonia}}</span>
+              <span class="mx-2 truncate w-full">
+                {{dir.calle}}, {{dir.colonia}}
+              </span>
             </div>
             
-<hlm-alert-dialog>
-  <button id='edit-profile' brnAlertDialogTrigger hlmBtn
-  class="bg-white"
-  >
-    <lucide-icon name='trash'></lucide-icon>
-  </button>
-  <hlm-alert-dialog-content *brnAlertDialogContent='let ctx'>
-    <hlm-alert-dialog-header>
-      <h3 hlmAlertDialogTitle>¿Estás seguro de que deseas esta dirección?</h3>
-      <p hlmAlertDialogDescription>
-        Esta acción no se puede deshacer. Esta eliminará la dirreción de tu cuenta.
-      </p>
-    </hlm-alert-dialog-header>
-    <hlm-alert-dialog-footer>
-      <button hlmAlertDialogCancel (click)='ctx.close()'>Cancelar</button>
-      <button hlmAlertDialogAction (click)='ctx.close()'
-      (click)="onDeleteAddress(dir)"
-      >Eliminar dirección</button>
-    </hlm-alert-dialog-footer>
-  </hlm-alert-dialog-content>
-</hlm-alert-dialog>
-
-            <button
-            (click)="onClickEdit(dir)"
-            >
-              <lucide-angular name="pencil"></lucide-angular>
-            </button>
+            <div class="flex items-center space-x-2">
+              <hlm-alert-dialog>
+                <button id='edit-profile' brnAlertDialogTrigger hlmBtn class="bg-white">
+                  <lucide-icon name='trash'></lucide-icon>
+                </button>
+                <hlm-alert-dialog-content *brnAlertDialogContent='let ctx'>
+                  <hlm-alert-dialog-header>
+                    <h3 hlmAlertDialogTitle>¿Estás seguro de que deseas esta dirección?</h3>
+                    <p hlmAlertDialogDescription>
+                      Esta acción no se puede deshacer. Esta eliminará la dirección de tu cuenta.
+                    </p>
+                  </hlm-alert-dialog-header>
+                  <hlm-alert-dialog-footer>
+                    <button hlmAlertDialogCancel (click)='ctx.close()'>Cancelar</button>
+                    <button hlmAlertDialogAction (click)='ctx.close()' (click)="onDeleteAddress(dir)">Eliminar dirección</button>
+                  </hlm-alert-dialog-footer>
+                </hlm-alert-dialog-content>
+              </hlm-alert-dialog>
+              <button (click)="onClickEdit(dir)">
+                <lucide-angular name="pencil"></lucide-angular>
+              </button>
+            </div>
           </div>
         }
       </div>
     </div>
+    
     <div class="col-span-8 px-4">
       <h2>Agregar dirección</h2>
       <div>
@@ -138,7 +136,7 @@
                 brnPopoverTrigger
                 hlmBtn
               >
-                {{ currentFramework() ? currentFramework()?.label : 'Select framework...' }}
+                {{ currentFramework() ? currentFramework()?.label : 'Elige tu estado' }}
                 <lucide-icon name="chevron-down"></lucide-icon>
               </button>
               <brn-cmd
