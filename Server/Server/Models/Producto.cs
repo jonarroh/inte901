@@ -17,7 +17,7 @@ namespace Server.Models
         public string? Descripcion { get; set; }
 
         [Required]
-        public int? Estatus { get; set; } = 1;
+        public bool? Estatus { get; set; } = 1;
 
         [Required]
         public string Tipo { get; set; }

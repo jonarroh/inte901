@@ -21,7 +21,7 @@ namespace Server.Models
         [MaxLength(80)]
         public string? NombreEncargado { get; set; }
         [Required]
-        public int? Estatus { get; set; }
+        public bool? Estatus { get; set; }
 
         public DateTime? CreatedAt { get; set; }
 

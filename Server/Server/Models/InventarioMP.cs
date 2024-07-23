@@ -22,7 +22,7 @@ namespace Server.Models
         [Required]
         public DateTime? Caducidad { get; set; }
         [Required]
-        public int? Estatus { get; set; } = 1;
+        public bool? Estatus { get; set; } = 1;
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
     }
 }

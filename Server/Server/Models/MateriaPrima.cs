@@ -12,7 +12,7 @@ namespace Server.Models
         public string? Material { get; set; }
 
         [Required]
-        public int? Estatus { get; set; } = 1;
+        public bool? Estatus { get; set; } = 1;
 
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
 
