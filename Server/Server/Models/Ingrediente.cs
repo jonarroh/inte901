@@ -21,7 +21,7 @@ namespace Server.Models
         [MaxLength(40)]
         public string? UnidadMedida { get; set; }
         [Required]
-        public bool? Estatus { get; set; } = 1;
+        public int? Estatus { get; set; } = 1;
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }

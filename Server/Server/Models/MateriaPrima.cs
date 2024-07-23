@@ -12,7 +12,7 @@ namespace Server.Models
         public string? Material { get; set; }
 
         [Required]
-        public bool? Estatus { get; set; } = 1;
+        public int? Estatus { get; set; } = 1;
 
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
 
@@ -23,6 +23,6 @@ namespace Server.Models
         public ICollection<InventarioMP>? InventarioMps { get; set; }
         public ICollection<Ingrediente>? Ingredientes { get; set; }
 
-        
+
     }
 }

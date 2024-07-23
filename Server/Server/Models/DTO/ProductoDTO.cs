@@ -6,7 +6,7 @@
         public string? Nombre { get; set; }
         public decimal? Precio { get; set; }
         public string? Descripcion { get; set; }
-        public bool? Estatus { get; set; }
+        public int? Estatus { get; set; }
         public string Tipo { get; set; }
         public int? CantidadXReceta { get; set; }
         public string? Temperatura { get; set; }
