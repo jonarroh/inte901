@@ -9,10 +9,10 @@ import {
 
 import { FormsModule } from '@angular/forms';
 import { lucideArrowUpDown, lucideChevronDown, lucideMoreHorizontal } from '@ng-icons/lucide';
-import { HlmButtonModule } from '@spartan-ng/ui-button-helm';
+import { HlmButtonModule } from '~/components/ui-button-helm/src';
 import { HlmCheckboxCheckIconComponent, HlmCheckboxComponent } from '@spartan-ng/ui-checkbox-helm';
 import { HlmIconComponent, provideIcons } from '@spartan-ng/ui-icon-helm';
-import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
+import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';

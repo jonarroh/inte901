@@ -7,7 +7,7 @@ import {
   V,
 } from 'ng-signal-forms';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule, Router } from 'lucide-angular';
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { UserService } from '../home/services/user.service';
@@ -27,6 +27,7 @@ import {
   HlmAlertDialogTitleDirective,
 } from '@spartan-ng/ui-alertdialog-helm';
 import { toast } from 'ngx-sonner';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-edit-user',
@@ -52,6 +53,7 @@ import { toast } from 'ngx-sonner';
     HlmAlertDialogCancelButtonDirective,
     BrnAlertDialogTriggerDirective,
     BrnAlertDialogContentDirective,
+    RouterModule
   ],
   templateUrl: './edit-user.component.html',
   styleUrl: './edit-user.component.css'

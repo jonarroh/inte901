@@ -9,7 +9,7 @@ import {
 } from 'ng-signal-forms';
 
 
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '~/app/auth/auth.service';
 import { LoaderCircle, LucideAngularModule } from 'lucide-angular';
 
@@ -31,6 +31,7 @@ import { UserService } from '~/app/home/services/user.service';
     HlmButtonDirective,
     FormsModule,
     SignalInputDirective,
+    RouterModule
   ],
   providers: [AuthService, Router],
   templateUrl: './left-seccion.component.html'
