@@ -6,7 +6,7 @@
     using System.ComponentModel.DataAnnotations;
 	using System.ComponentModel.DataAnnotations.Schema;
 
-	public class Purchase
+    public class Purchase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -21,10 +21,10 @@
         public string? Status { get; set; } // Pendiente, Aceptada, Cancelada, Entregada
         public ICollection<DetailPurchase>? DetailPurchases { get; set; }
         public Proveedor? Proveedor { get; set; }
-		public User? User { get; set; }
+        public User? User { get; set; }
         public Purchase()
         {
             DetailPurchases = new List<DetailPurchase>();
         }
-	}
+    }
 }
