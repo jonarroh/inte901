@@ -21,6 +21,7 @@ import { TarjetaComponent } from './checkout/tarjeta/tarjeta.component';
 import { DetailsComponent } from './checkout/details/details.component';
 import { AddDireccionComponent } from './checkout/add-direccion/add-direccion.component';
 import { AddCardComponent } from './checkout/add-card/add-card.component';
+import { ProductosComponent } from './admin/productos/productos.component';
 
 
 
@@ -58,6 +59,10 @@ export const routes: Routes = [
       {
         path: 'compras',
         component: ComprasComponent
+      },
+      {
+        path: 'productos',
+        component: ProductosComponent
       }
     ]
   },
