@@ -72,14 +72,14 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrderId")
+                    b.Property<int>("IdOrder")
                         .HasColumnType("int");
 
                     b.Property<decimal?>("PriceSingle")
                         .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("IdProduct")
                         .HasColumnType("int");
 
                     b.Property<int?>("Quantity")
@@ -92,9 +92,9 @@ namespace Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("IdOrder");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("IdProduct");
 
                     b.ToTable("DetailOrders");
                 });
@@ -123,10 +123,10 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("IdProduct")
                         .HasColumnType("int");
 
-                    b.Property<int>("PurchaseId")
+                    b.Property<int>("IdPurchase")
                         .HasColumnType("int");
 
                     b.Property<int?>("Quantity")
@@ -143,9 +143,9 @@ namespace Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("IdProduct");
 
-                    b.HasIndex("PurchaseId");
+                    b.HasIndex("IdPurchase");
 
                     b.ToTable("DetailPurchases");
                 });
@@ -609,13 +609,13 @@ namespace Server.Migrations
                 {
                     b.HasOne("Server.Models.Order", "Order")
                         .WithMany("DetailOrders")
-                        .HasForeignKey("OrderId")
+                        .HasForeignKey("IdOrder")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Server.Models.Producto", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("IdProduct")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -628,13 +628,13 @@ namespace Server.Migrations
                 {
                     b.HasOne("Server.Models.Producto", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("IdProduct")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Server.Models.Purchase", "Purchase")
                         .WithMany("DetailPurchases")
-                        .HasForeignKey("PurchaseId")
+                        .HasForeignKey("IdPurchase")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

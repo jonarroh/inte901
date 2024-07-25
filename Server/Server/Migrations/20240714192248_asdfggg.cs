@@ -229,21 +229,21 @@ namespace Server.Migrations
                     DateOrder = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Ingredients = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OrderId = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: false)
+                    IdOrder = table.Column<int>(type: "int", nullable: false),
+                    IdProduct = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DetailOrders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DetailOrders_Orders_OrderId",
-                        column: x => x.OrderId,
+                        name: "FK_DetailOrders_Orders_IdOrder",
+                        column: x => x.IdOrder,
                         principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DetailOrders_Productos_ProductId",
-                        column: x => x.ProductId,
+                        name: "FK_DetailOrders_Productos_IdProduct",
+                        column: x => x.IdProduct,
                         principalTable: "Productos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -312,21 +312,21 @@ namespace Server.Migrations
                     UnitType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PurchaseId = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: false)
+                    IdPurchase = table.Column<int>(type: "int", nullable: false),
+                    IdProduct = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DetailPurchases", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DetailPurchases_Productos_ProductId",
-                        column: x => x.ProductId,
+                        name: "FK_DetailPurchases_Productos_IdProduct",
+                        column: x => x.IdProduct,
                         principalTable: "Productos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DetailPurchases_Purchases_PurchaseId",
-                        column: x => x.PurchaseId,
+                        name: "FK_DetailPurchases_Purchases_IdPurchase",
+                        column: x => x.IdPurchase,
                         principalTable: "Purchases",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -368,24 +368,24 @@ namespace Server.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DetailOrders_OrderId",
+                name: "IX_DetailOrders_IdOrder",
                 table: "DetailOrders",
-                column: "OrderId");
+                column: "IdOrder");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DetailOrders_ProductId",
+                name: "IX_DetailOrders_IdProduct",
                 table: "DetailOrders",
-                column: "ProductId");
+                column: "IdProduct");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DetailPurchases_ProductId",
+                name: "IX_DetailPurchases_IdProduct",
                 table: "DetailPurchases",
-                column: "ProductId");
+                column: "IdProduct");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DetailPurchases_PurchaseId",
+                name: "IX_DetailPurchases_IdPurchase",
                 table: "DetailPurchases",
-                column: "PurchaseId");
+                column: "IdPurchase");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Direcciones_UserId",
