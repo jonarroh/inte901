@@ -2,63 +2,118 @@
     <h1 class="text-5xl font-bold pt-5 mt-5 text-secondary">Productos</h1>
 </div>
 
-<form (ngSubmit)="onSubmit()" #productoForm="ngForm">
-  <div class="flex justify-end my-5 me-5 pr-5">
-    <hlm-dialog>
-      <button id="edit-profile" brnDialogTrigger hlmBtn class="bg-secondary text-white">Agregar</button>
-      <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
-        <hlm-dialog-header>
-          <h3 hlmDialogTitle>Agregar producto</h3>
-          <p hlmDialogDescription>Ingresa los detalles del nuevo producto. Haz clic en guardar cuando termines.</p>
-        </hlm-dialog-header>
+<div class="flex justify-end my-5 me-5 pr-5">
+  <!-- Botón para agregar producto -->
+  <hlm-dialog>
+    <button id="add-product-trigger" brnDialogTrigger hlmBtn (click)="onAdd()" class="bg-secondary text-white">Agregar producto</button>
+    <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+      <hlm-dialog-header>
+        <h3 hlmDialogTitle>Agregar producto</h3>
+        <p hlmDialogDescription>Ingresa los detalles del nuevo producto. Haz clic en guardar cuando termines.</p>
+      </hlm-dialog-header>
+      <form (ngSubmit)="onSubmitAdd(productoFormAdd)" #productoFormAdd="ngForm">
         <div class="py-4 grid gap-4">
+          <!-- Campos del formulario -->
           <div class="items-center grid grid-cols-4 gap-4">
-            <label hlmLabel for="name" class="text-right">Nombre</label>
-            <input hlmInput id="name" name="nombre" [(ngModel)]="producto.nombre" placeholder="Nombre del producto" class="col-span-3" />
+            <label hlmLabel for="name-add" class="text-right">Nombre</label>
+            <input hlmInput id="name-add" name="nombre" [(ngModel)]="producto.nombre" placeholder="Nombre del producto" class="col-span-3" required />
           </div>
           <div class="items-center grid grid-cols-4 gap-4">
-            <label hlmLabel for="precio" class="text-right">Precio</label>
-            <input hlmInput id="precio" name="precio" type="number" [(ngModel)]="producto.precio" placeholder="Precio del producto" class="col-span-3" />
+            <label hlmLabel for="precio-add" class="text-right">Precio</label>
+            <input hlmInput id="precio-add" name="precio" type="number" [(ngModel)]="producto.precio" placeholder="Precio del producto" class="col-span-3" required />
           </div>
           <div class="items-center grid grid-cols-4 gap-4">
-            <label hlmLabel for="description" class="text-right">Descripción</label>
-            <input hlmInput id="description" name="descripcion" [(ngModel)]="producto.descripcion" placeholder="Descripción del producto" class="col-span-3" />
+            <label hlmLabel for="description-add" class="text-right">Descripción</label>
+            <input hlmInput id="description-add" name="descripcion" [(ngModel)]="producto.descripcion" placeholder="Descripción del producto" class="col-span-3" />
           </div>
           <div class="items-center grid grid-cols-4 gap-4">
-            <label hlmLabel for="tipo" class="text-right">Tipo</label>
-            <input hlmInput id="tipo" name="tipo" [(ngModel)]="producto.tipo" placeholder="Tipo de producto" class="col-span-3" />
+            <label hlmLabel for="tipo-add" class="text-right">Tipo</label>
+            <input hlmInput id="tipo-add" name="tipo" [(ngModel)]="producto.tipo" placeholder="Tipo de producto" class="col-span-3" />
           </div>
           <div class="items-center grid grid-cols-4 gap-4">
-            <label hlmLabel for="cantidadXReceta" class="text-right">Cantidad por receta</label>
-            <input hlmInput id="cantidadXReceta" name="cantidadXReceta" type="number" [(ngModel)]="producto.cantidadXReceta" placeholder="Cantidad del producto por receta" class="col-span-3" />
+            <label hlmLabel for="cantidadXReceta-add" class="text-right">Cantidad por receta</label>
+            <input hlmInput id="cantidadXReceta-add" name="cantidadXReceta" type="number" [(ngModel)]="producto.cantidadXReceta" placeholder="Cantidad del producto por receta" class="col-span-3" />
           </div>
           <div class="items-center grid grid-cols-4 gap-4">
-            <label hlmLabel for="temperatura" class="text-right">Temperatura</label>
-            <select id="temperatura" name="temperatura" [(ngModel)]="producto.temperatura" hlmInput class="col-span-3">
+            <label hlmLabel for="temperatura-add" class="text-right">Temperatura</label>
+            <select id="temperatura-add" name="temperatura" [(ngModel)]="producto.temperatura" hlmInput class="col-span-3">
               <option value="caliente">Caliente</option>
               <option value="frio">Frío</option>
             </select>
           </div>
           <div class="items-center grid grid-cols-4 gap-4">
-            <label hlmLabel for="imagen" class="text-right">Imagen</label>
-            <input hlmInput type="file" id="imagen" name="imagen" class="col-span-3" (change)="onFileChange($event)" />
+            <label hlmLabel for="imagen-add" class="text-right">Imagen</label>
+            <input hlmInput type="file" id="imagen-add" name="imagen" class="col-span-3" (change)="onFileChange($event)" />
           </div>
         </div>
         <hlm-dialog-footer>
           <button hlmBtn type="submit">Guardar</button>
         </hlm-dialog-footer>
-      </hlm-dialog-content>
-    </hlm-dialog>
-  </div>
-</form>
+      </form>
+    </hlm-dialog-content>
+  </hlm-dialog>
 
+  <!-- Botón para editar producto (se muestra al hacer clic en "Editar" en la lista de productos) -->
+  <hlm-dialog>
+    <button id="edit-product-trigger" brnDialogTrigger hlmBtn class="hidden">Editar producto</button>
+    <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+      <hlm-dialog-header>
+        <h3 hlmDialogTitle>Editar producto</h3>
+        <p hlmDialogDescription>Actualiza los detalles del producto. Haz clic en actualizar cuando termines.</p>
+      </hlm-dialog-header>
+      <form (ngSubmit)="onSubmitEdit(productoFormEdit)" #productoFormEdit="ngForm">
+        <div class="py-4 grid gap-4">
+          <!-- Campos del formulario -->
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="name-edit" class="text-right">Nombre</label>
+            <input hlmInput id="name-edit" name="nombre" [(ngModel)]="producto.nombre" placeholder="Nombre del producto" class="col-span-3" required />
+          </div>
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="precio-edit" class="text-right">Precio</label>
+            <input hlmInput id="precio-edit" name="precio" type="number" [(ngModel)]="producto.precio" placeholder="Precio del producto" class="col-span-3" required />
+          </div>
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="description-edit" class="text-right">Descripción</label>
+            <input hlmInput id="description-edit" name="descripcion" [(ngModel)]="producto.descripcion" placeholder="Descripción del producto" class="col-span-3" />
+          </div>
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="tipo-edit" class="text-right">Tipo</label>
+            <input hlmInput id="tipo-edit" name="tipo" [(ngModel)]="producto.tipo" placeholder="Tipo de producto" class="col-span-3" />
+          </div>
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="cantidadXReceta-edit" class="text-right">Cantidad por receta</label>
+            <input hlmInput id="cantidadXReceta-edit" name="cantidadXReceta" type="number" [(ngModel)]="producto.cantidadXReceta" placeholder="Cantidad del producto por receta" class="col-span-3" />
+          </div>
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="temperatura-edit" class="text-right">Temperatura</label>
+            <select id="temperatura-edit" name="temperatura" [(ngModel)]="producto.temperatura" hlmInput class="col-span-3">
+              <option value="caliente">Caliente</option>
+              <option value="frio">Frío</option>
+            </select>
+          </div>
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="imagen-edit" class="text-right">Imagen</label>
+            <input hlmInput type="file" id="imagen-edit" name="imagen" class="col-span-3" (change)="onFileChange($event)" />
+          </div>
+        </div>
+        <hlm-dialog-footer>
+          <button hlmBtn type="submit">Actualizar</button>
+        </hlm-dialog-footer>
+      </form>
+    </hlm-dialog-content>
+  </hlm-dialog>
+</div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-5">
   <div *ngFor="let product of (productos$ | async); trackBy: trackByProductId" class="bg-white shadow-md rounded-lg p-4">
-      <img [src]="'../../../assets/img/' + product.imagen" alt="{{ product.nombre }}" class="w-full h-48 object-cover rounded-t-lg">
-      <div class="p-4">
-        <h2 class="text-xl font-bold">{{ product.nombre }}</h2>
-        <p class="text-gray-600">{{ product.descripcion }}</p>
+    <img [src]="'../../../assets/img/' + product.imagen" alt="{{ product.nombre }}" class="w-full h-48 object-cover rounded-t-lg">
+    <div class="p-4">
+      <h2 class="text-xl font-bold">{{ product.nombre }}</h2>
+      <p class="text-gray-600">{{ product.descripcion }}</p>
+      <div class="flex justify-end space-x-2 mt-2">
+        <button (click)="onEdit(product)" class="bg-blue-500 text-white px-4 py-2 rounded">Editar</button>
+        <button (click)="onDelete(product.id!)" class="bg-red-500 text-white px-4 py-2 rounded">Eliminar</button>
       </div>
     </div>
   </div>
+</div>
