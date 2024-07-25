@@ -26,6 +26,14 @@
 		[Required]
 		public string Status { get; set; }
 
+        [Required]
+        [ForeignKey("IdOrder")]
+        public int? IdOrder { get; set; }
+
+        [Required]
+        [ForeignKey("IdProduct")]
+        public int? IdProduct { get; set; }
+
         public Order Order { get; set; }
 
         public Producto Product { get; set; }
