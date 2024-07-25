@@ -12,12 +12,6 @@
         public int? Id { get; set; }
 
 		[Required]
-		public int? IdPurchase { get; set; }
-
-		[Required]
-		public int? IdProduct { get; set; }
-
-		[Required]
 		public int? Quantity { get; set; }
 
 		[Required]
