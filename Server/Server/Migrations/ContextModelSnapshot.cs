@@ -68,22 +68,9 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("IdOrder")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("IdProduct")
-                        .IsRequired()
-                        .HasColumnType("int");
-
                     b.Property<string>("Ingredients")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NameProduct")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
@@ -99,9 +86,9 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<long?>("Ticket")
+                    b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("bigint");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -128,14 +115,6 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("IdProduct")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("IdPurchase")
-                        .IsRequired()
-                        .HasColumnType("int");
-
                     b.Property<string>("Presentation")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -153,6 +132,10 @@ namespace Server.Migrations
                     b.Property<int?>("Quantity")
                         .IsRequired()
                         .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UnitType")
                         .IsRequired()
@@ -408,7 +391,7 @@ namespace Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
-                    b.Property<int?>("IdClient")
+                    b.Property<int>("IdClient")
                         .HasColumnType("int");
 
                     b.Property<int?>("IdUser")
@@ -416,12 +399,14 @@ namespace Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("OrderDate")
-                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("Ticket")
+                        .HasColumnType("bigint");
 
                     b.Property<float?>("Total")
                         .IsRequired()
@@ -551,6 +536,9 @@ namespace Server.Migrations
 
                     b.Property<int?>("ProveedorId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
