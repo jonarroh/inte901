@@ -13,8 +13,7 @@ import { from, map, Observable } from 'rxjs';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Producto } from './interface/producto';
 import { ProductoService } from './service/producto.service';
-import { FormsModule } from '@angular/forms';
-
+import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-productos',
@@ -36,13 +35,13 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   templateUrl: './productos.component.html',
-  styleUrl: './productos.component.css'
+  styleUrls: ['./productos.component.css']
 })
 export class ProductosComponent {
-
   productoService = inject(ProductoService);
   productos$: Observable<Producto[]>;
   producto: Producto = {};
+  editMode: boolean = false;
 
   constructor() {
     this.productos$ = this.productoService.getProductos().pipe(
@@ -55,15 +54,64 @@ export class ProductosComponent {
   }
 
   onFileChange(event: any) {
-    // Método para manejar el cambio de archivo, aunque no se usará por ahora
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.producto.imagen = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
-  onSubmit() {
-    // Enviar los datos del producto sin incluir la imagen
-    this.productoService.registrarProductos(this.producto).subscribe(response => {
-      // Manejar la respuesta
-      console.log('Producto registrado:', response);
+  onSubmitAdd(form: NgForm) {
+    if (form.valid) {
+      this.producto.estatus = 1;
+      this.producto.createdAt = new Date().toISOString();
+      this.productoService.registrarProductos(this.producto).subscribe(response => {
+        console.log('Producto registrado:', response);
+        form.resetForm();
+        this.producto = {}; // Reiniciar el objeto producto
+        this.refreshProductos();
+      });
+    }
+  }
+
+  onSubmitEdit(form: NgForm) {
+    if (form.valid) {
+      this.productoService.editarProducto(this.producto.id!, this.producto).subscribe(response => {
+        console.log('Producto actualizado:', response);
+        form.resetForm();
+        this.producto = {}; // Reiniciar el objeto producto
+        this.editMode = false;
+        this.refreshProductos();
+      });
+    }
+  }
+
+  onAdd() {
+    this.producto = {}; // Limpiar el objeto producto antes de abrir el formulario de agregar
+    const addButton = document.getElementById('add-product-trigger');
+    addButton?.click();
+  }
+
+  onEdit(product: Producto) {
+    this.producto = { ...product };
+    this.editMode = true;
+    const editButton = document.getElementById('edit-product-trigger');
+    editButton?.click();
+  }
+
+  onDelete(id: number) {
+    this.productoService.eliminarProducto(id).subscribe(() => {
+      console.log('Producto eliminado');
+      this.refreshProductos();
     });
   }
-}
 
+  refreshProductos() {
+    this.productos$ = this.productoService.getProductos().pipe(
+      map(productos => productos.filter(producto => producto.estatus === 1))
+    );
+  }
+}
