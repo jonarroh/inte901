@@ -27,6 +27,7 @@
         // Falta campo para el QR...creo
 
         public ICollection<DetailOrder>? DetailOrders { get; set; }
+        [NotMapped]
         public User? User { get; set; }
         public Order()
         {

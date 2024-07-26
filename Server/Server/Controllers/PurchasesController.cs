@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Server;
 using Server.Models;
 using Server.Models.DTO;
+using Server.Models.Usuario.Server.Models.Usuario;
 
 namespace Server.Controllers
 {
@@ -31,11 +33,21 @@ namespace Server.Controllers
         {
             try
             {
-                var compras = await _context.Purchases.OrderByDescending(c => c.Status == "Pendiente").ToListAsync();
+                var compras = await _context.Purchases.ToListAsync();
+                var result = new List<allCompras>();
+                var detail = new List<DetalleCompra>();
 
                 if (compras == null || compras.Count == 0)
                 {
                     return BadRequest("No hay compras encontradas");
+                }
+
+                foreach (var compra in compras)
+                {
+                    compra.CreatedAt = DateTime.Parse(compra.CreatedAt.ToString() ?? "");
+                    compra.DetailPurchases = await _context.DetailPurchases.Where(d => d.IdPurchase == compra.Id).ToListAsync();
+                    compra.Proveedor = await _context.Proveedores.FindAsync(compra.IdProveedor);
+                    compra.User = await _context.Users.FindAsync(compra.IdUser);
                 }
 
                 return Ok(compras);
@@ -89,7 +101,8 @@ namespace Server.Controllers
                 }
 
                 return Ok(compra);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
 
@@ -141,7 +154,8 @@ namespace Server.Controllers
                 await _context.Purchases.AddAsync(compra);
 
                 return Ok();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
 
@@ -196,7 +210,8 @@ namespace Server.Controllers
                 await _context.SaveChangesAsync();
 
                 return Ok();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
 
@@ -224,7 +239,8 @@ namespace Server.Controllers
                 await _context.SaveChangesAsync();
 
                 return Ok();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
 
@@ -235,6 +251,27 @@ namespace Server.Controllers
         private bool PurchaseExists(int? id)
         {
             return _context.Purchases.Any(e => e.Id == id);
+        }
+
+        public class allCompras()
+        {
+            public int Id { get; set; }
+            public string Status { get; set; }
+            public DateTime CreatedAt { get; set; }
+            public string user { get; set; }
+            public string proveedor { get; set; }
+            public List<DetalleCompra> DetailPurchases { get; set; }
+        }
+
+        public class DetalleCompra()
+        {
+            public int IdProduct { get; set; }
+            public int Quantity { get; set; }
+            public double PriceSingle { get; set; }
+            public string Presentation { get; set; }
+            public DateTime Expiration { get; set; }
+            public string UnitType { get; set; }
+            public string Status { get; set; }
         }
     }
 }

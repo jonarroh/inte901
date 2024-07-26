@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Server;
 
@@ -11,9 +12,11 @@ using Server;
 namespace Server.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240726170845_InitialMigrate")]
+    partial class InitialMigrate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,10 +42,6 @@ namespace Server.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CardNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Estatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -83,7 +82,6 @@ namespace Server.Migrations
                     b.Property<string>("Ingredients")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
 
                     b.Property<int?>("OrderId")
                         .HasColumnType("int");
@@ -193,13 +191,6 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Estatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumeroExterior")
-                        .HasColumnType("int");
 
                     b.Property<string>("Pais")
                         .IsRequired()
@@ -570,10 +561,6 @@ namespace Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Estatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
