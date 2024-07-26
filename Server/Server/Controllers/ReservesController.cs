@@ -69,6 +69,7 @@ namespace Server.Controllers
                 return BadRequest("ReservaDTO is null.");
             }
 
+            // Verificar existencia de usuario y cliente
             var usuarioExists = await _context.Users.FindAsync(reservaDTO.idUsuario);
             var clienteExists = await _context.Users.FindAsync(reservaDTO.idCliente);
             var espacioExists = await _context.Espacios.FindAsync(reservaDTO.detailReserva.idEspacio);
@@ -104,8 +105,7 @@ namespace Server.Controllers
                 idUsuario = reservaDTO.idUsuario,
                 idCliente = reservaDTO.idCliente,
                 estatus = reservaDTO.estatus,
-                DetailReserva = detailReserva,
-                Usuario = usuarioExists
+                DetailReserva = detailReserva
             };
 
             // Añadir la reserva al contexto y guardar
@@ -114,11 +114,11 @@ namespace Server.Controllers
 
             return CreatedAtAction("GetReserva", new { id = reserva.idReserva }, reserva);
         }
-    
 
 
-    // PUT: api/Reserves/5
-    [HttpPut("{id}")]
+
+        // PUT: api/Reserves/5
+        [HttpPut("{id}")]
         public async Task<IActionResult> PutReserva(int id, Reserva updatedReserva)
         {
             if (id != updatedReserva.idReserva)

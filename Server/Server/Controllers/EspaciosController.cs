@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Server.Models;
+using Server.Models.DTO;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,21 +13,25 @@ namespace Server.Controllers
     [ApiController]
     public class EspaciosController : ControllerBase
     {
-        // In-memory list to simulate a database
-        private static List<Espacio> _espacios = new List<Espacio>();
+        private readonly Context _context;
+
+        public EspaciosController(Context context)
+        {
+            _context = context;
+        }
 
         // GET: api/Espacios
         [HttpGet]
-        public ActionResult<IEnumerable<Espacio>> GetEspacios()
+        public async Task<ActionResult<IEnumerable<Espacio>>> GetEspacios()
         {
-            return Ok(_espacios);
+            return Ok(await _context.Espacios.ToListAsync());
         }
 
         // GET: api/Espacios/5
         [HttpGet("{id}")]
-        public ActionResult<Espacio> GetEspacio(int id)
+        public async Task<ActionResult<Espacio>> GetEspacio(int id)
         {
-            var espacio = _espacios.FirstOrDefault(e => e.idEspacio == id);
+            var espacio = await _context.Espacios.FindAsync(id);
             if (espacio == null)
             {
                 return NotFound();
@@ -33,24 +39,38 @@ namespace Server.Controllers
             return Ok(espacio);
         }
 
+
+
         // POST: api/Espacios
         [HttpPost]
-        public ActionResult<Espacio> PostEspacio(Espacio espacio)
+        public async Task<ActionResult<Espacio>> PostEspacio(EspacioDTO espacioDTO)
         {
-            if (_espacios.Any(e => e.idEspacio == espacio.idEspacio))
+            var espacios = new Espacio
             {
-                return BadRequest("Espacio with the same id already exists.");
-            }
+                nombre = espacioDTO.nombre,
+                canPersonas = espacioDTO.canPersonas,
+                precio = espacioDTO.precio,
+                estatus = espacioDTO.estatus,
+                descripcion = espacioDTO.descripcion
+             };
 
-            _espacios.Add(espacio);
-            return CreatedAtAction(nameof(GetEspacio), new { id = espacio.idEspacio }, espacio);
+            _context.Espacios.Add(espacios);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetEspacio", new { id = espacios.idEspacio }, espacios);
+
         }
 
         // PUT: api/Espacios/5
         [HttpPut("{id}")]
-        public IActionResult PutEspacio(int id, Espacio updatedEspacio)
+        public async Task<IActionResult> PutEspacio(int id, Espacio updatedEspacio)
         {
-            var espacio = _espacios.FirstOrDefault(e => e.idEspacio == id);
+            if (id != updatedEspacio.idEspacio)
+            {
+                return BadRequest("Espacio ID mismatch.");
+            }
+
+            var espacio = await _context.Espacios.FindAsync(id);
             if (espacio == null)
             {
                 return NotFound();
@@ -62,21 +82,46 @@ namespace Server.Controllers
             espacio.estatus = updatedEspacio.estatus;
             espacio.descripcion = updatedEspacio.descripcion;
 
+            _context.Entry(espacio).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EspacioExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
             return NoContent();
         }
 
         // DELETE: api/Espacios/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteEspacio(int id)
+        public async Task<IActionResult> DeleteEspacio(int id)
         {
-            var espacio = _espacios.FirstOrDefault(e => e.idEspacio == id);
+            var espacio = await _context.Espacios.FindAsync(id);
             if (espacio == null)
             {
                 return NotFound();
             }
 
-            _espacios.Remove(espacio);
+            _context.Espacios.Remove(espacio);
+            await _context.SaveChangesAsync();
+
             return NoContent();
+        }
+
+        private bool EspacioExists(int id)
+        {
+            return _context.Espacios.Any(e => e.idEspacio == id);
         }
     }
 }
