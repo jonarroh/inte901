@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Server.Migrations
 {
     /// <inheritdoc />
-    public partial class asdfggg : Migration
+    public partial class asdf : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -40,6 +40,7 @@ namespace Server.Migrations
                     Estatus = table.Column<int>(type: "int", nullable: false),
                     Tipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CantidadXReceta = table.Column<int>(type: "int", nullable: false),
+                    Temperatura = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -57,6 +58,7 @@ namespace Server.Migrations
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Estatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Token = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
@@ -130,6 +132,7 @@ namespace Server.Migrations
                     ExpiryDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CVV = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CardHolderName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Estatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -150,6 +153,8 @@ namespace Server.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Calle = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    NumeroExterior = table.Column<int>(type: "int", nullable: false),
+                    Estatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Colonia = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Ciudad = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Estado = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -174,12 +179,12 @@ namespace Server.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IdClient = table.Column<int>(type: "int", nullable: true),
+                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IdClient = table.Column<int>(type: "int", nullable: false),
                     IdUser = table.Column<int>(type: "int", nullable: false),
                     Total = table.Column<float>(type: "real", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Ticket = table.Column<long>(type: "bigint", nullable: false),
+                    Ticket = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -230,20 +235,22 @@ namespace Server.Migrations
                     Ingredients = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IdOrder = table.Column<int>(type: "int", nullable: false),
-                    IdProduct = table.Column<int>(type: "int", nullable: false)
+                    IdProduct = table.Column<int>(type: "int", nullable: false),
+                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DetailOrders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DetailOrders_Orders_IdOrder",
-                        column: x => x.IdOrder,
+                        name: "FK_DetailOrders_Orders_OrderId",
+                        column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DetailOrders_Productos_IdProduct",
-                        column: x => x.IdProduct,
+                        name: "FK_DetailOrders_Productos_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "Productos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -279,8 +286,10 @@ namespace Server.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    IdProveedor = table.Column<int>(type: "int", nullable: false),
+                    IdUser = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProveedorId = table.Column<int>(type: "int", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -313,20 +322,22 @@ namespace Server.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IdPurchase = table.Column<int>(type: "int", nullable: false),
-                    IdProduct = table.Column<int>(type: "int", nullable: false)
+                    IdProduct = table.Column<int>(type: "int", nullable: false),
+                    PurchaseId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DetailPurchases", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DetailPurchases_Productos_IdProduct",
-                        column: x => x.IdProduct,
+                        name: "FK_DetailPurchases_Productos_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "Productos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DetailPurchases_Purchases_IdPurchase",
-                        column: x => x.IdPurchase,
+                        name: "FK_DetailPurchases_Purchases_PurchaseId",
+                        column: x => x.PurchaseId,
                         principalTable: "Purchases",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -368,24 +379,24 @@ namespace Server.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DetailOrders_IdOrder",
+                name: "IX_DetailOrders_OrderId",
                 table: "DetailOrders",
-                column: "IdOrder");
+                column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DetailOrders_IdProduct",
+                name: "IX_DetailOrders_ProductId",
                 table: "DetailOrders",
-                column: "IdProduct");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DetailPurchases_IdProduct",
+                name: "IX_DetailPurchases_ProductId",
                 table: "DetailPurchases",
-                column: "IdProduct");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DetailPurchases_IdPurchase",
+                name: "IX_DetailPurchases_PurchaseId",
                 table: "DetailPurchases",
-                column: "IdPurchase");
+                column: "PurchaseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Direcciones_UserId",

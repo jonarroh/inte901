@@ -42,6 +42,10 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Estatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ExpiryDate")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -68,18 +72,26 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("IdOrder")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdProduct")
+                        .IsRequired()
+                        .HasColumnType("int");
+
                     b.Property<string>("Ingredients")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdOrder")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<decimal?>("PriceSingle")
                         .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("IdProduct")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int?>("Quantity")
@@ -92,9 +104,9 @@ namespace Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdOrder");
+                    b.HasIndex("OrderId");
 
-                    b.HasIndex("IdProduct");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("DetailOrders");
                 });
@@ -115,6 +127,14 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("IdProduct")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdPurchase")
+                        .IsRequired()
+                        .HasColumnType("int");
+
                     b.Property<string>("Presentation")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -123,10 +143,10 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("IdProduct")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdPurchase")
+                    b.Property<int>("PurchaseId")
                         .HasColumnType("int");
 
                     b.Property<int?>("Quantity")
@@ -143,9 +163,9 @@ namespace Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdProduct");
+                    b.HasIndex("ProductId");
 
-                    b.HasIndex("IdPurchase");
+                    b.HasIndex("PurchaseId");
 
                     b.ToTable("DetailPurchases");
                 });
@@ -182,6 +202,13 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Estatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumeroExterior")
+                        .HasColumnType("int");
 
                     b.Property<string>("Pais")
                         .IsRequired()
@@ -567,6 +594,10 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Estatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -609,13 +640,13 @@ namespace Server.Migrations
                 {
                     b.HasOne("Server.Models.Order", "Order")
                         .WithMany("DetailOrders")
-                        .HasForeignKey("IdOrder")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Server.Models.Producto", "Product")
                         .WithMany()
-                        .HasForeignKey("IdProduct")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -628,13 +659,13 @@ namespace Server.Migrations
                 {
                     b.HasOne("Server.Models.Producto", "Product")
                         .WithMany()
-                        .HasForeignKey("IdProduct")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Server.Models.Purchase", "Purchase")
                         .WithMany("DetailPurchases")
-                        .HasForeignKey("IdPurchase")
+                        .HasForeignKey("PurchaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
