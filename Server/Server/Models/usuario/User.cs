@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
 
     namespace Server.Models.Usuario
@@ -26,6 +27,9 @@
             [Required]
             [MaxLength(100)]
             public string Password { get; set; }
+
+            [DefaultValue("Activo")]
+            public string Estatus { get; set; }
 
             [Required]
             [MaxLength(50)]

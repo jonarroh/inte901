@@ -26,7 +26,9 @@ namespace Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CreditCardDTO>>> GetCreditCard()
         {
-           var creditCards = await _context.CreditCard.ToListAsync();
+            var creditCards = await _context.CreditCard
+                                            .Where(c => c.Estatus == "Activo")
+                                            .ToListAsync();
             var creditCardsDTO = new List<CreditCardDTO>();
 
             foreach (var c in creditCards)
@@ -35,7 +37,7 @@ namespace Server.Controllers
                 {
                     Id = c.Id,
                     CardHolderName = c.CardHolderName,
-                    CardNumber = ocultaNumero(c.CardNumber),
+                    CardNumber = OcultaNumero(c.CardNumber),
                     ExpiryDate = c.ExpiryDate,
                     UserId = c.UserId
                 });
@@ -48,7 +50,9 @@ namespace Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CreditCardDTO>> GetCreditCard(int id)
         {
-            var creditCard = await _context.CreditCard.FindAsync(id);
+            var creditCard = await _context.CreditCard
+                                           .Where(c => c.Id == id && c.Estatus == "Activo")
+                                           .FirstOrDefaultAsync();
 
             if (creditCard == null)
             {
@@ -59,14 +63,13 @@ namespace Server.Controllers
             {
                 Id = creditCard.Id,
                 CardHolderName = creditCard.CardHolderName,
-                CardNumber = ocultaNumero(creditCard.CardNumber),
+                CardNumber = OcultaNumero(creditCard.CardNumber),
                 ExpiryDate = creditCard.ExpiryDate,
                 UserId = creditCard.UserId
             });
         }
 
-
-        private string ocultaNumero(string numero)
+        private string OcultaNumero(string numero)
         {
             string oculto = "";
             for (int i = 0; i < numero.Length; i++)
@@ -83,7 +86,7 @@ namespace Server.Controllers
             return oculto;
         }
 
-        private bool isExpired(string expiryDate)
+        private bool IsExpired(string expiryDate)
         {
             string[] date = expiryDate.Split("/");
             if (date.Length != 2)
@@ -120,9 +123,7 @@ namespace Server.Controllers
             return false;
         }
 
-
         // PUT: api/CreditCards/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCreditCard(int id, CreditCard creditCard)
         {
@@ -133,9 +134,9 @@ namespace Server.Controllers
 
             _context.Entry(creditCard).State = EntityState.Modified;
 
-            if (isExpired(creditCard.ExpiryDate))
+            if (IsExpired(creditCard.ExpiryDate))
             {
-                return BadRequest("La tarjeta esta vencida");
+                return BadRequest("La tarjeta está vencida");
             }
 
             try
@@ -158,21 +159,23 @@ namespace Server.Controllers
             {
                 Id = creditCard.Id,
                 CardHolderName = creditCard.CardHolderName,
-                CardNumber = ocultaNumero(creditCard.CardNumber),
+                CardNumber = OcultaNumero(creditCard.CardNumber),
                 ExpiryDate = creditCard.ExpiryDate,
                 UserId = creditCard.UserId
             });
         }
 
         // POST: api/CreditCards
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<CreditCardDTO>> PostCreditCard(CreditCard creditCard)
         {
-            if (isExpired(creditCard.ExpiryDate))
+            if (IsExpired(creditCard.ExpiryDate))
             {
-                return BadRequest("La tarjeta esta vencida");
+                return BadRequest("La tarjeta está vencida");
             }
+
+            creditCard.Estatus = "Activo";
+
             _context.CreditCard.Add(creditCard);
             await _context.SaveChangesAsync();
 
@@ -180,7 +183,7 @@ namespace Server.Controllers
             {
                 Id = creditCard.Id,
                 CardHolderName = creditCard.CardHolderName,
-                CardNumber = ocultaNumero(creditCard.CardNumber),
+                CardNumber = OcultaNumero(creditCard.CardNumber),
                 ExpiryDate = creditCard.ExpiryDate,
                 UserId = creditCard.UserId
             });
@@ -193,10 +196,12 @@ namespace Server.Controllers
             var creditCardsDTO = new List<CreditCardDTO>();
             foreach (var creditCard in creditCards)
             {
-                if (isExpired(creditCard.ExpiryDate))
+                if (IsExpired(creditCard.ExpiryDate))
                 {
-                    return BadRequest("La tarjeta esta vencida");
+                    return BadRequest("La tarjeta está vencida");
                 }
+
+                creditCard.Estatus = "Activo";
             }
 
             _context.CreditCard.AddRange(creditCards);
@@ -208,7 +213,7 @@ namespace Server.Controllers
                 {
                     Id = creditCard.Id,
                     CardHolderName = creditCard.CardHolderName,
-                    CardNumber = ocultaNumero(creditCard.CardNumber),
+                    CardNumber = OcultaNumero(creditCard.CardNumber),
                     ExpiryDate = creditCard.ExpiryDate,
                     UserId = creditCard.UserId
                 });
@@ -216,7 +221,6 @@ namespace Server.Controllers
 
             return CreatedAtAction("GetCreditCard", creditCardsDTO);
         }
-
 
         // DELETE: api/CreditCards/5
         [HttpDelete("{id}")]
@@ -228,7 +232,8 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            _context.CreditCard.Remove(creditCard);
+            creditCard.Estatus = "Inactivo";
+            _context.Entry(creditCard).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return NoContent();
