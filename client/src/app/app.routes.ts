@@ -22,6 +22,7 @@ import { DetailsComponent } from './checkout/details/details.component';
 import { AddDireccionComponent } from './checkout/add-direccion/add-direccion.component';
 import { AddCardComponent } from './checkout/add-card/add-card.component';
 import { ProductosComponent } from './admin/productos/productos.component';
+import { ReservesComponent } from './reserves/reserves.component';
 
 
 
@@ -86,6 +87,15 @@ export const routes: Routes = [
 
     path: 'places/:id',
     component: DescriptionPlaceComponent
+  },
+  {
+    path: 'reserve',
+    component: ReservesComponent
+  },
+
+  {
+    path: 'reserve/:id',
+    component: ReservesComponent
   },
 
   {
