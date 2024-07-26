@@ -68,46 +68,33 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("IdOrder")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("IdProduct")
-                        .IsRequired()
-                        .HasColumnType("int");
-
                     b.Property<string>("Ingredients")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NameProduct")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("OrderId")
+                    b.Property<int>("IdOrder")
                         .HasColumnType("int");
 
                     b.Property<decimal?>("PriceSingle")
                         .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("IdProduct")
                         .HasColumnType("int");
 
                     b.Property<int?>("Quantity")
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<long?>("Ticket")
+                    b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("bigint");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("IdOrder");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("IdProduct");
 
                     b.ToTable("DetailOrders");
                 });
@@ -128,14 +115,6 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("IdProduct")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("IdPurchase")
-                        .IsRequired()
-                        .HasColumnType("int");
-
                     b.Property<string>("Presentation")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -144,15 +123,19 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("IdProduct")
                         .HasColumnType("int");
 
-                    b.Property<int>("PurchaseId")
+                    b.Property<int>("IdPurchase")
                         .HasColumnType("int");
 
                     b.Property<int?>("Quantity")
                         .IsRequired()
                         .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UnitType")
                         .IsRequired()
@@ -160,9 +143,9 @@ namespace Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("IdProduct");
 
-                    b.HasIndex("PurchaseId");
+                    b.HasIndex("IdPurchase");
 
                     b.ToTable("DetailPurchases");
                 });
@@ -408,7 +391,7 @@ namespace Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
-                    b.Property<int?>("IdClient")
+                    b.Property<int>("IdClient")
                         .HasColumnType("int");
 
                     b.Property<int?>("IdUser")
@@ -416,12 +399,14 @@ namespace Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("OrderDate")
-                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("Ticket")
+                        .HasColumnType("bigint");
 
                     b.Property<float?>("Total")
                         .IsRequired()
@@ -552,6 +537,9 @@ namespace Server.Migrations
                     b.Property<int?>("ProveedorId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
@@ -621,13 +609,13 @@ namespace Server.Migrations
                 {
                     b.HasOne("Server.Models.Order", "Order")
                         .WithMany("DetailOrders")
-                        .HasForeignKey("OrderId")
+                        .HasForeignKey("IdOrder")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Server.Models.Producto", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("IdProduct")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -640,13 +628,13 @@ namespace Server.Migrations
                 {
                     b.HasOne("Server.Models.Producto", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("IdProduct")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Server.Models.Purchase", "Purchase")
                         .WithMany("DetailPurchases")
-                        .HasForeignKey("PurchaseId")
+                        .HasForeignKey("IdPurchase")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

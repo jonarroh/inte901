@@ -108,11 +108,13 @@ export class FormComponent {
       token: ""
     }
 
+    console.log(user);
+
     if(this.formModel.valid()){
 
       this.registerServe.registerUser(user).subscribe({
         next: (response) =>{
-          this.router.navigate(['/home']);
+          this.router.navigate(['/login']);
         },
         error : (error)=>{
           
