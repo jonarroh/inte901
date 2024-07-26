@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Server.Models
@@ -12,6 +13,9 @@ namespace Server.Models
         public string ExpiryDate { get; set; }
         public string CVV { get; set; }
         public string CardHolderName { get; set; }
+
+        [DefaultValue("Activo")]
+        public string estatus { get; set; }
 
         [ForeignKey("User")]
         public int UserId { get; set; }
