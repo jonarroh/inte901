@@ -27,5 +27,6 @@ namespace Server.Models
 
         public virtual DetailReserva DetailReserva { get; set; }
         public virtual User Usuario { get; set; }
+
     }
 }

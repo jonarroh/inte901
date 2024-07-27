@@ -24,7 +24,7 @@ import { HlmSelectModule } from '@spartan-ng/ui-select-helm';
 import { hlmMuted } from '@spartan-ng/ui-typography-helm';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { SelectionModel } from '@angular/cdk/collections';
-import { from,debounceTime, map, Observable } from 'rxjs';
+import { from, debounceTime, map, Observable } from 'rxjs';
 import { ComprasService } from './compras.service';
 import { Compra } from './interface/compras';
 import { CommonModule } from '@angular/common';
@@ -57,7 +57,10 @@ import { CommonModule } from '@angular/common';
     CommonModule,
   ],
   templateUrl: './compras.component.html',
-  styleUrl: './compras.component.css'
+  styleUrl: './compras.component.css',
+  providers: [
+    provideIcons({ lucideArrowUpDown, lucideChevronDown, lucideMoreHorizontal }),
+  ],
 })
 export class ComprasComponent {
   compraService = inject(ComprasService);
@@ -66,7 +69,29 @@ export class ComprasComponent {
 
   constructor() {
     this.compras$ = this.compraService.getCompras();
+
+    this.compras$.subscribe((compras) => {
+      compras.forEach(element => {
+        console.log('Element:', element);
+
+        if (element.detailPurchases && element.detailPurchases.length > 0) {
+          console.log('Detail Purchases:', element.detailPurchases);
+          element.detailPurchases.forEach(detail => {
+            console.log('Detail Purchase:', detail);
+          });
+        }
+      });
+    });
+
   }
 
   trackByCompraId: TrackByFunction<Compra> = (index, compra) => compra.id;
+
+  protected readonly _proveedorFilter = signal('');
+  protected readonly _rawFilterInput = signal('');
+  protected readonly _brnColumnManager = useBrnColumnManager({
+    proveedor: { visible: true, label: 'Proveedor' },
+    user: { visible: true, label: 'Usuario' },
+    status: { visible: true, label: 'Estatus' },
+  });
 }

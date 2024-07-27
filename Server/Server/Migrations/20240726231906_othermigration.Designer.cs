@@ -12,8 +12,8 @@ using Server;
 namespace Server.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240717050432_temperatura")]
-    partial class temperatura
+    [Migration("20240726231906_othermigration")]
+    partial class othermigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,19 +35,27 @@ namespace Server.Migrations
 
                     b.Property<string>("CVV")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<string>("CardHolderName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("CardNumber")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
+
+                    b.Property<string>("Estatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ExpiryDate")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -83,34 +91,24 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NameProduct")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("OrderId")
+                    b.Property<int?>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<decimal?>("PriceSingle")
                         .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("Quantity")
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<long?>("Ticket")
+                    b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("bigint");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("DetailOrders");
                 });
@@ -147,15 +145,16 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PurchaseId")
+                    b.Property<int?>("PurchaseId")
                         .HasColumnType("int");
 
                     b.Property<int?>("Quantity")
                         .IsRequired()
                         .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UnitType")
                         .IsRequired()
@@ -163,11 +162,38 @@ namespace Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
-
                     b.HasIndex("PurchaseId");
 
                     b.ToTable("DetailPurchases");
+                });
+
+            modelBuilder.Entity("Server.Models.DetailReserva", b =>
+                {
+                    b.Property<int>("idDetailReser")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("idDetailReser"));
+
+                    b.Property<DateTime>("fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("horaFin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("horaInicio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("idEspacio")
+                        .HasColumnType("int");
+
+                    b.HasKey("idDetailReser");
+
+                    b.HasIndex("idEspacio");
+
+                    b.ToTable("DetailReservas");
                 });
 
             modelBuilder.Entity("Server.Models.Direcciones", b =>
@@ -203,6 +229,13 @@ namespace Server.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Estatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumeroExterior")
+                        .HasColumnType("int");
+
                     b.Property<string>("Pais")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -216,6 +249,37 @@ namespace Server.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Direcciones");
+                });
+
+            modelBuilder.Entity("Server.Models.Espacio", b =>
+                {
+                    b.Property<int>("idEspacio")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("idEspacio"));
+
+                    b.Property<int>("canPersonas")
+                        .HasColumnType("int");
+
+                    b.Property<string>("descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("estatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("precio")
+                        .HasColumnType("float");
+
+                    b.HasKey("idEspacio");
+
+                    b.ToTable("Espacios");
                 });
 
             modelBuilder.Entity("Server.Models.Ingrediente", b =>
@@ -411,7 +475,7 @@ namespace Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
-                    b.Property<int?>("IdClient")
+                    b.Property<int>("IdClient")
                         .HasColumnType("int");
 
                     b.Property<int?>("IdUser")
@@ -419,20 +483,20 @@ namespace Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("OrderDate")
-                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("Ticket")
+                        .HasColumnType("bigint");
+
                     b.Property<float?>("Total")
                         .IsRequired()
                         .HasColumnType("real");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IdUser");
 
                     b.ToTable("Orders");
                 });
@@ -552,19 +616,45 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProveedorId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProveedorId");
-
-                    b.HasIndex("UserId");
-
                     b.ToTable("Purchases");
+                });
+
+            modelBuilder.Entity("Server.Models.Reserva", b =>
+                {
+                    b.Property<int>("idReserva")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("idReserva"));
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("estatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("idCliente")
+                        .HasColumnType("int");
+
+                    b.Property<int>("idDetailReser")
+                        .HasColumnType("int");
+
+                    b.Property<int>("idUsuario")
+                        .HasColumnType("int");
+
+                    b.HasKey("idReserva");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.HasIndex("idDetailReser");
+
+                    b.ToTable("Reservas");
                 });
 
             modelBuilder.Entity("Server.Models.Usuario.Server.Models.Usuario.User", b =>
@@ -579,6 +669,10 @@ namespace Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Estatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -622,40 +716,27 @@ namespace Server.Migrations
 
             modelBuilder.Entity("Server.Models.DetailOrder", b =>
                 {
-                    b.HasOne("Server.Models.Order", "Order")
+                    b.HasOne("Server.Models.Order", null)
                         .WithMany("DetailOrders")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Server.Models.Producto", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Product");
+                        .HasForeignKey("OrderId");
                 });
 
             modelBuilder.Entity("Server.Models.DetailPurchase", b =>
                 {
-                    b.HasOne("Server.Models.Producto", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Server.Models.Purchase", "Purchase")
+                    b.HasOne("Server.Models.Purchase", null)
                         .WithMany("DetailPurchases")
-                        .HasForeignKey("PurchaseId")
+                        .HasForeignKey("PurchaseId");
+                });
+
+            modelBuilder.Entity("Server.Models.DetailReserva", b =>
+                {
+                    b.HasOne("Server.Models.Espacio", "Espacio")
+                        .WithMany()
+                        .HasForeignKey("idEspacio")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product");
-
-                    b.Navigation("Purchase");
+                    b.Navigation("Espacio");
                 });
 
             modelBuilder.Entity("Server.Models.Direcciones", b =>
@@ -721,17 +802,6 @@ namespace Server.Migrations
                     b.Navigation("Proveedor");
                 });
 
-            modelBuilder.Entity("Server.Models.Order", b =>
-                {
-                    b.HasOne("Server.Models.Usuario.Server.Models.Usuario.User", "User")
-                        .WithMany()
-                        .HasForeignKey("IdUser")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Server.Models.Proveedor", b =>
                 {
                     b.HasOne("Server.Models.Usuario.Server.Models.Usuario.User", "Usuario")
@@ -741,19 +811,23 @@ namespace Server.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("Server.Models.Purchase", b =>
+            modelBuilder.Entity("Server.Models.Reserva", b =>
                 {
-                    b.HasOne("Server.Models.Proveedor", "Proveedor")
+                    b.HasOne("Server.Models.Usuario.Server.Models.Usuario.User", "Usuario")
                         .WithMany()
-                        .HasForeignKey("ProveedorId");
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Server.Models.Usuario.Server.Models.Usuario.User", "User")
+                    b.HasOne("Server.Models.DetailReserva", "DetailReserva")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("idDetailReser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Proveedor");
+                    b.Navigation("DetailReserva");
 
-                    b.Navigation("User");
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("Server.Models.MateriaPrima", b =>

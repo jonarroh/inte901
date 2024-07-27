@@ -33,9 +33,9 @@
         [Required]
         [ForeignKey("IdProduct")]
         public int? IdProduct { get; set; }
-
+        [NotMapped]
         public Order Order { get; set; }
-
+        [NotMapped]
         public Producto Product { get; set; }
     }
 }

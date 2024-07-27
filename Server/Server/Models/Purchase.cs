@@ -20,7 +20,9 @@
         public DateTime? CreatedAt { get; set; }
         public string? Status { get; set; } // Pendiente, Aceptada, Cancelada, Entregada
         public ICollection<DetailPurchase>? DetailPurchases { get; set; }
+        [NotMapped]
         public Proveedor? Proveedor { get; set; }
+        [NotMapped]
         public User? User { get; set; }
         public Purchase()
         {

@@ -48,25 +48,69 @@
       </hlm-dialog-content>
     </hlm-dialog>
   </div>
-  <div class="relative w-full">
-    <hlm-table  class="w-full min-w-max">
+  <div class="overflow-y-auto min-w-full">
+    <div class="flex flex-col justify-between gap-4 sm:flex-row">
+      <input
+        hlmInput
+        class="w-full md:w-80"
+        placeholder="Filter emails..."
+        [ngModel]="_proveedorFilter()"
+        (ngModelChange)="_rawFilterInput.set($event)"
+      />
+      <button hlmBtn variant="outline" align="end" [brnMenuTriggerFor]="menu">
+        Columnas
+        <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
+      </button>
+      <ng-template #menu>
+        <hlm-menu class="w-32">
+          @for (column of _brnColumnManager.allColumns; track column.name) {
+            <button
+              hlmMenuItemCheckbox
+              [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
+              [checked]="_brnColumnManager.isColumnVisible(column.name)"
+              (triggered)="_brnColumnManager.toggleVisibility(column.name)"
+            >
+              <hlm-menu-item-check />
+              <span>{{ column.label }}</span>
+            </button>
+          }
+        </hlm-menu>
+      </ng-template>
+    </div>
+
+    <!-- Datatable -->
+    <!-- <brn-table hlm stickyHeader="" class="border-border mt-4 block overflow-auto rounded-md border w-full min-w-full">
+      <brn-column-def>
+
+      </brn-column-def>
+    </brn-table> -->
+
+    <!-- Tabla basica funciona xd -->
+    <hlm-table class="w-full min-w-full">
       <hlm-trow>
-        <hlm-th class="w-auto">id</hlm-th>
-        <hlm-th class="w-auto">prov</hlm-th>
-        <hlm-th class="w-auto">user</hlm-th>
-        <hlm-th class="w-auto">creatd</hlm-th>
-        <hlm-th class="w-auto">status</hlm-th>
+        <hlm-th class="flex-1">Fecha Compra</hlm-th>
+        <hlm-th class="flex-1">Insumos</hlm-th>
+        <hlm-th class="flex-1">Proveedor</hlm-th>
+        <hlm-th class="flex-1">Empleado</hlm-th>
+        <hlm-th class="flex-1">Estatus</hlm-th>
+        <hlm-th class="flex-1">Acciones</hlm-th>
       </hlm-trow>
       <hlm-trow *ngIf="(compras$ | async)?.length === 0">
-        <hlm-td colspan="5">No hay registros</hlm-td>
+        <hlm-td colspan="6">No hay registros</hlm-td>
       </hlm-trow>
       <hlm-trow *ngFor="let compra of (compras$ | async); trackBy: trackByCompraId">
-        <hlm-td>{{ compra.id }}</hlm-td>
-        <hlm-td>{{ compra.idProveedor }}</hlm-td>
-        <hlm-td>{{ compra.idUser }}</hlm-td>
-        <hlm-td>{{ compra.createdAt }}</hlm-td>
-        <hlm-td>{{ compra.status }}</hlm-td>
+        <hlm-td class="flex-1">{{ compra.createdAt }}</hlm-td>
+        <hlm-td class="flex-1">{{ compra.detailPurchases?.length }}</hlm-td>
+        <hlm-td class="flex-1">{{ compra.proveedor?.nombreEmpresa }}</hlm-td>
+        <hlm-td class="flex-1">{{ compra.user?.name }}</hlm-td>
+        <hlm-td class="flex-1">{{ compra.status }}</hlm-td>
+        <hlm-td class="flex-1">
+          <button hlmBtn variant="success">
+            Ok
+          </button>
+        </hlm-td>
       </hlm-trow>
     </hlm-table>
   </div>
+
 </div>

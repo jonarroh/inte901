@@ -164,3 +164,21 @@ export interface CreditCardWithCvv{
   userId: number;
   id: number;
 }
+export interface DetailReserva {
+  idDetailReser: number;
+  fecha: string;  // Considera cambiar a Date si manejas fechas como objetos
+  horaInicio: string;
+  horaFin: string;
+  idEspacio: number;
+  espacio: Espacio;  // Relación con Espacio
+}
+
+export interface Reserva {
+  idReserva: number;
+  idDetailReser: number;
+  idUsuario: number;
+  idCliente: number;
+  estatus: string;
+  detailReserva: DetailReserva;  // Relación con DetailReserva
+  usuario: User;  // Relación con User
+}
