@@ -16,10 +16,6 @@ namespace Server.Models
 
         [Required]
         [ForeignKey("User")]
-        public int idUsuario { get; set; }
-
-        [Required]
-        [ForeignKey("User")]
         public int idCliente { get; set; }
 
         [Required]
