@@ -24,6 +24,7 @@ import { AddCardComponent } from './checkout/add-card/add-card.component';
 import { ProductosComponent } from './admin/productos/productos.component';
 import { ReservesComponent } from './reserves/reserves.component';
 import { MateriasPrimasComponent } from './admin/materias-primas/materias-primas.component';
+import { IngredientesComponent } from './admin/ingredientes/ingredientes.component';
 
 
 
@@ -69,6 +70,10 @@ export const routes: Routes = [
       {
         path: 'materias-primas',
         component: MateriasPrimasComponent
+      },
+      {
+        path: 'ingredientes',
+        component: IngredientesComponent
       }
     ]
   },
