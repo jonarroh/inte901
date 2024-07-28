@@ -1,0 +1,73 @@
+<div class="flex-1 flex justify-center" style="width: calc(100vw - 18rem);">
+    <h1 class="text-5xl font-bold pt-5 mt-5 text-secondary">Materias Primas</h1>
+  </div>
+  
+  <div class="flex justify-end my-5 me-5 pr-5">
+  <hlm-dialog>
+    <button id="add-materia-trigger" brnDialogTrigger hlmBtn (click)="onAdd()" class="bg-secondary text-white">Agregar</button>
+    <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+      <hlm-dialog-header>
+        <h3 hlmDialogTitle>Agregar materia prima</h3>
+        <p hlmDialogDescription>Ingresa los detalles de la nueva materia prima. Haz clic en guardar cuando termines.</p>
+      </hlm-dialog-header>
+      <form (ngSubmit)="onSubmitAdd(materiaPrimaFormAdd)" #materiaPrimaFormAdd="ngForm">
+        <div class="py-4 grid gap-4">
+          <!-- Campos del formulario -->
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="name-add" class="text-right">Nombre</label>
+            <input hlmInput id="name-add" name="nombre" [(ngModel)]="materiaPrima.material" placeholder="Nombre de la materia prima" class="col-span-3" required />
+          </div>
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="imagen-add" class="text-right">Imagen</label>
+            <input hlmInput type="file" id="imagen-add" name="imagen" class="col-span-3" (change)="onFileChange($event)" />
+          </div>
+        </div>
+        <hlm-dialog-footer>
+          <button hlmBtn type="submit">Guardar</button>
+        </hlm-dialog-footer>
+      </form>
+    </hlm-dialog-content>
+  </hlm-dialog>
+
+  <hlm-dialog>
+    <button id="edit-materia-trigger" brnDialogTrigger hlmBtn class="hidden">Editar materia prima</button>
+    <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+      <hlm-dialog-header>
+        <h3 hlmDialogTitle>Editar materia prima</h3>
+        <p hlmDialogDescription>Actualiza los detalles de la materia prima. Haz clic en actualizar cuando termines.</p>
+      </hlm-dialog-header>
+      <form (ngSubmit)="onSubmitEdit(materiaPrimaFormEdit)" #materiaPrimaFormEdit="ngForm">
+        <div class="py-4 grid gap-4">
+          <!-- Campos del formulario -->
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="name-edit" class="text-right">Nombre</label>
+            <input hlmInput id="name-edit" name="nombre" [(ngModel)]="materiaPrima.material" placeholder="Nombre de la materia prima" class="col-span-3" required />
+          </div>
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="imagen-edit" class="text-right">Imagen</label>
+            <input hlmInput type="file" id="imagen-edit" name="imagen" class="col-span-3" (change)="onFileChange($event)" />
+          </div>
+        </div>
+        <hlm-dialog-footer>
+          <button hlmBtn type="submit">Actualizar</button>
+        </hlm-dialog-footer>
+      </form>
+    </hlm-dialog-content>
+  </hlm-dialog>
+  </div>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-5">
+  <div *ngFor="let materiaPrima of (materiasPrimas$ | async); trackBy: trackByMateriaPrimaId" class="bg-white shadow-md rounded-lg p-4 flex flex-col justify-between">
+    <div>
+      <img [src]="'../../../assets/img/' + materiaPrima.imagen" alt="{{ materiaPrima.material }}" class="w-full h-48 object-cover rounded-t-lg">
+      <div class="p-4">
+        <h2 class="text-xl font-bold">{{ materiaPrima.material }}</h2>
+      </div>
+    </div>
+    <div class="flex justify-end space-x-2 pe-3">
+      <button (click)="onEdit(materiaPrima)" class="bg-white text-secondary px-4 py-2 rounded border border-secondary">Editar</button>
+      <button (click)="onDelete(materiaPrima.id!)" class="bg-secondary text-white px-4 py-2 rounded">Eliminar</button>
+    </div>
+  </div>
+  </div>
+  

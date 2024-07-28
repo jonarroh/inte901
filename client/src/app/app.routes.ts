@@ -23,6 +23,7 @@ import { AddDireccionComponent } from './checkout/add-direccion/add-direccion.co
 import { AddCardComponent } from './checkout/add-card/add-card.component';
 import { ProductosComponent } from './admin/productos/productos.component';
 import { ReservesComponent } from './reserves/reserves.component';
+import { MateriasPrimasComponent } from './admin/materias-primas/materias-primas.component';
 
 
 
@@ -64,6 +65,10 @@ export const routes: Routes = [
       {
         path: 'productos',
         component: ProductosComponent
+      },
+      {
+        path: 'materias-primas',
+        component: MateriasPrimasComponent
       }
     ]
   },
