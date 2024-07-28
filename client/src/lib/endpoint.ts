@@ -6,4 +6,5 @@ export const ENDPOINTS = {
   test: `${API_URL}/Home/protected`,
   producto: `${API_URL}/api/Productos`,
   compras: `${API_URL}/api/Purchases`,
+  materia_prima: `${API_URL}/api/MateriasPrimas`
 } as const;
