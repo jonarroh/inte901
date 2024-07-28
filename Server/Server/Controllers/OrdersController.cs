@@ -121,7 +121,7 @@ namespace Server.Controllers
 
 
         [HttpPost]
-        //[Authorize]
+        // [Authorize]
         [Route("addOrder")]
         public async Task<IActionResult> PostOrder(OrderDTO ordertdo)
         {
@@ -153,6 +153,7 @@ namespace Server.Controllers
                     Ticket = ticket,
                 };
 
+                // Validación y guardado de la dirección solo si es una entrega
                 if (ordertdo.IsDeliver == true)
                 {
                     var tarjeta = await _context.CreditCard.FindAsync(ordertdo.IdUser);
@@ -175,64 +176,22 @@ namespace Server.Controllers
                             };
 
                             await _context.Direcciones.AddAsync(direccion);
-
-                            foreach (var d in ordertdo.DetailOrders)
-                            {
-                                var detail = new DetailOrder
-                                {
-                                    IdOrder = orden.Id,
-                                    IdProduct = d.IdProduct,
-                                    Quantity = d.Quantity,
-                                    PriceSingle = d.PriceSingle,
-                                    DateOrder = DateTime.Now,
-                                    Ingredients = d.Ingredients,
-                                    Status = "Pendiente"
-                                };
-
-                                orden.DetailOrders?.Add(detail);
-
-                                await _context.DetailOrders.AddAsync(detail);
-                            }
-
-                            await _context.Orders.AddAsync(orden);
-
-                            using (HttpClient client = new HttpClient())
-                            {
-                                var data = new Dictionary<string, string?>
-                                {
-                                    { "id", orden.Id.ToString() },
-                                    { "ticket", orden.Ticket.ToString() },
-                                };
-
-                                var content = new FormUrlEncodedContent(data);
-
-                                HttpResponseMessage response = await client.PostAsync("http://localhost:5000/generate_qr_order", content);
-
-                                if (response.IsSuccessStatusCode)
-                                {
-                                    responseStatus = response.StatusCode.ToString();
-                                    Console.WriteLine(response.Content);
-                                }
-                                else
-                                {
-                                    responseStatus = response.StatusCode.ToString();
-                                    Console.WriteLine(response.Content);
-                                }
-                            }
-
-                            if (responseStatus == "200")
-                            {
-                                await _context.SaveChangesAsync();
-                            }
-                            else
-                            {
-                                return NotFound($"Error con el QR, no guardaran los cambios, status: {responseStatus}");
-                                //return NotFound("Se produjo un error en el servidor, contacte a soporte");
-                            }
                         }
+                        else
+                        {
+                            return BadRequest("No hay suficiente saldo en la tarjeta.");
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest("La tarjeta no es válida.");
                     }
                 }
 
+                await _context.Orders.AddAsync(orden);
+                await _context.SaveChangesAsync();
+
+                // Guardado de los detalles de la orden
                 foreach (var d in ordertdo.DetailOrders)
                 {
                     var detail = new DetailOrder
@@ -247,19 +206,19 @@ namespace Server.Controllers
                     };
 
                     orden.DetailOrders?.Add(detail);
-
                     await _context.DetailOrders.AddAsync(detail);
                 }
 
-                await _context.Orders.AddAsync(orden);
+                await _context.SaveChangesAsync();
 
+                // Petición para generar el QR después de guardar la orden y sus detalles
                 using (HttpClient client = new HttpClient())
                 {
                     var data = new Dictionary<string, string?>
-                    {
-                        { "id", orden.Id.ToString() },
-                        { "ticket", orden.Ticket.ToString() },
-                    };
+            {
+                { "id", orden.Id.ToString() },
+                { "ticket", orden.Ticket.ToString() },
+            };
 
                     var content = new FormUrlEncodedContent(data);
 
@@ -274,17 +233,8 @@ namespace Server.Controllers
                     {
                         responseStatus = response.StatusCode.ToString();
                         Console.WriteLine(response.Content);
+                        return NotFound($"Error con el QR, status: {responseStatus}");
                     }
-                }
-
-                if (responseStatus == "200")
-                {
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    return NotFound($"Error con el QR, no guardaran los cambios, status: {responseStatus}");
-                    //return NotFound("Se produjo un error en el servidor, contacte a soporte");
                 }
 
                 return Ok();
@@ -292,7 +242,6 @@ namespace Server.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
         }
