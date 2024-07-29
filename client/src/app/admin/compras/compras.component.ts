@@ -12,7 +12,7 @@ import { lucideArrowUpDown, lucideChevronDown, lucideMoreHorizontal } from '@ng-
 import { HlmButtonModule } from '~/components/ui-button-helm/src';
 import { HlmCheckboxCheckIconComponent, HlmCheckboxComponent } from '@spartan-ng/ui-checkbox-helm';
 import { HlmIconComponent, provideIcons } from '@spartan-ng/ui-icon-helm';
-import { HlmInputDirective } from '~/components/ui-input-helm/src';
+import { HlmInputDirective, HlmInputModule } from '~/components/ui-input-helm/src';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
@@ -28,6 +28,10 @@ import { from, debounceTime, map, Observable } from 'rxjs';
 import { ComprasService } from './compras.service';
 import { Compra } from './interface/compras';
 import { CommonModule } from '@angular/common';
+import { Proveedor } from './interface/proveedor';
+import { ProveedoresService } from '~/app/proveedores/proveedores.service';
+import { HlmAccordionDirective, HlmAccordionModule } from '~/components/ui-accordion-helm/src';
+import { BrnAccordionModule } from '@spartan-ng/ui-accordion-brain';
 
 @Component({
   selector: 'app-compras',
@@ -55,6 +59,10 @@ import { CommonModule } from '@angular/common';
     BrnSelectModule,
     FormsModule,
     CommonModule,
+    HlmInputDirective,
+    HlmAccordionDirective,
+    HlmAccordionModule,
+    BrnAccordionModule
   ],
   templateUrl: './compras.component.html',
   styleUrl: './compras.component.css',
@@ -66,9 +74,12 @@ export class ComprasComponent {
   compraService = inject(ComprasService);
   compras$: Observable<Compra[]>;
   compra: Compra = {};
+  proveedorService = inject(ProveedoresService);
+  proveedores$: Observable<Proveedor[]>;
 
   constructor() {
     this.compras$ = this.compraService.getCompras();
+    this.proveedores$ = this.proveedorService.getProveedores();
 
     this.compras$.subscribe((compras) => {
       compras.forEach(element => {
@@ -92,6 +103,8 @@ export class ComprasComponent {
   protected readonly _brnColumnManager = useBrnColumnManager({
     proveedor: { visible: true, label: 'Proveedor' },
     user: { visible: true, label: 'Usuario' },
-    status: { visible: true, label: 'Estatus' },
+    status: { visible: true, label: 'Status' },
   });
+
+
 }

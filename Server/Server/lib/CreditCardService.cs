@@ -10,7 +10,7 @@ namespace Server.lib
         [
             new CheckCreditCard
             {
-                id = 1,
+                Id = 1,
                 CardHolderName = "Juan Perez",
                 CVV = "568",
                 CardNumber = "1234567890123456",
@@ -19,7 +19,7 @@ namespace Server.lib
             },
             new CheckCreditCard
             {
-                id = 2,
+                Id = 2,
                 CVV = "153",
                 CardHolderName = "Maria Lopez",
                 CardNumber = "1234567890123456",
@@ -28,7 +28,7 @@ namespace Server.lib
             },
             new CheckCreditCard
             {
-                id = 3,
+                Id = 3,
                 CVV = "123",
                 CardHolderName = "Pedro Ramirez",
                 CardNumber = "1234567890123456",
@@ -107,7 +107,7 @@ namespace Server.lib
                 throw new ArgumentException("No hay tarjetas en la base de datos.");
             }
 
-            var card = creditCards.FirstOrDefault(card => card.id == id);
+            var card = creditCards.FirstOrDefault(card => card.Id == id);
 
             CreditCard creditCard = new CreditCard
             {
@@ -115,7 +115,7 @@ namespace Server.lib
                 CardNumber = card.CardNumber,
                 CVV = card.CVV,
                 ExpiryDate = card.ExpiryDate,
-                UserId = card.id
+                UserId = card.Id
             };
 
             return creditCard;
@@ -172,11 +172,11 @@ namespace Server.lib
 
             //ver si el id de la tarjeta y el cvv coinciden
 
-            if (creditCards.Any(card => card.id == creditCard.UserId && card.CVV == creditCard.CVV))
+            if (creditCards.Any(card => card.Id == creditCard.UserId && card.CVV == creditCard.CVV))
             {
                 return "La tarjeta es válida";
             }
-            if (creditCards.Any(card => card.id == creditCard.UserId && card.CVV != creditCard.CVV))
+            if (creditCards.Any(card => card.Id == creditCard.UserId && card.CVV != creditCard.CVV))
             {
                 return "El CVV no es correcto";
             }

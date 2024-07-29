@@ -44,11 +44,11 @@ namespace Server.Controllers
 
                 foreach (var compra in compras)
                 {
-                    compra.CreatedAt = DateTime.Parse(compra.CreatedAt.ToString() ?? "");
-                    compra.DetailPurchases = await _context.DetailPurchases.Where(d => d.IdPurchase == compra.Id).ToListAsync();
-                    compra.Proveedor = await _context.Proveedores.FindAsync(compra.IdProveedor);
-                    compra.User = await _context.Users.FindAsync(compra.IdUser);
-                }
+					compra.CreatedAt = DateTime.Parse(compra.CreatedAt.ToString() ?? "");
+					compra.DetailPurchases = await _context.DetailPurchases.Where(d => d.IdPurchase == compra.Id).ToListAsync();
+					compra.Proveedor = await _context.Proveedores.FindAsync(compra.IdProveedor);
+					compra.User = await _context.Users.FindAsync(compra.IdUser);
+				}
 
                 return Ok(compras);
             }
