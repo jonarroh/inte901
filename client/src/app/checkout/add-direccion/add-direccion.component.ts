@@ -89,54 +89,6 @@ export class AddDireccionComponent {
 
   isEdit = signal(false);
 
-  mexicanStates: Estados[] = [
-    { 'label': 'Aguascalientes', 'value': 'Aguascalientes' },
-    { 'label': 'Baja California', 'value': 'Baja California' },
-    { 'label': 'Baja California Sur', 'value': 'Baja California Sur' },
-    { 'label': 'Campeche', 'value': 'Campeche' },
-    { 'label': 'Chiapas', 'value': 'Chiapas' },
-    { 'label': 'Chihuahua', 'value': 'Chihuahua' },
-    { 'label': 'Coahuila', 'value': 'Coahuila' },
-    { 'label': 'Colima', 'value': 'Colima' },
-    { 'label': 'Durango', 'value': 'Durango' },
-    { 'label': 'Guanajuato', 'value': 'Guanajuato' },
-    { 'label': 'Guerrero', 'value': 'Guerrero' },
-    { 'label': 'Hidalgo', 'value': 'Hidalgo' },
-    { 'label': 'Jalisco', 'value': 'Jalisco' },
-    { 'label': 'México', 'value': 'México' },
-    { 'label': 'Michoacán', 'value': 'Michoacán' },
-    { 'label': 'Morelos', 'value': 'Morelos' },
-    { 'label': 'Nayarit', 'value': 'Nayarit' },
-    { 'label': 'Nuevo León', 'value': 'Nuevo León' },
-    { 'label': 'Oaxaca', 'value': 'Oaxaca' },
-    { 'label': 'Puebla', 'value': 'Puebla' },
-    { 'label': 'Querétaro', 'value': 'Querétaro' },
-    { 'label': 'Quintana Roo', 'value': 'Quintana Roo' },
-    { 'label': 'San Luis Potosí', 'value': 'San Luis Potosí' },
-    { 'label': 'Sinaloa', 'value': 'Sinaloa' },
-    { 'label': 'Sonora', 'value': 'Sonora' },
-    { 'label': 'Tabasco', 'value': 'Tabasco' },
-    { 'label': 'Tamaulipas', 'value': 'Tamaulipas' },
-    { 'label': 'Tlaxcala', 'value': 'Tlaxcala' },
-    { 'label': 'Veracruz', 'value': 'Veracruz' },
-    { 'label': 'Yucatán', 'value': 'Yucatán' },
-    { 'label': 'Zacatecas', 'value': 'Zacatecas' }
-  ];
-
-  currentFramework = signal<Estados | undefined>(undefined);
-  state = signal<'closed' | 'open'>('closed');
-  stateChanged(state: 'open' | 'closed') {
-    this.state.set(state);
-  }
-
-  commandSelected(framework: Estados) {
-    this.state.set('closed');
-    if (this.currentFramework()?.value === framework.value) {
-      this.currentFramework.set(undefined);
-    } else {
-      this.currentFramework.set(framework);
-    }
-  }
   
 
 
@@ -148,10 +100,12 @@ export class AddDireccionComponent {
         ciudad: this.formModel.controls.ciudad.value(),
         codigoPostal: this.formModel.controls.codigoPostal.value(),
         colonia: this.formModel.controls.colonia.value(),
-        estado: this.currentFramework()?.value,
+        numeroExterior: this.formModel.controls.numeroExterior.value(),
+        estado: 'Guanajuato',
         id: this.currentAdress()?.id,
         pais: 'México',
-        userId: this.currentAdress()?.userId
+        userId: this.currentAdress()?.userId,
+        estatus: 'Activo'
       } as Address;
       console.log('Address', add);
       this.onClearForm();
@@ -194,11 +148,13 @@ export class AddDireccionComponent {
         ciudad: this.formModel.controls.ciudad.value(),
         codigoPostal: this.formModel.controls.codigoPostal.value(),
         colonia: this.formModel.controls.colonia.value(),
-        estado: this.currentFramework()?.value,
+        numeroExterior: this.formModel.controls.numeroExterior.value(),
+        estado: 'Guanajuato',
         id: 0,
         pais: 'México',
+        estatus: 'Activo',
         userId: Number(localStorage.getItem('userId'))
-      } as Address;
+      } satisfies Address;
       console.log('Address', add);
       this.onClearForm();
       this.CheackoutService.createAddress(add).subscribe({
@@ -270,6 +226,18 @@ export class AddDireccionComponent {
         }
       ],
     }),
+    numeroExterior: createFormField('', {
+      validators: [
+        {
+          validator: V.required(),
+          message: 'El número exterior es requerido',
+        },
+        {
+          validator: V.maxLength(10),
+          message: 'El número exterior debe tener menos de 10 caracteres',
+        }
+      ],
+    }),
 
   })
 
@@ -280,14 +248,13 @@ export class AddDireccionComponent {
     this.formModel.controls.ciudad.value.set(address.ciudad);
     this.formModel.controls.codigoPostal.value.set(address.codigoPostal);
     this.formModel.controls.colonia.value.set(address.colonia);
-    this.currentFramework.set(this.mexicanStates.find(state => state.value === address.estado));
+    this.formModel.controls.numeroExterior.value.set(address.numeroExterior);
     this.isEdit.set(true);
     this.currentAdress.set(address);
   }
 
   onClearForm() {
     this.formModel.reset();
-    this.currentFramework.set(undefined);
     this.isEdit.set(false);
     this.currentAdress.set(undefined);
   }

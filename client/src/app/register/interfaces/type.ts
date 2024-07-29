@@ -27,5 +27,6 @@ interface Direccion {
     token: string;
     direcciones: Direccion[];
     creditCards: CreditCard[];
+    estatus: string;
   }
   
