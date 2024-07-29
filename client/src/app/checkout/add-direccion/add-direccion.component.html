@@ -102,6 +102,25 @@
             }
           </div>
           <div>
+            <label>
+              Numero exterior
+            </label>
+            <input
+              type="text"
+              hlmInput
+              ngModel
+              [ngModelOptions]="{standalone: true}"
+              [formField]="formModel.controls.numeroExterior"
+            />
+            @if (formModel.controls.numeroExterior.touched()) {
+              @if (formModel.controls.numeroExterior.hasError('required')) {
+                <div class="text-red-500 text-sm">El número exterior es requerido</div>
+              } @else if (formModel.controls.numeroExterior.hasError('maxLength')) {
+                <div class="text-red-500 text-sm">El número exterior debe tener menos de 10 caracteres</div>
+              }
+            }
+          </div>
+          <div>
             <label>Código postal</label>
             <input
               type="text"
@@ -119,64 +138,7 @@
             }
           </div>
           
-          <div>
-            <label for="state" class="block text-sm font-medium text-gray-700">
-              Estado
-            </label>
-            <brn-popover
-              [state]="state()"
-              (stateChanged)="stateChanged($event)"
-              sideOffset="5"
-              closeDelay="100"
-            >
-              <button
-                class="w-[200px] justify-between"
-                id="edit-profile"
-                variant="outline"
-                brnPopoverTrigger
-                hlmBtn
-              >
-                {{ currentFramework() ? currentFramework()?.label : 'Elige tu estado' }}
-                <lucide-icon name="chevron-down"></lucide-icon>
-              </button>
-              <brn-cmd
-                *brnPopoverContent="let ctx"
-                hlmPopoverContent
-                hlm
-                class="p-0 w-[200px] z-50 bg-white"
-              >
-                <hlm-cmd-input-wrapper>
-                  <lucide-icon name="search"></lucide-icon>
-                  <input
-                    placeholder="Buscar..."
-                    id="search"
-                    brnCmdInput
-                    hlm
-                  />
-                </hlm-cmd-input-wrapper>
-                <div *brnCmdEmpty hlmCmdEmpty>No hay resultados</div>
-                <brn-cmd-list hlm>
-                  <brn-cmd-group hlm>
-                    <button
-                      *ngFor="let framework of mexicanStates"
-                      brnCmdItem
-                      [value]="framework.value"
-                      (selected)="commandSelected(framework)"
-                      class="bg-white text-black hover:bg-gray-100 w-full text-left p-2"
-                      hlm
-                    >
-                      <hlm-icon
-                        [class.opacity-0]="currentFramework()?.value !== framework.value"
-                        name="lucideCheck"
-                        hlmCmdIcon
-                      />
-                      {{ framework.label }}
-                    </button>
-                  </brn-cmd-group>
-                </brn-cmd-list>
-              </brn-cmd>
-            </brn-popover>
-          </div>
+         
           <div>
            @if(isEdit()){
             <button hlmBtn
