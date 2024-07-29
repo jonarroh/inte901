@@ -8,7 +8,7 @@ export interface Compra {
   idUser?: number;
   createdAt?: string;
   status?: string;
-  detailPurchases?: DetailPurchase[]; // Corrección aquí: debe ser un array de objetos, no strings
+  details?: DetailPurchase[]; // Corrección aquí: debe ser un array de objetos, no strings
   proveedor?: Proveedor;
   user?: Usuario;
 }

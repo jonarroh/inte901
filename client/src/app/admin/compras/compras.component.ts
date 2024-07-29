@@ -12,7 +12,7 @@ import { lucideArrowUpDown, lucideChevronDown, lucideMoreHorizontal } from '@ng-
 import { HlmButtonModule } from '~/components/ui-button-helm/src';
 import { HlmCheckboxCheckIconComponent, HlmCheckboxComponent } from '@spartan-ng/ui-checkbox-helm';
 import { HlmIconComponent, provideIcons } from '@spartan-ng/ui-icon-helm';
-import { HlmInputDirective } from '~/components/ui-input-helm/src';
+import { HlmInputDirective, HlmInputModule } from '~/components/ui-input-helm/src';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
@@ -28,6 +28,13 @@ import { from, debounceTime, map, Observable } from 'rxjs';
 import { ComprasService } from './compras.service';
 import { Compra } from './interface/compras';
 import { CommonModule } from '@angular/common';
+import { Proveedor } from './interface/proveedor';
+import { ProveedoresService } from '~/app/proveedores/proveedores.service';
+import { HlmAccordionDirective, HlmAccordionModule } from '~/components/ui-accordion-helm/src';
+import { BrnAccordionModule } from '@spartan-ng/ui-accordion-brain';
+import { ProductoService } from '../productos/service/producto.service';
+import { MateriasPrimasService } from '../materias-primas/service/materias-primas.service';
+import { MateriaPrima } from '../materias-primas/interface/materias-primas';
 
 @Component({
   selector: 'app-compras',
@@ -55,6 +62,10 @@ import { CommonModule } from '@angular/common';
     BrnSelectModule,
     FormsModule,
     CommonModule,
+    HlmInputDirective,
+    HlmAccordionDirective,
+    HlmAccordionModule,
+    BrnAccordionModule
   ],
   templateUrl: './compras.component.html',
   styleUrl: './compras.component.css',
@@ -66,18 +77,24 @@ export class ComprasComponent {
   compraService = inject(ComprasService);
   compras$: Observable<Compra[]>;
   compra: Compra = {};
+  proveedorService = inject(ProveedoresService);
+  proveedores$: Observable<Proveedor[]>;
+  insumos = inject(MateriasPrimasService);
+  insumos$: Observable<MateriaPrima[]>;
 
   constructor() {
     this.compras$ = this.compraService.getCompras();
+    this.proveedores$ = this.proveedorService.getProveedores();
+    this.insumos$ = this.insumos.getMateriaPrima();
 
     this.compras$.subscribe((compras) => {
       compras.forEach(element => {
-        console.log('Element:', element);
+        // console.log('Element:', element);
 
-        if (element.detailPurchases && element.detailPurchases.length > 0) {
-          console.log('Detail Purchases:', element.detailPurchases);
-          element.detailPurchases.forEach(detail => {
-            console.log('Detail Purchase:', detail);
+        if (element.details && element.details.length > 0) {
+          // console.log('Detail Purchases:', element.details);
+          element.details.forEach(detail => {
+            // console.log('Detail Purchase:', detail);
           });
         }
       });
@@ -92,6 +109,67 @@ export class ComprasComponent {
   protected readonly _brnColumnManager = useBrnColumnManager({
     proveedor: { visible: true, label: 'Proveedor' },
     user: { visible: true, label: 'Usuario' },
-    status: { visible: true, label: 'Estatus' },
+    status: { visible: true, label: 'Status' },
   });
+
+  selectedProveedor: Proveedor | null = null;
+  cantidad: number = 0;
+  preciounitario: number = 0;
+  selectedPresentacion: string = '';
+  selectedInsumo: MateriaPrima | null = null;
+
+  get unitType() {
+    return this.selectedPresentacion.slice(-2);
+  }
+
+  addPurchase() {
+    if (!this.selectedProveedor || !this.cantidad || !this.preciounitario || !this.selectedPresentacion || !this.selectedInsumo) {
+      console.log('Please fill in all required fields');
+      return;
+    }
+
+    const newPurchase: Compra = {
+      idProveedor: this.selectedProveedor.id,
+      idUser: 1, // Hardcoded for now
+      details: [
+        {
+          quantity: this.cantidad,
+          priceSingle: this.preciounitario,
+          presentation: this.selectedPresentacion,
+          idProduct: this.selectedInsumo.id,
+          unitType: this.unitType.toString(),
+          status: "Pendiente"
+        }
+      ],
+      status: "Pendiente"
+    };
+
+    this.compraService.createCompra(newPurchase).subscribe(
+      () => {
+        console.log('Compra agregada');
+
+        // Reset the form fields
+        this.selectedProveedor = null;
+        this.cantidad = 0;
+        this.preciounitario = 0;
+        this.selectedPresentacion = '';
+        this.selectedInsumo = null;
+      },
+      (error) => {
+        console.error('Error al realizar la compra:', error);
+      }
+    );
+  }
+
+  getCompraById(id: number) {
+    this.compraService.getCompraById(id).subscribe(
+      (compra) => {
+        console.log('Compra encontrada:', compra);
+        // Do something with the compra object
+      },
+      (error) => {
+        console.error('Error al consultar la compra:', error);
+      }
+    );
+  }
 }

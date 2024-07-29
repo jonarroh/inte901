@@ -130,6 +130,10 @@ namespace Server.Controllers
                     CreatedAt = DateTime.Now,
                     Status = "Pendiente"
                 };
+                Console.WriteLine(JsonConvert.SerializeObject(compra));
+
+                await _context.Purchases.AddAsync(compra);
+                await _context.SaveChangesAsync();
 
                 foreach (var item in compradto.Details)
                 {
@@ -140,20 +144,19 @@ namespace Server.Controllers
                         Quantity = item.Quantity,
                         PriceSingle = item.PriceSingle,
                         Presentation = item.Presentation,
-                        Expiration = item.Expiration,
+                        Expiration = DateTime.Now,
                         UnitType = item.UnitType,
                         CreatedAt = DateTime.Now,
                         Status = "Pendiente"
                     };
 
-                    compra.DetailPurchases?.Add(detail);
-
                     await _context.DetailPurchases.AddAsync(detail);
+                    await _context.SaveChangesAsync();
+                    Console.WriteLine(JsonConvert.SerializeObject(detail));
                 }
 
-                await _context.Purchases.AddAsync(compra);
 
-                return Ok();
+                return Ok(200);
             }
             catch (Exception ex)
             {
