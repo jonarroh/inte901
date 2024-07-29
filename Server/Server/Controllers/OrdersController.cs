@@ -167,6 +167,8 @@ namespace Server.Controllers
                             var direccion = new Direcciones
                             {
                                 Calle = ordertdo.Direcciones.Calle,
+                                NumeroExterior = ordertdo.Direcciones.NumeroExterior,
+                                Estatus = "Activo",
                                 Colonia = ordertdo.Direcciones.Colonia,
                                 Ciudad = ordertdo.Direcciones.Ciudad,
                                 Estado = ordertdo.Direcciones.Estado,
@@ -222,6 +224,8 @@ namespace Server.Controllers
 
                     var content = new FormUrlEncodedContent(data);
 
+                    Console.WriteLine($"Se genero el QR, {data["id"]}, {data["ticket"]}");
+
                     HttpResponseMessage response = await client.PostAsync("http://localhost:5000/generate_qr_order", content);
 
                     if (response.IsSuccessStatusCode)
@@ -237,12 +241,13 @@ namespace Server.Controllers
                     }
                 }
 
-                return Ok();
+                return Ok(200);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
+                // return NotFound(ex.Message);
             }
         }
 
