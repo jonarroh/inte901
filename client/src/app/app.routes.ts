@@ -25,6 +25,7 @@ import { ProductosComponent } from './admin/productos/productos.component';
 import { ReservesComponent } from './reserves/reserves.component';
 import { MateriasPrimasComponent } from './admin/materias-primas/materias-primas.component';
 import { IngredientesComponent } from './admin/ingredientes/ingredientes.component';
+import { ProveedoresComponent } from './admin/proveedores/proveedores.component';
 
 
 
@@ -74,6 +75,10 @@ export const routes: Routes = [
       {
         path: 'ingredientes',
         component: IngredientesComponent
+      },
+      {
+        path: 'proveedores',
+        component: ProveedoresComponent
       }
     ]
   },
