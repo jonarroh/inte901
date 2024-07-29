@@ -7,9 +7,11 @@ using Castle.Components.DictionaryAdapter.Xml;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using Server;
+using Server.Hubs;
 using Server.lib;
 using Server.Models;
 using Server.Models.DTO;
@@ -24,12 +26,32 @@ namespace Server.Controllers
 
         private readonly CreditCardService _creditCardService;
 
-        public OrdersController(Context context, CreditCardService creditService)
+        private IHubContext<OrderHub> _hubContext;
+        public OrdersController(Context context, CreditCardService creditService, IHubContext<OrderHub> hubContext)
         {
             _context = context;
             _creditCardService = creditService;
+            _hubContext = hubContext;
         }
 
+        [HttpPut]
+        [Route("updateStatus/{id}")]
+        public async Task<IActionResult> UpdateOrderStatus(int id, [FromBody] string newStatus)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound("Order not found");
+            }
+
+            order.Status = newStatus;
+            await _context.SaveChangesAsync();
+
+            var message = $"{order.Id}:{newStatus}";
+            await _hubContext.Clients.All.SendAsync("ReceiveOrderUpdate", message);
+
+            return Ok(order);
+        }
 
         [HttpGet]
         //[Authorize]
@@ -241,7 +263,7 @@ namespace Server.Controllers
                     }
                 }
 
-                return Ok(200);
+                return Ok(orden);
             }
             catch (Exception ex)
             {

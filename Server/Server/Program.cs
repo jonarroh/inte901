@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Server;
+using Server.Hubs;
 using Server.lib;
 using System.Text;
 
@@ -86,14 +87,16 @@ builder.Services.AddControllers();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        builder => builder.AllowAnyOrigin()
+    options.AddPolicy("AllowSpecificOrigins",
+        builder => builder.WithOrigins("http://localhost:5000", "http://localhost:4200") // Lista de orígenes permitidos
                           .AllowAnyHeader()
-                          .AllowAnyMethod());
+                          .AllowAnyMethod()
+                          .AllowCredentials()); // Permite el uso de credenciales
 });
 
-// Agregar soporte para WebSockets
-builder.Services.AddSingleton<WebSocketConnectionManager>();
+
+// Agregar soporte para SignalR
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -114,37 +117,14 @@ if (app.Environment.IsDevelopment())
 app.UseRouting();
 
 // Habilitar CORS antes de la autenticación y autorización
-app.UseCors("AllowAll");
+app.UseCors("AllowSpecificOrigins");
 
 // Middleware de autenticación y autorización
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Agregar el middleware de WebSockets
-app.UseWebSockets();
-app.Use(async (context, next) =>
-{
-    if (context.Request.Path == "/ws")
-    {
-        if (context.WebSockets.IsWebSocketRequest)
-        {
-            var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-            var socketFinishedTcs = new TaskCompletionSource<object>();
-
-            var connectionManager = app.Configuration.Get<WebSocketConnectionManager>();
-            await connectionManager.HandleWebSocketAsync(webSocket, socketFinishedTcs);
-            await socketFinishedTcs.Task;
-        }
-        else
-        {
-            context.Response.StatusCode = 400;
-        }
-    }
-    else
-    {
-        await next();
-    }
-});
+// Agregar el middleware de SignalR
+app.MapHub<OrderHub>("/orderHub");
 
 // Middleware de puntos finales
 app.MapControllers();
