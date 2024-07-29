@@ -45,7 +45,7 @@ export class DescriptionPlaceComponent implements OnInit {
   }
 
   verReserva(id: number): void {
-    this.router.navigate(['/reserve', id]);
+    this.router.navigate(['/reserves', id]);
   }
   
 
