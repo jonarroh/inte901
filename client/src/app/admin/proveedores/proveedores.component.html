@@ -1,0 +1,119 @@
+<div class="flex-1 flex justify-center" style="width: calc(100vw - 18rem);">
+    <h1 class="text-5xl font-bold pt-5 mt-5 text-secondary">Proveedores</h1>
+  </div>
+  
+  <div class="flex justify-end my-5 me-5 pr-5">
+    <!-- Botón para agregar proveedor -->
+    <hlm-dialog>
+      <button id="add-proveedor-trigger" brnDialogTrigger hlmBtn (click)="onAdd()" class="bg-secondary text-white">Agregar proveedor</button>
+      <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+        <hlm-dialog-header>
+          <h3 hlmDialogTitle>Agregar proveedor</h3>
+          <p hlmDialogDescription>Ingresa los detalles del nuevo proveedor y selecciona las materias primas que surte. Haz clic en guardar cuando termines.</p>
+        </hlm-dialog-header>
+        <form (ngSubmit)="onSubmitAdd(proveedorFormAdd)" #proveedorFormAdd="ngForm">
+          <div class="py-4 grid gap-4">
+            <!-- Campos del formulario -->
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="nombreEmpresa-add" class="text-right">Nombre Empresa</label>
+              <input hlmInput id="nombreEmpresa-add" name="nombreEmpresa" [(ngModel)]="proveedor.nombreEmpresa" placeholder="Nombre de la empresa" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="direccionEmpresa-add" class="text-right">Dirección Empresa</label>
+              <input hlmInput id="direccionEmpresa-add" name="direccionEmpresa" [(ngModel)]="proveedor.direccionEmpresa" placeholder="Dirección de la empresa" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="telefonoEmpresa-add" class="text-right">Teléfono Empresa</label>
+              <input hlmInput id="telefonoEmpresa-add" name="telefonoEmpresa" [(ngModel)]="proveedor.telefonoEmpresa" placeholder="Teléfono de la empresa" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="nombreEncargado-add" class="text-right">Nombre Encargado</label>
+              <input hlmInput id="nombreEncargado-add" name="nombreEncargado" [(ngModel)]="proveedor.nombreEncargado" placeholder="Nombre del encargado" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="materiaPrima-add" class="text-right">Materia Prima</label>
+              <select hlmInput id="materiaPrima-add" name="materiaPrima" [(ngModel)]="selectedMateriasPrimas" class="col-span-3 h-auto max-h-48 overflow-y-auto" multiple required>
+                  <option *ngFor="let materiaPrima of (materiasPrimas$ | async)" [value]="materiaPrima.id">{{ materiaPrima.material }}</option>
+              </select>
+          </div>
+          
+          </div>
+          <hlm-dialog-footer>
+            <button hlmBtn type="submit">Guardar</button>
+          </hlm-dialog-footer>
+        </form>
+      </hlm-dialog-content>
+    </hlm-dialog>
+  
+    <!-- Botón para editar proveedor (se muestra al hacer clic en "Editar" en la lista de proveedores) -->
+    <hlm-dialog>
+      <button id="edit-proveedor-trigger" brnDialogTrigger hlmBtn class="hidden">Editar proveedor</button>
+      <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+        <hlm-dialog-header>
+          <h3 hlmDialogTitle>Editar proveedor</h3>
+          <p hlmDialogDescription>Actualiza los detalles del proveedor y selecciona las materias primas que surte. Haz clic en actualizar cuando termines.</p>
+        </hlm-dialog-header>
+        <form (ngSubmit)="onSubmitEdit(proveedorFormEdit)" #proveedorFormEdit="ngForm">
+          <div class="py-4 grid gap-4">
+            <!-- Campos del formulario -->
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="nombreEmpresa-edit" class="text-right">Nombre Empresa</label>
+              <input hlmInput id="nombreEmpresa-edit" name="nombreEmpresa" [(ngModel)]="proveedor.nombreEmpresa" placeholder="Nombre de la empresa" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="direccionEmpresa-edit" class="text-right">Dirección Empresa</label>
+              <input hlmInput id="direccionEmpresa-edit" name="direccionEmpresa" [(ngModel)]="proveedor.direccionEmpresa" placeholder="Dirección de la empresa" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="telefonoEmpresa-edit" class="text-right">Teléfono Empresa</label>
+              <input hlmInput id="telefonoEmpresa-edit" name="telefonoEmpresa" [(ngModel)]="proveedor.telefonoEmpresa" placeholder="Teléfono de la empresa" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="nombreEncargado-edit" class="text-right">Nombre Encargado</label>
+              <input hlmInput id="nombreEncargado-edit" name="nombreEncargado" [(ngModel)]="proveedor.nombreEncargado" placeholder="Nombre del encargado" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="materiaPrima-edit" class="text-right">Materia Prima</label>
+              <select hlmInput id="materiaPrima-edit" name="materiaPrima" [(ngModel)]="selectedMateriasPrimas" class="col-span-3 h-auto max-h-48 overflow-y-auto" multiple required>
+                  <option *ngFor="let materiaPrima of (materiasPrimas$ | async)" [value]="materiaPrima.id">{{ materiaPrima.material }}</option>
+              </select>
+          </div>          
+          </div>
+          <hlm-dialog-footer>
+            <button hlmBtn type="submit">Actualizar</button>
+          </hlm-dialog-footer>
+        </form>
+      </hlm-dialog-content>
+    </hlm-dialog>
+  </div>
+  
+  <div class="overflow-x-auto p-5">
+    <table class="table-auto w-full text-center">
+      <thead>
+        <tr>
+          <th class="px-4 py-2">ID</th>
+          <th class="px-4 py-2">Nombre Empresa</th>
+          <th class="px-4 py-2">Dirección Empresa</th>
+          <th class="px-4 py-2">Teléfono Empresa</th>
+          <th class="px-4 py-2">Nombre Encargado</th>
+          <th class="px-4 py-2">Materias Primas</th>
+          <th class="px-4 py-2">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let proveedor of (proveedores$ | async); trackBy: trackByProveedorId">
+          <td class="border px-4 py-2">{{ proveedor.id }}</td>
+          <td class="border px-4 py-2">{{ proveedor.nombreEmpresa }}</td>
+          <td class="border px-4 py-2">{{ proveedor.direccionEmpresa }}</td>
+          <td class="border px-4 py-2">{{ proveedor.telefonoEmpresa }}</td>
+          <td class="border px-4 py-2">{{ proveedor.nombreEncargado }}</td>
+          <td class="border px-4 py-2">{{ proveedor.materiasPrimas }}</td>
+          <td class="border px-4 py-2">
+            <button (click)="onEdit(proveedor)" class="bg-white text-secondary px-4 py-2 rounded border border-secondary mr-4">Editar</button>
+            <button (click)="onDelete(proveedor.id!)" class="bg-secondary text-white px-4 py-2 rounded">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
