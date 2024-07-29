@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\esbre\\inte901\\Server\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\esbre\\inte901\\Server\\Server\\Migrations\\20240726231906_othermigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Server\\Migrations\\20240726231906_othermigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\esbre\\inte901\\server\\server\\controllers\\reservescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\controllers\\reservescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\esbre\\inte901\\Server\\Server\\Migrations\\20240726231906_othermigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Server\\Migrations\\20240726231906_othermigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\esbre\\inte901\\server\\server\\context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -176,7 +176,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 9,
           "Children": [
             {
               "$type": "Bookmark",
@@ -204,13 +204,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "20240726231906_othermigration.cs",
               "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Migrations\\20240726231906_othermigration.cs",
               "RelativeDocumentMoniker": "Server\\Migrations\\20240726231906_othermigration.cs",
               "ToolTip": "C:\\Users\\esbre\\inte901\\Server\\Server\\Migrations\\20240726231906_othermigration.cs",
               "RelativeToolTip": "Server\\Migrations\\20240726231906_othermigration.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-26T23:19:06.617Z",
               "EditorCaption": ""
@@ -243,13 +243,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "ReservesController.cs",
               "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\ReservesController.cs",
               "RelativeDocumentMoniker": "Server\\Controllers\\ReservesController.cs",
               "ToolTip": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\ReservesController.cs",
               "RelativeToolTip": "Server\\Controllers\\ReservesController.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAAABAAAAAyAAAA",
+              "ViewState": "AQIAAFoAAAAAAAAAAAAuwGoAAAAtAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-16T14:56:10.669Z",
               "EditorCaption": ""

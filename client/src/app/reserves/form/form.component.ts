@@ -4,8 +4,7 @@ import { format, getDaysInMonth, getDay, startOfMonth, addDays, addMonths, subMo
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { es } from 'date-fns/locale';
-import { ActivatedRoute } from '@angular/router';
-import { Reserva, DetailReserva} from '~/lib/types';
+import { Reserva } from '~/lib/types';
 import { NavbarComponent } from '~/app/home/navbar/navbar.component';
 
 @Component({
@@ -16,51 +15,39 @@ import { NavbarComponent } from '~/app/home/navbar/navbar.component';
   styleUrls: ['./form.component.css']
 })
 export class FormComponent implements OnInit {
+  idEspacio: number = 1; // Asegúrate de establecer este valor según sea necesario
   month: string;
   year: number;
   daysInMonth: Date[] = [];
   showModal: boolean = false;
+  eventName: string = '';
   eventStartTime: string = '';
   eventEndTime: string = '';
   eventDate: string = '';
   selectedDate: Date | null = null;
-  events: { [key: string]: { name: string; startTime: string; endTime: string }[] } = {};
+  reservations: Reserva[] = [];
 
-  constructor(private eventService: ReserveServiceService, private route: ActivatedRoute) {
+  constructor(private eventService: ReserveServiceService) {
     const today = new Date();
     this.month = format(today, 'LLLL', { locale: es });
     this.year = today.getFullYear();
+    this.generateCalendar();
   }
 
   ngOnInit() {
-    this.generateCalendar();
     this.loadReservations();
   }
 
   loadReservations() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (id) {
-      this.eventService.getReservesBySpaceId(id).subscribe((data: Reserva[]) => {
-        data.forEach(reservation => {
-          const date = new Date(reservation.detailReserva.fecha);
-          const dateString = this.formatDate(date);
-          if (!this.events[dateString]) {
-            this.events[dateString] = [];
-          }
-          this.events[dateString].push({
-            name: 'Reserva',
-            startTime: reservation.detailReserva.horaInicio,
-            endTime: reservation.detailReserva.horaFin
-          });
-        });
+    this.eventService.getReservationsBySpaceId(this.idEspacio).subscribe(
+      (data: Reserva[]) => {
+        this.reservations = data;
         this.generateCalendar();
-      });
-    }
-  }
-
-  getEvents(date: Date) {
-    const dateString = this.formatDate(date);
-    return this.events[dateString] || [];
+      },
+      (error) => {
+        console.error('Error fetching reservations', error);
+      }
+    );
   }
 
   generateCalendar() {
@@ -92,19 +79,22 @@ export class FormComponent implements OnInit {
   }
 
   prevMonth() {
-    const date = new Date(this.year, this.getMonthNumber(this.month), 1);
-    const newDate = subMonths(date, 1);
-    this.month = this.getMonthName(newDate.getMonth());
-    this.year = newDate.getFullYear();
+    const date = subMonths(new Date(this.year, this.getMonthNumber(this.month), 1), 1);
+    this.month = this.getMonthName(date.getMonth());
+    this.year = date.getFullYear();
     this.generateCalendar();
   }
 
   nextMonth() {
-    const date = new Date(this.year, this.getMonthNumber(this.month), 1);
-    const newDate = addMonths(date, 1);
-    this.month = this.getMonthName(newDate.getMonth());
-    this.year = newDate.getFullYear();
+    const date = addMonths(new Date(this.year, this.getMonthNumber(this.month), 1), 1);
+    this.month = this.getMonthName(date.getMonth());
+    this.year = date.getFullYear();
     this.generateCalendar();
+  }
+
+  getEvents(date: Date): Reserva[] {
+    const dateString = this.formatDate(date);
+    return this.reservations.filter((event) => this.formatDate(new Date(event.startTime)) === dateString);
   }
 
   formatDate(date: Date): string {
@@ -121,22 +111,39 @@ export class FormComponent implements OnInit {
     }
     this.showModal = true;
   }
-  
+
   closeModal() {
     this.showModal = false;
+    this.eventName = '';
     this.eventStartTime = '';
     this.eventEndTime = '';
     this.eventDate = '';
     this.selectedDate = null;
   }
-  
+
   saveEvent() {
-    if (this.eventDate && this.eventStartTime && this.eventEndTime) {
-      // Crear el objeto Reserva
-    
-      
+    const reservaDTO = {
+      idUsuario: 1,
+      idCliente: 3,
+      estatus: 'Activo',
+      detailReserva: {
+        idDetailReser: 0, // Asumido, o eliminar si es autogenerado
+        fecha: this.eventDate,
+        horaInicio: this.eventStartTime,
+        horaFin: this.eventEndTime,
+        idEspacio: this.idEspacio
+      }
+    };
   
-     
-    }
+    this.eventService.addEvent(reservaDTO).subscribe(
+      () => {
+        this.closeModal();
+        // Actualizar el calendario o realizar alguna otra acción
+      },
+      (error) => {
+        console.error('Error al agregar la reserva:', error);
+      }
+    );
   }
+    
 }
