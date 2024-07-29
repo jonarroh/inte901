@@ -26,5 +26,6 @@ namespace Server.Models
 
         public virtual Espacio Espacio { get; set; }
 
+
     }
 }

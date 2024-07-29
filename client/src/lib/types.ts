@@ -91,6 +91,8 @@ export interface Address {
   pais: string;
   codigoPostal: string;
   userId: number;
+  numeroExterior: string;
+  estatus:string;
 }
 
 export interface CreditCard {
@@ -99,6 +101,7 @@ export interface CreditCard {
   expiryDate: string;
   cardHolderName: string;
   userId: number;
+  estatus: string;
 }
 
 export interface User {
@@ -109,6 +112,7 @@ export interface User {
   password: string;
   role: string;
   token: string;
+  estatus: string;
   direcciones: Address[];
   creditCards: CreditCard[];
 }
@@ -163,4 +167,23 @@ export interface CreditCardWithCvv{
   cardHolderName: string;
   userId: number;
   id: number;
+  estatus: string;
+}
+export interface DetailReserva {
+  idDetailReser: number;
+  fecha: string;  // Considera cambiar a Date si manejas fechas como objetos
+  horaInicio: string;
+  horaFin: string;
+  idEspacio: number;
+  espacio: Espacio;  // Relación con Espacio
+}
+
+export interface Reserva {
+  idReserva: number;
+  idDetailReser: number;
+  idUsuario: number;
+  idCliente: number;
+  estatus: string;
+  detailReserva: DetailReserva;  // Relación con DetailReserva
+  usuario: User;  // Relación con User
 }
