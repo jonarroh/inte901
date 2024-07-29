@@ -588,11 +588,7 @@ namespace Server.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-					b.Property<string>("Estatus")
-						.IsRequired()
-						.HasColumnType("nvarchar(max)");
-
-					b.HasKey("Id");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });

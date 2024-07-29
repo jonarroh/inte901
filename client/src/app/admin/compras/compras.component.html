@@ -1,120 +1,48 @@
 <div class="container mx-auto w-full p-4">
   <div class="justify-end mb-4">
-    <hlm-dialog class="w-[500px]">
-      <button id="edit-profile" variant="success" brnDialogTrigger
-        hlmBtn>Realizar compra</button>
-      <hlm-dialog-content class="min-w-[800px] w-full bg-success"
-        *brnDialogContent="let ctx">
+    <hlm-dialog>
+      <button id="edit-profile" variant="success" brnDialogTrigger hlmBtn>Realizar compra</button>
+      <hlm-dialog-content class="md:max-w-[425px] w-full" *brnDialogContent="let ctx">
         <hlm-dialog-header>
           <h3 class="text-white" hlmDialogTitle>Compra de materia prima</h3>
         </hlm-dialog-header>
-        <form>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <label class="flex-1" for="insumos">Proveedor*</label>
-                </div>
-                <div>
-                  <brn-select class="inline-block bg-success"
-                    placeholder="Seleccionar">
-                    <hlm-select-trigger class="w-fit bg-success">
-                      <hlm-select-value />
-                    </hlm-select-trigger>
-                    <hlm-select-content class="bg-success">
-                      <hlm-option
-                        *ngFor="let proveedor of (proveedores$ | async)"
-                        value="proveedor.id">
-                        {{ proveedor.nombreEmpresa }}
-                      </hlm-option>
-                    </hlm-select-content>
-                  </brn-select>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <label class="flex-1" for="cantidad">Cantidad*</label>
-                </div>
-                <div>
-                  <input required type="number" hlmInput class="flex-1">
-                </div>
-              </div>
-            </div>
+        <div class="py-4 grid gap-4">
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="name" class="text-right text-white">Proveedor</label>
+
           </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <label class="flex-1" for="precio">Precio Unitario*</label>
-                </div>
-                <div>
-                  <input type="number" hlmInput class="w-fit">
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <label class="flex-1"
-                    for="presentacion">Presentaci&oacute;n*</label>
-                </div>
-                <div>
-                  <brn-select class="inline-block w-fit bg-success"
-                    placeholder="Seleccionar">
-                    <hlm-select-trigger class="flex-1 bg-success">
-                      <hlm-select-value />
-                    </hlm-select-trigger>
-                    <hlm-select-content class="bg-success">
-                      <hlm-option value="1">Costal 50Kg</hlm-option>
-                      <hlm-option value="2">Caja 350Gr</hlm-option>
-                      <hlm-option value="3">Carton 1Lt</hlm-option>
-                      <hlm-option value="4">Botella 1Lt</hlm-option>
-                      <hlm-option value="5">Docena 70Gr</hlm-option>
-                      <hlm-option value="6">Bolsa 1Kg</hlm-option>
-                      <hlm-option value="7">Galon 20Lt</hlm-option>
-                      <hlm-option value="8">Pieza</hlm-option>
-                      <hlm-option value="9">Empacado 400Gr</hlm-option>
-                      <hlm-option value="10">Empacado 1Kg</hlm-option>
-                      <hlm-option value="11">Empacado 200Gr</hlm-option>
-                      <hlm-option value="12">Caja 1Kg</hlm-option>
-                      <hlm-option value="13">Frasco 400Gr</hlm-option>
-                      <hlm-option value="14">Barra 100Gr</hlm-option>
-                      <hlm-option value="15">Costal 25Kg</hlm-option>
-                      <hlm-option value="16">Galon 10Lt</hlm-option>
-                      <hlm-option value="17">Botella 500ml</hlm-option>
-                      <hlm-option value="18">Caja 2Kg</hlm-option>
-                      <hlm-option value="19">Lata 250Gr</hlm-option>
-                      <hlm-option value="20">Bolsa 500Gr</hlm-option>
-                      <hlm-option value="22">Carton 500ml</hlm-option>
-                      <hlm-option value="23">Sobre 50Gr</hlm-option>
-                      <hlm-option value="24">Lata 1Kg</hlm-option>
-                      <hlm-option value="25">Botella 750ml</hlm-option>
-                      <hlm-option value="26">Caja 5Kg</hlm-option>
-                    </hlm-select-content>
-                  </brn-select>
-                </div>
-              </div>
-            </div>
+        </div>
+        <div class="py-4 grid gap-4">
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="name" class="text-right text-white">Insumo</label>
+
           </div>
-        </form>
-        <br>
-        <div hlmAccordion>
-          <div hlmAccordionItem>
-            <button hlmAccordionTrigger>
-              Lista de compras
-              <hlm-icon hlmAccIcon></hlm-icon>
-            </button>
-            <brn-accordion-content hlm>
-              no
-            </brn-accordion-content>
+        </div>
+        <div class="py-4 grid gap-4">
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="name" class="text-right text-white">Presentac&oacute;n</label>
+
+          </div>
+        </div>
+        <div class="py-4 grid gap-4">
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="name" class="text-right text-white">Cantidad</label>
+
+          </div>
+        </div>
+        <div class="py-4 grid gap-4">
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="name" class="text-right text-white">Costo unitario</label>
+
+          </div>
+        </div>
+        <div class="py-4 grid gap-4">
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="name" class="text-right text-white">Caducidad</label>
+
           </div>
         </div>
         <hlm-dialog-footer>
-          <div class="text-start">
-            Los campos marcados con * son obligatorios
-          </div>
           <button hlmBtn type="submit" variant="success">Solicitar</button>
         </hlm-dialog-footer>
       </hlm-dialog-content>
@@ -127,7 +55,8 @@
         class="w-full md:w-80"
         placeholder="Filter emails..."
         [ngModel]="_proveedorFilter()"
-        (ngModelChange)="_rawFilterInput.set($event)" />
+        (ngModelChange)="_rawFilterInput.set($event)"
+      />
       <button hlmBtn variant="outline" align="end" [brnMenuTriggerFor]="menu">
         Columnas
         <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
@@ -135,35 +64,35 @@
       <ng-template #menu>
         <hlm-menu class="w-32">
           @for (column of _brnColumnManager.allColumns; track column.name) {
-          <button
-            hlmMenuItemCheckbox
-            [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
-            [checked]="_brnColumnManager.isColumnVisible(column.name)"
-            (triggered)="_brnColumnManager.toggleVisibility(column.name)">
-            <hlm-menu-item-check />
-            <span>{{ column.label }}</span>
-          </button>
+            <button
+              hlmMenuItemCheckbox
+              [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
+              [checked]="_brnColumnManager.isColumnVisible(column.name)"
+              (triggered)="_brnColumnManager.toggleVisibility(column.name)"
+            >
+              <hlm-menu-item-check />
+              <span>{{ column.label }}</span>
+            </button>
           }
         </hlm-menu>
       </ng-template>
     </div>
 
     <!-- Datatable -->
-    <brn-table hlm stickyHeader
-      class="border-border mt-4 block overflow-auto rounded-md border w-full min-w-full">
+    <!-- <brn-table hlm stickyHeader="" class="border-border mt-4 block overflow-auto rounded-md border w-full min-w-full">
       <brn-column-def>
 
       </brn-column-def>
-    </brn-table>
+    </brn-table> -->
 
     <!-- Tabla basica funciona xd -->
-    <!-- <hlm-table class="w-full min-w-full">
+    <hlm-table class="w-full min-w-full">
       <hlm-trow>
         <hlm-th class="flex-1">Fecha Compra</hlm-th>
         <hlm-th class="flex-1">Insumos</hlm-th>
         <hlm-th class="flex-1">Proveedor</hlm-th>
         <hlm-th class="flex-1">Empleado</hlm-th>
-        <hlm-th class="flex-1">Status</hlm-th>
+        <hlm-th class="flex-1">Estatus</hlm-th>
         <hlm-th class="flex-1">Acciones</hlm-th>
       </hlm-trow>
       <hlm-trow *ngIf="(compras$ | async)?.length === 0">
@@ -181,7 +110,7 @@
           </button>
         </hlm-td>
       </hlm-trow>
-    </hlm-table> -->
+    </hlm-table>
   </div>
 
 </div>
