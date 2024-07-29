@@ -6,8 +6,8 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogDescriptionDirective, HlmDialogFooterComponent, HlmDialogHeaderComponent, HlmDialogTitleDirective } from '~/components/ui-dialog-helm/src';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
-import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
+import { HlmButtonDirective } from '~/components/ui-button-helm/src';
+import { HlmInputDirective } from '~/components/ui-input-helm/src';
 
 @Component({
   selector: 'app-materias-primas',

@@ -12,6 +12,7 @@ const defaultUser: User = {
   password: '',
   role: '',
   token: '',
+  estatus: 'Activo'
 };
 
 @Injectable({
