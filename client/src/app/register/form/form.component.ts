@@ -5,8 +5,9 @@ import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { SignalInputDirective, V, createFormField, createFormGroup } from 'ng-signal-forms';
 import { RegisterService } from '../register.service';
 import { Router } from '@angular/router';
-import { User } from '../interfaces/type';
 import { LucideAngularModule } from 'lucide-angular';
+import { es } from 'date-fns/locale';
+import { User } from '~/lib/types';
 
 
 @Component({
@@ -99,13 +100,15 @@ export class FormComponent {
     const user : User = {
       creditCards:[],
       direcciones: [],
+      estatus: "Activo",
       email: this.formModel.controls.email.value(),
       id: 0,
       lastName: this.formModel.controls.lastname.value(),
       name: this.formModel.controls.name.value(),
       password: this.formModel.controls.password.value(),
       role: "Cliente",
-      token: ""
+      token: "",
+
     }
 
     console.log(user);

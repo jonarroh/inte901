@@ -63,18 +63,18 @@ namespace Server.Controllers
 
         [HttpPost]
         public async Task<ActionResult<Reserva>> PostReserva([FromBody] ReservaDTO reservaDTO)
-        {
+        { 
+
             if (reservaDTO == null)
             {
                 return BadRequest("ReservaDTO is null.");
             }
 
             // Verificar existencia de usuario y cliente
-            var usuarioExists = await _context.Users.FindAsync(reservaDTO.idUsuario);
             var clienteExists = await _context.Users.FindAsync(reservaDTO.idCliente);
             var espacioExists = await _context.Espacios.FindAsync(reservaDTO.detailReserva.idEspacio);
 
-            if (usuarioExists == null || clienteExists == null)
+            if (clienteExists == null)
             {
                 return BadRequest("User or client does not exist.");
             }
@@ -87,7 +87,6 @@ namespace Server.Controllers
             // Crear el detalle de la reserva
             var detailReserva = new DetailReserva
             {
-                idDetailReser = reservaDTO.detailReserva.idDetailReser,
                 fecha = reservaDTO.detailReserva.fecha,
                 horaInicio = reservaDTO.detailReserva.horaInicio,
                 horaFin = reservaDTO.detailReserva.horaFin,
@@ -102,10 +101,10 @@ namespace Server.Controllers
             var reserva = new Reserva
             {
                 idDetailReser = detailReserva.idDetailReser,
-                idUsuario = reservaDTO.idUsuario,
                 idCliente = reservaDTO.idCliente,
                 estatus = reservaDTO.estatus,
-                DetailReserva = detailReserva
+                DetailReserva = detailReserva,
+                Usuario = clienteExists
             };
 
             // Añadir la reserva al contexto y guardar
@@ -114,7 +113,6 @@ namespace Server.Controllers
 
             return CreatedAtAction("GetReserva", new { id = reserva.idReserva }, reserva);
         }
-
 
 
         // PUT: api/Reserves/5
@@ -133,7 +131,6 @@ namespace Server.Controllers
             }
 
             reserva.idDetailReser = updatedReserva.idDetailReser;
-            reserva.idUsuario = updatedReserva.idUsuario;
             reserva.idCliente = updatedReserva.idCliente;
             reserva.estatus = updatedReserva.estatus;
 

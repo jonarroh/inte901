@@ -94,6 +94,7 @@ export class AddCardComponent {
       cardNumber: this.form.controls.cardNumber.value(),
       expiryDate: this.form.controls.expiryDate.value(),
       id: this.currentCard()!.id,
+      estatus: 'Activo',
       cvv: this.form.controls.cvv.value(),
       userId: localStorage.getItem('userId') as unknown as number,
     };
@@ -118,6 +119,7 @@ export class AddCardComponent {
       cardNumber: this.form.controls.cardNumber.value(),
       expiryDate: this.form.controls.expiryDate.value(),
       id: 0,
+      estatus: 'Activo',
       cvv: this.form.controls.cvv.value(),
       userId: localStorage.getItem('userId') as unknown as number,
     };
@@ -174,7 +176,6 @@ export class AddCardComponent {
   onClickEdit(card: CreditCard) {
     this.currentCard.set(card);
     this.isEdit.set(true);
-
     this.form.controls.cardHolderName.value.set(card.cardHolderName);
     this.form.controls.cardNumber.value.set(card.cardNumber);
     this.form.controls.expiryDate.value.update(value => {

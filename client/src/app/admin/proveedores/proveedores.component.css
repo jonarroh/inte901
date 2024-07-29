@@ -1,0 +1,6 @@
+/* Asegura que el select tenga suficiente altura para mostrar las opciones */
+select[multiple] {
+    height: auto;
+    max-height: 200px; /* Ajusta este valor según sea necesario */
+    overflow-y: auto;
+}

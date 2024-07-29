@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Server.lib;
-using Server;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Server;
+using Server.lib;
+using System.Text;
 
+// Crear el builder
 var builder = WebApplication.CreateBuilder(args);
 
 // Configurar la conexión a la base de datos
@@ -26,7 +27,7 @@ builder.Services.AddSingleton<TokenService>();
 builder.Services.AddHttpClient<IHttpCDNService, HttpCDNService>();
 
 // Services
-builder.Services.AddScoped<CreditCardService, CreditCardService >();
+builder.Services.AddScoped<CreditCardService, CreditCardService>();
 
 // Configurar autenticación JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -91,6 +92,9 @@ builder.Services.AddCors(options =>
                           .AllowAnyMethod());
 });
 
+// Agregar soporte para WebSockets
+builder.Services.AddSingleton<WebSocketConnectionManager>();
+
 var app = builder.Build();
 
 // Middleware de desarrollo y Swagger
@@ -98,7 +102,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI(c => {
+    app.UseSwaggerUI(c =>
+    {
         c.ConfigObject.AdditionalItems.Add("syntaxHighlight", false);
         c.DefaultModelExpandDepth(2);
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
@@ -114,6 +119,32 @@ app.UseCors("AllowAll");
 // Middleware de autenticación y autorización
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Agregar el middleware de WebSockets
+app.UseWebSockets();
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/ws")
+    {
+        if (context.WebSockets.IsWebSocketRequest)
+        {
+            var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+            var socketFinishedTcs = new TaskCompletionSource<object>();
+
+            var connectionManager = app.Configuration.Get<WebSocketConnectionManager>();
+            await connectionManager.HandleWebSocketAsync(webSocket, socketFinishedTcs);
+            await socketFinishedTcs.Task;
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+        }
+    }
+    else
+    {
+        await next();
+    }
+});
 
 // Middleware de puntos finales
 app.MapControllers();
