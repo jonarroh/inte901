@@ -54,26 +54,33 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        //[Authorize]
         [Route("allOrders")]
         public async Task<IActionResult> GetOrders()
         {
             try
             {
                 var ordenes = await _context.Orders.ToListAsync();
-                var ordenesPendientes = new List<Order>();
 
-                if (ordenes == null || ordenes.Count() == 0)
+                if (ordenes == null || !ordenes.Any())
                 {
                     return BadRequest("No hay ordenes registradas");
                 }
 
+                var ordenesPendientes = new List<Order>();
+
                 foreach (var orden in ordenes)
                 {
-                    if (orden.Status == "Pendiente")
-                    {
-                        ordenesPendientes.Add(orden);
-                    }
+                    // Obtener la fecha del detalle de la orden de forma asíncrona
+                    var dateOrder = await _context.DetailOrders
+                        .Where(d => d.IdOrder == orden.Id)
+                        .FirstOrDefaultAsync();
+
+                   
+                    // Asignar la fecha al campo correspondiente
+                    orden.OrderDate = dateOrder != null ? dateOrder.DateOrder : null;
+
+                    // Agregar la orden a la lista
+                    ordenesPendientes.Add(orden);
                 }
 
                 return Ok(ordenesPendientes);
@@ -81,10 +88,52 @@ namespace Server.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-
-                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+                return StatusCode(500, "Se produjo un error en el servidor, contacte a soporte");
             }
         }
+
+        [HttpGet]
+        [Route("ordersByUser/{userId}")]
+        public async Task<IActionResult> GetAllByIdUser(long userId)
+        {
+            try
+            {
+                // Obtén todas las órdenes del usuario específico
+                var ordenes = await _context.Orders
+                    .Where(o => o.IdUser == userId)
+                    .ToListAsync();
+
+                if (ordenes == null || !ordenes.Any())
+                {
+                    return NotFound("No hay órdenes registradas para el usuario especificado");
+                }
+
+                var ordenesPendientes = new List<Order>();
+
+                foreach (var orden in ordenes)
+                {
+                    // Obtener la fecha del detalle de la orden de forma asíncrona
+                    var dateOrder = await _context.DetailOrders
+                        .Where(d => d.IdOrder == orden.Id)
+                        .FirstOrDefaultAsync();
+
+                    // Asignar la fecha al campo correspondiente
+                    orden.OrderDate = dateOrder != null ? dateOrder.DateOrder : null;
+
+                    // Agregar la orden a la lista
+                    ordenesPendientes.Add(orden);
+                }
+
+                return Ok(ordenesPendientes);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+
 
 
         [HttpGet]
