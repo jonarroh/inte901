@@ -170,20 +170,30 @@ export interface CreditCardWithCvv{
   estatus: string;
 }
 export interface DetailReserva {
-  idDetailReser: number;
-  fecha: string;  // Considera cambiar a Date si manejas fechas como objetos
+  fecha: string; // o Date si se maneja como objeto Date
   horaInicio: string;
   horaFin: string;
-  idEspacio: number;
-  espacio: Espacio;  // Relación con Espacio
+  idEspacio: number;  // Relación con Espacio
 }
 
 export interface Reserva {
-  idReserva: number;
+  name: string;
+  startTime: string;
+  endTime: string;
+}
+
+
+export interface DetailReservaDTO {
   idDetailReser: number;
+  fecha: string; // Puedes ajustar el tipo según tus necesidades
+  horaInicio: string;
+  horaFin: string;
+  idEspacio: number;
+}
+
+export interface ReservaDTO {
   idUsuario: number;
   idCliente: number;
   estatus: string;
-  detailReserva: DetailReserva;  // Relación con DetailReserva
-  usuario: User;  // Relación con User
+  detailReserva: DetailReservaDTO;
 }
