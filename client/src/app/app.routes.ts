@@ -26,6 +26,8 @@ import { ReservesComponent } from './reserves/reserves.component';
 import { MateriasPrimasComponent } from './admin/materias-primas/materias-primas.component';
 import { IngredientesComponent } from './admin/ingredientes/ingredientes.component';
 import { ProveedoresComponent } from './admin/proveedores/proveedores.component';
+import { PedidosUserComponent } from './pedidos-user/pedidos-user.component';
+import { ProcessStateComponent } from './pedido-state/process-state/process-state.component';
 
 
 
@@ -81,6 +83,14 @@ export const routes: Routes = [
         component: ProveedoresComponent
       }
     ]
+  },
+  {
+    path: 'pedidosList',
+    component: PedidosUserComponent
+  },
+  {
+    path: 'estatus/:id',
+    component: PedidoStateComponent
   },
   {
     path: 'estatus',
