@@ -1,24 +1,19 @@
-<!-- <div class="w-2/5 rounded-lg" style=" background-color: aqua; margin-left: 80px; margin-right: 50px; margin-top: 20px; border: 2px solid rgb(71, 69, 69); border-radius: 10px;"> Este div cubre el 20% -->
-
-        
-    <div class="flex items-center justify-center w-full p-4">
-        <hlm-carousel class="w-full max-w-xs">
-          <hlm-carousel-content>
-          
-            <hlm-carousel-item>
-              <div class="p-1">
-                <section hlmCard>
-                  <p hlmCardContent class="flex items-center justify-center p-6 aspect-square">
-                    <span class="text-4xl font-semibold"></span>
-                  </p>
-                </section>
-              </div>
-            </hlm-carousel-item>
-          
-          </hlm-carousel-content>
-          <button hlm-carousel-previous></button>
-          <button hlm-carousel-next></button>
-        </hlm-carousel>
-      </div>
-  
-    <!-- </div> -->
+<div class="flex items-center justify-center w-full p-4">
+  <hlm-carousel class="w-full max-w-xs">
+    <hlm-carousel-content>
+      <ng-container *ngFor="let id of productIds">
+        <hlm-carousel-item>
+          <div class="p-1">
+            <section hlmCard>
+              <p hlmCardContent class="flex items-center justify-center p-6 aspect-square">
+                <img [src]="'http://localhost:5000/static/places/' + id + '.webp'" alt="Product Image" class="w-full h-full object-cover rounded-lg">
+              </p>
+            </section>
+          </div>
+        </hlm-carousel-item>
+      </ng-container>
+    </hlm-carousel-content>
+    <button hlm-carousel-previous></button>
+    <button hlm-carousel-next></button>
+  </hlm-carousel>
+</div>
