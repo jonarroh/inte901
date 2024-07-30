@@ -104,12 +104,12 @@ export const routes: Routes = [
     component: DescriptionPlaceComponent
   },
   {
-    path: 'reserve',
+    path: 'reserves',
     component: ReservesComponent
   },
 
   {
-    path: 'reserve/:id',
+    path: 'reserves/:id',
     component: ReservesComponent
   },
 

@@ -7,9 +7,11 @@ using Castle.Components.DictionaryAdapter.Xml;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using Server;
+using Server.Hubs;
 using Server.lib;
 using Server.Models;
 using Server.Models.DTO;
@@ -24,34 +26,61 @@ namespace Server.Controllers
 
         private readonly CreditCardService _creditCardService;
 
-        public OrdersController(Context context, CreditCardService creditService)
+        private IHubContext<OrderHub> _hubContext;
+        public OrdersController(Context context, CreditCardService creditService, IHubContext<OrderHub> hubContext)
         {
             _context = context;
             _creditCardService = creditService;
+            _hubContext = hubContext;
         }
 
+        [HttpPut]
+        [Route("updateStatus/{id}")]
+        public async Task<IActionResult> UpdateOrderStatus(int id, [FromBody] string newStatus)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound("Order not found");
+            }
+
+            order.Status = newStatus;
+            await _context.SaveChangesAsync();
+
+            var message = $"{order.Id}:{newStatus}";
+            await _hubContext.Clients.All.SendAsync("ReceiveOrderUpdate", message);
+
+            return Ok(order);
+        }
 
         [HttpGet]
-        //[Authorize]
         [Route("allOrders")]
         public async Task<IActionResult> GetOrders()
         {
             try
             {
                 var ordenes = await _context.Orders.ToListAsync();
-                var ordenesPendientes = new List<Order>();
 
-                if (ordenes == null || ordenes.Count() == 0)
+                if (ordenes == null || !ordenes.Any())
                 {
                     return BadRequest("No hay ordenes registradas");
                 }
 
+                var ordenesPendientes = new List<Order>();
+
                 foreach (var orden in ordenes)
                 {
-                    if (orden.Status == "Pendiente")
-                    {
-                        ordenesPendientes.Add(orden);
-                    }
+                    // Obtener la fecha del detalle de la orden de forma asíncrona
+                    var dateOrder = await _context.DetailOrders
+                        .Where(d => d.IdOrder == orden.Id)
+                        .FirstOrDefaultAsync();
+
+                   
+                    // Asignar la fecha al campo correspondiente
+                    orden.OrderDate = dateOrder != null ? dateOrder.DateOrder : null;
+
+                    // Agregar la orden a la lista
+                    ordenesPendientes.Add(orden);
                 }
 
                 return Ok(ordenesPendientes);
@@ -59,10 +88,52 @@ namespace Server.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-
-                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+                return StatusCode(500, "Se produjo un error en el servidor, contacte a soporte");
             }
         }
+
+        [HttpGet]
+        [Route("ordersByUser/{userId}")]
+        public async Task<IActionResult> GetAllByIdUser(long userId)
+        {
+            try
+            {
+                // Obtén todas las órdenes del usuario específico
+                var ordenes = await _context.Orders
+                    .Where(o => o.IdUser == userId)
+                    .ToListAsync();
+
+                if (ordenes == null || !ordenes.Any())
+                {
+                    return NotFound("No hay órdenes registradas para el usuario especificado");
+                }
+
+                var ordenesPendientes = new List<Order>();
+
+                foreach (var orden in ordenes)
+                {
+                    // Obtener la fecha del detalle de la orden de forma asíncrona
+                    var dateOrder = await _context.DetailOrders
+                        .Where(d => d.IdOrder == orden.Id)
+                        .FirstOrDefaultAsync();
+
+                    // Asignar la fecha al campo correspondiente
+                    orden.OrderDate = dateOrder != null ? dateOrder.DateOrder : null;
+
+                    // Agregar la orden a la lista
+                    ordenesPendientes.Add(orden);
+                }
+
+                return Ok(ordenesPendientes);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+
 
 
         [HttpGet]
@@ -241,7 +312,7 @@ namespace Server.Controllers
                     }
                 }
 
-                return Ok(200);
+                return Ok(orden);
             }
             catch (Exception ex)
             {
