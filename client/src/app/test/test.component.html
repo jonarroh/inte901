@@ -1,37 +1,7 @@
-<div class="flex items-center justify-center w-full p-4">
-  <hlm-carousel class="w-full max-w-xs">
-    <hlm-carousel-content>
-    
-      <hlm-carousel-item>
-        <div class="p-1">
-          <section hlmCard>
-            <p hlmCardContent class="flex items-center justify-center p-6 aspect-square">
-              <img src="https://via.placeholder.com/150" alt="Placeholder" class="w-full h-full object-cover" />
-            </p>
-          </section>
-        </div>
-      </hlm-carousel-item>
-      <hlm-carousel-item>
-        <div class="p-1">
-          <section hlmCard>
-            <p hlmCardContent class="flex items-center justify-center p-6 aspect-square">
-              <img src="https://via.placeholder.com/15" alt="Placeholder" class="w-full h-full object-cover" />
-            </p>
-          </section>
-        </div>
-      </hlm-carousel-item>
-      <hlm-carousel-item>
-        <div class="p-1">
-          <section hlmCard>
-            <p hlmCardContent class="flex items-center justify-center p-6 aspect-square">
-              <img src="https://via.placeholder.com/157" alt="Placeholder" class="w-full h-full object-cover" />
-            </p>
-          </section>
-        </div>
-      </hlm-carousel-item>
-    
-    </hlm-carousel-content>
-    <button hlm-carousel-previous></button>
-    <button hlm-carousel-next></button>
-  </hlm-carousel>
+<!-- src/app/components/order-status/order-status.component.html -->
+<div>
+  <h1>Order Status Updates</h1>
+  <div *ngFor="let update of updates">
+    {{ update }}
+  </div>
 </div>

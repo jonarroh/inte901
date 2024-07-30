@@ -35,37 +35,8 @@ export class CheckoutComponent {
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
-    // Dependiendo de la ruta actual se establece el paso actual
-    const currentStepPath = this.activatedRoute.snapshot.firstChild?.routeConfig?.path;
-    if (currentStepPath) {
-      this.currentStep.set(this.steps.indexOf(currentStepPath));
-    }
+    
   }
 
-  nextStep() {
-    if (!this.isLastStep()) {
-      this.currentStep.update(value => value + 1);
-      this.router.navigate([`checkout/${this.currentStepName}`]);
-      if (this.disabled()) {
-        this.disabled.set(false);
-      }
-    }
-  }
-
-  get currentStepName() {
-    return this.steps[this.currentStep()];
-  }
-
-  prevStep() {
-    if (this.currentStep() > 0) {
-      this.currentStep.update(value => value - 1);
-      this.router.navigate([`checkout/${this.currentStepName}`]);
-    } else {
-      this.disabled.set(true);
-    }
-  }
-
-  isLastStep() {
-    return this.currentStep() === this.steps.length - 1;
-  }
+  
 }

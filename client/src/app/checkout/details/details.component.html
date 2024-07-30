@@ -1,1 +1,28 @@
-<p>details works!</p>
+<section class="grid grid-cols-12 gap-4 p-4">
+  <div class="col-span-8 bg-white shadow-lg rounded-lg p-6">
+    <h1 class="text-2xl font-semibold mb-4">Detalle de productos</h1>
+    <div *ngFor="let product of products()" class="flex items-center space-x-4 mb-4">
+      <img [src]="getImageUrl(product.id)" alt="{{ product.nombre }}" class="w-16 h-16 object-cover rounded-lg shadow-md" />
+      <div>
+        <p class="text-lg font-medium">{{ product.nombre }} - {{ product.precio | currency }}</p>
+        <p class="text-sm text-gray-600">{{ product.descripcion }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-span-4 bg-white shadow-lg rounded-lg p-6">
+    <h1 class="text-2xl font-semibold mb-4">Resumen de compra</h1>
+    <div class="space-y-2">
+      <p class="flex justify-between"><span>Subtotal:</span> <span>{{ getSubtotal() | currency }}</span></p>
+      <p class="flex justify-between"><span>Envio:</span> <span>{{ isOrderToStore() ? 'Recogida en tienda' : 'Envío a domicilio' }}</span></p>
+      <p class="flex justify-between font-bold"><span>Total:</span> <span>{{ getTotal() | currency }}</span></p>
+      <p *ngIf="isPaidWithCard()" class="flex justify-between"><span>Tarjeta de crédito:</span> <span>{{ selectedCard().cardHolderName }} - **** **** **** {{ selectedCard().cardNumber.slice(-4) }}</span></p>
+      <p *ngIf="!isOrderToStore()" class="text-sm text-gray-600">
+        Dirección de envío: {{ selectedAddress().calle }}, {{ selectedAddress().colonia }}, {{ selectedAddress().ciudad }}, {{ selectedAddress().estado }}, {{ selectedAddress().pais }} - {{ selectedAddress().codigoPostal }}
+      </p>
+    </div>
+    <div>
+      <button hlmBtn class="w-full bg-blue-500 text-white rounded-lg py-2 mt-4" (click)="onOrder()">Pagar</button>
+    </div>
+  </div>
+</section>

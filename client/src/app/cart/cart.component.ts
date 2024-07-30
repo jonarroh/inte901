@@ -26,6 +26,7 @@ import {
   HlmDialogHeaderComponent,
   HlmDialogTitleDirective,
 } from '@spartan-ng/ui-dialog-helm';
+import { RouterModule } from '@angular/router';
 
 
 @Component({
@@ -51,8 +52,8 @@ import {
     HlmDialogTitleDirective,
     HlmDialogDescriptionDirective,
     BrnDialogTriggerDirective,
-    BrnDialogContentDirective
-
+    BrnDialogContentDirective,
+    RouterModule
 
   ],
   templateUrl: './cart.component.html',

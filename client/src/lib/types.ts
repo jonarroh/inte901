@@ -91,7 +91,7 @@ export interface Address {
   pais: string;
   codigoPostal: string;
   userId: number;
-  numeroExterior: string;
+  numeroExterior: number;
   estatus:string;
 }
 
@@ -130,23 +130,27 @@ export interface Espacio {
 export interface DetailOrder {
   id: number;
   idProduct: number;
-  nameProduct: string;
+  idOrder: number;
   quantity: number;
   priceSingle: number;
-  status: number;
   dateOrder: string;
-  ticket: number;
   ingredients: string;
+  status: string;
 }
+
 
 export interface Order {
   id: number;
   idClient: number;
   idUser: number;
   total: number;
+  isDeliver: boolean;
   orderDate: string;
   detailOrders: DetailOrder[];
+  creditCard: CreditCard;
+  direcciones: Address;
 }
+
 
 
 export interface UserEditDTO{
@@ -170,20 +174,30 @@ export interface CreditCardWithCvv{
   estatus: string;
 }
 export interface DetailReserva {
-  idDetailReser: number;
-  fecha: string;  // Considera cambiar a Date si manejas fechas como objetos
+  fecha: string; // o Date si se maneja como objeto Date
   horaInicio: string;
   horaFin: string;
-  idEspacio: number;
-  espacio: Espacio;  // Relación con Espacio
+  idEspacio: number;  // Relación con Espacio
 }
 
 export interface Reserva {
-  idReserva: number;
+  name: string;
+  startTime: string;
+  endTime: string;
+}
+
+
+export interface DetailReservaDTO {
   idDetailReser: number;
+  fecha: string; // Puedes ajustar el tipo según tus necesidades
+  horaInicio: string;
+  horaFin: string;
+  idEspacio: number;
+}
+
+export interface ReservaDTO {
   idUsuario: number;
   idCliente: number;
   estatus: string;
-  detailReserva: DetailReserva;  // Relación con DetailReserva
-  usuario: User;  // Relación con User
+  detailReserva: DetailReservaDTO;
 }
