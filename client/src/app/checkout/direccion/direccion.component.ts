@@ -52,7 +52,18 @@ export class DireccionComponent {
 
   onOrderToStore() {
     this.CheackoutService.isOrderToStore.set(true);
-    this.CheackoutService.selectedCard.set({} as CreditCard);
+    this.CheackoutService.selectdAddress.set({
+      calle: 'aaaa',
+      colonia: 'aaa',
+      ciudad: 'aaa',
+      codigoPostal: 'aaa',
+      estado: 'aa',
+      estatus: 'aaa',
+      id: 0,
+      numeroExterior:45,
+      pais: 'aaa',
+      userId: 0,
+    } as Address);
     this.router.navigate(['checkout/payment']);
   }
 

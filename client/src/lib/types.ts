@@ -91,7 +91,7 @@ export interface Address {
   pais: string;
   codigoPostal: string;
   userId: number;
-  numeroExterior: string;
+  numeroExterior: number;
   estatus:string;
 }
 
@@ -130,15 +130,13 @@ export interface Espacio {
 export interface DetailOrder {
   id: number;
   idProduct: number;
-  nameProduct: string;
+  idOrder: number;
   quantity: number;
   priceSingle: number;
-  status: number;
   dateOrder: string;
-  ticket: number;
   ingredients: string;
+  status: string;
 }
-
 
 
 export interface Order {
@@ -146,9 +144,13 @@ export interface Order {
   idClient: number;
   idUser: number;
   total: number;
+  isDeliver: boolean;
   orderDate: string;
   detailOrders: DetailOrder[];
+  creditCard: CreditCard;
+  direcciones: Address;
 }
+
 
 
 export interface UserEditDTO{
