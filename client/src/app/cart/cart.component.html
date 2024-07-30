@@ -68,7 +68,10 @@
         <span>{{total}}</span>
       </div>
       <div class="mt-2 flex justify-between">
-        <button class="bg-blue-500 text-white px-4 py-2 rounded" hlmBtn>Pagar</button>
+        <a
+        routerLink="/checkout/address"
+        (click)="ctx.close()"
+        class="bg-blue-500 text-white px-4 py-2 rounded" hlmBtn>Pagar</a>
         <button class="bg-red-500 text-white px-4 py-2 rounded" hlmBtn (click)="deleteAll()">Vaciar</button>
       </div>
     </div>

@@ -11,18 +11,30 @@ export class CheckoutService {
   constructor(private http: HttpClient) {
     window.addEventListener('storage', this.syncOrderAcrossTabs.bind(this));
     effect(() => {
-      console.log('Order changed', this.selectedCard());
+      localStorage.setItem('selectedCard', JSON.stringify(this.selectedCard()));
     });
+
+    effect(() => {
+      localStorage.setItem('selectedAddress', JSON.stringify(this.selectdAddress()));
+    });
+
+    effect(() => {
+      localStorage.setItem('isOrderToStore', JSON.stringify(this.isOrderToStore()));
+    })
+
+    effect(() => {
+      localStorage.setItem('isPaidWithCard', JSON.stringify(this.isPaidWithCard()));
+    })
   }
 
 
   
 
-  url = 'https://localhost:7268/api/Orders';
+  url = 'https://localhost:7268/Orders';
   urlAddress = 'https://localhost:7268/api/Direcciones';
   urlCard = 'https://localhost:7268/api/CreditCards';
 
-  orderSignal = signal<Order | Espacio>(this.loadOrderFromLocalStorage());
+  orderSignal = signal<Order>(this.loadOrderFromLocalStorage());
 
   isOrderToStore = signal(false);
   isPaidWithCard = signal(false);
@@ -33,7 +45,7 @@ export class CheckoutService {
 
 
 
-  setOrder(order: Order | Espacio) {
+  setOrder(order: Order) {
     this.orderSignal.set(order);
     localStorage.setItem(this.storageKey, JSON.stringify(order));
   }
@@ -47,7 +59,7 @@ export class CheckoutService {
     }
   }
 
-  private loadOrderFromLocalStorage(): Order | Espacio {
+  private loadOrderFromLocalStorage(): Order {
     const savedOrder = localStorage.getItem(this.storageKey);
     return savedOrder ? JSON.parse(savedOrder) : null;
   }
@@ -85,6 +97,8 @@ export class CheckoutService {
   editCard(card: CreditCard) {
     return this.http.put<CreditCard>(`${this.urlCard}/${card.id}`, card);
   }
+
+
 
 
 }

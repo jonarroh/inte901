@@ -100,7 +100,7 @@ export class AddDireccionComponent {
         ciudad: this.formModel.controls.ciudad.value(),
         codigoPostal: this.formModel.controls.codigoPostal.value(),
         colonia: this.formModel.controls.colonia.value(),
-        numeroExterior: this.formModel.controls.numeroExterior.value(),
+        numeroExterior: Number(this.formModel.controls.numeroExterior.value()),
         estado: 'Guanajuato',
         id: this.currentAdress()?.id,
         pais: 'México',
@@ -148,7 +148,7 @@ export class AddDireccionComponent {
         ciudad: this.formModel.controls.ciudad.value(),
         codigoPostal: this.formModel.controls.codigoPostal.value(),
         colonia: this.formModel.controls.colonia.value(),
-        numeroExterior: this.formModel.controls.numeroExterior.value(),
+        numeroExterior: Number(this.formModel.controls.numeroExterior.value()),
         estado: 'Guanajuato',
         id: 0,
         pais: 'México',
@@ -248,7 +248,7 @@ export class AddDireccionComponent {
     this.formModel.controls.ciudad.value.set(address.ciudad);
     this.formModel.controls.codigoPostal.value.set(address.codigoPostal);
     this.formModel.controls.colonia.value.set(address.colonia);
-    this.formModel.controls.numeroExterior.value.set(address.numeroExterior);
+    this.formModel.controls.numeroExterior.value.set(String(address.numeroExterior));
     this.isEdit.set(true);
     this.currentAdress.set(address);
   }
