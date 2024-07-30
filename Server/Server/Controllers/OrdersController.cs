@@ -220,7 +220,7 @@ namespace Server.Controllers
                     IdUser = ordertdo.IdUser,
                     Total = ordertdo.Total,
                     OrderDate = DateTime.Now,
-                    Status = "Pendiente",
+                    Status = "Ordenado",
                     Ticket = ticket,
                 };
 

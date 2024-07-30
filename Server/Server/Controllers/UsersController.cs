@@ -59,7 +59,7 @@ namespace Server.Controllers
                                                 {
                                                     Id = c.Id,
                                                     CardHolderName = c.CardHolderName,
-                                                    CardNumber = ocultaNumero(c.CardNumber),
+                                                    CardNumber = c.CardNumber,
                                                     ExpiryDate = c.ExpiryDate,
                                                     UserId = c.UserId
                                                 }).ToListAsync()
@@ -71,10 +71,7 @@ namespace Server.Controllers
             return Ok(usersDTO);
         }
 
-        private static string ocultaNumero(string CardNumber)
-        {
-            return "**** **** **** " + CardNumber.Substring(CardNumber.Length - 4);
-        }
+       
 
         // GET: api/Users/5
         [HttpGet("{id}")]
@@ -98,12 +95,12 @@ namespace Server.Controllers
                                             .Where(d => d.UserId == user.Id && d.Estatus == "Activo")
                                             .ToListAsync(),
                 CreditCards = await _context.CreditCard
-                                            .Where(c => c.UserId == user.Id)
+                                            .Where(c => c.UserId == user.Id && c.Estatus == "Activo")
                                             .Select(c => new CreditCardDTO
                                             {
                                                 Id = c.Id,
                                                 CardHolderName = c.CardHolderName,
-                                                CardNumber = ocultaNumero(c.CardNumber),
+                                                CardNumber = c.CardNumber,
                                                 ExpiryDate = c.ExpiryDate,
                                                 UserId = c.UserId
                                             }).ToListAsync()
@@ -185,12 +182,12 @@ namespace Server.Controllers
                                             .Where(d => d.UserId == user.Id && d.Estatus == "Activo")
                                             .ToListAsync(),
                 CreditCards = await _context.CreditCard
-                                            .Where(c => c.UserId == user.Id)
+                                            .Where(c => c.UserId == user.Id && c.Estatus == "Activo")
                                             .Select(c => new CreditCardDTO
                                             {
                                                 Id = c.Id,
                                                 CardHolderName = c.CardHolderName,
-                                                CardNumber = ocultaNumero(c.CardNumber),
+                                                CardNumber =c.CardNumber,
                                                 ExpiryDate = c.ExpiryDate,
                                                 UserId = c.UserId
                                             }).ToListAsync()
