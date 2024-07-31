@@ -28,6 +28,7 @@ import { IngredientesComponent } from './admin/ingredientes/ingredientes.compone
 import { ProveedoresComponent } from './admin/proveedores/proveedores.component';
 import { PedidosUserComponent } from './pedidos-user/pedidos-user.component';
 import { ProcessStateComponent } from './pedido-state/process-state/process-state.component';
+import { AdminGuard } from './auth/admin.guard';
 
 
 
@@ -57,6 +58,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
+    canActivate: [AdminGuard],
     children: [
       {
         path: 'ventas',
