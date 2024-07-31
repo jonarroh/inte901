@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { PedidoStateService } from '../pedido-state.service';
 
 @Component({
   selector: 'app-process-state',
@@ -11,13 +12,13 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ProcessStateComponent implements OnInit {
 
-  status : string | null = null;
+  status: string | null = null;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private pedidoStateService: PedidoStateService) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.status = params['status'] || null;
+    this.pedidoStateService.getOrderStatus().subscribe(status => {
+      this.status = status;
     });
   }
 }
