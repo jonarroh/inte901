@@ -12,6 +12,8 @@ export interface Proveedor {
   materiaPrimaProveedores: string[];
 }
 
+export type Roles = 'Admin' | 'Cliente' | 'Proveedor';
+
 export interface MateriaPrimaProveedor {
   id: number;
   materiaPrimaId: number;
