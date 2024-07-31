@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
 using Server;
 using Server.Models;
 
@@ -63,6 +64,35 @@ namespace Server.Controllers
 
             return consumos;
         }
+        [HttpPost("{idConsumo}/addDetails")]
+        public async Task<ActionResult> AddDetailsToConsumo(int idConsumo, List<DetailConsumoDTO> detailConsumoDTOs)
+        {
+            // Buscar el consumo existente
+            var consumo = await _context.Consumo.Include(c => c.DetailConsumo).FirstOrDefaultAsync(c => c.Id == idConsumo);
+            if (consumo == null)
+            {
+                return NotFound();
+            }
+
+            // Crear y agregar los nuevos detalles al consumo
+            var newDetails = detailConsumoDTOs.Select(d => new DetailConsumo
+            {
+                Quantity = d.Quantity,
+                PriceSingle = d.PriceSingle,
+                Status = d.Status,
+                IdConsumo = idConsumo,
+                IdProduct = d.IdProduct
+            }).ToList();
+
+            consumo.DetailConsumo.AddRange(newDetails);
+
+            // Guardar los cambios en la base de datos
+            _context.DetailConsumo.AddRange(newDetails);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
 
         // GET: api/Consumo/5
         [HttpGet("{id}")]
