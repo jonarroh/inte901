@@ -85,20 +85,23 @@ export class PedidosUserComponent implements OnInit {
     }
     return null;
   }
-  filteredOrders(): Order[] {
-    return this.orders.filter(order => {
-      const matchesStatus = this.selectedFilter === '' || order.status === this.selectedFilter;
-      const matchesSearchTerm = 
-        order.id.toString().includes(this.searchTerm) ||
-        order.total.toString().includes(this.searchTerm) ||
-        order.detailOrders.some(detail =>
-          this.productos[detail.idProduct]?.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          detail.quantity.toString().includes(this.searchTerm)
-        );
   
-      return matchesStatus && matchesSearchTerm;
-    });
-  }
+  // Método para filtrar órdenes
+filteredOrders(): Order[] {
+  return this.orders.filter(order => {
+    const matchesStatus = this.selectedFilter === '' || order.status === this.selectedFilter;
+    const matchesSearchTerm = 
+      order.id.toString().includes(this.searchTerm) ||
+      order.total.toString().includes(this.searchTerm) ||
+      order.detailOrders.some(detail =>
+        this.productos[detail.idProduct]?.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        detail.quantity.toString().includes(this.searchTerm)
+      );
+
+    return matchesStatus && matchesSearchTerm;
+  });
+}
+
   
 
   viewStatus(orderId: number): void {

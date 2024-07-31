@@ -66,7 +66,9 @@
             <img [src]="'http://localhost:5000/static/productos/' + detail.idProduct + '.webp'" alt="" class="w-full h-full object-cover rounded-lg">
           </div>
           <div class="flex-grow">
-            <h4 class="text-lg font-medium text-gray-900">{{ productos[detail.idProduct]?.nombre }}</h4>
+            <!-- En tu HTML -->
+            <h4 class="text-lg font-medium text-gray-900">{{ productos[detail.idProduct].nombre }}</h4>
+
             <p class="text-gray-500">Cantidad: {{ detail.quantity }}</p>
             <p class="mb-3 text-gray-700">Total: ${{ order.total }}</p>
           </div>
