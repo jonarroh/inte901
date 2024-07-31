@@ -53,6 +53,7 @@ export class DetailsComponent {
         direcciones: this.selectedAddress(),
         isDeliver: !this.isOrderToStore(),
         idClient: this.getIdClient(),
+        status : 'Ordenado',
         detailOrders: [
           ...this.products().map((product) => ({
             id: 0,

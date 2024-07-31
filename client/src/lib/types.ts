@@ -12,6 +12,8 @@ export interface Proveedor {
   materiaPrimaProveedores: string[];
 }
 
+export type Roles = 'Admin' | 'Cliente' | 'Proveedor';
+
 export interface MateriaPrimaProveedor {
   id: number;
   materiaPrimaId: number;
@@ -146,12 +148,11 @@ export interface Order {
   total: number;
   isDeliver: boolean;
   orderDate: string;
+  status: string;
   detailOrders: DetailOrder[];
   creditCard: CreditCard;
   direcciones: Address;
 }
-
-
 
 export interface UserEditDTO{
   id: number;
@@ -200,4 +201,13 @@ export interface ReservaDTO {
   idCliente: number;
   estatus: string;
   detailReserva: DetailReservaDTO;
+}
+
+
+export class OrderListComponent {
+  orders: any[] = [];
+  productos: any = {};
+  searchTerm: string = '';
+  selectedFilter: string = '';
+  error: string = '';
 }

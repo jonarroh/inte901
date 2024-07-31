@@ -7,6 +7,10 @@
       "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\esbre\\inte901\\server\\server\\controllers\\productoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\controllers\\productoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\esbre\\inte901\\server\\server\\controllers\\reservescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\controllers\\reservescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -49,10 +53,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\esbre\\inte901\\server\\server\\controllers\\direccionescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\controllers\\direccionescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\esbre\\inte901\\server\\server\\controllers\\productoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\controllers\\productoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\esbre\\inte901\\server\\server\\models\\dto\\detailreservadto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -172,7 +172,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -200,19 +200,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ReservesController.cs",
-              "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\ReservesController.cs",
-              "RelativeDocumentMoniker": "Server\\Controllers\\ReservesController.cs",
-              "ToolTip": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\ReservesController.cs",
-              "RelativeToolTip": "Server\\Controllers\\ReservesController.cs",
-              "ViewState": "AQIAAEcAAAAAAAAAAAAuwGkAAAAuAAAA",
+              "DocumentIndex": 0,
+              "Title": "OrdersController.cs",
+              "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\OrdersController.cs",
+              "RelativeDocumentMoniker": "Server\\Controllers\\OrdersController.cs",
+              "ToolTip": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\OrdersController.cs",
+              "RelativeToolTip": "Server\\Controllers\\OrdersController.cs",
+              "ViewState": "AQIAADYAAAAAAAAAAAAQwE8AAABKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-16T14:56:10.669Z"
+              "WhenOpened": "2024-07-16T14:56:10.678Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "EspaciosController.cs",
               "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\EspaciosController.cs",
               "RelativeDocumentMoniker": "Server\\Controllers\\EspaciosController.cs",
@@ -224,7 +225,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "ReservaDTO.cs",
               "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Models\\DTO\\ReservaDTO.cs",
               "RelativeDocumentMoniker": "Server\\Models\\DTO\\ReservaDTO.cs",
@@ -236,7 +237,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "Server\\Controllers\\UsersController.cs",
@@ -248,7 +249,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\appsettings.json",
               "RelativeDocumentMoniker": "Server\\appsettings.json",
@@ -260,20 +261,32 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "OrdersController.cs",
-              "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\OrdersController.cs",
-              "RelativeDocumentMoniker": "Server\\Controllers\\OrdersController.cs",
-              "ToolTip": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\OrdersController.cs",
-              "RelativeToolTip": "Server\\Controllers\\OrdersController.cs",
-              "ViewState": "AQIAADsAAAAAAAAAAAAYwF0AAAAAAAAA",
+              "DocumentIndex": 1,
+              "Title": "ProductosController.cs",
+              "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\ProductosController.cs",
+              "RelativeDocumentMoniker": "Server\\Controllers\\ProductosController.cs",
+              "ToolTip": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\ProductosController.cs",
+              "RelativeToolTip": "Server\\Controllers\\ProductosController.cs",
+              "ViewState": "AQIAABwAAAAAAAAAAAAQwDoAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-16T14:56:10.678Z",
+              "WhenOpened": "2024-07-16T14:56:10.68Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 2,
+              "Title": "ReservesController.cs",
+              "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\ReservesController.cs",
+              "RelativeDocumentMoniker": "Server\\Controllers\\ReservesController.cs",
+              "ToolTip": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\ReservesController.cs",
+              "RelativeToolTip": "Server\\Controllers\\ReservesController.cs",
+              "ViewState": "AQIAAEcAAAAAAAAAAAAuwGkAAAAuAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-16T14:56:10.669Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "MateriasPrimasController.cs",
               "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\MateriasPrimasController.cs",
               "RelativeDocumentMoniker": "Server\\Controllers\\MateriasPrimasController.cs",
@@ -285,7 +298,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "EspacioDTO.cs",
               "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Models\\DTO\\EspacioDTO.cs",
               "RelativeDocumentMoniker": "Server\\Models\\DTO\\EspacioDTO.cs",
@@ -309,7 +322,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Program.cs",
               "RelativeDocumentMoniker": "Server\\Program.cs",
@@ -321,7 +334,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Context.cs",
               "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Context.cs",
               "RelativeDocumentMoniker": "Server\\Context.cs",
@@ -333,7 +346,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "Espacio.cs",
               "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Models\\Espacio.cs",
               "RelativeDocumentMoniker": "Server\\Models\\Espacio.cs",
@@ -342,18 +355,6 @@
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABoAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-16T14:56:10.664Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "ProductosController.cs",
-              "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\ProductosController.cs",
-              "RelativeDocumentMoniker": "Server\\Controllers\\ProductosController.cs",
-              "ToolTip": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\ProductosController.cs",
-              "RelativeToolTip": "Server\\Controllers\\ProductosController.cs",
-              "ViewState": "AQIAAIUAAAAAAAAAAAAwwJwAAAArAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-16T14:56:10.68Z"
             },
             {
               "$type": "Document",
@@ -369,7 +370,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "DireccionesController.cs",
               "DocumentMoniker": "C:\\Users\\esbre\\inte901\\Server\\Server\\Controllers\\DireccionesController.cs",
               "RelativeDocumentMoniker": "Server\\Controllers\\DireccionesController.cs",

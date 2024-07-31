@@ -117,6 +117,9 @@ export class FormComponent {
 
       this.registerServe.registerUser(user).subscribe({
         next: (response) =>{
+          console.log(response);
+          console.log('Usuario registrado correctamente');
+
           this.router.navigate(['/login']);
         },
         error : (error)=>{

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavbarComponent } from '../home/navbar/navbar.component';
+import { NavbarComponent } from '../../home/navbar/navbar.component';
 import { HlmCarouselComponent, HlmCarouselContentComponent, HlmCarouselItemComponent, HlmCarouselNextComponent, HlmCarouselPreviousComponent } from '~/components/ui-carousel-helm/src';
 import { ProcessStateComponent } from './process-state/process-state.component';
 import { ProductsListComponent } from './products-list/products-list.component';
@@ -19,24 +19,26 @@ import { PedidoStateService } from './pedido-state.service';
 })
 export class PedidoStateComponent implements OnInit{
 
-  orderId: number | null = null;
+  productIds: number[] = [];
+  orderStatus: string | null = null;
 
-  constructor(private route:ActivatedRoute, private pedidoStateService : PedidoStateService){}
+  constructor(private pedidoStateService: PedidoStateService) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const orderId = +params.get('id')!;
-      // Lógica para obtener los productos de la orden y enviar los IDs
-      // Ejemplo de IDs:
-      const productIds = this.getProductIdsFromOrder(orderId);
-      this.pedidoStateService.setProductIds(productIds);
+    this.pedidoStateService.getOrderStatus().subscribe(status => {
+      this.orderStatus = status;
+      // Asegúrate de que `status` no sea null antes de usarlo
+      if (status !== null) {
+        localStorage.setItem('orderStatus', status);
+      }
+    });
+
+    this.pedidoStateService.getProductIds().subscribe(ids => {
+      this.productIds = ids;
+      // Asegúrate de que `ids` no sea null o undefined antes de usarlo
+      if (ids) {
+        localStorage.setItem('productIds', JSON.stringify(ids));
+      }
     });
   }
-
-  getProductIdsFromOrder(orderId: number): number[] {
-    // Lógica para obtener los IDs de productos basados en el orderId
-    // Esto es solo un ejemplo y debes reemplazarlo con la lógica real
-    return [1, 2, 3, 4]; // Reemplaza con la lista real de IDs
-  }
-
 }

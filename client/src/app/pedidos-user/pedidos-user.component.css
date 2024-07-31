@@ -1,0 +1,17 @@
+/* Agrega esto a tu archivo CSS para ajustar el ícono dentro del campo de búsqueda */
+
+.relative {
+    position: relative;
+  }
+  
+  input[type="text"] {
+    padding-left: 2.5rem; /* Espacio para el ícono */
+  }
+  
+  svg {
+    position: absolute;
+    top: 50%;
+    left: 0.75rem; /* Ajusta el espacio del ícono */
+    transform: translateY(-50%);
+  }
+  
