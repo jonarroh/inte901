@@ -28,6 +28,9 @@ namespace Server
         public DbSet<Espacio> Espacios { get; set; } = default!;
         public DbSet<Reserva> Reservas { get; set; } = default!;
         public DbSet<DetailReserva> DetailReservas { get; set; } = default!;
-        
+        public DbSet<Consumo> Consumo { get; set; } = default!;
+
+        public DbSet<DetailConsumo> DetailConsumo { get; set; } = default!;
+
     }
 }
