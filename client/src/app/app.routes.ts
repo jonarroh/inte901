@@ -7,7 +7,7 @@ import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { AdminComponent } from './admin/admin.component';
 import { VentasComponent } from './admin/ventas/ventas.component';
-import { PedidoStateComponent } from './pedido-state/pedido-state.component';
+import { PedidoStateComponent } from './pedidos/pedido-state/pedido-state.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { PlaceComponent } from './place/place.component';
 
@@ -26,8 +26,8 @@ import { ReservesComponent } from './reserves/reserves.component';
 import { MateriasPrimasComponent } from './admin/materias-primas/materias-primas.component';
 import { IngredientesComponent } from './admin/ingredientes/ingredientes.component';
 import { ProveedoresComponent } from './admin/proveedores/proveedores.component';
-import { PedidosUserComponent } from './pedidos-user/pedidos-user.component';
-import { ProcessStateComponent } from './pedido-state/process-state/process-state.component';
+import { PedidosUserComponent } from './pedidos/pedidos-user/pedidos-user.component';
+import { ProcessStateComponent } from './pedidos/pedido-state/process-state/process-state.component';
 import { AdminGuard } from './auth/admin.guard';
 
 

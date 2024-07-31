@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Order, Producto } from '~/lib/types';
 import { PedidosUserServiceService } from './pedidos-user-service.service';
-import { NavbarComponent } from '../home/navbar/navbar.component';
+import { NavbarComponent } from '../../home/navbar/navbar.component';
 import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
-import { ProductoService } from '../admin/productos/service/producto.service';
+import { ProductoService } from '../../admin/productos/service/producto.service';
 import { Router } from '@angular/router';
 import { PedidoStateService } from '../pedido-state/pedido-state.service';
 
