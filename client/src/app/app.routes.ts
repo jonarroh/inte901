@@ -88,11 +88,13 @@ export const routes: Routes = [
   },
   {
     path: 'pedidosList',
-    component: PedidosUserComponent
+    component: PedidosUserComponent,
+    
   },
   {
     path: 'estatus/:id',
-    component: PedidoStateComponent
+    component: PedidoStateComponent,
+    
   },
   {
     path: 'estatus',

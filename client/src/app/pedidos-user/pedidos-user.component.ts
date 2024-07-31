@@ -2,15 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { Order, Producto } from '~/lib/types';
 import { PedidosUserServiceService } from './pedidos-user-service.service';
 import { NavbarComponent } from '../home/navbar/navbar.component';
-import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
+import { CommonModule, CurrencyPipe, NgFor, NgIf } from '@angular/common';
 import { ProductoService } from '../admin/productos/service/producto.service';
 import { Router } from '@angular/router';
 import { PedidoStateService } from '../pedido-state/pedido-state.service';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-pedidos-user',
   standalone: true,
-  imports: [NavbarComponent, NgFor, CurrencyPipe, NgIf],
+  imports: [NavbarComponent, NgFor, CurrencyPipe, NgIf, FormsModule, CommonModule],
   templateUrl: './pedidos-user.component.html',
   styleUrls: ['./pedidos-user.component.css']
 })
@@ -18,6 +20,16 @@ export class PedidosUserComponent implements OnInit {
   orders: Order[] = [];
   productos: { [key: number]: { nombre: string; id: number } } = {};
   error: string | null = null;
+  searchTerm: string = '';
+  selectedFilter: string = '';
+  
+  statusColorMap = {
+    'Ordenado': ['#f17d6f', 'gray', 'gray', 'gray', 'gray'],
+    'Aceptado': ['#f17d6f', '#f3a560', 'gray', 'gray', 'gray'],
+    'Preparacion': ['#f17d6f', '#f3a560', '#f3bb60', 'gray', 'gray'],
+    'Enviado': ['#f17d6f', '#f3a560', '#f3bb60', '#f3e860', 'gray'],
+    'Recibido': ['#f17d6f', '#f3a560', '#f3bb60', '#f3e860', '#7ec88b']
+  };
 
   constructor(
     private pedidosUserService: PedidosUserServiceService,
@@ -25,7 +37,10 @@ export class PedidosUserComponent implements OnInit {
     private router: Router,
     private pedidoStateService: PedidoStateService
   ) {}
+
   
+
+
   ngOnInit(): void {
     const userId = this.getUserIdFromLocalStorage();
     if (userId) {
@@ -70,21 +85,46 @@ export class PedidosUserComponent implements OnInit {
     }
     return null;
   }
+  
+  // Método para filtrar órdenes
+filteredOrders(): Order[] {
+  return this.orders.filter(order => {
+    const matchesStatus = this.selectedFilter === '' || order.status === this.selectedFilter;
+    const matchesSearchTerm = 
+      order.id.toString().includes(this.searchTerm) ||
+      order.total.toString().includes(this.searchTerm) ||
+      order.detailOrders.some(detail =>
+        this.productos[detail.idProduct]?.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        detail.quantity.toString().includes(this.searchTerm)
+      );
+
+    return matchesStatus && matchesSearchTerm;
+  });
+}
+
+  
 
   viewStatus(orderId: number): void {
     const order = this.orders.find(o => o.id === orderId);
     if (order) {
       const productIds = order.detailOrders.map(detail => detail.idProduct);
-      this.pedidoStateService.setOrderId(orderId);
+      this.pedidoStateService.setOrderId(orderId);  // Asegúrate de que este método exista en el servicio
       this.pedidoStateService.setProductIds(productIds);
-      this.pedidoStateService.setOrderStatus(order.status); // Asegúrate de que este método esté implementado en el servicio
+      this.pedidoStateService.setOrderStatus(order.status);
 
-      this.router.navigate(['/estatus', orderId], {
-        queryParams: { 
-          productIds: productIds.join(','), 
-          status: order.status 
-        }
-      });
+      // Guardar los datos en localStorage
+      localStorage.setItem('productIds', JSON.stringify(productIds));
+      localStorage.setItem('orderStatus', order.status);
+
+      this.router.navigate(['/estatus', orderId]);
     }
+  }
+
+  
+
+  // Método para obtener el color del botón según el estado y el índice
+  getStatusColor(status: string, step: number): string {
+    const statusColors = this.statusColorMap[status as keyof typeof this.statusColorMap];
+    return statusColors ? statusColors[step - 1] : '#d3d3d3';
   }
 }

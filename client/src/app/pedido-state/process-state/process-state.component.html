@@ -1,50 +1,65 @@
 <div class="w-1/4 justify-center" style="margin-left: 50px; margin-top: 30px; background-color: white;">
   <ol class="relative list-decimal list-inside">
+    <!-- Paso 1: En orden -->
     <li class="mb-10 ms-6 flex items-center space-x-4">
       <span [ngClass]="{
         'absolute flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white': true,
-        'bg-green-200 text-green-500': status === 'aceptado' || status === 'preparando' || status === 'enviado' || status === 'recibido',
-        'bg-gray-100 text-gray-500': status !== 'aceptado'
+        'bg-green-200 text-green-500': status === 'Aceptado' || status === 'Preparando' || status === 'Enviado' || status === 'Recibido',
+        'bg-gray-100 text-gray-500': status !== 'Aceptado'
       }">
-        <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12"></svg>
+        <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+          <!-- Aquí puedes agregar el contenido del SVG -->
+        </svg>
       </span>
       <div>
         <h3 class="font-medium leading-tight">En orden</h3>
         <p class="text-sm">Pronto comenzará la preparación</p>
       </div>
     </li>
+
+    <!-- Paso 2: En preparación -->
     <li class="mb-10 ms-6 flex items-center space-x-4">
       <span [ngClass]="{
         'absolute flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white': true,
-        'bg-green-200 text-green-500': status === 'preparando' || status === 'enviado' || status === 'recibido',
-        'bg-gray-100 text-gray-500': status !== 'preparando'
+        'bg-green-200 text-green-500': status === 'Preparando' || status === 'Enviado' || status === 'Recibido',
+        'bg-gray-100 text-gray-500': status !== 'Preparando'
       }">
-        <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16"></svg>
+        <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
+          <!-- Aquí puedes agregar el contenido del SVG -->
+        </svg>
       </span>
       <div>
         <h3 class="font-medium leading-tight">En preparación</h3>
         <p class="text-sm">Tu orden se está preparando</p>
       </div>
     </li>
+
+    <!-- Paso 3: Enviado -->
     <li class="mb-10 ms-6 flex items-center space-x-4">
       <span [ngClass]="{
         'absolute flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white': true,
-        'bg-green-200 text-green-500': status === 'enviado' || status === 'recibido',
-        'bg-gray-100 text-gray-500': status !== 'enviado'
+        'bg-green-200 text-green-500': status === 'Enviado' || status === 'Recibido',
+        'bg-gray-100 text-gray-500': status !== 'Enviado'
       }">
-        <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20"></svg>
+        <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
+          <!-- Aquí puedes agregar el contenido del SVG -->
+        </svg>
       </span>
       <div>
         <h3 class="font-medium leading-tight">Enviado</h3>
       </div>
     </li>
+
+    <!-- Paso 4: Recibido -->
     <li class="ms-6 flex items-center space-x-4">
       <span [ngClass]="{
         'absolute flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white': true,
-        'bg-green-200 text-green-500': status === 'recibido',
-        'bg-gray-100 text-gray-500': status !== 'recibido'
+        'bg-green-200 text-green-500': status === 'Recibido',
+        'bg-gray-100 text-gray-500': status !== 'Recibido'
       }">
-        <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20"></svg>
+        <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
+          <!-- Aquí puedes agregar el contenido del SVG -->
+        </svg>
       </span>
       <div>
         <h3 class="font-medium leading-tight">Recibido</h3>

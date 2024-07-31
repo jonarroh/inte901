@@ -1,4 +1,4 @@
-<div class="flex items-center justify-center w-full p-4">
+<div class="flex items-center justify-center w-full p-4" style="padding-top: 70px;">
   <hlm-carousel class="w-full max-w-xs">
     <hlm-carousel-content>
       <ng-container *ngFor="let id of productIds">
@@ -6,7 +6,7 @@
           <div class="p-1">
             <section hlmCard>
               <p hlmCardContent class="flex items-center justify-center p-6 aspect-square">
-                <img [src]="'http://localhost:5000/static/places/' + id + '.webp'" alt="Product Image" class="w-full h-full object-cover rounded-lg">
+                <img [src]="'http://localhost:5000/static/productos/' + id + '.webp'" alt="Product Image" class="w-full h-full object-cover rounded-lg">
               </p>
             </section>
           </div>
