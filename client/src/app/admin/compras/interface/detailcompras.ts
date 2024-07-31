@@ -9,6 +9,5 @@ export interface DetailPurchase {
   status?: string;
   idPurchase?: number;
   idProduct?: number;
-  purchase?: any; // Esto puede ser ajustado según el tipo de datos real
-  product?: any;  // Esto puede ser ajustado según el tipo de datos real
+  product?: any;
 }

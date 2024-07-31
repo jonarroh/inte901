@@ -18,7 +18,7 @@ using Server.Models.DTO;
 
 namespace Server.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class OrdersController : ControllerBase
     {
@@ -53,6 +53,7 @@ namespace Server.Controllers
             return Ok(order);
         }
 
+
         [HttpGet]
         [Route("allOrders")]
         public async Task<IActionResult> GetOrders()
@@ -79,6 +80,8 @@ namespace Server.Controllers
                     // Asignar la fecha al campo correspondiente
                     orden.OrderDate = dateOrder != null ? dateOrder.DateOrder : null;
 
+                    orden.OrderDate = DateTime.Parse(orden.OrderDate.ToString() ?? "");
+
                     // Agregar la orden a la lista
                     ordenesPendientes.Add(orden);
                 }
@@ -91,6 +94,7 @@ namespace Server.Controllers
                 return StatusCode(500, "Se produjo un error en el servidor, contacte a soporte");
             }
         }
+
 
         [HttpGet]
         [Route("ordersByUser/{userId}")]
@@ -132,8 +136,6 @@ namespace Server.Controllers
                 return StatusCode(500, "Se produjo un error en el servidor, contacte a soporte");
             }
         }
-
-
 
 
         [HttpGet]

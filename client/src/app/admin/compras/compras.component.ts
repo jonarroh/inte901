@@ -35,6 +35,7 @@ import { BrnAccordionModule } from '@spartan-ng/ui-accordion-brain';
 import { ProductoService } from '../productos/service/producto.service';
 import { MateriasPrimasService } from '../materias-primas/service/materias-primas.service';
 import { MateriaPrima } from '../materias-primas/interface/materias-primas';
+import { DetailPurchase } from './interface/detailcompras';
 
 @Component({
   selector: 'app-compras',
@@ -77,25 +78,25 @@ export class ComprasComponent {
   compraService = inject(ComprasService);
   compras$: Observable<Compra[]>;
   compra: Compra = {};
+  detalles: DetailPurchase[] = [];
   proveedorService = inject(ProveedoresService);
   proveedores$: Observable<Proveedor[]>;
   insumos = inject(MateriasPrimasService);
   insumos$: Observable<MateriaPrima[]>;
+  detalles$: Observable<DetailPurchase[]>;
   editMode: boolean = false;
 
   constructor() {
     this.compras$ = this.compraService.getCompras();
     this.proveedores$ = this.proveedorService.getProveedores();
     this.insumos$ = this.insumos.getMateriaPrima();
+    this.detalles$ = this.compraService.getDetailCompra(0) as Observable<DetailPurchase[]>;
 
     this.compras$.subscribe((compras) => {
       compras.forEach(element => {
-        // console.log('Element:', element);
-
         if (element.details && element.details.length > 0) {
-          // console.log('Detail Purchases:', element.details);
           element.details.forEach(detail => {
-            // console.log('Detail Purchase:', detail);
+
           });
         }
       });
@@ -131,7 +132,7 @@ export class ComprasComponent {
 
     const newPurchase: Compra = {
       idProveedor: this.selectedProveedor.id,
-      idUser: 1, // Hardcoded for now
+      idUser: 1,
       details: [
         {
           quantity: this.cantidad,
@@ -149,7 +150,6 @@ export class ComprasComponent {
       () => {
         console.log('Compra agregada');
 
-        // Reset the form fields
         this.selectedProveedor = null;
         this.cantidad = 0;
         this.preciounitario = 0;
@@ -174,6 +174,9 @@ export class ComprasComponent {
         }
       );
     }
+  }
+
+  editStatusDetalle(form: NgForm) {
 
   }
 
@@ -197,11 +200,24 @@ export class ComprasComponent {
     );
   }
 
-  getDetails(id: number) {
+  getDetails(compra: Compra) {
+    const id: number = compra.id || 0;
+
     this.compraService.getDetailCompra(id).subscribe(
       (compra) => {
-        console.log('Detalles de la compra:', compra);
-        // Do something with the compra object
+        this.detalles$ = this.compraService.getDetailCompra(id) as Observable<DetailPurchase[]>;
+
+        this.detalles = [compra];
+
+        this.detalles.forEach(detail => {
+          this.insumos$.subscribe(insumos => {
+            return detail.product = insumos.find(insumo => insumo.id === detail.idProduct)?.material;
+          });
+        });
+
+        const editButton = document.getElementById('edit-status-detail');
+        editButton?.click();
+        console.log('Detalles de la compra:', this.detalles);
       },
       (error) => {
         console.error('Error al consultar los detalles de la compra:', error);

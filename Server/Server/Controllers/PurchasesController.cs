@@ -228,6 +228,11 @@ namespace Server.Controllers
 					return BadRequest("No se encontro la compra seleccionada");
 				}
 
+                foreach (var item in detail)
+                {
+                    item.Expiration = DateTime.Parse(item.Expiration.ToString()?.Replace("T"," ") ?? "");
+                }
+
 				return Ok(detail);
 			}
 			catch (Exception ex)

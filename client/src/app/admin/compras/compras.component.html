@@ -183,7 +183,7 @@
         *ngFor="let compra of (compras$ | async); trackBy: trackByCompraId">
         <hlm-td class="flex-1">{{ compra.createdAt }}</hlm-td>
         <hlm-td class="flex-1">
-          <button hlmBtn variant="destructive" (click)="getDetails(compra.id || 0)">
+          <button hlmBtn variant="destructive" (click)="getDetails(compra || 0)">
             Insumos
           </button>
         </hlm-td>
@@ -251,6 +251,39 @@
       <hlm-dialog-footer>
         <button hlmBtn type="submit" variant="primary">Actualizar</button>
       </hlm-dialog-footer>
+    </form>
+  </hlm-dialog-content>
+</hlm-dialog>
+
+<hlm-dialog class="w-[500px]">
+  <button class="hidden" hlmBtn variant="success" brnDialogTrigger id="edit-status-detail">
+    Detalles
+  </button>
+  <hlm-dialog-content class="min-w-[800px] w-full bg-success" *brnDialogContent="let ctx">
+    <hlm-dialog-header>
+      <h3 class="text-white" hlmDialogTitle>Detalles de la compra</h3>
+    </hlm-dialog-header>
+    <form (ngSubmit)="editStatusDetalle(statusFormDetalleEdit)" #statusFormDetalleEdit="ngForm">
+      <hlm-table>
+        <hlm-trow>
+          <hlm-th class="flex-1">Material</hlm-th>
+          <hlm-th class="flex-1">Cantidad</hlm-th>
+          <hlm-th class="flex-1">Precio Unitario</hlm-th>
+          <hlm-th class="flex-1">Presentaci&oacute;n</hlm-th>
+          <hlm-th class="flex-1">Expiraci&oacute;n</hlm-th>
+          <hlm-th class="flex-1">Unidad de medida</hlm-th>
+          <hlm-th class="flex-1">Estatus</hlm-th>
+        </hlm-trow>
+        <hlm-trow *ngFor="let detalle of (detalles$ | async)">
+          <hlm-td class="flex-1">{{ detalle.product }}</hlm-td>
+          <hlm-td class="flex-1">{{ detalle.quantity }}</hlm-td>
+          <hlm-td class="flex-1">{{ detalle.priceSingle }}</hlm-td>
+          <hlm-td class="flex-1">{{ detalle.presentation }}</hlm-td>
+          <hlm-td class="flex-1">{{ detalle.expiration }}</hlm-td>
+          <hlm-td class="flex-1">{{ detalle.unitType }}</hlm-td>
+          <hlm-td class="flex-1">{{ detalle.status }}</hlm-td>
+        </hlm-trow>
+      </hlm-table>
     </form>
   </hlm-dialog-content>
 </hlm-dialog>
