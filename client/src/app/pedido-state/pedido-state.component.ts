@@ -19,24 +19,20 @@ import { PedidoStateService } from './pedido-state.service';
 })
 export class PedidoStateComponent implements OnInit{
 
-  orderId: number | null = null;
+  productIds: number[] = [];
+  orderStatus: string | null = null;
 
-  constructor(private route:ActivatedRoute, private pedidoStateService : PedidoStateService){}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const orderId = +params.get('id')!;
-      // Lógica para obtener los productos de la orden y enviar los IDs
-      // Ejemplo de IDs:
-      const productIds = this.getProductIdsFromOrder(orderId);
-      this.pedidoStateService.setProductIds(productIds);
+    this.route.queryParams.subscribe(params => {
+      const productIdsParam = params['productIds'];
+      this.productIds = productIdsParam ? productIdsParam.split(',').map((id: string) => parseInt(id, 10)) : [];
+      
+      this.orderStatus = params['status'];
+      
+      console.log('Received product IDs:', this.productIds);
+      console.log('Received order status:', this.orderStatus);
     });
   }
-
-  getProductIdsFromOrder(orderId: number): number[] {
-    // Lógica para obtener los IDs de productos basados en el orderId
-    // Esto es solo un ejemplo y debes reemplazarlo con la lógica real
-    return [1, 2, 3, 4]; // Reemplaza con la lista real de IDs
-  }
-
 }

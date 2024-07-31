@@ -146,12 +146,11 @@ export interface Order {
   total: number;
   isDeliver: boolean;
   orderDate: string;
+  status: string;
   detailOrders: DetailOrder[];
   creditCard: CreditCard;
   direcciones: Address;
 }
-
-
 
 export interface UserEditDTO{
   id: number;

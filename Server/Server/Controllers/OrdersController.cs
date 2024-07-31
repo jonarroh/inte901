@@ -73,11 +73,11 @@ namespace Server.Controllers
                     // Obtener la fecha del detalle de la orden de forma asíncrona
                     var dateOrder = await _context.DetailOrders
                         .Where(d => d.IdOrder == orden.Id)
-                        .FirstOrDefaultAsync();
+                        .ToListAsync();
 
                    
                     // Asignar la fecha al campo correspondiente
-                    orden.OrderDate = dateOrder != null ? dateOrder.DateOrder : null;
+                    orden.OrderDate = dateOrder != null ? new DateTime() : dateOrder.FirstOrDefault().DateOrder;
 
                     // Agregar la orden a la lista
                     ordenesPendientes.Add(orden);
@@ -115,10 +115,10 @@ namespace Server.Controllers
                     // Obtener la fecha del detalle de la orden de forma asíncrona
                     var dateOrder = await _context.DetailOrders
                         .Where(d => d.IdOrder == orden.Id)
-                        .FirstOrDefaultAsync();
+                        .ToListAsync();
 
                     // Asignar la fecha al campo correspondiente
-                    orden.OrderDate = dateOrder != null ? dateOrder.DateOrder : null;
+                    orden.OrderDate = dateOrder != null ? new DateTime() : dateOrder.FirstOrDefault().DateOrder;
 
                     // Agregar la orden a la lista
                     ordenesPendientes.Add(orden);
