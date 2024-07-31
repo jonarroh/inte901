@@ -7,7 +7,7 @@ import {
   HlmDialogDescriptionDirective,
 } from '~/components/ui-dialog-helm/src';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { lucideArrowUpDown, lucideChevronDown, lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmButtonModule } from '~/components/ui-button-helm/src';
 import { HlmCheckboxCheckIconComponent, HlmCheckboxComponent } from '@spartan-ng/ui-checkbox-helm';
@@ -81,6 +81,7 @@ export class ComprasComponent {
   proveedores$: Observable<Proveedor[]>;
   insumos = inject(MateriasPrimasService);
   insumos$: Observable<MateriaPrima[]>;
+  editMode: boolean = false;
 
   constructor() {
     this.compras$ = this.compraService.getCompras();
@@ -161,6 +162,29 @@ export class ComprasComponent {
     );
   }
 
+  editStatus(form: NgForm) {
+    if (form.valid) {
+      this.compraService.editCompra(this.compra).subscribe(
+        (response) => {
+          console.log('Compra actualizada:', response);
+          form.resetForm();
+          this.compra = {}; // Reiniciar el objeto compra
+          this.editMode = false;
+          this.compras$ = this.compraService.getCompras();
+        }
+      );
+    }
+
+  }
+
+  onEdit(compra: Compra) {
+    this.compra = { ...compra };
+    this.editMode = true;
+
+    const editButton = document.getElementById('edit-status');
+    editButton?.click();
+  }
+
   getCompraById(id: number) {
     this.compraService.getCompraById(id).subscribe(
       (compra) => {
@@ -169,6 +193,18 @@ export class ComprasComponent {
       },
       (error) => {
         console.error('Error al consultar la compra:', error);
+      }
+    );
+  }
+
+  getDetails(id: number) {
+    this.compraService.getDetailCompra(id).subscribe(
+      (compra) => {
+        console.log('Detalles de la compra:', compra);
+        // Do something with the compra object
+      },
+      (error) => {
+        console.error('Error al consultar los detalles de la compra:', error);
       }
     );
   }

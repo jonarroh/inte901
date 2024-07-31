@@ -1,8 +1,10 @@
 <div class="container mx-auto w-full p-4">
   <div class="justify-end mb-4">
     <hlm-dialog class="w-[500px]">
-      <button id="edit-profile" variant="success" brnDialogTrigger hlmBtn>Realizar compra</button>
-      <hlm-dialog-content class="min-w-[800px] w-full bg-success" *brnDialogContent="let ctx">
+      <button id="edit-profile" variant="success" brnDialogTrigger
+        hlmBtn>Realizar compra</button>
+      <hlm-dialog-content class="min-w-[800px] w-full bg-success"
+        *brnDialogContent="let ctx">
         <hlm-dialog-header>
           <h3 class="text-white" hlmDialogTitle>Compra de materia prima</h3>
         </hlm-dialog-header>
@@ -14,13 +16,15 @@
                   <label class="flex-1" for="insumos">Proveedor*</label>
                 </div>
                 <div>
-                  <brn-select class="inline-block bg-success" placeholder="Seleccionar" [(ngModel)]="selectedProveedor"
+                  <brn-select class="inline-block bg-success"
+                    placeholder="Seleccionar" [(ngModel)]="selectedProveedor"
                     name="selectedProveedor">
                     <hlm-select-trigger class="w-fit bg-success">
                       <hlm-select-value />
                     </hlm-select-trigger>
                     <hlm-select-content class="bg-success">
-                      <ng-container *ngFor="let proveedor of (proveedores$ | async)">
+                      <ng-container
+                        *ngFor="let proveedor of (proveedores$ | async)">
                         <hlm-option [value]="proveedor">
                           {{ proveedor.nombreEmpresa }}
                         </hlm-option>
@@ -36,7 +40,8 @@
                   <label class="flex-1" for="cantidad">Cantidad*</label>
                 </div>
                 <div>
-                  <input required type="number" hlmInput class="flex-1" [(ngModel)]="cantidad" name="cantidad">
+                  <input required type="number" hlmInput class="flex-1"
+                    [(ngModel)]="cantidad" name="cantidad">
                 </div>
               </div>
             </div>
@@ -48,7 +53,8 @@
                   <label class="flex-1" for="precio">Precio Unitario*</label>
                 </div>
                 <div>
-                  <input required type="number" hlmInput class="w-fit" [(ngModel)]="preciounitario"
+                  <input required type="number" hlmInput class="w-fit"
+                    [(ngModel)]="preciounitario"
                     name="preciounitario">
                 </div>
               </div>
@@ -56,10 +62,12 @@
             <div>
               <div class="grid grid-cols-2 gap-4">
                 <div>
-                  <label class="flex-1" for="presentacion">Presentaci&oacute;n*</label>
+                  <label class="flex-1"
+                    for="presentacion">Presentaci&oacute;n*</label>
                 </div>
                 <div>
-                  <brn-select class="inline-block w-fit bg-success" placeholder="Seleccionar"
+                  <brn-select class="inline-block w-fit bg-success"
+                    placeholder="Seleccionar"
                     [(ngModel)]="selectedPresentacion" name="presentacion">
                     <hlm-select-trigger class="flex-1 bg-success">
                       <hlm-select-value />
@@ -73,22 +81,26 @@
                       <hlm-option value="Bolsa 1kg">Bolsa 1Kg</hlm-option>
                       <hlm-option value="Galon 20lt">Galon 20Lt</hlm-option>
                       <hlm-option value="Pieza">Pieza</hlm-option>
-                      <hlm-option value="Empacado 400gr">Empacado 400Gr</hlm-option>
+                      <hlm-option value="Empacado 400gr">Empacado
+                        400Gr</hlm-option>
                       <hlm-option value="Empacado 1kg">Empacado 1Kg</hlm-option>
-                      <hlm-option value="Empacado 200gr">Empacado 200Gr</hlm-option>
+                      <hlm-option value="Empacado 200gr">Empacado
+                        200Gr</hlm-option>
                       <hlm-option value="Caja 1kg">Caja 1Kg</hlm-option>
                       <hlm-option value="Frasco 400gr">Frasco 400Gr</hlm-option>
                       <hlm-option value="Barra 100gr">Barra 100Gr</hlm-option>
                       <hlm-option value="Costal 25kg">Costal 25Kg</hlm-option>
                       <hlm-option value="Galon 10lt">Galon 10Lt</hlm-option>
-                      <hlm-option value="Botella 500ml">Botella 500ml</hlm-option>
+                      <hlm-option value="Botella 500ml">Botella
+                        500ml</hlm-option>
                       <hlm-option value="Caja 2kg">Caja 2Kg</hlm-option>
                       <hlm-option value="Lata 250gr">Lata 250Gr</hlm-option>
                       <hlm-option value="Bolsa 500gr">Bolsa 500Gr</hlm-option>
                       <hlm-option value="Carton 500ml">Carton 500ml</hlm-option>
                       <hlm-option value="Sobre 50gr">Sobre 50Gr</hlm-option>
                       <hlm-option value="Lata 1kg">Lata 1Kg</hlm-option>
-                      <hlm-option value="Botella 750ml">Botella 750ml</hlm-option>
+                      <hlm-option value="Botella 750ml">Botella
+                        750ml</hlm-option>
                       <hlm-option value="Caja 5kg">Caja 5Kg</hlm-option>
                     </hlm-select-content>
                   </brn-select>
@@ -103,13 +115,15 @@
                   <label class="flex-1" for="producto">Insumos</label>
                 </div>
                 <div>
-                  <brn-select class="inline-block bg-success" placeholder="Seleccionar" [(ngModel)]="selectedInsumo"
+                  <brn-select class="inline-block bg-success"
+                    placeholder="Seleccionar" [(ngModel)]="selectedInsumo"
                     name="selectedInsumo">
                     <hlm-select-trigger class="w-fit bg-success">
                       <hlm-select-value />
                     </hlm-select-trigger>
                     <hlm-select-content class="bg-success">
-                      <hlm-option *ngFor="let insumo of (insumos$ | async)" [value]="insumo">
+                      <hlm-option *ngFor="let insumo of (insumos$ | async)"
+                        [value]="insumo">
                         {{ insumo.material }}
                       </hlm-option>
                     </hlm-select-content>
@@ -121,26 +135,17 @@
           </div>
         </form>
         <br>
-        <!-- <div hlmAccordion>
-          <div hlmAccordionItem>
-            <button hlmAccordionTrigger>
-              Lista de compras
-              <hlm-icon hlmAccIcon></hlm-icon>
-            </button>
-            <brn-accordion-content hlm>
-              no
-            </brn-accordion-content>
-          </div>
-        </div> -->
         <hlm-dialog-footer>
-          <button hlmBtn type="submit" variant="primary" (click)="addPurchase()">Solicitar</button>
+          <button hlmBtn type="submit" variant="primary"
+            (click)="addPurchase()">Solicitar</button>
         </hlm-dialog-footer>
       </hlm-dialog-content>
     </hlm-dialog>
   </div>
   <div class="overflow-y-auto min-w-full">
     <div class="flex flex-col justify-between gap-4 sm:flex-row">
-      <input hlmInput class="w-full md:w-80" placeholder="Filter emails..." [ngModel]="_proveedorFilter()"
+      <input hlmInput class="w-full md:w-80" placeholder="Filter emails..."
+        [ngModel]="_proveedorFilter()"
         (ngModelChange)="_rawFilterInput.set($event)" />
       <button hlmBtn variant="outline" align="end" [brnMenuTriggerFor]="menu">
         Columnas
@@ -149,7 +154,8 @@
       <ng-template #menu>
         <hlm-menu class="w-32">
           @for (column of _brnColumnManager.allColumns; track column.name) {
-          <button hlmMenuItemCheckbox [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
+          <button hlmMenuItemCheckbox
+            [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
             [checked]="_brnColumnManager.isColumnVisible(column.name)"
             (triggered)="_brnColumnManager.toggleVisibility(column.name)">
             <hlm-menu-item-check />
@@ -159,13 +165,6 @@
         </hlm-menu>
       </ng-template>
     </div>
-
-    <!-- Datatable -->
-    <!-- <brn-table hlm stickyHeader class="border-border mt-4 block overflow-auto rounded-md border w-full min-w-full">
-      <brn-column-def>
-
-      </brn-column-def>
-    </brn-table> -->
 
     <!-- Tabla basica funciona xd -->
     <hlm-table class="w-full min-w-full">
@@ -180,19 +179,78 @@
       <hlm-trow *ngIf="(compras$ | async)?.length === 0">
         <hlm-td colspan="6">No hay registros</hlm-td>
       </hlm-trow>
-      <hlm-trow *ngFor="let compra of (compras$ | async); trackBy: trackByCompraId">
+      <hlm-trow
+        *ngFor="let compra of (compras$ | async); trackBy: trackByCompraId">
         <hlm-td class="flex-1">{{ compra.createdAt }}</hlm-td>
-        <hlm-td class="flex-1">{{ compra.details?.length }}</hlm-td>
+        <hlm-td class="flex-1">
+          <button hlmBtn variant="destructive" (click)="getDetails(compra.id || 0)">
+            Insumos
+          </button>
+        </hlm-td>
         <hlm-td class="flex-1">{{ compra.proveedor?.nombreEmpresa }}</hlm-td>
         <hlm-td class="flex-1">{{ compra.user?.name }}</hlm-td>
-        <hlm-td class="flex-1">{{ compra.status }}</hlm-td>
+        @if (compra.status === 'Pendiente') {
+        <hlm-td class="flex-1" style="color: orange;">{{ compra.status
+          }}</hlm-td>
+        } @else if (compra.status === 'Entregada') {
+        <hlm-td class="flex-1" style="color: green;">{{ compra.status
+          }}</hlm-td>
+        } @else {
+        <hlm-td class="flex-1" style="color: red;">{{ compra.status }}</hlm-td>
+        }
         <hlm-td class="flex-1">
-          <button hlmBtn variant="success" (click)="compra.id !== undefined ? getCompraById(compra.id) : null">
-            Detalles
+          @if(compra.status === 'Pendiente'){
+          <button hlmBtn variant="success"
+            (click)="compra.id !== undefined ? onEdit(compra) : null">
+            Entrega
           </button>
+          } @else {
+          <button disabled hlmBtn variant="success">
+            Entrega
+          </button>
+          }
         </hlm-td>
       </hlm-trow>
     </hlm-table>
   </div>
-
 </div>
+
+<hlm-dialog class="w-[500px]">
+  <button class="hidden" hlmBtn variant="success" brnDialogTrigger
+    id="edit-status">
+    Status
+  </button>
+  <hlm-dialog-content class="min-w-[800px] w-full bg-success"
+    *brnDialogContent="let ctx">
+    <hlm-dialog-header>
+      <h3 class="text-white" hlmDialogTitle>Actualizar status</h3>
+    </hlm-dialog-header>
+    <form (ngSubmit)="editStatus(statusFormEdit)" #statusFormEdit="ngForm">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="flex-1" for="status">Status*</label>
+            </div>
+            <div>
+              <brn-select class="inline-block bg-success"
+                placeholder="Seleccionar" [(ngModel)]="compra.status"
+                name="selectedStatus">
+                <hlm-select-trigger class="w-fit bg-success">
+                  <hlm-select-value />
+                </hlm-select-trigger>
+                <hlm-select-content class="bg-success">
+                  <hlm-option value="Entregada">Entregada</hlm-option>
+                  <hlm-option value="Cancelada">Cancelada</hlm-option>
+                </hlm-select-content>
+              </brn-select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hlm-dialog-footer>
+        <button hlmBtn type="submit" variant="primary">Actualizar</button>
+      </hlm-dialog-footer>
+    </form>
+  </hlm-dialog-content>
+</hlm-dialog>

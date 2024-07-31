@@ -170,14 +170,11 @@ namespace Server.Controllers
         [HttpPut]
         // [Authorize]
         [Route("statusCompra")]
-        public async Task<IActionResult> CancelCompra([FromBody] JObject data)
+        public async Task<IActionResult> CancelCompra(PurchaseDTO compradto)
         {
             try
             {
-                int idCompra = data["id"].ToObject<int>();
-                string status = data["status"].ToObject<string>();
-
-                var compra = await _context.Purchases.FindAsync(idCompra);
+                var compra = await _context.Purchases.FindAsync(compradto.Id);
                 var detail = await _context.DetailPurchases.Where(d => d.IdPurchase == compra.Id).ToListAsync();
 
                 if (compra == null)
@@ -185,34 +182,29 @@ namespace Server.Controllers
                     return BadRequest("No se encontro la compra realizada");
                 }
 
-                if (status == "Cancelada")
+                if (compradto.Status == "Cancelada")
                 {
                     compra.Status = "Cancelada";
 
                     foreach (var item in detail)
                     {
-                        item.Status = "Cancelado";
+                        item.Status = "Cancelada";
                     }
                 }
 
-                if (status == "Aceptada")
-                {
-                    compra.Status = "Aceptada";
-                }
-
-                if (status == "Entregada")
+                if (compradto.Status == "Entregada")
                 {
                     compra.Status = "Entregada";
 
                     foreach (var item in detail)
                     {
-                        item.Status = "Entregado";
+                        item.Status = "Entregada";
                     }
                 }
 
                 await _context.SaveChangesAsync();
 
-                return Ok();
+                return Ok(200);
             }
             catch (Exception ex)
             {
@@ -221,6 +213,30 @@ namespace Server.Controllers
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
         }
+
+        [HttpGet]
+        // [Authorize]
+        [Route("getDetailCompra/{idCompra}")]
+        public async Task<IActionResult> GetDetailCompra(int? idCompra)
+        {
+			try
+            {
+				var detail = await _context.DetailPurchases.Where(d => d.IdPurchase == idCompra).ToListAsync();
+
+				if (detail == null)
+                {
+					return BadRequest("No se encontro la compra seleccionada");
+				}
+
+				return Ok(detail);
+			}
+			catch (Exception ex)
+            {
+				Console.WriteLine(ex.Message);
+
+				return NotFound("Se produjo un error en el servidor, contacte a soporte");
+			}
+		}
 
 
         [HttpPut]

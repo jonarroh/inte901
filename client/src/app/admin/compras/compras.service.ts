@@ -20,4 +20,10 @@ export class ComprasService {
 
   createCompra = (compra: Compra): Observable<Compra> =>
     this.http.post<Compra>(`${this.apiURL}/addCompra`, compra)
+
+  editCompra = (compra: Compra): Observable<Compra> =>
+    this.http.put<Compra>(`${this.apiURL}/statusCompra`, compra)
+
+  getDetailCompra = (id: number): Observable<Compra> =>
+    this.http.get<Compra>(`${this.apiURL}/getDetailCompra/${id}`)
 }
