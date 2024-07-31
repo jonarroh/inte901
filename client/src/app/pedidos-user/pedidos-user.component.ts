@@ -1,32 +1,31 @@
-
 import { Component, OnInit } from '@angular/core';
-
 import { Order, Producto } from '~/lib/types';
 import { PedidosUserServiceService } from './pedidos-user-service.service';
 import { NavbarComponent } from '../home/navbar/navbar.component';
 import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
 import { ProductoService } from '../admin/productos/service/producto.service';
 import { Router } from '@angular/router';
-
+import { PedidoStateService } from '../pedido-state/pedido-state.service';
 
 @Component({
   selector: 'app-pedidos-user',
   standalone: true,
   imports: [NavbarComponent, NgFor, CurrencyPipe, NgIf],
   templateUrl: './pedidos-user.component.html',
-  styleUrl: './pedidos-user.component.css'
+  styleUrls: ['./pedidos-user.component.css']
 })
 export class PedidosUserComponent implements OnInit {
   orders: Order[] = [];
-  productos: { [id: number]: { nombre: string, id: number } } = {};
+  productos: { [key: number]: { nombre: string; id: number } } = {};
   error: string | null = null;
 
   constructor(
     private pedidosUserService: PedidosUserServiceService,
     private productoService: ProductoService,
-    private router: Router
+    private router: Router,
+    private pedidoStateService: PedidoStateService
   ) {}
-
+  
   ngOnInit(): void {
     const userId = this.getUserIdFromLocalStorage();
     if (userId) {
@@ -71,7 +70,21 @@ export class PedidosUserComponent implements OnInit {
     }
     return null;
   }
+
   viewStatus(orderId: number): void {
-    this.router.navigate(['/estatus', orderId]); // Redirige al componente process-state
+    const order = this.orders.find(o => o.id === orderId);
+    if (order) {
+      const productIds = order.detailOrders.map(detail => detail.idProduct);
+      this.pedidoStateService.setOrderId(orderId);
+      this.pedidoStateService.setProductIds(productIds);
+      this.pedidoStateService.setOrderStatus(order.status); // Asegúrate de que este método esté implementado en el servicio
+
+      this.router.navigate(['/estatus', orderId], {
+        queryParams: { 
+          productIds: productIds.join(','), 
+          status: order.status 
+        }
+      });
+    }
   }
 }
