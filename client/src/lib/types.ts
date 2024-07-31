@@ -202,3 +202,12 @@ export interface ReservaDTO {
   estatus: string;
   detailReserva: DetailReservaDTO;
 }
+
+
+export class OrderListComponent {
+  orders: any[] = [];
+  productos: any = {};
+  searchTerm: string = '';
+  selectedFilter: string = '';
+  error: string = '';
+}

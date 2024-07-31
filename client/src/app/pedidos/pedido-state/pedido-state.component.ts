@@ -22,17 +22,23 @@ export class PedidoStateComponent implements OnInit{
   productIds: number[] = [];
   orderStatus: string | null = null;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private pedidoStateService: PedidoStateService) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      const productIdsParam = params['productIds'];
-      this.productIds = productIdsParam ? productIdsParam.split(',').map((id: string) => parseInt(id, 10)) : [];
-      
-      this.orderStatus = params['status'];
-      
-      console.log('Received product IDs:', this.productIds);
-      console.log('Received order status:', this.orderStatus);
+    this.pedidoStateService.getOrderStatus().subscribe(status => {
+      this.orderStatus = status;
+      // Asegúrate de que `status` no sea null antes de usarlo
+      if (status !== null) {
+        localStorage.setItem('orderStatus', status);
+      }
+    });
+
+    this.pedidoStateService.getProductIds().subscribe(ids => {
+      this.productIds = ids;
+      // Asegúrate de que `ids` no sea null o undefined antes de usarlo
+      if (ids) {
+        localStorage.setItem('productIds', JSON.stringify(ids));
+      }
     });
   }
 }
