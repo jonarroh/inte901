@@ -5,6 +5,7 @@ import { CartService } from '~/app/cart/cart.service';
 import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
 import { Router } from '@angular/router';
+import { tick } from '@angular/core/testing';
 
 @Component({
   selector: 'app-details',
@@ -54,6 +55,7 @@ export class DetailsComponent {
         isDeliver: !this.isOrderToStore(),
         idClient: this.getIdClient(),
         status : 'Ordenado',
+        ticket: '',
         detailOrders: [
           ...this.products().map((product) => ({
             id: 0,
@@ -64,6 +66,7 @@ export class DetailsComponent {
             priceSingle: product.precio,
             dateOrder: new Date().toISOString(),
             status: 'Ordenado',
+            
 
           })),
         ],

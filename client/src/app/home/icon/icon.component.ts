@@ -55,6 +55,7 @@ export class IconComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit() {
+    console.log(Number(localStorage.getItem('userId')));
     this.userService.getUser(Number(localStorage.getItem('userId'))).subscribe({
       next: (user) => {
         this.userData.set(user);
