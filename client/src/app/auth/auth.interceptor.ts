@@ -21,9 +21,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   if (token) {
     if (isTokenExpired(token)) {
-      const router = inject(Router);
-      router.navigate(['/login']);
-      return new Observable<HttpEvent<any>>(() => {});
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userData');
+      return next(req);
     } else {
       const clonedRequest = req.clone({
         setHeaders: {
