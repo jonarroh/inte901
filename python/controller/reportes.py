@@ -1,9 +1,58 @@
 from flask import request, jsonify, Blueprint
-from db.db import db_instance  # Import the instance of DB
+from db.db import db_instance  
 from datetime import timedelta
 from datetime import datetime
+import random
+from matplotlib import colors as mcolors
 
 reportes = Blueprint('reportes', __name__)
+
+
+@reportes.route('/reportes/users', methods=['POST'])
+def get_users():
+    query = """
+    SELECT * FROM Users
+    """
+    result = db_instance.execute_query(query)
+    return jsonify({
+        'data': result
+    })
+
+
+@reportes.route('/reportes/InventarioMPs', methods=['POST'])
+def get_inventory():
+    QUERY = """
+    SELECT * FROM InventarioMPs imp 
+    inner join MateriasPrimas mp on mp.Id = imp.IdMateriaPrima
+    WHERE imp.estatus = 1
+    """
+    result = db_instance.execute_query(QUERY)
+
+    labels = [
+        Material['Material'] for Material in result
+    ]
+    colors  = [
+                random.choice(list(mcolors.CSS4_COLORS.values())) for _ in range(len(result))
+
+            ]
+    datasets =[
+        {
+            'axis': 'y',
+            'label': 'Cantidad de materia prima',
+            'data': [Material['Cantidad'] for Material in result],
+            'fill': False,
+            'backgroundColor': colors,
+            'borderColor': colors,
+        }
+    ]
+
+
+
+    return jsonify({
+        'labels': labels,
+        'datasets': datasets
+    })
+
 
 
 @reportes.route('/reportes/ventas', methods=['POST'])
