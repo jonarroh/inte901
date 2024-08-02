@@ -193,6 +193,36 @@ namespace Server.Controllers
         }
 
 
+        [HttpGet]
+        // [Authorize]
+        [Route("orderDetail/{id}")]
+        public async Task<IActionResult> GetOrderDetail (int? id)
+        {
+            try
+            {
+                var detail = await _context.DetailOrders.Where(d => d.IdOrder == id).ToListAsync();
+
+                if (detail == null)
+                {
+                    return BadRequest("No se encontraron detalles de la orden");
+                }
+
+                foreach (var d in detail)
+                {
+                    d.DateOrder = DateTime.Parse(d.DateOrder.ToString() ?? "");
+                }
+
+                return Ok(detail);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+
         [HttpPost]
         // [Authorize]
         [Route("addOrder")]

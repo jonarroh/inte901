@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ENDPOINTS } from '~/lib/endpoint';
 import { Observable } from 'rxjs';
 import { Order } from './interface/order';
+import { DetailOrder } from './interface/detailorder';
 
 @Injectable({
   providedIn: 'root'
@@ -14,4 +15,10 @@ export class VentasService {
 
   getOrders = (): Observable<Order[]> =>
     this.http.get<Order[]>(`${this.apiURL}/allOrders`)
+
+  getDetail = (id: number): Observable<DetailOrder> =>
+    this.http.get<DetailOrder>(`${this.apiURL}/orderDetail/${id}`)
+
+  getOrder = (ticket: number, id: number): Observable<Order> =>
+    this.http.get<Order>(`${this.apiURL}/oneOrder/${ticket},${id}`)
 }
