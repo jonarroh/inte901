@@ -149,6 +149,9 @@ export class AddCardComponent {
     })
   }
 
+  obscureCardNumber(cardNumber: string) {
+    return cardNumber.slice(0, 4) + ' **** **** ' + cardNumber.slice(-4);	
+  }
 
   protected form = createFormGroup({
     cardHolderName: createFormField('',{

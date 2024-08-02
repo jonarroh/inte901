@@ -152,6 +152,7 @@ export interface Order {
   detailOrders: DetailOrder[];
   creditCard: CreditCard;
   direcciones: Address;
+  ticket: string;
 }
 
 export interface UserEditDTO{

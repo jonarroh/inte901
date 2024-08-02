@@ -35,7 +35,7 @@
     >
       <div class="flex justify-between">
         <div>
-          <h5 class="mb-2 text-2xl font-bold text-gray-900">Orden ID: {{ order.id }}</h5>
+          <h5 class="mb-2 text-2xl font-bold text-gray-900">Orden ID: {{ order.ticket }}</h5>
           <p class="mb-3 text-gray-700">Total: ${{ order.total }}</p>
         </div>
         <div class="flex flex-col items-center mt-4">
@@ -65,10 +65,8 @@
           <div class="w-24 h-24 bg-gray-200 rounded-lg flex-shrink-0" *ngIf="productos[detail.idProduct]">
             <img [src]="'http://localhost:5000/static/productos/' + detail.idProduct + '.webp'" alt="" class="w-full h-full object-cover rounded-lg">
           </div>
-          <div class="flex-grow">
-            <!-- En tu HTML -->
-            <h4 class="text-lg font-medium text-gray-900">{{ productos[detail.idProduct].nombre }}</h4>
-
+          <div class="flex flex-col justify-around">
+            <h4 class="text-lg font-medium text-gray-900">{{ productos[detail.idProduct].nombre || 'Desconocido' }}</h4>
             <p class="text-gray-500">Cantidad: {{ detail.quantity }}</p>
             <p class="mb-3 text-gray-700">Total: ${{ order.total }}</p>
           </div>

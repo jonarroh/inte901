@@ -87,7 +87,7 @@ export const routes: Routes = [
     ]
   },
   {
-    path: 'pedidosList',
+    path: 'orders',
     component: PedidosUserComponent,
     
   },

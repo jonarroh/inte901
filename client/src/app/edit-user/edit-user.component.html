@@ -16,13 +16,15 @@
     <label class="block mb-2 text-sm font-medium text-gray-900" for="file_input">
       Cambiar foto de perfil
     </label>
+   <div>
     <input 
-      class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" 
-      id="file_input"
-      type="file"
-      (change)="onImageChange($event)"
-      accept="image/png, image/jpeg, image/jpg"
-    />
+    hlmInput 
+    id="file_input"
+    type="file"
+    (change)="onImageChange($event)"
+    accept="image/png, image/jpeg, image/jpg"
+  />
+   </div>
   </div>
 
   <div class="flex flex-col space-y-8">
@@ -83,7 +85,7 @@
             } }
           </div>
 
-          <div>
+          <div class="col-span-2">
             <label for="email" class="block mb-2">
               Correo electrónico
               <input
@@ -107,6 +109,7 @@
             } }
           </div>
 
+         <div class="col-span-2">
           <div>
             <label for="ActualPassword" class="block mb-2">
               Contraseña actual
@@ -135,52 +138,57 @@
                 class="block w-full mt-1"
               />
             </label>
+            <div class="flex flex-row items-center justify-between  mt-4 w-full gap-x-4">
+              <a routerLink="/edit/address"
+              hlmBtn
+              class="text-sm  hover:underline bg-background"
+              >
+                editar dirección
+              </a>
+              <a routerLink="/edit/payment"
+              class="text-sm hover:underline bg-background"
+              hlmBtn
+              >
+                editar método de pago
+              </a>
+              
+          
+              <button
+              hlmBtn
+                class="bg-secondary text-white rounded-md  flex justify-center items-center hover:bg-secondary-dark transition-colors duration-300"
+                [disabled]="disabled()"
+                (click)="onSaveData()"
+              >
+                Guardar cambios
+              </button>
+              
+    <hlm-alert-dialog>
+      <button id='edit-profile' variant='outline' brnAlertDialogTrigger hlmBtn
+      class=" bg-error text-white rounded-md flex justify-center items-center hover:bg-error/90 transition-colors duration-300"
+      >Eliminar cuenta</button>
+      <hlm-alert-dialog-content *brnAlertDialogContent='let ctx'>
+        <hlm-alert-dialog-header>
+          <h3 hlmAlertDialogTitle>¿Estas seguro que deseas eliminar tu cuenta?</h3>
+          <p hlmAlertDialogDescription>
+            Esta acción no se puede deshacer y perderás todos tus datos.
+          </p>
+        </hlm-alert-dialog-header>
+        <hlm-alert-dialog-footer>
+          <button hlmAlertDialogCancel (click)='ctx.close()'>Cancelar</button>
+          <button hlmAlertDialogAction (click)='ctx.close()'>Eliminar cuenta</button>
+        </hlm-alert-dialog-footer>
+      </hlm-alert-dialog-content>
+    </hlm-alert-dialog>
+    
+            </div>
           </div>
-          
-
-        </div>
+         </div>
+         
+        </div>  
         
-        <div class="flex flex-row items-center">
-          <button
-            class="w-80 h-10 bg-secondary text-white rounded-md mt-4 flex justify-center items-center"
-            [disabled]="disabled()"
-            (click)="onSaveData()"
-          >
-            Guardar cambios
-          </button>
-          
-<hlm-alert-dialog>
-  <button id='edit-profile' variant='outline' brnAlertDialogTrigger hlmBtn
-  class="w-80 h-10 bg-error text-white rounded-md mt-4 flex justify-center items-center"
-  >Eliminar cuenta</button>
-  <hlm-alert-dialog-content *brnAlertDialogContent='let ctx'>
-    <hlm-alert-dialog-header>
-      <h3 hlmAlertDialogTitle>¿Estas seguro que deseas eliminar tu cuenta?</h3>
-      <p hlmAlertDialogDescription>
-        Esta acción no se puede deshacer y perderás todos tus datos.
-      </p>
-    </hlm-alert-dialog-header>
-    <hlm-alert-dialog-footer>
-      <button hlmAlertDialogCancel (click)='ctx.close()'>Cancelar</button>
-      <button hlmAlertDialogAction (click)='ctx.close()'>Eliminar cuenta</button>
-    </hlm-alert-dialog-footer>
-  </hlm-alert-dialog-content>
-</hlm-alert-dialog>
-
-        </div>
+        
       </form>
-      <div class="flex flex-col justify-between">
-        <a routerLink="/edit/address"
-        class="text-sm text-gray-400 hover:text-gray-400 hover:underline"
-        >
-          editar dirección
-        </a>
-        <a routerLink="/edit/payment"
-        class="text-sm text-gray-400 hover:text-gray-400 hover:underline"
-        >
-          editar método de pago
-        </a>
-      </div>
+      
     </section>
   </div>
 </section>

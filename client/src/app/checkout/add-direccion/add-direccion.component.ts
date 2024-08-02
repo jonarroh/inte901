@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CheckoutService } from '../checkout.service';
 import { UserService } from '~/app/home/services/user.service';
 import { Address } from '~/lib/types';
@@ -74,6 +74,7 @@ type Estados = { label: string; value: string }
     HlmAlertDialogHeaderComponent,
     HlmAlertDialogOverlayDirective,
     HlmAlertDialogTitleDirective,
+    RouterModule,
     
     
 ],
