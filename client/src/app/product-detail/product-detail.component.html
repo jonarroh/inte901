@@ -2,7 +2,7 @@
 @if (isLoading()) {
   <hlm-skeleton class='h-3 w-50' />
 } @else {
-  <div class="w-full p-4 bg-gray-100 rounded-lg shadow-md">
+  <div class="w-full p-4 bg-white rounded-lg shadow-md">
     <span class="text-2xl font-bold text-gray-800">{{ product.nombre }}</span>
     <brn-separator hlmSeparator class="w-full text-gray-500 bg-gray-300 my-2" />
   </div>
@@ -31,10 +31,10 @@
             <brn-accordion-content hlm class="p-2 bg-gray-50 rounded-lg">
               <div class="flex flex-col space-y-1">
                 @for (item of product.ingredientes; track $index) {
-                  <span class="text-sm text-gray-600">{{ item.materiaPrima.material }}</span>
+                  <span class="text-md text-gray-600">{{ item.materiaPrima.material }}</span>
                 }
                 @empty {
-                  <span class="text-sm text-gray-600">No hay ingredientes</span>
+                  <span class="text-md text-gray-600">No hay ingredientes</span>
                 }
               </div>
             </brn-accordion-content>
