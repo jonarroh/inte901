@@ -26,6 +26,22 @@ namespace Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Producto>>> GetProductos()
         {
+            var productos = await _context.Productos.ToListAsync();
+
+            foreach(var producto in productos)
+            {
+                var ingredientes = await _context.Ingredientes
+                    .Where(i => i.IdProducto == producto.Id)
+                    .ToListAsync();
+
+                foreach (var ingrediente in ingredientes)
+                {
+                    ingrediente.MateriaPrima = await _context.MateriasPrimas.FindAsync(ingrediente.IdMateriaPrima);
+                }
+
+                producto.Ingredientes = ingredientes;
+            }
+
             return await _context.Productos.ToListAsync();
         }
 

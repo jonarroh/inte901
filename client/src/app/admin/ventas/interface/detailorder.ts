@@ -7,4 +7,5 @@ export interface DetailOrder {
   status?: string;
   idOrder?: number;
   idProduct?: number;
+  pruduct?: string;
 }
