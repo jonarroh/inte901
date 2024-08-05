@@ -55,6 +55,9 @@ export class IconComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit() {
+   if(this.isLog()) {
+
+   
     this.userService.getUser(Number(localStorage.getItem('userId'))).subscribe({
       next: (user) => {
         this.userData.set(user);
@@ -67,6 +70,11 @@ export class IconComponent implements OnInit {
       }
     });
   }
+}
+
+isLog() {
+  return !!localStorage.getItem('token');
+}
 
   logout() {
     localStorage.removeItem('token');

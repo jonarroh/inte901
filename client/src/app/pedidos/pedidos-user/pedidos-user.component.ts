@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Order, Producto } from '~/lib/types';
 import { PedidosUserServiceService } from './pedidos-user-service.service';
-import { NavbarComponent } from '../home/navbar/navbar.component';
+import { NavbarComponent } from '../../home/navbar/navbar.component';
 import { CommonModule, CurrencyPipe, NgFor, NgIf } from '@angular/common';
-import { ProductoService } from '../admin/productos/service/producto.service';
+import { ProductoService } from '../../admin/productos/service/producto.service';
 import { Router } from '@angular/router';
 import { PedidoStateService } from '../pedido-state/pedido-state.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { SignalRService } from '~/app/orden/signal-rorder.service';
 
 @Component({
   selector: 'app-pedidos-user',
@@ -35,29 +36,54 @@ export class PedidosUserComponent implements OnInit {
     private pedidosUserService: PedidosUserServiceService,
     private productoService: ProductoService,
     private router: Router,
-    private pedidoStateService: PedidoStateService
+    private pedidoStateService: PedidoStateService,
+    private signalRService: SignalRService
   ) {}
 
   
 
 
   ngOnInit(): void {
+    this.signalRService.hubConnection.on('ReceiveOrderUpdate', (message: string) => {
+      const changeId = message.split(':')[0];
+      const status = message.split(':')[1];
+      if (this.orders) {
+        const order = this.orders.find(o => o.id === Number(changeId));
+        if (order) {
+          order.status = status;
+        }
+      }
+    });
+  
     const userId = this.getUserIdFromLocalStorage();
     if (userId) {
       this.pedidosUserService.getOrdersByUser(userId).subscribe({
         next: (data) => {
           this.orders = data;
+          console.log('Orders:', this.orders);
+          let remainingProducts = 0;
           this.orders.forEach(order => {
             order.detailOrders.forEach(detail => {
+              remainingProducts++;
               this.productoService.getProductoById(detail.idProduct).subscribe({
                 next: (producto) => {
                   this.productos[detail.idProduct] = { 
                     nombre: producto.nombre || 'Desconocido', 
                     id: producto.id ?? 0 
                   };
+                  remainingProducts--;
+                  if (remainingProducts === 0) {
+                    // All products loaded
+                    this.orders = [...this.orders]; // Trigger change detection
+                  }
                 },
                 error: (err) => {
                   console.error('Error fetching product', err);
+                  remainingProducts--;
+                  if (remainingProducts === 0) {
+                    // All products loaded
+                    this.orders = [...this.orders]; // Trigger change detection
+                  }
                 }
               });
             });
@@ -72,6 +98,7 @@ export class PedidosUserComponent implements OnInit {
       this.error = 'No se encontró el ID de usuario.';
     }
   }
+  
 
   private getUserIdFromLocalStorage(): number | null {
     const userData = localStorage.getItem('userData');

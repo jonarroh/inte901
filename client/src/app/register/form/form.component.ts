@@ -126,9 +126,6 @@ export class FormComponent {
           
           this.disabled.set(false); // para que no le pueda dar al boton de clic
           console.error(error)
-
-        
-
         },
         complete: () =>{
           this.disabled.set(false);

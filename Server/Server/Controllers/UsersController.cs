@@ -11,10 +11,12 @@ using Server.lib;
 using System.Security.Cryptography;
 using System.Text;
 using Server.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Server.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class UsersController : ControllerBase
     {

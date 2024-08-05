@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavbarComponent } from '../home/navbar/navbar.component';
+import { NavbarComponent } from '../../home/navbar/navbar.component';
 import { HlmCarouselComponent, HlmCarouselContentComponent, HlmCarouselItemComponent, HlmCarouselNextComponent, HlmCarouselPreviousComponent } from '~/components/ui-carousel-helm/src';
 import { ProcessStateComponent } from './process-state/process-state.component';
 import { ProductsListComponent } from './products-list/products-list.component';

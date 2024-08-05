@@ -1,22 +1,24 @@
 <home-navbar></home-navbar>
-<section class="flex flex-col items-center justify-between p-4 h-[calc(100vh-3rem)] w-screen">
+<section class="flex flex-col items-center justify-between p-8 h-[calc(100vh-3rem)] w-screen">
   <div class="grid grid-cols-12 w-full h-full">
     <div class="col-span-4 only-border-right h-full">
-      <div class="mt-8">
-        <h2>Tus Tarjetas</h2>
+      <div>
+        <h2
+        class="text-2xl font-bold"
+        >Tus Tarjetas</h2>
         @for (card of user().creditCards; track $index) {
-          <div class="flex justify-between items-center border border-black rounded-lg px-4 py-2 my-2 ">
+          <div class="flex justify-between items-center borde rounded-lg px-4 py-2 my-2 shadow-md  w-full border border-gray-50/30 bg-slate-50 ">
             <div class="flex items-center w-full">
               <lucide-icon name="house"></lucide-icon>
               <span class="mx-2 truncate w-full">
-                {{card.cardNumber}}, {{card.expiryDate}}
+                {{obscureCardNumber(card.cardNumber)}}, {{card.expiryDate}}
               </span>
             </div>
             
             <div class="flex items-center space-x-2">
               <hlm-alert-dialog>
-                <button id='edit-profile' brnAlertDialogTrigger hlmBtn class="bg-white">
-                  <lucide-icon name='trash'></lucide-icon>
+                <button id='edit-profile' brnAlertDialogTrigger hlmBtn class="bg-slate-50">
+                  <lucide-icon name='trash' ></lucide-icon>
                 </button>
                 <hlm-alert-dialog-content *brnAlertDialogContent='let ctx'>
                   <hlm-alert-dialog-header>
@@ -44,7 +46,9 @@
     </div>
     
     <div class="col-span-8 px-4">
-      <h2>Agregar tarjeta</h2>
+      <h2
+      class="text-2xl font-bold"
+      >Agregar tarjeta</h2>
       <div>
         <form class="bg-white w-full max-w-3xl mx-auto px-6 py-8  rounded-md flex flex-col justify-center items-center">
           <div class="w-full ">

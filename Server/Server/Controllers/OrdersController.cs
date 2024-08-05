@@ -100,7 +100,7 @@ namespace Server.Controllers
             {
                 // Obtén todas las órdenes del usuario específico
                 var ordenes = await _context.Orders
-                    .Where(o => o.IdUser == userId)
+                    .Where(o => o.IdClient == userId)
                     .ToListAsync();
 
                 if (ordenes == null || !ordenes.Any())
@@ -109,20 +109,36 @@ namespace Server.Controllers
                 }
 
                 var ordenesPendientes = new List<Order>();
+                var products = await _context.Productos.ToListAsync();
 
                 foreach (var orden in ordenes)
                 {
-                    // Obtener la fecha del detalle de la orden de forma asíncrona
-                    var dateOrder = await _context.DetailOrders
+                    // Obtener los detalles de la orden de forma asíncrona
+                    var detailOrders = await _context.DetailOrders
                         .Where(d => d.IdOrder == orden.Id)
                         .ToListAsync();
 
-                    // Asignar la fecha al campo correspondiente
-                    orden.OrderDate = dateOrder != null ? new DateTime() : dateOrder.FirstOrDefault().DateOrder;
+                    // Asignar la fecha más reciente del detalle de la orden al campo correspondiente
+                    if (detailOrders.Any())
+                    {
+                        orden.OrderDate = detailOrders.Max(d => d.DateOrder);
+                    }
+
+                    foreach (var detail in detailOrders)
+                    {
+                        // Obtener el producto correspondiente al detalle de la orden
+                        var product = products.FirstOrDefault(p => p.Id == detail.IdProduct);
+
+                        // Asignar el producto al detalle de la orden
+                        detail.Product = product;
+                    }
 
                     // Agregar la orden a la lista
                     ordenesPendientes.Add(orden);
                 }
+
+                // Ordenar las órdenes por fecha de forma descendente (más recientes primero)
+                ordenesPendientes = ordenesPendientes.OrderByDescending(o => o.OrderDate).ToList();
 
                 return Ok(ordenesPendientes);
             }
@@ -132,6 +148,7 @@ namespace Server.Controllers
                 return StatusCode(500, "Se produjo un error en el servidor, contacte a soporte");
             }
         }
+
 
 
 

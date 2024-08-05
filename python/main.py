@@ -4,7 +4,7 @@ import os
 from io import BytesIO
 from controller.models import models
 from controller.ridge import rid
-# from controller.reportes import reportes
+from controller.reportes import reportes
 import qrcode
 
 
@@ -12,7 +12,7 @@ import qrcode
 app = Flask(__name__)
 app.register_blueprint(models)
 app.register_blueprint(rid)
-# app.register_blueprint(reportes)
+app.register_blueprint(reportes)
 
 STATIC_FOLDER = 'static'
 
