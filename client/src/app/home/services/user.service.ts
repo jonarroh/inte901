@@ -115,5 +115,13 @@ export class UserService {
   }
 
 
+  createUser(userData: User) {
+      return this.http.post<User>(`${this.endpoint}`, userData);
+  }
+
+  getAllUsers() {
+    return this.http.get<User[]>(`${this.endpoint}`);
+  }
+
   
 }

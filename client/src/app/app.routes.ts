@@ -29,6 +29,7 @@ import { ProveedoresComponent } from './admin/proveedores/proveedores.component'
 import { PedidosUserComponent } from './pedidos/pedidos-user/pedidos-user.component';
 import { ProcessStateComponent } from './pedidos/pedido-state/process-state/process-state.component';
 import { AdminGuard } from './auth/admin.guard';
+import { UsersComponent } from './admin/users/users.component';
 
 
 
@@ -58,7 +59,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
-    canActivate: [AdminGuard],
+    // canActivate: [AdminGuard],
     children: [
       {
         path: 'ventas',
@@ -83,6 +84,10 @@ export const routes: Routes = [
       {
         path: 'proveedores',
         component: ProveedoresComponent
+      },
+      {
+        path:'users',
+        component: UsersComponent
       }
     ]
   },

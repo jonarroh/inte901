@@ -40,6 +40,7 @@ export class AppComponent {
           order.status = status;
           toast.info(`Tu orden ${order.ticket} ha cambiado a ${status}`);
         }
+        else return;
       }
     });
     
