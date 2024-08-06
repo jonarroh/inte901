@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Server;
 using Server.Hubs;
@@ -235,116 +236,125 @@ namespace Server.Controllers
                     return BadRequest("Campos incompletos, es necesario completar todos los datos.");
                 }
 
-                Random rnd = new Random();
-                int ticket;
-                bool ticketExists;
-                string responseStatus;
+                Console.WriteLine(JsonConvert.SerializeObject(ordertdo));
 
-                do
-                {
-                    ticket = rnd.Next(10000000, 99999999);
-                    ticketExists = await _context.Orders.AnyAsync(d => d.Ticket == ticket);
-                } while (ticketExists);
 
-                var orden = new Order
-                {
-                    IdClient = ordertdo.IdClient,
-                    IdUser = ordertdo.IdUser,
-                    Total = ordertdo.Total,
-                    OrderDate = DateTime.Now,
-                    Status = "Pendiente",
-                    Ticket = ticket,
-                };
+                return Ok(ordertdo);
+            //    if (ordertdo == null)
+            //    {
+            //        return BadRequest("Campos incompletos, es necesario completar todos los datos.");
+            //    }
 
-                // Validación y guardado de la dirección solo si es una entrega
-                if (ordertdo.IsDeliver == true)
-                {
-                    var tarjeta = await _context.CreditCard.FindAsync(ordertdo.IdUser);
+            //    Random rnd = new Random();
+            //    int ticket;
+            //    bool ticketExists;
+            //    string responseStatus;
 
-                    if (_creditCardService.IsValidCreditCard(tarjeta))
-                    {
-                        decimal amount = (decimal)orden.Total;
+            //    do
+            //    {
+            //        ticket = rnd.Next(10000000, 99999999);
+            //        ticketExists = await _context.Orders.AnyAsync(d => d.Ticket == ticket);
+            //    } while (ticketExists);
 
-                        if (_creditCardService.CardCanPay(tarjeta, amount))
-                        {
-                            var direccion = new Direcciones
-                            {
-                                Calle = ordertdo.Direcciones.Calle,
-                                NumeroExterior = ordertdo.Direcciones.NumeroExterior,
-                                Estatus = "Activo",
-                                Colonia = ordertdo.Direcciones.Colonia,
-                                Ciudad = ordertdo.Direcciones.Ciudad,
-                                Estado = ordertdo.Direcciones.Estado,
-                                Pais = ordertdo.Direcciones.Pais,
-                                CodigoPostal = ordertdo.Direcciones.CodigoPostal,
-                                UserId = ordertdo.IdUser,
-                            };
+            //    var orden = new Order
+            //    {
+            //        IdClient = ordertdo.IdClient,
+            //        IdUser = ordertdo.IdUser,
+            //        Total = ordertdo.Total,
+            //        OrderDate = DateTime.Now,
+            //        Status = "Pendiente",
+            //        Ticket = ticket,
+            //    };
 
-                            await _context.Direcciones.AddAsync(direccion);
-                        }
-                        else
-                        {
-                            return BadRequest("No hay suficiente saldo en la tarjeta.");
-                        }
-                    }
-                    else
-                    {
-                        return BadRequest("La tarjeta no es válida.");
-                    }
-                }
+            //    // Validación y guardado de la dirección solo si es una entrega
+            //    if (ordertdo.IsDeliver == true)
+            //    {
+            //        var tarjeta = await _context.CreditCard.FindAsync(ordertdo.IdUser);
 
-                await _context.Orders.AddAsync(orden);
-                await _context.SaveChangesAsync();
+            //        if (_creditCardService.IsValidCreditCard(tarjeta))
+            //        {
+            //            decimal amount = (decimal)orden.Total;
 
-                // Guardado de los detalles de la orden
-                foreach (var d in ordertdo.DetailOrders)
-                {
-                    var detail = new DetailOrder
-                    {
-                        IdOrder = orden.Id,
-                        IdProduct = d.IdProduct,
-                        Quantity = d.Quantity,
-                        PriceSingle = d.PriceSingle,
-                        DateOrder = DateTime.Now,
-                        Ingredients = d.Ingredients,
-                        Status = "Pendiente"
-                    };
+            //            if (_creditCardService.CardCanPay(tarjeta, amount))
+            //            {
+            //                var direccion = new Direcciones
+            //                {
+            //                    Calle = ordertdo.Direcciones.Calle,
+            //                    NumeroExterior = ordertdo.Direcciones.NumeroExterior,
+            //                    Estatus = "Activo",
+            //                    Colonia = ordertdo.Direcciones.Colonia,
+            //                    Ciudad = ordertdo.Direcciones.Ciudad,
+            //                    Estado = ordertdo.Direcciones.Estado,
+            //                    Pais = ordertdo.Direcciones.Pais,
+            //                    CodigoPostal = ordertdo.Direcciones.CodigoPostal,
+            //                    UserId = ordertdo.IdUser,
+            //                };
 
-                    orden.DetailOrders?.Add(detail);
-                    await _context.DetailOrders.AddAsync(detail);
-                }
+            //                await _context.Direcciones.AddAsync(direccion);
+            //            }
+            //            else
+            //            {
+            //                return BadRequest("No hay suficiente saldo en la tarjeta.");
+            //            }
+            //        }
+            //        else
+            //        {
+            //            return BadRequest("La tarjeta no es válida.");
+            //        }
+            //    }
 
-                await _context.SaveChangesAsync();
+            //    await _context.Orders.AddAsync(orden);
+            //    await _context.SaveChangesAsync();
 
-                // Petición para generar el QR después de guardar la orden y sus detalles
-                using (HttpClient client = new HttpClient())
-                {
-                    var data = new Dictionary<string, string?>
-            {
-                { "id", orden.Id.ToString() },
-                { "ticket", orden.Ticket.ToString() },
-            };
+            //    // Guardado de los detalles de la orden
+            //    foreach (var d in ordertdo.DetailOrders)
+            //    {
+            //        var detail = new DetailOrder
+            //        {
+            //            IdOrder = orden.Id,
+            //            IdProduct = d.IdProduct,
+            //            Quantity = d.Quantity,
+            //            PriceSingle = d.PriceSingle,
+            //            DateOrder = DateTime.Now,
+            //            Ingredients = d.Ingredients,
+            //            Status = "Pendiente"
+            //        };
 
-                    var content = new FormUrlEncodedContent(data);
+            //        orden.DetailOrders?.Add(detail);
+            //        await _context.DetailOrders.AddAsync(detail);
+            //    }
 
-                    Console.WriteLine($"Se genero el QR, {data["id"]}, {data["ticket"]}");
+            //    await _context.SaveChangesAsync();
 
-                    HttpResponseMessage response = await client.PostAsync("http://localhost:5000/generate_qr_order", content);
+            //    // Petición para generar el QR después de guardar la orden y sus detalles
+            //    using (HttpClient client = new HttpClient())
+            //    {
+            //        var data = new Dictionary<string, string?>
+            //{
+            //    { "id", orden.Id.ToString() },
+            //    { "ticket", orden.Ticket.ToString() },
+            //};
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        responseStatus = response.StatusCode.ToString();
-                        Console.WriteLine(response.Content);
-                    }
-                    else
-                    {
-                        responseStatus = response.StatusCode.ToString();
-                        Console.WriteLine(response.Content);
-                        return NotFound($"Error con el QR, status: {responseStatus}");
-                    }
-                }
+            //        var content = new FormUrlEncodedContent(data);
 
-                return Ok(orden);
+            //        Console.WriteLine($"Se genero el QR, {data["id"]}, {data["ticket"]}");
+
+            //        HttpResponseMessage response = await client.PostAsync("http://localhost:5000/generate_qr_order", content);
+
+            //        if (response.IsSuccessStatusCode)
+            //        {
+            //            responseStatus = response.StatusCode.ToString();
+            //            Console.WriteLine(response.Content);
+            //        }
+            //        else
+            //        {
+            //            responseStatus = response.StatusCode.ToString();
+            //            Console.WriteLine(response.Content);
+            //            return NotFound($"Error con el QR, status: {responseStatus}");
+            //        }
+            //    }
+
+            //    return Ok(orden);
             }
             catch (Exception ex)
             {

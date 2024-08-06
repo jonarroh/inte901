@@ -21,4 +21,7 @@ export class VentasService {
 
   getOrder = (ticket: number, id: number): Observable<Order> =>
     this.http.get<Order>(`${this.apiURL}/oneOrder/${ticket},${id}`)
+
+  addOrder = (order: Order): Observable<Order> =>
+    this.http.post<Order>(`${this.apiURL}/addOrder`, order)
 }

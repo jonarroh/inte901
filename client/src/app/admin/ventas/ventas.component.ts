@@ -79,9 +79,22 @@ export class VentasComponent {
     this.detalles$ = this.orderService.getDetail(0) as Observable<DetailOrder[]>;
     this.productos$ = this.productoService.getProductos() as Observable<Producto[]>;
     this.ingredientes$ = this.ingredientesService.getIngredientes() as Observable<Ingrediente[]>;
+    this.cargarCarrito();
+    this.calcularTotal();
   }
 
   trackByOrderId: TrackByFunction<Order> = (index, order) => order.id;
+
+  cargarCarrito() {
+    const storedCart = localStorage.getItem('carrito');
+    if (storedCart) {
+      this.carrito = JSON.parse(storedCart);
+    }
+  }
+
+  guardarCarrito() {
+    localStorage.setItem('carrito', JSON.stringify(this.carrito));
+  }
 
   onDetail(order: Order) {
     this.detalles = { ...order.details } as DetailOrder[];
@@ -140,14 +153,19 @@ export class VentasComponent {
   }
 
   addToCart(producto: Producto) {
-    const detalle: DetailOrder = {
-      idProduct: producto.id,
-      quantity: 1,
-      pruduct: producto.nombre,
-      priceSingle: producto.precio,
-    };
-
-    this.detalles.push(detalle);
+    const existingItem = this.carrito.find(item => item.idProduct === producto.id);
+    if (existingItem) {
+      existingItem.quantity! += 1;
+    } else {
+      this.carrito.push({
+        idProduct: producto.id,
+        quantity: 1,
+        pruduct: producto.nombre,
+        priceSingle: producto.precio,
+      });
+    }
+    this.calcularTotal();
+    this.guardarCarrito();
   }
 
   detalleTotal() {
@@ -175,29 +193,50 @@ export class VentasComponent {
   }
 
   quitarItem(detalle: DetailOrder) {
-    if (this.carrito.length === 0) return;
-
-    const carritoIndex = this.carrito.findIndex(d => d.idProduct === detalle.idProduct);
-    if (carritoIndex === -1) return;
-
-    const item = this.carrito[carritoIndex];
-    this.total -= (item.priceSingle ?? 0) * (item.quantity ?? 0);
-    this.carrito.splice(carritoIndex, 1);
-
-    // Solo eliminar del carrito si la cantidad llega a 0
-    if (item.quantity && item.quantity > 1) {
-      item.quantity -= 1;
-      this.detalles.push(item); // Agregar de nuevo a detalles con la cantidad reducida
-    } else {
-      const detalleIndex = this.detalles.findIndex(d => d.idProduct === detalle.idProduct);
-      if (detalleIndex !== -1) {
-        this.detalles.splice(detalleIndex, 1); // Eliminar del array de detalles
+    const index = this.carrito.findIndex(item => item.idProduct === detalle.idProduct);
+    if (index !== -1) {
+      if (this.carrito[index].quantity! > 1) {
+        this.carrito[index].quantity!--;
+      } else {
+        this.carrito.splice(index, 1);
       }
+      this.calcularTotal();
+      this.guardarCarrito();
+    }
+  }
+
+  calcularTotal() {
+    this.total = this.carrito.reduce((acc, item) => acc + (item.priceSingle! * item.quantity!), 0);
+  }
+
+  enviarOrden() {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      console.error('Usuario no autenticado.');
+      return;
     }
 
-    // Recalcular el total en caso de haber cambios
-    this.detalleTotal();
+    const nuevaOrden: Order = {
+      idClient: 0,
+      idUser: parseInt(userId, 10) ?? 0,
+      total: this.total,
+      isDelivery: false,
+      details: this.carrito
+    };
 
-    console.log('Carrito actualizado: ', this.carrito);
+    console.log(nuevaOrden);
+
+    // this.orderService.addOrder(nuevaOrden).subscribe(
+    //   (order) => {
+    //     console.log('Orden enviada: ', order);
+    //     // Aquí puedes agregar lógica para limpiar el carrito, mostrar una confirmación, etc.
+    //     this.carrito = [];
+    //     this.total = 0;
+    //     this.guardarCarrito();
+    //   },
+    //   (error) => {
+    //     console.error('Error al enviar la orden: ', error);
+    //   }
+    // );
   }
 }
