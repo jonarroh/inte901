@@ -1,29 +1,39 @@
 <div class="container mx-auto p-4">
-  <hlm-sheet side="right">
-    <button id="carrito" variant="success" brnSheetTrigger hlmBtn (click)="calcularTotal()">
-      detalle
-    </button>
-    <hlm-sheet-content *brnSheetContent="let ctx">
-      <hlm-sheet-header>
-        <h3 hlmSheetTitle>Carrito de compra</h3>
-      </hlm-sheet-header>
-      <div class="py-4 grid gap-4">
-        <div *ngFor="let item of carrito">
+  <div class="flex justify-end mb-4 space-x-2"> <!-- space-x-2 adds some spacing between the buttons -->
+    <hlm-sheet side="right">
+      <button id="carrito" variant="success" brnSheetTrigger hlmBtn (click)="calcularTotal()">
+        Carrito
+      </button>
+      <hlm-sheet-content *brnSheetContent="let ctx">
+        <hlm-sheet-header>
+          <h3 hlmSheetTitle>Carrito de compra</h3>
+        </hlm-sheet-header>
+        <div class="py-4 grid gap-4">
+          <div *ngFor="let item of carrito">
+            <div class="flex justify-between">
+              <span>{{ item.product }}</span>
+              <span>{{ item.priceSingle }}</span>
+              <span>{{ item.quantity }}</span>
+              <button hlmBtn variant="destructive" (click)="quitarItem(item)">Eliminar</button>
+            </div>
+          </div>
           <div class="flex justify-between">
-            <span>{{ item.pruduct }}</span>
-            <span>{{ item.priceSingle }}</span>
-            <span>{{ item.quantity }}</span>
-            <button hlmBtn variant="destructive" (click)="quitarItem(item)">Eliminar</button>
+            <ng-container *ngIf="carrito.length > 0">
+              <span>Total:</span>
+              <span>${{ total }} MXN</span>
+              <hlm-toaster />
+              <button variant="success" hlmBtn (click)="enviarOrden()">
+                Cobrar
+              </button>
+            </ng-container>
+            <ng-container *ngIf="carrito.length === 0">
+              <span>No hay productos en el carrito</span>
+            </ng-container>
           </div>
         </div>
-        <div class="flex justify-between">
-          <span>Total:</span>
-          <span>${{ total }} MXN</span>
-        </div>
-      </div>
-    </hlm-sheet-content>
-  </hlm-sheet>
-  <div class="flex justify-end mb-4">
+      </hlm-sheet-content>
+    </hlm-sheet>
+
     <hlm-dialog class="w-[500px]">
       <button id="edit-profile" variant="success" brnDialogTrigger hlmBtn>Generar venta</button>
       <hlm-dialog-content class="min-w-[950px] w-full bg-success" *brnDialogContent="let ctx">
@@ -42,28 +52,12 @@
                     {{ producto.precio }}
                   </p>
                 </div>
-                <!-- <div hlmCardBody>
-                  <div *ngFor="let item of producto.ingredientes">
-                    <span>{{ item.materiaPrima.material }}</span>
-                  </div>
-                </div> -->
                 <div hlmCardFooter class="justify-between">
                   <button hlmBtn variant="primary" (click)="addToCart(producto)">Agregar</button>
                 </div>
               </section>
             </div>
           </div>
-          <!-- <div *ngFor="let product of (productos$ | async)">
-            <div class="card">
-              <div class="card-body">
-                <h4>{{ product.nombre }}</h4>
-                <p>{{ product.precio }}</p>
-                <p *ngFor="let item of product.ingredientes">
-                  <span>{{item.materiaPrima.material}}</span>
-                </p>
-              </div>
-            </div>
-          </div> -->
         </form>
         <hlm-dialog-footer>
           <button hlmBtn type="submit">Registrar orden</button>
@@ -71,27 +65,36 @@
       </hlm-dialog-content>
     </hlm-dialog>
   </div>
+
   <div class="overflow-y-auto min-w-full">
     <hlm-table class="w-full min-w-full">
       <hlm-trow>
-        <hlm-th class="flex-1">Fecha</hlm-th>
-        <hlm-th class="flex-1">Total</hlm-th>
-        <hlm-th class="flex-1">Detalle</hlm-th>
-        <hlm-th class="flex-1">Estatus</hlm-th>
-        <hlm-th class="flex-1">Acciones</hlm-th>
+        <hlm-th class="flex-1 text-center">Ticket</hlm-th>
+        <hlm-th class="flex-1 text-center">Fecha</hlm-th>
+        <hlm-th class="flex-1 text-center">Total</hlm-th>
+        <hlm-th class="flex-1 text-center">Detalle</hlm-th>
+        <hlm-th class="flex-1 text-center">Estatus</hlm-th>
+        <hlm-th class="flex-1 text-center">Status</hlm-th>
       </hlm-trow>
       <hlm-trow *ngIf="(orders$ | async)?.length === 0">
         <hlm-td colspan="6">No hay registros</hlm-td>
       </hlm-trow>
       <hlm-trow *ngFor="let order of (orders$ | async); trackBy: trackByOrderId">
+        <hlm-td class="flex-1"># {{ order.ticket }}</hlm-td>
         <hlm-td class="flex-1">{{ order.orderDate }}</hlm-td>
-        <hlm-td class="flex-1">{{ order.total }}</hlm-td>
+        <hlm-td class="flex-1">$ {{ order.total }}.00 MXN</hlm-td>
         <hlm-td class="flex-1">
-          <button variant="success" hlmBtn (click)="getDetail(order || 0)">
+          <button variant="success" hlmBtn (click)="getDetails(order || 0)">
             Detalle
           </button>
         </hlm-td>
-        <hlm-td class="flex-1">{{ order.status }}</hlm-td>
+        <hlm-td class="flex-1">
+          <ng-container [ngSwitch]="order.status">
+            <span *ngSwitchCase="'Pendiente'" style="color: orange;">{{ order.status }}</span>
+            <span *ngSwitchCase="'Pagado'" style="color: green;">{{ order.status }}</span>
+            <span *ngSwitchDefault style="color: red;">{{ order.status }}</span>
+          </ng-container>
+        </hlm-td>
         <hlm-td class="flex-1">
           <button hlmBtn variant="success" (click)="onGestion(order)">
             Gestionar
@@ -103,7 +106,7 @@
 </div>
 
 <hlm-dialog class="w-[500px]">
-  <button class="hidden" hlmBtn variant="success" cl brnDialogTrigger id="detail-show">
+  <button class="hidden" hlmBtn variant="success" brnDialogTrigger id="detail-show">
     Detalle
   </button>
   <hlm-dialog-content class="min-w-[800px] w-full bg-success" *brnDialogContent="let ctx">
@@ -111,7 +114,20 @@
       <h3 hlmDialogTitle>Detalle de la orden</h3>
     </hlm-dialog-header>
     <form>
-
+      <div class="w-full min-w-full">
+        <hlm-table>
+          <hlm-trow>
+            <hlm-th class="flex-1">Producto</hlm-th>
+            <hlm-th class="flex-1">Precio</hlm-th>
+            <hlm-th class="flex-1">Cantidad</hlm-th>
+          </hlm-trow>
+          <hlm-trow *ngFor="let detalle of detalles">
+            <hlm-td class="flex-1">{{ detalle.product?.nombre }}</hlm-td>
+            <hlm-td class="flex-1">{{ detalle.priceSingle }}</hlm-td>
+            <hlm-td class="flex-1">{{ detalle.quantity }}</hlm-td>
+          </hlm-trow>
+        </hlm-table>
+      </div>
     </form>
   </hlm-dialog-content>
 </hlm-dialog>

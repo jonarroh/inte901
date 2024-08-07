@@ -16,8 +16,8 @@ export class VentasService {
   getOrders = (): Observable<Order[]> =>
     this.http.get<Order[]>(`${this.apiURL}/allOrders`)
 
-  getDetail = (id: number): Observable<DetailOrder> =>
-    this.http.get<DetailOrder>(`${this.apiURL}/orderDetail/${id}`)
+  getOrderDetail = (id: number): Observable<DetailOrder[]> =>
+    this.http.get<DetailOrder[]>(`${this.apiURL}/orderDetail/${id}`)
 
   getOrder = (ticket: number, id: number): Observable<Order> =>
     this.http.get<Order>(`${this.apiURL}/oneOrder/${ticket},${id}`)

@@ -1,5 +1,6 @@
 import { User } from './usuario';
 import { DetailOrder } from './detailorder';
+import { Address, CreditCard } from '~/lib/types';
 
 export interface Order {
   id?: number;
@@ -10,6 +11,8 @@ export interface Order {
   status?: string;
   ticket?: number;
   isDelivery?: boolean;
-  details?: DetailOrder[];
+  detailOrders?: DetailOrder[];
   user?: User;
+  creditCard?: CreditCard | undefined;
+  direcciones?: Address | undefined;
 }

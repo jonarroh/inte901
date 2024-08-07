@@ -9,7 +9,7 @@ import {
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import { BrnDialogTriggerDirective, BrnDialogContentDirective } from '@spartan-ng/ui-dialog-brain';
-import { from, Observable } from 'rxjs';
+import { from, Observable, map, timer } from 'rxjs';
 import { HlmTableModule } from '~/components/ui-table-helm/src';
 import { VentasService } from './ventas.service';
 import { Order } from './interface/order';
@@ -17,7 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HlmSelectModule } from '~/components/ui-select-helm/src';
 import { BrnSelectModule } from '@spartan-ng/ui-select-brain';
-import { Producto } from '~/lib/types';
+import { Address, CreditCard } from '~/lib/types';
 import { ProductoService } from '../productos/service/producto.service';
 import { DetailOrder } from './interface/detailorder';
 import { ca, de } from 'date-fns/locale';
@@ -26,6 +26,9 @@ import { IngredienteService } from '../ingredientes/service/ingrediente.service'
 import { HlmCheckboxComponent } from '~/components/ui-checkbox-helm/src';
 import { HlmSheetComponent, HlmSheetContentComponent, HlmSheetDescriptionDirective, HlmSheetFooterComponent, HlmSheetHeaderComponent, HlmSheetTitleDirective } from '~/components/ui-sheet-helm/src';
 import { BrnSheetContentDirective, BrnSheetTriggerDirective } from '@spartan-ng/ui-sheet-brain';
+import { toast } from 'ngx-sonner';
+import { HlmToasterComponent } from '~/components/ui-sonner-helm/src';
+import { Producto } from './interface/producto';
 
 @Component({
   selector: 'app-ventas',
@@ -56,6 +59,7 @@ import { BrnSheetContentDirective, BrnSheetTriggerDirective } from '@spartan-ng/
     HlmSheetFooterComponent,
     HlmSheetTitleDirective,
     HlmSheetDescriptionDirective,
+    HlmToasterComponent
   ],
   templateUrl: './ventas.component.html',
   styleUrl: './ventas.component.css'
@@ -72,11 +76,12 @@ export class VentasComponent {
   detalles: DetailOrder[] = [];
   ingredientes: Ingrediente[] = [];
   carrito: DetailOrder[] = [];
+  producto: Producto = {};
   total: number = 0;
 
   constructor() {
     this.orders$ = this.orderService.getOrders();
-    this.detalles$ = this.orderService.getDetail(0) as Observable<DetailOrder[]>;
+    this.detalles$ = this.orderService.getOrderDetail(0) as Observable<DetailOrder[]>;
     this.productos$ = this.productoService.getProductos() as Observable<Producto[]>;
     this.ingredientes$ = this.ingredientesService.getIngredientes() as Observable<Ingrediente[]>;
     this.cargarCarrito();
@@ -97,33 +102,28 @@ export class VentasComponent {
   }
 
   onDetail(order: Order) {
-    this.detalles = { ...order.details } as DetailOrder[];
+    this.detalles = { ...order.detailOrders } as DetailOrder[];
 
     const detButton = document.getElementById('detail-show');
     detButton?.click();
   }
 
-  getDetail(order: Order) {
+  getDetails(order: Order) {
     const id: number = order.id || 0;
 
-    this.orderService.getDetail(id).subscribe(
+    this.orderService.getOrderDetail(id).subscribe(
       (details) => {
-        this.detalles$ = this.orderService.getDetail(id) as Observable<DetailOrder[]>;
+        this.detalles = details;;
 
-        this.detalles = [details];
+        this.detalles.forEach(detalle => {
 
-        this.detalles.forEach((detail) => {
-          console.log(detail);
-          this.productoService.getProductoById(detail.idProduct || 0).subscribe(
-            (producto) => {
-              detail.pruduct = producto.nombre;
-            }
-          );
         });
 
         const detButton = document.getElementById('detail-show');
         detButton?.click();
-        console.log('Detalles encontrados: ', this.detalles);
+      },
+      (error) => {
+
       }
     );
   }
@@ -134,9 +134,9 @@ export class VentasComponent {
 
     this.orderService.getOrder(ticket, id).subscribe(
       (orderdata) => {
-        this.orderService.getDetail(id).subscribe(
+        this.orderService.getOrderDetail(id).subscribe(
           (details) => {
-            orderdata.details = [details];
+            orderdata.detailOrders = details;
 
             this.order = orderdata;
           }
@@ -160,9 +160,25 @@ export class VentasComponent {
       this.carrito.push({
         idProduct: producto.id,
         quantity: 1,
-        pruduct: producto.nombre,
+        product: {
+          id: producto.id,
+          nombre: producto.nombre,
+          price: producto.precio
+        },
         priceSingle: producto.precio,
+        ingredients: 'Crema',
+        status: 'Pendiente'
       });
+
+      toast.success(
+        `${producto.nombre} agregado al carrito`, {
+        action: {
+          label: 'X',
+          onClick: () => toast.dismiss(),
+        },
+        duration: 2000
+      }
+      );
     }
     this.calcularTotal();
     this.guardarCarrito();
@@ -179,11 +195,11 @@ export class VentasComponent {
     this.total = 0;
 
     this.detalles.forEach(detalle => {
-      if (detailMap.has(detalle.idProduct??0)) {
-        const existing = detailMap.get(detalle.idProduct??0)!;
+      if (detailMap.has(detalle.idProduct ?? 0)) {
+        const existing = detailMap.get(detalle.idProduct ?? 0)!;
         existing.quantity = (existing.quantity ?? 0) + (detalle.quantity ?? 0);
       } else {
-        detailMap.set(detalle.idProduct??0, { ...detalle });
+        detailMap.set(detalle.idProduct ?? 0, { ...detalle });
       }
       this.total += (detalle.priceSingle ?? 0) * (detalle.quantity ?? 0);
     });
@@ -200,6 +216,16 @@ export class VentasComponent {
       } else {
         this.carrito.splice(index, 1);
       }
+
+      toast.success(
+        `${detalle.product} eliminado del carrito`, {
+        action: {
+          label: 'X',
+          onClick: () => toast.dismiss(),
+        },
+        duration: 2000
+      });
+
       this.calcularTotal();
       this.guardarCarrito();
     }
@@ -211,9 +237,32 @@ export class VentasComponent {
 
   enviarOrden() {
     const userId = localStorage.getItem('userId');
+
     if (!userId) {
       console.error('Usuario no autenticado.');
       return;
+    }
+
+    const credit: CreditCard = {
+      id: 0,
+      cardNumber: 'NA',
+      cardHolderName: 'NA',
+      estatus: 'NA',
+      expiryDate: 'NA',
+      userId: 0
+    };
+
+    const direccion: Address = {
+      calle: 'NA',
+      ciudad: 'NA',
+      codigoPostal: 'NA',
+      colonia: 'NA',
+      estado: 'NA',
+      estatus: 'Activo',
+      id: 0,
+      numeroExterior: 0,
+      pais: 'NA',
+      userId: 0
     }
 
     const nuevaOrden: Order = {
@@ -221,22 +270,37 @@ export class VentasComponent {
       idUser: parseInt(userId, 10) ?? 0,
       total: this.total,
       isDelivery: false,
-      details: this.carrito
+      detailOrders: this.carrito,
+      creditCard: credit,
+      direcciones: direccion
     };
 
     console.log(nuevaOrden);
 
-    // this.orderService.addOrder(nuevaOrden).subscribe(
-    //   (order) => {
-    //     console.log('Orden enviada: ', order);
-    //     // Aquí puedes agregar lógica para limpiar el carrito, mostrar una confirmación, etc.
-    //     this.carrito = [];
-    //     this.total = 0;
-    //     this.guardarCarrito();
-    //   },
-    //   (error) => {
-    //     console.error('Error al enviar la orden: ', error);
-    //   }
-    // );
+    this.orderService.addOrder(nuevaOrden).subscribe(
+      (order) => {
+        console.log('Orden enviada: ', order);
+        toast.success(
+          'Se realizo la orden', {
+          action: {
+            label: 'X',
+            onClick: () => toast.dismiss(),
+          },
+          duration: 2000,
+          onAutoClose: ((toast => {
+            location.reload();
+          }))
+        }
+        );
+
+        this.carrito = [];
+        this.total = 0;
+        this.guardarCarrito();
+      },
+      (error) => {
+        toast.error('Se produjo un error al realizar la orden');
+        console.error('Error al enviar la orden: ', error);
+      }
+    );
   }
 }

@@ -7,5 +7,10 @@ export interface DetailOrder {
   status?: string;
   idOrder?: number;
   idProduct?: number;
-  pruduct?: string;
+  product?: {
+    id?: number;
+    nombre?: string; // Asegúrate de que esta propiedad coincida con tu back-end
+    price?: number;
+    // otros campos necesarios
+  };
 }

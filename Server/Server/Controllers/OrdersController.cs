@@ -77,12 +77,12 @@ namespace Server.Controllers
                         .Where(d => d.IdOrder == orden.Id)
                         .FirstOrDefaultAsync();
 
-                   
+
                     // Asignar la fecha al campo correspondiente
                     orden.OrderDate = dateOrder != null ? dateOrder.DateOrder : null;
 
                     orden.OrderDate = DateTime.Parse(orden.OrderDate.ToString() ?? "");
-
+                
                     // Agregar la orden a la lista
                     ordenesPendientes.Add(orden);
                 }
@@ -197,23 +197,42 @@ namespace Server.Controllers
         [HttpGet]
         // [Authorize]
         [Route("orderDetail/{id}")]
-        public async Task<IActionResult> GetOrderDetail (int? id)
+        public async Task<IActionResult> GetOrderDetail(int? id)
         {
+            if (id == null)
+            {
+                return BadRequest("El ID de la orden no puede ser nulo");
+            }
+
             try
             {
-                var detail = await _context.DetailOrders.Where(d => d.IdOrder == id).ToListAsync();
+                var details = await _context.DetailOrders
+                                            .Where(d => d.IdOrder == id)
+                                            .Select(d => new
+                                            {
+                                                d.Id,
+                                                d.IdOrder,
+                                                d.IdProduct,
+                                                d.Quantity,
+                                                d.PriceSingle,
+                                                DateOrder = DateTime.Parse(d.DateOrder.ToString() ?? ""),
+                                                Product = _context.Productos
+                                                                  .Where(p => p.Id == d.IdProduct)
+                                                                  .Select(p => new
+                                                                  {
+                                                                      p.Id,
+                                                                      p.Nombre, // Asegúrate de que esta propiedad coincida con tu modelado de back-end
+                                                                      p.Precio,
+                                                                      // otros campos necesarios
+                                                                  }).FirstOrDefault()
+                                            }).ToListAsync();
 
-                if (detail == null)
+                if (details == null || !details.Any())
                 {
-                    return BadRequest("No se encontraron detalles de la orden");
+                    return NotFound("No se encontraron detalles de la orden");
                 }
 
-                foreach (var d in detail)
-                {
-                    d.DateOrder = DateTime.Parse(d.DateOrder.ToString() ?? "");
-                }
-
-                return Ok(detail);
+                return Ok(details);
             }
             catch (Exception ex)
             {
@@ -238,123 +257,121 @@ namespace Server.Controllers
 
                 Console.WriteLine(JsonConvert.SerializeObject(ordertdo));
 
+                if (ordertdo == null)
+                {
+                    return BadRequest("Campos incompletos, es necesario completar todos los datos.");
+                }
 
-                return Ok(ordertdo);
-            //    if (ordertdo == null)
-            //    {
-            //        return BadRequest("Campos incompletos, es necesario completar todos los datos.");
-            //    }
+                Random rnd = new Random();
+                int ticket;
+                bool ticketExists;
+                string responseStatus;
 
-            //    Random rnd = new Random();
-            //    int ticket;
-            //    bool ticketExists;
-            //    string responseStatus;
+                do
+                {
+                    ticket = rnd.Next(10000000, 99999999);
+                    ticketExists = await _context.Orders.AnyAsync(d => d.Ticket == ticket);
+                } while (ticketExists);
 
-            //    do
-            //    {
-            //        ticket = rnd.Next(10000000, 99999999);
-            //        ticketExists = await _context.Orders.AnyAsync(d => d.Ticket == ticket);
-            //    } while (ticketExists);
+                var orden = new Order
+                {
+                    IdClient = ordertdo.IdClient,
+                    IdUser = ordertdo.IdUser,
+                    Total = ordertdo.Total,
+                    OrderDate = DateTime.Now,
+                    Status = "Pendiente",
+                    Ticket = ticket,
+                };
 
-            //    var orden = new Order
-            //    {
-            //        IdClient = ordertdo.IdClient,
-            //        IdUser = ordertdo.IdUser,
-            //        Total = ordertdo.Total,
-            //        OrderDate = DateTime.Now,
-            //        Status = "Pendiente",
-            //        Ticket = ticket,
-            //    };
+                // Validación y guardado de la dirección solo si es una entrega
+                if (ordertdo.IsDeliver == true)
+                {
+                    var tarjeta = await _context.CreditCard.FindAsync(ordertdo.IdUser);
 
-            //    // Validación y guardado de la dirección solo si es una entrega
-            //    if (ordertdo.IsDeliver == true)
-            //    {
-            //        var tarjeta = await _context.CreditCard.FindAsync(ordertdo.IdUser);
+                    if (_creditCardService.IsValidCreditCard(tarjeta))
+                    {
+                        decimal amount = (decimal)orden.Total;
 
-            //        if (_creditCardService.IsValidCreditCard(tarjeta))
-            //        {
-            //            decimal amount = (decimal)orden.Total;
+                        if (_creditCardService.CardCanPay(tarjeta, amount))
+                        {
+                            var direccion = new Direcciones
+                            {
+                                Calle = ordertdo.Direcciones.Calle,
+                                NumeroExterior = ordertdo.Direcciones.NumeroExterior,
+                                Estatus = "Activo",
+                                Colonia = ordertdo.Direcciones.Colonia,
+                                Ciudad = ordertdo.Direcciones.Ciudad,
+                                Estado = ordertdo.Direcciones.Estado,
+                                Pais = ordertdo.Direcciones.Pais,
+                                CodigoPostal = ordertdo.Direcciones.CodigoPostal,
+                                UserId = ordertdo.IdUser,
+                            };
 
-            //            if (_creditCardService.CardCanPay(tarjeta, amount))
-            //            {
-            //                var direccion = new Direcciones
-            //                {
-            //                    Calle = ordertdo.Direcciones.Calle,
-            //                    NumeroExterior = ordertdo.Direcciones.NumeroExterior,
-            //                    Estatus = "Activo",
-            //                    Colonia = ordertdo.Direcciones.Colonia,
-            //                    Ciudad = ordertdo.Direcciones.Ciudad,
-            //                    Estado = ordertdo.Direcciones.Estado,
-            //                    Pais = ordertdo.Direcciones.Pais,
-            //                    CodigoPostal = ordertdo.Direcciones.CodigoPostal,
-            //                    UserId = ordertdo.IdUser,
-            //                };
+                            await _context.Direcciones.AddAsync(direccion);
+                        }
+                        else
+                        {
+                            return BadRequest("No hay suficiente saldo en la tarjeta.");
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest("La tarjeta no es válida.");
+                    }
+                }
 
-            //                await _context.Direcciones.AddAsync(direccion);
-            //            }
-            //            else
-            //            {
-            //                return BadRequest("No hay suficiente saldo en la tarjeta.");
-            //            }
-            //        }
-            //        else
-            //        {
-            //            return BadRequest("La tarjeta no es válida.");
-            //        }
-            //    }
+                await _context.Orders.AddAsync(orden);
+                await _context.SaveChangesAsync();
 
-            //    await _context.Orders.AddAsync(orden);
-            //    await _context.SaveChangesAsync();
+                // Guardado de los detalles de la orden
+                foreach (var d in ordertdo.DetailOrders)
+                {
+                    var detail = new DetailOrder
+                    {
+                        IdOrder = orden.Id,
+                        IdProduct = d.IdProduct,
+                        Quantity = d.Quantity,
+                        PriceSingle = d.PriceSingle,
+                        DateOrder = DateTime.Now,
+                        Ingredients = d.Ingredients,
+                        Status = "Pendiente"
+                    };
 
-            //    // Guardado de los detalles de la orden
-            //    foreach (var d in ordertdo.DetailOrders)
-            //    {
-            //        var detail = new DetailOrder
-            //        {
-            //            IdOrder = orden.Id,
-            //            IdProduct = d.IdProduct,
-            //            Quantity = d.Quantity,
-            //            PriceSingle = d.PriceSingle,
-            //            DateOrder = DateTime.Now,
-            //            Ingredients = d.Ingredients,
-            //            Status = "Pendiente"
-            //        };
+                    orden.DetailOrders?.Add(detail);
+                    await _context.DetailOrders.AddAsync(detail);
+                }
 
-            //        orden.DetailOrders?.Add(detail);
-            //        await _context.DetailOrders.AddAsync(detail);
-            //    }
+                await _context.SaveChangesAsync();
 
-            //    await _context.SaveChangesAsync();
+                // Petición para generar el QR después de guardar la orden y sus detalles
+                //using (HttpClient client = new HttpClient())
+                //{
+                //    var data = new Dictionary<string, string?>
+                //{
+                //    { "id", orden.Id.ToString() },
+                //    { "ticket", orden.Ticket.ToString() },
+                //};
 
-            //    // Petición para generar el QR después de guardar la orden y sus detalles
-            //    using (HttpClient client = new HttpClient())
-            //    {
-            //        var data = new Dictionary<string, string?>
-            //{
-            //    { "id", orden.Id.ToString() },
-            //    { "ticket", orden.Ticket.ToString() },
-            //};
+                //    var content = new FormUrlEncodedContent(data);
 
-            //        var content = new FormUrlEncodedContent(data);
+                //    Console.WriteLine($"Se genero el QR, {data["id"]}, {data["ticket"]}");
 
-            //        Console.WriteLine($"Se genero el QR, {data["id"]}, {data["ticket"]}");
+                //    HttpResponseMessage response = await client.PostAsync("http://localhost:5000/generate_qr_order", content);
 
-            //        HttpResponseMessage response = await client.PostAsync("http://localhost:5000/generate_qr_order", content);
+                //    if (response.IsSuccessStatusCode)
+                //    {
+                //        responseStatus = response.StatusCode.ToString();
+                //        Console.WriteLine(response.Content);
+                //    }
+                //    else
+                //    {
+                //        responseStatus = response.StatusCode.ToString();
+                //        Console.WriteLine(response.Content);
+                //        return NotFound($"Error con el QR, status: {responseStatus}");
+                //    }
+                //}
 
-            //        if (response.IsSuccessStatusCode)
-            //        {
-            //            responseStatus = response.StatusCode.ToString();
-            //            Console.WriteLine(response.Content);
-            //        }
-            //        else
-            //        {
-            //            responseStatus = response.StatusCode.ToString();
-            //            Console.WriteLine(response.Content);
-            //            return NotFound($"Error con el QR, status: {responseStatus}");
-            //        }
-            //    }
-
-            //    return Ok(orden);
+                return Ok(orden);
             }
             catch (Exception ex)
             {
