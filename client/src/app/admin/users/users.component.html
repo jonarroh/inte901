@@ -4,12 +4,14 @@
   </div>
   <div class="flex justify-end my-5 me-5 pr-5">
     <div>
-      <hlm-dialog>
+      <hlm-dialog
+      [state]="states()" 
+      >
         <button id="edit-profile" brnDialogTrigger hlmBtn>Agregar Usuario</button>
        <form 
        (submit)="onSubmit()"
        >
-       <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+       <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx" >
         <hlm-dialog-header>
           <h3 hlmDialogTitle>Nuevo Usuario</h3>
           <p hlmDialogDescription></p>
@@ -100,9 +102,7 @@
               />
             </label>
             @if (formModel.controls.password.touched()) {
-              @if (formModel.controls.password.hasError('required')) {
-                <div class="text-red-500 text-sm">El correo electrónico es requerido</div>
-              } @else if (formModel.controls.password.hasError('maxLength')) {
+               @if (formModel.controls.password.hasError('maxLength')) {
                 <div class="text-red-500 text-sm">
                   El correo electrónico debe tener menos de 50 caracteres
                 </div>
@@ -146,11 +146,17 @@
           </div>
         </div>
         <hlm-dialog-footer>
-          <button hlmBtn 
-          (click)="onSubmit()"
-          >
-        Agregar Usuario
-        </button>
+          @if(isEditing()) {
+            <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
+            <button hlmBtn type="submit"
+            (click)="onEditUser()"
+            >Guardar</button>
+          } @else {
+            <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
+            <button hlmBtn 
+            (click)="onSubmit()"
+            >Crear</button>
+          }
         </hlm-dialog-footer>
       </hlm-dialog-content>
       </form>
@@ -158,29 +164,30 @@
     </div>
     
   </div>
-  <div class="flex flex-col justify-between gap-4 p-20">
+  <div class="flex flex-row justify-between gap-4 px-20 py-5">
     <input
       hlmInput
       class="w-full md:w-80"
-      placeholder="Filter emails..."
+      placeholder="buscar por email"
       [ngModel]="_emailFilter()"
       (ngModelChange)="_rawFilterInput.set($event)"
     />
   
     <button hlmBtn variant="outline" align="end" [brnMenuTriggerFor]="menu">
-      Columns
+      Ver columnas
       <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
     </button>
     <ng-template #menu>
-      <hlm-menu class="w-32">
+      <hlm-menu class="w-32 bg-white">
         @for (column of _brnColumnManager.allColumns; track column.name) {
           <button
             hlmMenuItemCheckbox
+            class="bg-white hover:bg-gray-100"
             [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
             [checked]="_brnColumnManager.isColumnVisible(column.name)"
             (triggered)="_brnColumnManager.toggleVisibility(column.name)"
           >
-            <hlm-menu-item-check />
+            <hlm-menu-item-check  class="bg-white"/>
             <span>{{ column.label }}</span>
           </button>
         }
@@ -191,27 +198,31 @@
   <brn-table
     hlm
     stickyHeader
-    class="border-border mt-4 block h-[335px] overflow-auto rounded-md border p-20"
+    class="border-border  block h-[335px] overflow-auto rounded-md border px-20 bg-white"
     [dataSource]="_filteredSortedPaginatedPayments()"
     [displayedColumns]="_allDisplayedColumns()"
     [trackBy]="_trackBy"
   >
-    <brn-column-def name="select" class="w-12">
-      <hlm-th *brnHeaderDef>
-        <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()" />
+    <brn-column-def name="select" class="w-12 bg-white">
+      <hlm-th *brnHeaderDef class="bg-white">
+        <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()" 
+        
+        class="bg-white"/>
       </hlm-th>
-      <hlm-td *brnCellDef="let element">
-        <hlm-checkbox [checked]="_isUserSelected(element)" (changed)="toggleUser(element)" />
+      <hlm-td *brnCellDef="let element" class="bg-white">
+        <hlm-checkbox [checked]="_isUserSelected(element)" (changed)="toggleUser(element)"
+        class="bg-white"
+        />
       </hlm-td>
     </brn-column-def>
-    <brn-column-def name="Name" class="w-32 sm:w-40">
+    <brn-column-def name="Name" class="w-32 sm:w-40 bg-white">
       <hlm-th truncate *brnHeaderDef>Nombre</hlm-th>
       <hlm-td truncate *brnCellDef="let element">
         {{ element.name }} {{ element.lastName }}
       </hlm-td>
     </brn-column-def>
    
-    <brn-column-def name="Email" class="w-60 lg:flex-1">
+    <brn-column-def name="Email" class="w-60 lg:flex-1 bg-white">
       <hlm-th *brnHeaderDef>
         <button hlmBtn size="sm" variant="ghost" (click)="handleEmailSortChange()">
           Email
@@ -222,33 +233,48 @@
         {{ element.email }}
       </hlm-td>
     </brn-column-def>
-    <brn-column-def name="Role" class="justify-end w-20">
+    <brn-column-def name="Role" class="justify-end w-20 bg-white">
       <hlm-th *brnHeaderDef>Rol</hlm-th>
       <hlm-td class="font-medium tabular-nums" *brnCellDef="let element">
-        {{ element.Role }}
+        @if (element.role === 'Admin') {
+          <span class="bg-green-300 text-white rounded-full px-2 py-1">
+            {{ element.role }}
+          </span>
+        }@else if (element.role === "Cliente") {
+          <span class="bg-secondary text-white rounded-full px-2 py-1">
+            {{ element.role }}
+          </span>
+        }
       </hlm-td>
     </brn-column-def>
-    <brn-column-def name="actions" class="w-16">
+    <brn-column-def name="actions" class="w-16 bg-white">
       <hlm-th *brnHeaderDef></hlm-th>
       <hlm-td *brnCellDef="let element">
-        <button hlmBtn variant="ghost" class="h-6 w-6 p-0.5" align="end" [brnMenuTriggerFor]="menu">
+        <button hlmBtn variant="ghost" class="h-6 w-6 p-0.5 hover:bg-gray-100" align="end" [brnMenuTriggerFor]="menu">
           <hlm-icon class="w-4 h-4" name="lucideMoreHorizontal" />
         </button>
   
         <ng-template #menu>
-          <hlm-menu>
+          <hlm-menu class="bg-white">
             <hlm-menu-label>
               Actions
   
             </hlm-menu-label>
             <hlm-menu-separator />
             <hlm-menu-group>
-              <button hlmMenuItem>Copy payment ID</button>
+              <button hlmMenuItem (click)="onClickEdit(element)"
+              class="hover:bg-gray-100"
+              >
+                Editar
+              </button>
             </hlm-menu-group>
             <hlm-menu-separator />
             <hlm-menu-group>
-              <button hlmMenuItem>View customer</button>
-              <button hlmMenuItem>View payment details</button>
+              <button hlmMenuItem  (click)="onDeletedUser(element)"
+              class="hover:bg-gray-100"
+              >
+                              Eliminar
+              </button>
             </hlm-menu-group>
           </hlm-menu>
         </ng-template>
@@ -257,13 +283,13 @@
     <div class="flex items-center justify-center p-20 text-muted-foreground" brnNoDataRow>No data</div>
   </brn-table>
   <div
-    class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center"
+    class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center px-20"
     *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange"
   >
     <span class="text-sm text-muted-foreground">{{ _selected().length }} de {{ _totalElements() }} usuarios</span>
     <div class="flex mt-2 sm:mt-0">
       <brn-select class="inline-block" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
-        <hlm-select-trigger class="inline-flex mr-1 w-15 h-9">
+        <hlm-select-trigger class="inline-flex mr-1 w-15 h-9 bg-white">
           <hlm-select-value />
         </hlm-select-trigger>
         <hlm-select-content>

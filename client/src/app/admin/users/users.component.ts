@@ -1,18 +1,14 @@
-import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
+
 import {
   HlmDialogComponent,
   HlmDialogContentComponent,
-  HlmDialogDescriptionDirective,
   HlmDialogFooterComponent,
-  HlmDialogHeaderComponent,
-  HlmDialogTitleDirective,
+  HlmDialogService,
 } from '@spartan-ng/ui-dialog-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { toast } from 'ngx-sonner';
 import { UserService } from '~/app/home/services/user.service';
-import { User } from '~/lib/types';
 import {
   createFormField,
   createFormGroup,
@@ -26,7 +22,6 @@ import { HlmCaptionComponent } from "../../../components/ui-table-helm/src/lib/h
 import { FormsModule } from '@angular/forms';
 import { BrnCommandImports } from '@spartan-ng/ui-command-brain';
 import { HlmCommandImports } from '@spartan-ng/ui-command-helm';
-import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import {
   BrnPopoverComponent,
   BrnPopoverContentDirective,
@@ -34,11 +29,9 @@ import {
 } from '@spartan-ng/ui-popover-brain';
 import { HlmPopoverContentDirective } from '@spartan-ng/ui-popover-helm';
 import { NgForOf } from '@angular/common';
-import { provideIcons } from '@ng-icons/core';
-import { lucideChevronsUpDown, lucideCheck, lucideSearch } from '@ng-icons/lucide';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DecimalPipe, TitleCasePipe } from '@angular/common';
-import { Component, TrackByFunction, computed, effect, signal } from '@angular/core';
+import {  TrackByFunction, computed, effect, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { lucideArrowUpDown, lucideChevronDown, lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmButtonModule } from '@spartan-ng/ui-button-helm';
@@ -52,20 +45,32 @@ import { HlmSelectModule } from '@spartan-ng/ui-select-helm';
 import { hlmMuted } from '@spartan-ng/ui-typography-helm';
 import { debounceTime, map } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
-import { es } from 'date-fns/locale';
+import { es, th } from 'date-fns/locale';
 
 
 type RoleO = {
   value: string;
   label: string;
 }
+
+
+import { Component, HostBinding, inject } from "@angular/core";
+import { provideIcons } from "@ng-icons/core";
+import { HlmButtonDirective } from "@spartan-ng/ui-button-helm";
+import { BrnDialogContentDirective, BrnDialogRef, BrnDialogTriggerDirective, injectBrnDialogContext } from "@spartan-ng/ui-dialog-brain";
+
+import { lucideChevronsUpDown, lucideCheck, lucideSearch } from '@ng-icons/lucide';
+import { HlmDialogDescriptionDirective, HlmDialogHeaderComponent, HlmDialogTitleDirective } from "~/components/ui-dialog-helm/src";
+import { HlmIconComponent } from "~/components/ui-icon-helm/src";
+import { User, UserEditDTO } from "~/lib/types";
+
+
 @Component({
   selector: 'app-users',
   imports: [
     LucideAngularModule,
     BrnDialogTriggerDirective,
     BrnDialogContentDirective,
-
     HlmDialogComponent,
     HlmDialogContentComponent,
     HlmDialogHeaderComponent,
@@ -130,6 +135,7 @@ export class UsersComponent {
 
   currentRole = signal<RoleO | undefined>(undefined);
   public state = signal<'closed' | 'open'>('closed');
+  public states = signal<'closed' | 'open'>('closed');
 
   stateChanged(state: 'open' | 'closed') {
     this.state.set(state);
@@ -180,6 +186,9 @@ export class UsersComponent {
           message: 'El email no es válido'
         }
       ]
+    }),
+    id: createFormField(0,{
+      hidden: () => true
     }),
   });
 
@@ -327,6 +336,77 @@ export class UsersComponent {
     } else {
       this._emailSort.set('ASC');
     }
+  }
+
+  onDeletedUser(user: User) {
+    this.userService.deleteUser(user.id).subscribe({
+      next: () => {
+        console.log('Usuario eliminado correctamente');
+        toast.success('Usuario eliminado correctamente');
+
+        this._users.set(this._users().filter((u) => u.id !== user.id));
+      },
+      error: (error) => {
+        console.error('Error al eliminar el usuario', error);
+        toast.error('Error al eliminar el usuario');
+  }
+  });
+  }
+
+  isEditing = signal(false);
+
+  onClickEdit(user: User) {
+    this.isEditing.set(true);
+    this.formModel.controls.name.value.set(user.name);
+    this.formModel.controls.lastName.value.set(user.lastName);
+    this.formModel.controls.email.value.set(user.email);
+    this.currentRole.set(this.roles.find((r) => r.value === user.role));
+    this.formModel.controls.id.value.set(user.id);
+
+    this.states.set('open');
+  }
+
+  onCancel() {
+    this.isEditing.set(false);
+    this.states.set('closed');
+    this.formModel.reset();
+  }
+
+  onEditUser() {
+
+  
+   const  user2: UserEditDTO ={
+    actualPassword: this.formModel.controls.password.value() || '',
+    creditCards: [],
+    direcciones: [],
+    email: this.formModel.controls.email.value(),
+    id: this.formModel.controls.id.value(),
+    Image: undefined,
+    lastName: this.formModel.controls.lastName.value(),
+    name: this.formModel.controls.name.value(),
+    newPassword: this.formModel.controls.password.value() || '',
+   }
+    this.userService.updateUser(user2).subscribe({
+      next: () => {
+        console.log('Usuario actualizado correctamente');
+        toast.success('Usuario actualizado correctamente');
+        this.isEditing.set(false);
+        this.states.set('closed');
+        this.userService.getAllUsers().subscribe({
+          next: (users) => {
+            this._users.set(users);
+          },
+          error: (error) => {
+            console.error('Error al cargar los usuarios', error);
+          }
+        });
+        
+      },
+      error: (error) => {
+        console.error('Error al actualizar el usuario', error);
+        toast.error('Error al actualizar el usuario');
+      }
+    });
   }
 
 
