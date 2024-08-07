@@ -12,12 +12,6 @@
         public int? Id { get; set; }
 
 		[Required]
-		public int? IdPurchase { get; set; }
-
-		[Required]
-		public int? IdProduct { get; set; }
-
-		[Required]
 		public int? Quantity { get; set; }
 
 		[Required]
@@ -34,9 +28,17 @@
 
 		[Required]
 		public DateTime? CreatedAt { get; set; }
-
+		[Required]
+		public string? Status { get; set; } // Pendiente, Cancelado, Entregado
+		[Required]
+        [ForeignKey("IdPurchase")]
+        public int? IdPurchase { get; set; }
+		[Required]
+        [ForeignKey("IdProduct")]
+        public int? IdProduct { get; set; }
+		[NotMapped]
         public Purchase Purchase { get; set; }
-
+		[NotMapped]
         public Producto Product { get; set; }
     }
 }

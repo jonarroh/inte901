@@ -12,16 +12,6 @@
         public int? Id { get; set; }
 
 		[Required]
-		public int? IdOrder { get; set; }
-
-		[Required]
-		public int? IdProduct { get; set; }
-
-		[Required]
-		[MaxLength(100)]
-		public string? NameProduct { get; set; }
-
-		[Required]
 		public int? Quantity { get; set; }
 
 		[Required]
@@ -31,11 +21,23 @@
 		public DateTime? DateOrder { get; set; }
 
 		[Required]
-		public long? Ticket { get; set; }
-        public string Ingredients { get; set; } = string.Empty;
+        public string Ingredients { get; set; }
 
+		[Required]
+		public string Status { get; set; }
+
+        [Required]
+        [ForeignKey("IdOrder")]
+        public int? IdOrder { get; set; }
+
+        [Required]
+        [ForeignKey("IdProduct")]
+        public int? IdProduct { get; set; }
+        [NotMapped]
         public Order Order { get; set; }
-
+        [NotMapped]
         public Producto Product { get; set; }
     }
+
+
 }

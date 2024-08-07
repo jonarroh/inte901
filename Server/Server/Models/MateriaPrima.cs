@@ -23,6 +23,6 @@ namespace Server.Models
         public ICollection<InventarioMP>? InventarioMps { get; set; }
         public ICollection<Ingrediente>? Ingredientes { get; set; }
 
-        
+
     }
 }

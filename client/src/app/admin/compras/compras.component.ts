@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, TrackByFunction, computed, effect, inject, signal } from '@angular/core';
 import { NavComponent } from '../componentes/nav/nav.component';
 import {
   HlmDialogComponent, HlmDialogContentComponent, HlmDialogHeaderComponent,
@@ -6,12 +6,28 @@ import {
   HlmDialogTitleDirective,
   HlmDialogDescriptionDirective,
 } from '~/components/ui-dialog-helm/src';
-import { HlmButtonDirective } from '~/components/ui-button-helm/src';
-import { HlmInputDirective } from '~/components/ui-input-helm/src';
-import { BrnDialogTriggerDirective, BrnDialogContentDirective } from '@spartan-ng/ui-dialog-brain';
-import { HlmTableComponent, HlmTdComponent, HlmThComponent, HlmTrowComponent, HlmCaptionComponent } from '~/components/ui-table-helm/src';
 
-import { from } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { lucideArrowUpDown, lucideChevronDown, lucideMoreHorizontal } from '@ng-icons/lucide';
+import { HlmButtonModule } from '~/components/ui-button-helm/src';
+import { HlmCheckboxCheckIconComponent, HlmCheckboxComponent } from '@spartan-ng/ui-checkbox-helm';
+import { HlmIconComponent, provideIcons } from '@spartan-ng/ui-icon-helm';
+import { HlmInputDirective } from '~/components/ui-input-helm/src';
+import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
+import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
+import { HlmButtonDirective } from '~/components/ui-button-helm/src';
+import { BrnDialogTriggerDirective, BrnDialogContentDirective } from '@spartan-ng/ui-dialog-brain';
+import { BrnTableModule, PaginatorState, useBrnColumnManager } from '@spartan-ng/ui-table-brain';
+import { HlmTableModule } from '@spartan-ng/ui-table-helm';
+import { BrnSelectModule } from '@spartan-ng/ui-select-brain';
+import { HlmSelectModule } from '@spartan-ng/ui-select-helm';
+import { hlmMuted } from '@spartan-ng/ui-typography-helm';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { SelectionModel } from '@angular/cdk/collections';
+import { from, debounceTime, map, Observable } from 'rxjs';
+import { ComprasService } from './compras.service';
+import { Compra } from './interface/compras';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-compras',
@@ -24,19 +40,58 @@ import { from } from 'rxjs';
     HlmDialogFooterComponent,
     HlmDialogTitleDirective,
     HlmDialogDescriptionDirective,
-    HlmButtonDirective,
+    HlmButtonModule,
+    HlmCheckboxCheckIconComponent,
+    HlmCheckboxComponent,
+    HlmIconComponent,
+    HlmInputDirective,
+    HlmMenuModule,
+    BrnMenuTriggerDirective,
     BrnDialogTriggerDirective,
     BrnDialogContentDirective,
-    HlmInputDirective,
-    HlmTableComponent,
-    HlmTdComponent,
-    HlmThComponent,
-    HlmTrowComponent,
-    HlmCaptionComponent
+    HlmTableModule,
+    BrnTableModule,
+    HlmSelectModule,
+    BrnSelectModule,
+    FormsModule,
+    CommonModule,
   ],
   templateUrl: './compras.component.html',
-  styleUrl: './compras.component.css'
+  styleUrl: './compras.component.css',
+  providers: [
+    provideIcons({ lucideArrowUpDown, lucideChevronDown, lucideMoreHorizontal }),
+  ],
 })
 export class ComprasComponent {
+  compraService = inject(ComprasService);
+  compras$: Observable<Compra[]>;
+  compra: Compra = {};
 
+  constructor() {
+    this.compras$ = this.compraService.getCompras();
+
+    this.compras$.subscribe((compras) => {
+      compras.forEach(element => {
+        console.log('Element:', element);
+
+        if (element.detailPurchases && element.detailPurchases.length > 0) {
+          console.log('Detail Purchases:', element.detailPurchases);
+          element.detailPurchases.forEach(detail => {
+            console.log('Detail Purchase:', detail);
+          });
+        }
+      });
+    });
+
+  }
+
+  trackByCompraId: TrackByFunction<Compra> = (index, compra) => compra.id;
+
+  protected readonly _proveedorFilter = signal('');
+  protected readonly _rawFilterInput = signal('');
+  protected readonly _brnColumnManager = useBrnColumnManager({
+    proveedor: { visible: true, label: 'Proveedor' },
+    user: { visible: true, label: 'Usuario' },
+    status: { visible: true, label: 'Estatus' },
+  });
 }

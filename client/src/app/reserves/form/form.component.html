@@ -1,0 +1,71 @@
+<div class="container mx-auto mt-10">
+    <div class="wrapper bg-white rounded shadow w-full">
+      <div class="header flex justify-between border-b p-2">
+        <span class="text-lg font-bold">{{ month }} {{ year }}</span>
+        <div class="buttons">
+          <button class="p-1" (click)="prevMonth()">
+            <!-- SVG para botón anterior -->
+          </button>
+          <button class="p-1" (click)="nextMonth()">
+            <!-- SVG para botón siguiente -->
+          </button>
+          <button class="p-1 bg-blue-500 text-white rounded" (click)="openModal(null)">Agregar Evento</button>
+        </div>
+      </div>
+      <table class="w-full">
+        <thead>
+          <!-- Encabezado de la tabla -->
+        </thead>
+        <tbody>
+          <tr *ngFor="let week of [0,1,2,3,4]">
+            <td *ngFor="let day of daysInMonth.slice(week * 7, (week + 1) * 7)" class="p-2 border cursor-pointer" (click)="openModal(day)">
+              <div class="flex flex-col h-40 mx-auto xl:w-40 lg:w-30 md:w-30 sm:w-full w-10 mx-auto overflow-hidden">
+                <div class="top h-5 w-full">
+                  <span class="text-gray-500">{{ day.getDate() }}</span>
+                </div>
+                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer">
+                  <div *ngFor="let event of getEvents(day)" class="event bg-purple-400 text-white rounded p-1 text-sm mb-1">
+                    <span class="event-name">{{ event.name }}</span>
+                    <span class="time">{{ event.startTime }} - {{ event.endTime }}</span>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <div *ngIf="showModal" class="modal fixed w-full h-full top-0 left-0 flex items-center justify-center">
+      <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50" (click)="closeModal()"></div>
+      
+      <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+        <div class="modal-content py-4 text-left px-6">
+          <div class="flex justify-between items-center pb-3">
+            <p class="text-2xl font-bold">Agregar Evento</p>
+            <div class="modal-close cursor-pointer z-50" (click)="closeModal()">
+              <!-- SVG para cerrar modal -->
+            </div>
+          </div>
+  
+          <div class="my-5">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="eventDate">Fecha del Evento</label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="eventDate" type="date" [(ngModel)]="eventDate">
+          
+            <label class="block text-gray-700 text-sm font-bold mb-2 mt-4" for="eventStartTime">Hora de Inicio</label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="eventStartTime" type="time" [(ngModel)]="eventStartTime">
+          
+            <label class="block text-gray-700 text-sm font-bold mb-2 mt-4" for="eventEndTime">Hora de Fin</label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="eventEndTime" type="time" [(ngModel)]="eventEndTime">
+          </div>
+          
+  
+          <div class="flex justify-end pt-2">
+            <button class="bg-blue-500 text-white px-4 py-2 rounded mr-2" (click)="saveEvent()">Guardar</button>
+            <button class="bg-gray-500 text-white px-4 py-2 rounded" (click)="closeModal()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

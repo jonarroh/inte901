@@ -11,10 +11,12 @@ using Server.lib;
 using System.Security.Cryptography;
 using System.Text;
 using Server.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Server.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -31,12 +33,14 @@ namespace Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
         {
-            var users = await _context.Users.ToListAsync();
+            var users = await _context.Users.Where(u => u.Estatus == "Activo").ToListAsync();
 
             // Agregar direcciones a cada usuario
             foreach (var user in users)
             {
-                user.Direcciones = await _context.Direcciones.Where(d => d.UserId == user.Id).ToListAsync();
+                user.Direcciones = await _context.Direcciones
+                                               .Where(d => d.UserId == user.Id && d.Estatus == "Activo")
+                                               .ToListAsync();
             }
 
             var usersDTO = new List<UserDTO>();
@@ -51,14 +55,16 @@ namespace Server.Controllers
                     Email = u.Email,
                     Role = u.Role,
                     Direcciones = u.Direcciones,
-                    CreditCards = await _context.CreditCard.Where(c => c.UserId == u.Id).Select(c => new CreditCardDTO
-                    {
-                        Id = c.Id,
-                        CardHolderName = c.CardHolderName,
-                        CardNumber = ocultaNumero(c.CardNumber),
-                        ExpiryDate = c.ExpiryDate,
-                        UserId = c.UserId
-                    }).ToListAsync()
+                    CreditCards = await _context.CreditCard
+                                                .Where(c => c.UserId == u.Id)
+                                                .Select(c => new CreditCardDTO
+                                                {
+                                                    Id = c.Id,
+                                                    CardHolderName = c.CardHolderName,
+                                                    CardNumber = c.CardNumber,
+                                                    ExpiryDate = c.ExpiryDate,
+                                                    UserId = c.UserId
+                                                }).ToListAsync()
                 };
 
                 usersDTO.Add(userDTO);
@@ -67,11 +73,7 @@ namespace Server.Controllers
             return Ok(usersDTO);
         }
 
-
-        private static string ocultaNumero(string CardNumber)
-        {
-            return "**** **** **** " + CardNumber.Substring(CardNumber.Length - 4);
-        }
+       
 
         // GET: api/Users/5
         [HttpGet("{id}")]
@@ -79,7 +81,7 @@ namespace Server.Controllers
         {
             var user = await _context.Users.FindAsync(id);
 
-            if (user == null)
+            if (user == null || user.Estatus != "Activo")
             {
                 return NotFound();
             }
@@ -91,23 +93,25 @@ namespace Server.Controllers
                 LastName = user.LastName,
                 Email = user.Email,
                 Role = user.Role,
-                Direcciones = await _context.Direcciones.Where(d => d.UserId == user.Id).ToListAsync(),
-                CreditCards = await _context.CreditCard.Where(c => c.UserId == user.Id).Select(c => new CreditCardDTO
-                {
-                    Id = c.Id,
-                    CardHolderName = c.CardHolderName,
-                    CardNumber = ocultaNumero(c.CardNumber),
-                    ExpiryDate = c.ExpiryDate,
-                    UserId = c.UserId
-                }).ToListAsync()
+                Direcciones = await _context.Direcciones
+                                            .Where(d => d.UserId == user.Id && d.Estatus == "Activo")
+                                            .ToListAsync(),
+                CreditCards = await _context.CreditCard
+                                            .Where(c => c.UserId == user.Id && c.Estatus == "Activo")
+                                            .Select(c => new CreditCardDTO
+                                            {
+                                                Id = c.Id,
+                                                CardHolderName = c.CardHolderName,
+                                                CardNumber = c.CardNumber,
+                                                ExpiryDate = c.ExpiryDate,
+                                                UserId = c.UserId
+                                            }).ToListAsync()
             };
 
             return userDTO;
-
         }
 
         // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<ActionResult<UserDTO>> PutUser(int id, [FromForm] UserEditDTO userEditDto)
         {
@@ -117,7 +121,7 @@ namespace Server.Controllers
             }
 
             var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            if (user == null || user.Estatus != "Activo")
             {
                 return NotFound();
             }
@@ -143,13 +147,12 @@ namespace Server.Controllers
             if (userEditDto.Image != null)
             {
                 var imageUrl = await _cdnService.UploadImageAsync(userEditDto.Image, id);
-                //si se sube la imagen, continuar con la lógica de negocio si no mandar mensaje de error
-
+                // Si se sube la imagen, continuar con la lógica de negocio, si no, mandar mensaje de error
                 if (imageUrl == "Error")
                 {
                     return BadRequest("Error al subir la imagen");
                 }
-                
+              
             }
 
             _context.Entry(user).State = EntityState.Modified;
@@ -177,15 +180,19 @@ namespace Server.Controllers
                 LastName = user.LastName,
                 Email = user.Email,
                 Role = user.Role,
-                Direcciones = await _context.Direcciones.Where(d => d.UserId == user.Id).ToListAsync(),
-                CreditCards = await _context.CreditCard.Where(c => c.UserId == user.Id).Select(c => new CreditCardDTO
-                {
-                    Id = c.Id,
-                    CardHolderName = c.CardHolderName,
-                    CardNumber = ocultaNumero(c.CardNumber),
-                    ExpiryDate = c.ExpiryDate,
-                    UserId = c.UserId
-                }).ToListAsync()
+                Direcciones = await _context.Direcciones
+                                            .Where(d => d.UserId == user.Id && d.Estatus == "Activo")
+                                            .ToListAsync(),
+                CreditCards = await _context.CreditCard
+                                            .Where(c => c.UserId == user.Id && c.Estatus == "Activo")
+                                            .Select(c => new CreditCardDTO
+                                            {
+                                                Id = c.Id,
+                                                CardHolderName = c.CardHolderName,
+                                                CardNumber =c.CardNumber,
+                                                ExpiryDate = c.ExpiryDate,
+                                                UserId = c.UserId
+                                            }).ToListAsync()
             };
 
             return userDTO;
@@ -201,11 +208,11 @@ namespace Server.Controllers
         }
 
         // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
             user.Password = StringToSha256(user.Password);
+            user.Estatus = "Activo";
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
@@ -222,7 +229,8 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            _context.Users.Remove(user);
+            user.Estatus = "Inactivo";
+            _context.Entry(user).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -233,13 +241,11 @@ namespace Server.Controllers
             return _context.Users.Any(e => e.Id == id);
         }
 
-
         // GET : apiToken
-
         [HttpPost("token")]
         public async Task<ActionResult<TokenDto>> Token()
         {
-            //ver si existe token en las cookies
+            // Ver si existe token en las cookies
             if (Request.Cookies.ContainsKey("token"))
             {
                 var token = Request.Cookies["token"];
@@ -251,6 +257,5 @@ namespace Server.Controllers
                 return NotFound();
             }
         }
-
     }
 }

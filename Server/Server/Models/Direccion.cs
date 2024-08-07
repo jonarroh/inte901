@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Server.Models.Usuario.Server.Models.Usuario;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Server.Models
 {
@@ -12,6 +14,12 @@ namespace Server.Models
         [Required]
         [MaxLength(200)]
         public string Calle { get; set; }
+
+        [AllowNull]
+        public int NumeroExterior { get; set; }
+
+        [DefaultValue("Activo")]
+        public string Estatus { get; set; }
 
         [Required]
         [MaxLength(100)]

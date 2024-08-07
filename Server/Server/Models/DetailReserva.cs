@@ -24,7 +24,10 @@ namespace Server.Models
         [ForeignKey("Espacio")]
         public int idEspacio { get; set; }
 
+
+        [NotMapped]
         public virtual Espacio Espacio { get; set; }
+
 
     }
 }

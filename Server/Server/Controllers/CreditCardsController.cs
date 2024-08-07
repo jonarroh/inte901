@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using Server.Models.DTO;
 namespace Server.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class CreditCardsController : ControllerBase
     {
@@ -24,49 +26,32 @@ namespace Server.Controllers
 
         // GET: api/CreditCards
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CreditCardDTO>>> GetCreditCard()
+        public async Task<ActionResult<IEnumerable<CreditCard>>> GetCreditCard()
         {
-           var creditCards = await _context.CreditCard.ToListAsync();
-            var creditCardsDTO = new List<CreditCardDTO>();
+            var creditCards = await _context.CreditCard
+                                            .Where(c => c.Estatus == "Activo")
+                                            .ToListAsync();
 
-            foreach (var c in creditCards)
-            {
-                creditCardsDTO.Add(new CreditCardDTO
-                {
-                    Id = c.Id,
-                    CardHolderName = c.CardHolderName,
-                    CardNumber = ocultaNumero(c.CardNumber),
-                    ExpiryDate = c.ExpiryDate,
-                    UserId = c.UserId
-                });
-            }
-
-            return Ok(creditCardsDTO);
+            return Ok(creditCards);
         }
 
         // GET: api/CreditCards/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<CreditCardDTO>> GetCreditCard(int id)
+        public async Task<ActionResult<CreditCard>> GetCreditCard(int id)
         {
-            var creditCard = await _context.CreditCard.FindAsync(id);
+            var creditCard = await _context.CreditCard
+                                           .Where(c => c.Id == id && c.Estatus == "Activo")
+                                           .FirstOrDefaultAsync();
 
             if (creditCard == null)
             {
                 return NotFound();
             }
 
-            return Ok(new CreditCardDTO
-            {
-                Id = creditCard.Id,
-                CardHolderName = creditCard.CardHolderName,
-                CardNumber = ocultaNumero(creditCard.CardNumber),
-                ExpiryDate = creditCard.ExpiryDate,
-                UserId = creditCard.UserId
-            });
+            return Ok(creditCard);
         }
 
-
-        private string ocultaNumero(string numero)
+        private string OcultaNumero(string numero)
         {
             string oculto = "";
             for (int i = 0; i < numero.Length; i++)
@@ -83,7 +68,7 @@ namespace Server.Controllers
             return oculto;
         }
 
-        private bool isExpired(string expiryDate)
+        private bool IsExpired(string expiryDate)
         {
             string[] date = expiryDate.Split("/");
             if (date.Length != 2)
@@ -120,9 +105,7 @@ namespace Server.Controllers
             return false;
         }
 
-
         // PUT: api/CreditCards/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCreditCard(int id, CreditCard creditCard)
         {
@@ -133,9 +116,9 @@ namespace Server.Controllers
 
             _context.Entry(creditCard).State = EntityState.Modified;
 
-            if (isExpired(creditCard.ExpiryDate))
+            if (IsExpired(creditCard.ExpiryDate))
             {
-                return BadRequest("La tarjeta esta vencida");
+                return BadRequest("La tarjeta está vencida");
             }
 
             try
@@ -158,21 +141,23 @@ namespace Server.Controllers
             {
                 Id = creditCard.Id,
                 CardHolderName = creditCard.CardHolderName,
-                CardNumber = ocultaNumero(creditCard.CardNumber),
+                CardNumber = creditCard.CardNumber,
                 ExpiryDate = creditCard.ExpiryDate,
                 UserId = creditCard.UserId
             });
         }
 
         // POST: api/CreditCards
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<CreditCardDTO>> PostCreditCard(CreditCard creditCard)
         {
-            if (isExpired(creditCard.ExpiryDate))
+            if (IsExpired(creditCard.ExpiryDate))
             {
-                return BadRequest("La tarjeta esta vencida");
+                return BadRequest("La tarjeta está vencida");
             }
+
+            creditCard.Estatus = "Activo";
+
             _context.CreditCard.Add(creditCard);
             await _context.SaveChangesAsync();
 
@@ -180,7 +165,7 @@ namespace Server.Controllers
             {
                 Id = creditCard.Id,
                 CardHolderName = creditCard.CardHolderName,
-                CardNumber = ocultaNumero(creditCard.CardNumber),
+                CardNumber = creditCard.CardNumber,
                 ExpiryDate = creditCard.ExpiryDate,
                 UserId = creditCard.UserId
             });
@@ -193,10 +178,12 @@ namespace Server.Controllers
             var creditCardsDTO = new List<CreditCardDTO>();
             foreach (var creditCard in creditCards)
             {
-                if (isExpired(creditCard.ExpiryDate))
+                if (IsExpired(creditCard.ExpiryDate))
                 {
-                    return BadRequest("La tarjeta esta vencida");
+                    return BadRequest("La tarjeta está vencida");
                 }
+
+                creditCard.Estatus = "Activo";
             }
 
             _context.CreditCard.AddRange(creditCards);
@@ -208,7 +195,7 @@ namespace Server.Controllers
                 {
                     Id = creditCard.Id,
                     CardHolderName = creditCard.CardHolderName,
-                    CardNumber = ocultaNumero(creditCard.CardNumber),
+                    CardNumber = OcultaNumero(creditCard.CardNumber),
                     ExpiryDate = creditCard.ExpiryDate,
                     UserId = creditCard.UserId
                 });
@@ -216,7 +203,6 @@ namespace Server.Controllers
 
             return CreatedAtAction("GetCreditCard", creditCardsDTO);
         }
-
 
         // DELETE: api/CreditCards/5
         [HttpDelete("{id}")]
@@ -228,7 +214,8 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            _context.CreditCard.Remove(creditCard);
+            creditCard.Estatus = "Inactivo";
+            _context.Entry(creditCard).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return NoContent();

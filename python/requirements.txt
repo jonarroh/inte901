@@ -16,10 +16,12 @@ Flask==3.0.3
 Flask-Cors==4.0.1
 flatbuffers==24.3.25
 fonttools==4.53.0
+greenlet==3.0.3
 holidays==0.51
 humanfriendly==10.0
 idna==3.7
 imageio==2.34.1
+inflect==7.3.1
 ipykernel==6.29.4
 ipython==8.25.0
 itsdangerous==2.2.0
@@ -36,6 +38,7 @@ llvmlite==0.43.0
 MarkupSafe==2.1.5
 matplotlib==3.9.0
 matplotlib-inline==0.1.7
+more-itertools==10.3.0
 mpmath==1.3.0
 nest-asyncio==1.6.0
 networkx==3.3
@@ -57,6 +60,7 @@ ptyprocess==0.7.0
 pure-eval==0.2.2
 Pygments==2.18.0
 PyMatting==1.1.12
+pyodbc==5.1.0
 pyparsing==3.1.2
 pypng==0.20220715.0
 python-dateutil==2.9.0.post0
@@ -72,6 +76,8 @@ scikit-learn==1.5.0
 scipy==1.13.1
 seaborn==0.13.2
 six==1.16.0
+sqlacodegen==2.3.0.post1
+SQLAlchemy==1.4.52
 stack-data==0.6.3
 sympy==1.12.1
 threadpoolctl==3.5.0
@@ -79,6 +85,7 @@ tifffile==2024.6.18
 tornado==6.4.1
 tqdm==4.66.4
 traitlets==5.14.3
+typeguard==4.3.0
 typing_extensions==4.12.2
 tzdata==2024.1
 urllib3==2.2.2

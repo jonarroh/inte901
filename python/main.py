@@ -4,12 +4,15 @@ import os
 from io import BytesIO
 from controller.models import models
 from controller.ridge import rid
+from controller.reportes import reportes
 import qrcode
+
 
 
 app = Flask(__name__)
 app.register_blueprint(models)
 app.register_blueprint(rid)
+app.register_blueprint(reportes)
 
 STATIC_FOLDER = 'static'
 
@@ -129,8 +132,8 @@ def upload_file():
 @app.route('/generate_qr_order', methods=['POST'])
 def generate_qr():
     # Obtener el string del request
-    data = request.json.get('data')
-    id = request.json.get('id')
+    data = request.form.get('ticket')
+    id = request.form.get('id')
     qr_orders_folder = os.path.join(STATIC_FOLDER, 'qr-orders')
     
     if not data:

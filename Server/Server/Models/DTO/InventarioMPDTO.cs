@@ -8,7 +8,7 @@
         public float? Cantidad { get; set; }
         public int? IdCompra { get; set; }
         public DateTime? Caducidad { get; set; }
-        public int? Estatus { get; set; }
+        public int? Estatus { get; set; } = 1;
         public DateTime? CreatedAt { get; set; }
     }
 }

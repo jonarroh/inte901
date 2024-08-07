@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PlaceServiceService } from '../place-service.service';
 import { NgIf, NgFor } from '@angular/common';
 import { NavbarComponent } from '~/app/home/navbar/navbar.component';
@@ -27,9 +27,7 @@ export class DescriptionPlaceComponent implements OnInit {
   espacio: any;
   images: string[] = [];
   
-  
-
-  constructor(private route: ActivatedRoute, private placeService: PlaceServiceService) {}
+  constructor(private route: ActivatedRoute, private placeService: PlaceServiceService, private router: Router) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -45,4 +43,12 @@ export class DescriptionPlaceComponent implements OnInit {
       });
     }
   }
+
+  verReserva(id: number): void {
+    this.router.navigate(['/reserves', id]);
+  }
+  
+
+ 
+  
 }

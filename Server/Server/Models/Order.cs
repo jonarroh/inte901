@@ -12,20 +12,23 @@
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? Id { get; set; }
-        [Required]
         public DateTime? OrderDate { get; set; }
-        public int? IdClient { get; set; }
+        public int IdClient { get; set; }
         [Required]
         [ForeignKey("User")]
         public int? IdUser { get; set; }
         [Required]
         public float? Total { get; set; }
-        public ICollection<DetailOrder>? DetailOrders { get; set; }
-        public User? User { get; set; }
 
         [Required]
-        public string Status { get; set; }
+        public string Status { get; set; } // Pendiente, Vendido, Cancelado
+        public long? Ticket { get; set; }
+        
+        // Falta campo para el QR...creo
 
+        public ICollection<DetailOrder>? DetailOrders { get; set; }
+        [NotMapped]
+        public User? User { get; set; }
         public Order()
         {
             DetailOrders = new List<DetailOrder>();

@@ -6,7 +6,7 @@
     using System.ComponentModel.DataAnnotations;
 	using System.ComponentModel.DataAnnotations.Schema;
 
-	public class Purchase
+    public class Purchase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -18,8 +18,15 @@
         [ForeignKey("IdUser")]
         public int? IdUser { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public string? Status { get; set; } // Pendiente, Aceptada, Cancelada, Entregada
         public ICollection<DetailPurchase>? DetailPurchases { get; set; }
+        [NotMapped]
         public Proveedor? Proveedor { get; set; }
-		public User? User { get; set; }
-	}
+        [NotMapped]
+        public User? User { get; set; }
+        public Purchase()
+        {
+            DetailPurchases = new List<DetailPurchase>();
+        }
+    }
 }

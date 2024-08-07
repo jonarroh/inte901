@@ -25,5 +25,12 @@ namespace Server
         public DbSet<Order> Orders { get; set; }
         public DbSet<DetailOrder> DetailOrders { get; set; }
         public DbSet<CreditCard> CreditCard { get; set; } = default!;
+        public DbSet<Espacio> Espacios { get; set; } = default!;
+        public DbSet<Reserva> Reservas { get; set; } = default!;
+        public DbSet<DetailReserva> DetailReservas { get; set; } = default!;
+        public DbSet<Consumo> Consumo { get; set; } = default!;
+
+        public DbSet<DetailConsumo> DetailConsumo { get; set; } = default!;
+
     }
 }

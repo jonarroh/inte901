@@ -12,6 +12,7 @@ const defaultUser: User = {
   password: '',
   role: '',
   token: '',
+  estatus: 'Activo'
 };
 
 @Injectable({
@@ -113,6 +114,14 @@ export class UserService {
     return this.http.put<User>(`${this.endpoint}/${userData.id}`, formData);
   }
 
+
+  createUser(userData: User) {
+      return this.http.post<User>(`${this.endpoint}`, userData);
+  }
+
+  getAllUsers() {
+    return this.http.get<User[]>(`${this.endpoint}`);
+  }
 
   
 }

@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Server.lib;
-using Server;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Server;
+using Server.Hubs;
+using Server.lib;
+using System.Text;
 
+// Crear el builder
 var builder = WebApplication.CreateBuilder(args);
 
 // Configurar la conexión a la base de datos
@@ -24,6 +26,9 @@ else if (environment == "P")
 // Registrar servicios
 builder.Services.AddSingleton<TokenService>();
 builder.Services.AddHttpClient<IHttpCDNService, HttpCDNService>();
+
+// Services
+builder.Services.AddScoped<CreditCardService, CreditCardService>();
 
 // Configurar autenticación JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -82,11 +87,16 @@ builder.Services.AddControllers();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        builder => builder.AllowAnyOrigin()
+    options.AddPolicy("AllowSpecificOrigins",
+        builder => builder.WithOrigins("http://localhost:5000", "http://localhost:4200") // Lista de orígenes permitidos
                           .AllowAnyHeader()
-                          .AllowAnyMethod());
+                          .AllowAnyMethod()
+                          .AllowCredentials()); // Permite el uso de credenciales
 });
+
+
+// Agregar soporte para SignalR
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -95,7 +105,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI(c => {
+    app.UseSwaggerUI(c =>
+    {
         c.ConfigObject.AdditionalItems.Add("syntaxHighlight", false);
         c.DefaultModelExpandDepth(2);
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
@@ -106,11 +117,14 @@ if (app.Environment.IsDevelopment())
 app.UseRouting();
 
 // Habilitar CORS antes de la autenticación y autorización
-app.UseCors("AllowAll");
+app.UseCors("AllowSpecificOrigins");
 
 // Middleware de autenticación y autorización
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Agregar el middleware de SignalR
+app.MapHub<OrderHub>("/orderHub");
 
 // Middleware de puntos finales
 app.MapControllers();

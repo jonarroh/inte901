@@ -12,6 +12,8 @@ export interface Proveedor {
   materiaPrimaProveedores: string[];
 }
 
+export type Roles = 'Admin' | 'Cliente' | 'Proveedor';
+
 export interface MateriaPrimaProveedor {
   id: number;
   materiaPrimaId: number;
@@ -91,6 +93,8 @@ export interface Address {
   pais: string;
   codigoPostal: string;
   userId: number;
+  numeroExterior: number;
+  estatus:string;
 }
 
 export interface CreditCard {
@@ -99,6 +103,7 @@ export interface CreditCard {
   expiryDate: string;
   cardHolderName: string;
   userId: number;
+  estatus: string;
 }
 
 export interface User {
@@ -109,6 +114,7 @@ export interface User {
   password: string;
   role: string;
   token: string;
+  estatus: string;
   direcciones: Address[];
   creditCards: CreditCard[];
 }
@@ -126,24 +132,28 @@ export interface Espacio {
 export interface DetailOrder {
   id: number;
   idProduct: number;
-  nameProduct: string;
+  idOrder: number;
   quantity: number;
   priceSingle: number;
-  status: number;
   dateOrder: string;
-  ticket: number;
   ingredients: string;
+  status: string;
 }
+
 
 export interface Order {
   id: number;
   idClient: number;
   idUser: number;
   total: number;
+  isDeliver: boolean;
   orderDate: string;
+  status: string;
   detailOrders: DetailOrder[];
+  creditCard: CreditCard;
+  direcciones: Address;
+  ticket: string;
 }
-
 
 export interface UserEditDTO{
   id: number;
@@ -155,4 +165,50 @@ export interface UserEditDTO{
   actualPassword: string | undefined;
   direcciones: Address[] | undefined;
   creditCards: CreditCard[] | undefined;
+}
+export interface CreditCardWithCvv{
+  cardNumber: string;
+  expiryDate: string;
+  cvv: string;
+  cardHolderName: string;
+  userId: number;
+  id: number;
+  estatus: string;
+}
+export interface DetailReserva {
+  fecha: string; // o Date si se maneja como objeto Date
+  horaInicio: string;
+  horaFin: string;
+  idEspacio: number;  // Relación con Espacio
+}
+
+export interface Reserva {
+  name: string;
+  startTime: string;
+  endTime: string;
+}
+
+
+export interface DetailReservaDTO {
+  idDetailReser: number;
+  fecha: string; // Puedes ajustar el tipo según tus necesidades
+  horaInicio: string;
+  horaFin: string;
+  idEspacio: number;
+}
+
+export interface ReservaDTO {
+  idUsuario: number;
+  idCliente: number;
+  estatus: string;
+  detailReserva: DetailReservaDTO;
+}
+
+
+export class OrderListComponent {
+  orders: any[] = [];
+  productos: any = {};
+  searchTerm: string = '';
+  selectedFilter: string = '';
+  error: string = '';
 }

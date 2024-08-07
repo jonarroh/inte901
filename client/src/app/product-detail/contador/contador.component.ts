@@ -46,39 +46,13 @@ export class ContadorComponent {
 
   
   setOrder(): void{
-    console.log('setOrder');
-    const order: Order ={
-      id:0,
-      idClient: Number(localStorage.getItem('userId')),
-      idUser: Number(localStorage.getItem('userId')),
-      orderDate: new Date().toString(),
-      total: this.total,
-      detailOrders:[
-        {
-          id:0,
-          idProduct:this.product().id,
-          quantity: this.contador(),
-          dateOrder: new Date().toString(),
-          ingredients: `
-          ${this.product().ingredientes.map(ingrediente => ingrediente.producto).join(', ')}
-          `,
-          status: 1,
-          nameProduct: this.product().nombre,
-          priceSingle: this.product().precio,
-          ticket: 0
-        }
-      ]
-    }
-    this.checkoutService.setOrder(order);
-    toast('Producto en proceso de compra',{
-      action: {
-        label: 'X',
-        onClick: () => toast.dismiss(),
-      }
-    })
+    //agregar el producto al carrito
+    this.agregarAlCarrito();
+    //crear la orden
+    this.router.navigate(['/checkout/address']);
   }
   get total() {
-    return this.product().precio * this.contador();
+    return (this.product().precio * this.contador()) + this.cartService.cartSignal().reduce((acc, item) => acc + item.precio * item.quantity, 0);
   }
 
   

@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { UserService } from '~/app/home/services/user.service';
 import { CheckoutService } from '../checkout.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CreditCard } from '~/lib/types';
 
 @Component({
@@ -10,6 +10,7 @@ import { CreditCard } from '~/lib/types';
   standalone: true,
   imports: [
     LucideAngularModule,
+    RouterModule
 
   ],
   templateUrl: './tarjeta.component.html',
@@ -33,8 +34,15 @@ export class TarjetaComponent {
   }
 
   onOrderToStore() {
-    this.CheackoutService.isOrderToStore.set(true);
-    this.CheackoutService.selectedCard.set({} as CreditCard);
+    this.CheackoutService.isPaidWithCard.set(false);
+    this.CheackoutService.selectedCard.set({
+      cardHolderName: '',
+      cardNumber: '',
+      estatus: '',
+      expiryDate: '',
+      id: 0,
+      userId: 0,
+    }as CreditCard);
     this.router.navigate(['checkout/details']);
   }
 }

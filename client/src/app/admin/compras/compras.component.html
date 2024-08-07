@@ -1,5 +1,5 @@
-<div class="container mx-auto p-4">
-  <div class="flex justify-end mb-4">
+<div class="container mx-auto w-full p-4">
+  <div class="justify-end mb-4">
     <hlm-dialog>
       <button id="edit-profile" variant="success" brnDialogTrigger hlmBtn>Realizar compra</button>
       <hlm-dialog-content class="md:max-w-[425px] w-full" *brnDialogContent="let ctx">
@@ -48,24 +48,69 @@
       </hlm-dialog-content>
     </hlm-dialog>
   </div>
-  <div class="relative overflow-x-auto">
-    <hlm-table>
+  <div class="overflow-y-auto min-w-full">
+    <div class="flex flex-col justify-between gap-4 sm:flex-row">
+      <input
+        hlmInput
+        class="w-full md:w-80"
+        placeholder="Filter emails..."
+        [ngModel]="_proveedorFilter()"
+        (ngModelChange)="_rawFilterInput.set($event)"
+      />
+      <button hlmBtn variant="outline" align="end" [brnMenuTriggerFor]="menu">
+        Columnas
+        <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
+      </button>
+      <ng-template #menu>
+        <hlm-menu class="w-32">
+          @for (column of _brnColumnManager.allColumns; track column.name) {
+            <button
+              hlmMenuItemCheckbox
+              [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
+              [checked]="_brnColumnManager.isColumnVisible(column.name)"
+              (triggered)="_brnColumnManager.toggleVisibility(column.name)"
+            >
+              <hlm-menu-item-check />
+              <span>{{ column.label }}</span>
+            </button>
+          }
+        </hlm-menu>
+      </ng-template>
+    </div>
+
+    <!-- Datatable -->
+    <!-- <brn-table hlm stickyHeader="" class="border-border mt-4 block overflow-auto rounded-md border w-full min-w-full">
+      <brn-column-def>
+
+      </brn-column-def>
+    </brn-table> -->
+
+    <!-- Tabla basica funciona xd -->
+    <hlm-table class="w-full min-w-full">
       <hlm-trow>
-        <hlm-th>Insumo</hlm-th>
-        <hlm-th>Proveedor</hlm-th>
-        <hlm-th>Cantidad</hlm-th>
-        <hlm-th>Precio unitario</hlm-th>
-        <hlm-th>Presentaci&oacute;n</hlm-th>
-        <hlm-th>Caducidad</hlm-th>
+        <hlm-th class="flex-1">Fecha Compra</hlm-th>
+        <hlm-th class="flex-1">Insumos</hlm-th>
+        <hlm-th class="flex-1">Proveedor</hlm-th>
+        <hlm-th class="flex-1">Empleado</hlm-th>
+        <hlm-th class="flex-1">Estatus</hlm-th>
+        <hlm-th class="flex-1">Acciones</hlm-th>
       </hlm-trow>
-      <hlm-trow>
-        <hlm-td>1</hlm-td>
-        <hlm-td>2</hlm-td>
-        <hlm-td>3</hlm-td>
-        <hlm-td>4</hlm-td>
-        <hlm-td>5</hlm-td>
-        <hlm-td>6</hlm-td>
+      <hlm-trow *ngIf="(compras$ | async)?.length === 0">
+        <hlm-td colspan="6">No hay registros</hlm-td>
+      </hlm-trow>
+      <hlm-trow *ngFor="let compra of (compras$ | async); trackBy: trackByCompraId">
+        <hlm-td class="flex-1">{{ compra.createdAt }}</hlm-td>
+        <hlm-td class="flex-1">{{ compra.detailPurchases?.length }}</hlm-td>
+        <hlm-td class="flex-1">{{ compra.proveedor?.nombreEmpresa }}</hlm-td>
+        <hlm-td class="flex-1">{{ compra.user?.name }}</hlm-td>
+        <hlm-td class="flex-1">{{ compra.status }}</hlm-td>
+        <hlm-td class="flex-1">
+          <button hlmBtn variant="success">
+            Ok
+          </button>
+        </hlm-td>
       </hlm-trow>
     </hlm-table>
   </div>
+
 </div>
