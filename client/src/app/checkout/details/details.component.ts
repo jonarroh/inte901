@@ -80,7 +80,7 @@ export class DetailsComponent {
         complete: () => {},
         error: (err) => {
           console.log(err);
-          toast.error('Error al hacer la orden');
+          toast.error('Error al hacer la orden '+ JSON.stringify(err.error));
         },
         next: (res) => {
           console.log(res);
