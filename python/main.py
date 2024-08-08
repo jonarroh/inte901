@@ -165,6 +165,45 @@ def generate_qr():
 
 
 
+
+@app.route('/generate_qr_reservation', methods=['POST'])
+def generate_qr_reservation():
+    # Obtener el string del request
+    data = request.form.get('ticket')
+    id = request.form.get('id')
+    qr_orders_folder = os.path.join(STATIC_FOLDER, 'reservaciones')
+    
+    if not data:
+        return {"error": "No data provided"}, 400
+
+    # Crear un código QR
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill='black', back_color='white')
+
+    # Generar un nombre de archivo único para evitar colisiones
+    
+    filename = f"{id}.png"
+    filepath = os.path.join(qr_orders_folder, filename)
+
+    # Guardar la imagen en el directorio 'static/qr-orders'
+    img.save(filepath)
+
+    # Devolver la URL del archivo guardado
+    file_url = url_for('static', filename=f'reservaciones/{filename}', _external=True)
+    return jsonify({"file_url": file_url})
+
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
     
