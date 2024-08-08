@@ -4,8 +4,7 @@ import { Address, CreditCard, CreditCardWithCvv, DetailOrder, Ingrediente, Order
 import { CartService } from '~/app/cart/cart.service';
 import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
-import { Router } from '@angular/router';
-import { tick } from '@angular/core/testing';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-details',
