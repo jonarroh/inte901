@@ -9,7 +9,9 @@ export interface ProductoWithQuantity extends Producto {
   providedIn: 'root'
 })
 export class CartService {
+
   private storageKey = 'shoppingCart';
+
   cartSignal = signal<ProductoWithQuantity[]>(this.loadCartFromLocalStorage());
   total = computed(() => {
     return this.cartSignal().reduce((acc, item) => acc + item.precio * item.quantity, 0);
@@ -68,4 +70,5 @@ export class CartService {
   clearCart(): void {
     this.saveCartToLocalStorage([]);
   }
+
 }
