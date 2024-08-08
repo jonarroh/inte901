@@ -1,4 +1,4 @@
-import { Component, inject, TrackByFunction } from '@angular/core';
+import { Component, inject, signal, TrackByFunction } from '@angular/core';
 import { NavComponent } from '../componentes/nav/nav.component';
 import {
   HlmDialogComponent, HlmDialogContentComponent, HlmDialogHeaderComponent,
@@ -14,7 +14,7 @@ import { HlmTableModule } from '~/components/ui-table-helm/src';
 import { VentasService } from './ventas.service';
 import { Order } from './interface/order';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgForOf } from '@angular/common';
 import { HlmSelectModule } from '~/components/ui-select-helm/src';
 import { BrnSelectModule } from '@spartan-ng/ui-select-brain';
 import { Address, CreditCard } from '~/lib/types';
@@ -29,6 +29,15 @@ import { BrnSheetContentDirective, BrnSheetTriggerDirective } from '@spartan-ng/
 import { toast } from 'ngx-sonner';
 import { HlmToasterComponent } from '~/components/ui-sonner-helm/src';
 import { Producto } from './interface/producto';
+import { BrnCommandImports } from '@spartan-ng/ui-command-brain';
+import { HlmCommandImports } from '~/components/ui-command-helm/src';
+import { BrnPopoverComponent, BrnPopoverContentDirective, BrnPopoverTriggerDirective } from '@spartan-ng/ui-popover-brain';
+import { HlmPopoverContentDirective } from '~/components/ui-popover-helm/src';
+import { HlmIconComponent } from '~/components/ui-icon-helm/src';
+import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
+import { HlmAlertDialogActionButtonDirective, HlmAlertDialogCancelButtonDirective, HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogOverlayDirective, HlmAlertDialogTitleDirective } from '~/components/ui-alertdialog-helm/src';
+
+type Framework = { label: string; value: string };
 
 @Component({
   selector: 'app-ventas',
@@ -59,7 +68,26 @@ import { Producto } from './interface/producto';
     HlmSheetFooterComponent,
     HlmSheetTitleDirective,
     HlmSheetDescriptionDirective,
-    HlmToasterComponent
+    HlmToasterComponent,
+    BrnCommandImports,
+    HlmCommandImports,
+    BrnPopoverComponent,
+    BrnPopoverTriggerDirective,
+    HlmPopoverContentDirective,
+    BrnPopoverContentDirective,
+    NgForOf,
+    HlmIconComponent,
+    BrnAlertDialogTriggerDirective,
+    BrnAlertDialogContentDirective,
+    HlmAlertDialogComponent,
+    HlmAlertDialogOverlayDirective,
+    HlmAlertDialogHeaderComponent,
+    HlmAlertDialogFooterComponent,
+    HlmAlertDialogTitleDirective,
+    HlmAlertDialogDescriptionDirective,
+    HlmAlertDialogCancelButtonDirective,
+    HlmAlertDialogActionButtonDirective,
+    HlmAlertDialogContentComponent,
   ],
   templateUrl: './ventas.component.html',
   styleUrl: './ventas.component.css'
@@ -78,6 +106,7 @@ export class VentasComponent {
   carrito: DetailOrder[] = [];
   producto: Producto = {};
   total: number = 0;
+  status: string = '';
 
   constructor() {
     this.orders$ = this.orderService.getOrders();
@@ -302,5 +331,40 @@ export class VentasComponent {
         console.error('Error al enviar la orden: ', error);
       }
     );
+  }
+
+  updateStatus() {
+    console.log('Orden a actualizar: ', this.status);
+  }
+
+  public frameworks = [
+    {
+      label: 'Cancelar',
+      value: 'Cancelado',
+    },
+    {
+      label: 'Entregado',
+      value: 'Entregado',
+    },
+  ];
+  public currentFramework = signal<Framework | undefined>(undefined);
+  public state = signal<'closed' | 'open'>('closed');
+
+  stateChanged(state: 'open' | 'closed') {
+    this.state.set(state);
+    if (state === 'closed') {
+      const statusBtn = document.getElementById('edit-status');
+      statusBtn?.click();
+    }
+  }
+
+  commandSelected(framework: Framework) {
+    this.state.set('closed');
+    if (this.currentFramework()?.value === framework.value) {
+      this.currentFramework.set(undefined);
+    } else {
+      this.currentFramework.set(framework);
+      this.status = framework.value;
+    }
   }
 }

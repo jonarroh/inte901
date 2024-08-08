@@ -54,6 +54,33 @@ namespace Server.Controllers
             return Ok(order);
         }
 
+        [HttpPut]
+        [Route("updateStatusOrder/{status},{idOrder}")]
+        public async Task<IActionResult> UpdateStatusOrder(string status, int idOrder)
+        {
+			try
+            {
+				var order = await _context.Orders.FindAsync(idOrder);
+
+				if (order == null)
+                {
+					return NotFound("No se encontro la orden");
+				}
+
+				order.Status = status;
+
+				await _context.SaveChangesAsync();
+
+				return Ok(order);
+			}
+			catch (Exception ex)
+            {
+				Console.WriteLine(ex.Message);
+
+				return NotFound("Se produjo un error en el servidor, contacte a soporte");
+			}
+		}
+
 
         [HttpGet]
         [Route("allOrders")]
