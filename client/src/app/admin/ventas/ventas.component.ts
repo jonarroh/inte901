@@ -1,4 +1,4 @@
-import { Component, inject, signal, TrackByFunction } from '@angular/core';
+import { Component, computed, inject, input, signal, TrackByFunction } from '@angular/core';
 import { NavComponent } from '../componentes/nav/nav.component';
 import {
   HlmDialogComponent, HlmDialogContentComponent, HlmDialogHeaderComponent,
@@ -20,7 +20,6 @@ import { BrnSelectModule } from '@spartan-ng/ui-select-brain';
 import { Address, CreditCard } from '~/lib/types';
 import { ProductoService } from '../productos/service/producto.service';
 import { DetailOrder } from './interface/detailorder';
-import { ca, de } from 'date-fns/locale';
 import { Ingrediente } from '../../../lib/types';
 import { IngredienteService } from '../ingredientes/service/ingrediente.service';
 import { HlmCheckboxComponent } from '~/components/ui-checkbox-helm/src';
@@ -106,7 +105,16 @@ export class VentasComponent {
   carrito: DetailOrder[] = [];
   producto: Producto = {};
   total: number = 0;
-  status: string = '';
+  public idOrden: number = 0;
+  public idDetalle: number = 0;
+  public status: string = '';
+  public statusProducto: string = '';
+  public popoverStates: { [key: number]: 'closed' | 'open' } = {};
+  public currentFrameworks: { [key: number]: Framework | undefined } = {};
+  public frameworks: Framework[] = [
+    { label: 'Cancelar', value: 'Cancelado' },
+    { label: 'Entregado', value: 'Entregado' },
+  ];
 
   constructor() {
     this.orders$ = this.orderService.getOrders();
@@ -115,9 +123,22 @@ export class VentasComponent {
     this.ingredientes$ = this.ingredientesService.getIngredientes() as Observable<Ingrediente[]>;
     this.cargarCarrito();
     this.calcularTotal();
+    this.idOrden = 0;
+    this.status = '';
   }
 
   trackByOrderId: TrackByFunction<Order> = (index, order) => order.id;
+
+  fallbackUrl = 'http://localhost:5000/static/productos/fallback.webp';
+  imageUrl = computed(() => `http://localhost:5000/static/productos/${this.id()}.webp`);
+  idorderstatus: number = 0;
+  id = input.required<number>();
+  public cantidades: { [id: number]: number | null } = {};
+
+  onImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.src = this.fallbackUrl;
+  }
 
   cargarCarrito() {
     const storedCart = localStorage.getItem('carrito');
@@ -183,12 +204,13 @@ export class VentasComponent {
 
   addToCart(producto: Producto) {
     const existingItem = this.carrito.find(item => item.idProduct === producto.id);
+    const cantidad = this.cantidades[producto.id||0] || 1;
     if (existingItem) {
       existingItem.quantity! += 1;
     } else {
       this.carrito.push({
         idProduct: producto.id,
-        quantity: 1,
+        quantity: cantidad,
         product: {
           id: producto.id,
           nombre: producto.nombre,
@@ -211,6 +233,8 @@ export class VentasComponent {
     }
     this.calcularTotal();
     this.guardarCarrito();
+
+    this.cantidades[producto.id || 0] = null;
   }
 
   detalleTotal() {
@@ -335,36 +359,136 @@ export class VentasComponent {
 
   updateStatus() {
     console.log('Orden a actualizar: ', this.status);
+
+    this.orderService.updateOrderStatus(this.idOrden, this.status).subscribe(
+      (order) => {
+        console.log('Orden actualizada: ', order);
+        toast.success(
+          'Se actualizo el estatus de la orden', {
+          action: {
+            label: 'X',
+            onClick: () => toast.dismiss(),
+          },
+          duration: 2000,
+          onAutoClose: ((toast => {
+            location.reload();
+          }))
+        }
+        );
+      },
+      (error) => {
+        toast.error('Se produjo un error al actualizar la orden');
+        console.error('Error al actualizar la orden: ', error);
+      }
+    );
   }
 
-  public frameworks = [
-    {
-      label: 'Cancelar',
-      value: 'Cancelado',
-    },
-    {
-      label: 'Entregado',
-      value: 'Entregado',
-    },
-  ];
-  public currentFramework = signal<Framework | undefined>(undefined);
-  public state = signal<'closed' | 'open'>('closed');
+  // public frameworks = [
+  //   {
+  //     label: 'Cancelar',
+  //     value: 'Cancelado',
+  //   },
+  //   {
+  //     label: 'Entregado',
+  //     value: 'Entregado',
+  //   },
+  // ];
 
-  stateChanged(state: 'open' | 'closed') {
-    this.state.set(state);
+
+  // public currentFramework = signal<Framework | undefined>(undefined);
+  // public state = signal<'closed' | 'open'>('closed');
+
+
+  // stateChanged(state: 'open' | 'closed') {
+  //   this.state.set(state);
+  //   if (state === 'closed') {
+  //     const statusBtn = document.getElementById('edit-status');
+  //     statusBtn?.click();
+  //   }
+  // }
+  stateChanged(state: 'open' | 'closed', orderId: number) {
+    this.popoverStates[orderId] = state;
     if (state === 'closed') {
       const statusBtn = document.getElementById('edit-status');
       statusBtn?.click();
     }
   }
 
-  commandSelected(framework: Framework) {
-    this.state.set('closed');
-    if (this.currentFramework()?.value === framework.value) {
-      this.currentFramework.set(undefined);
+  // commandSelected(framework: Framework) {
+  //   this.state.set('closed');
+  //   if (this.currentFramework()?.value === framework.value) {
+  //     this.currentFramework.set(undefined);
+  //   } else {
+  //     this.currentFramework.set(framework);
+  //     this.status = framework.value;
+  //     this.idOrden = this.idorderstatus;
+  //     console.log('Orden a actualizar: ', this.status);
+  //     console.log('ID de la orden: ', this.idOrden);
+  //   }
+  // }
+  commandSelected(framework: Framework, orderId: number) {
+    this.popoverStates[orderId] = 'closed'; // Cerrar el popover después de seleccionar
+
+    if (this.currentFrameworks[orderId]?.value === framework.value) {
+      this.currentFrameworks[orderId] = undefined;
     } else {
-      this.currentFramework.set(framework);
+      this.currentFrameworks[orderId] = framework;
+      this.idOrden = orderId;
       this.status = framework.value;
+      console.log('Orden a actualizar: ', framework.value);
+      console.log('ID de la orden: ', orderId);
     }
+  }
+  currentFramework(orderId: number): Framework | undefined {
+    return this.currentFrameworks[orderId];
+  }
+
+  resetCombo() {
+    // Reestablece el framework seleccionado para la orden actual
+    if (this.idOrden !== undefined) {
+      this.currentFrameworks[this.idOrden] = undefined;
+    }
+
+    // O si deseas reestablecer todos los comboboxes:
+    // this.currentFrameworks = {};
+
+    console.log('ComboBox reestablecido.');
+    location.reload();
+  }
+
+  cancelarProducto(id: number) {
+    console.log('Producto a cancelar: ', id);
+
+    const statusBtn = document.getElementById('edit-status-producto');
+    statusBtn?.click();
+
+    this.idDetalle = id;
+    this.statusProducto = 'Cancelado';
+  }
+
+  updateStatusProducto() {
+    console.log('Producto a actualizar: ', this.statusProducto, 'con ID: ', this.idDetalle);
+
+    this.orderService.updateDetailOrderStatus(this.idDetalle, this.statusProducto).subscribe(
+      (order) => {
+        console.log('Producto actualizado: ', order);
+        toast.success(
+          'Se actualizo el estatus del producto', {
+          action: {
+            label: 'X',
+            onClick: () => toast.dismiss(),
+          },
+          duration: 2000,
+          onAutoClose: ((toast => {
+            location.reload();
+          }))
+        }
+        );
+      },
+      (error) => {
+        toast.error('Se produjo un error al actualizar el producto');
+        console.error('Error al actualizar el producto: ', error);
+      }
+    );
   }
 }

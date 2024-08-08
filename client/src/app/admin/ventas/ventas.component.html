@@ -2,8 +2,7 @@
   <div class="flex justify-end mb-4 space-x-2">
     <!-- space-x-2 adds some spacing between the buttons -->
     <hlm-sheet side="right">
-      <button id="carrito" variant="success" brnSheetTrigger hlmBtn
-        (click)="calcularTotal()">
+      <button id="carrito" variant="success" brnSheetTrigger hlmBtn (click)="calcularTotal()">
         Carrito
       </button>
       <hlm-sheet-content *brnSheetContent="let ctx">
@@ -16,8 +15,7 @@
               <span>{{ item.product }}</span>
               <span>{{ item.priceSingle }}</span>
               <span>{{ item.quantity }}</span>
-              <button hlmBtn variant="destructive"
-                (click)="quitarItem(item)">Eliminar</button>
+              <button hlmBtn variant="destructive" (click)="quitarItem(item)">Eliminar</button>
             </div>
           </div>
           <div class="flex justify-between">
@@ -38,30 +36,27 @@
     </hlm-sheet>
 
     <hlm-dialog class="w-[500px]">
-      <button id="edit-profile" variant="success" brnDialogTrigger
-        hlmBtn>Generar venta</button>
-      <hlm-dialog-content class="min-w-[950px] w-full bg-success"
-        *brnDialogContent="let ctx">
+      <button id="edit-profile" variant="success" brnDialogTrigger hlmBtn>Generar venta</button>
+      <hlm-dialog-content class="min-w-[970px] w-full bg-success" *brnDialogContent="let ctx">
         <hlm-dialog-header>
           <h3 hlmDialogTitle>Nueva orden</h3>
         </hlm-dialog-header>
         <form>
           <div class="grid grid-cols-4 gap-4">
             <div *ngFor="let producto of (productos$ | async)">
-              <section
-                class="w-48 h-40 border border-solid border-black rounded-md"
-                hlmCard>
+              <section class="w-56 h-40 border border-solid border-black rounded-md" hlmCard>
                 <div hlmCardHeader>
-                  <h3 hlmCardTitle>
+                  <!-- <img [src]="imageUrl()" alt="producto" class="w-full h-20 object-cover" /> -->
+                  <p>
                     {{ producto.nombre }}
-                  </h3>
+                  </p>
                   <p hlmCardDescription>
-                    {{ producto.precio }}
+                    $ {{ producto.precio }} MXN
                   </p>
                 </div>
-                <div hlmCardFooter class="justify-between">
-                  <button hlmBtn variant="primary"
-                    (click)="addToCart(producto)">Agregar</button>
+                <div hlmCardFooter class="justify-between flex items-center">
+                  <input type="number" variant="primary" hlmInput class="w-28" placeholder="Cantidad" [(ngModel)]="cantidades[producto.id||0]"  [ngModelOptions]="{standalone: true}">
+                  <button hlmBtn variant="primary" class="sm" (click)="addToCart(producto)">Agregar</button>
                 </div>
               </section>
             </div>
@@ -87,8 +82,7 @@
       <hlm-trow *ngIf="(orders$ | async)?.length === 0">
         <hlm-td colspan="6">No hay registros</hlm-td>
       </hlm-trow>
-      <hlm-trow
-        *ngFor="let order of (orders$ | async); trackBy: trackByOrderId">
+      <hlm-trow *ngFor="let order of (orders$ | async); trackBy: trackByOrderId">
         <hlm-td class="flex-1"># {{ order.ticket }}</hlm-td>
         <hlm-td class="flex-1">{{ order.orderDate }}</hlm-td>
         <hlm-td class="flex-1">$ {{ order.total }}.00 MXN</hlm-td>
@@ -101,7 +95,7 @@
           <ng-container [ngSwitch]="order.status">
             <span *ngSwitchCase="'Pendiente'" style="color: orange;">{{
               order.status }}</span>
-            <span *ngSwitchCase="'Pagado'" style="color: green;">{{ order.status
+            <span *ngSwitchCase="'Entregado'" style="color: green;">{{ order.status
               }}</span>
             <span *ngSwitchDefault style="color: red;">{{ order.status }}</span>
           </ng-container>
@@ -110,30 +104,31 @@
           <!-- <button hlmBtn variant="success" (click)="onGestion(order)">
             Gestionar
           </button> -->
-          @if (order.status === 'Pendiente'){
-          <brn-popover [state]="state()" (stateChanged)="stateChanged($event)"
+          <!-- @if (order.status === 'Pendiente'){
+          <brn-popover [state]="popoverStates[order.id]" (stateChanged)="stateChanged($event, order.id)"
             sideOffset="5" closeDelay="100">
-            <button class="flex-1 justify-between" id="edit-profile"
+            <button class="flex-1 justify-between" id="{{order.id}}"
               variant="success" brnPopoverTrigger hlmBtn>
               {{ currentFramework() ? currentFramework()?.label :
               'Seleccionar' }}
             </button>
-            <brn-cmd *brnPopoverContent="let ctx" hlmPopoverContent hlm
+            <brn-cmd id="{{order.id}}" *brnPopoverContent="let ctx" hlmPopoverContent hlm
               class="p-0 mx-2 flex-1">
               <div *brnCmdEmpty hlmCmdEmpty>Sin resultados.</div>
-              <brn-cmd-list hlm>
+              <brn-cmd-list id="{{order.id}}" hlm>
                 <brn-cmd-group hlm>
                   <button
                     *ngFor="let framework of frameworks"
                     brnCmdItem
                     [value]="framework.value"
-                    (selected)="commandSelected(framework)"
+                    (selected)="commandSelected(framework, order.id)"
                     hlm>
                     <hlm-icon
-                      [class.opacity-0]="currentFramework()?.value !== framework.value"
+                      [class.opacity-0]="currentFramework(order.id)?.value !== framework.value"
                       name="lucideCheck"
                       hlmCmdIcon />
                     {{ framework.label }}
+                    <span class="hidden" [(ngModel)]="idorderstatus">{{order.id}}</span>
                   </button>
                 </brn-cmd-group>
               </brn-cmd-list>
@@ -143,7 +138,35 @@
             <button disabled variant="success">
               {{ order.status }}
             </button>
+          } -->
+          @if (order.status === 'Pendiente') {
+          <brn-popover [state]="popoverStates[order.id||0] || 'closed'"
+            (stateChanged)="stateChanged($event, order.id||0)" sideOffset="5" closeDelay="100">
+            <button class="flex-1 justify-between" id="{{order.id}}" variant="success" brnPopoverTrigger hlmBtn>
+              {{ currentFramework(order.id||0) ? currentFramework(order.id||0)?.label : 'Seleccionar' }}
+            </button>
+
+            <brn-cmd id="{{order.id}}" *brnPopoverContent="let ctx" hlmPopoverContent hlm class="p-0 mx-2 flex-1">
+              <div *brnCmdEmpty hlmCmdEmpty>Sin resultados.</div>
+              <brn-cmd-list id="{{order.id}}" hlm>
+                <brn-cmd-group hlm>
+                  <button *ngFor="let framework of frameworks" brnCmdItem [value]="framework.value"
+                    (selected)="commandSelected(framework, order.id||0)" hlm>
+                    <hlm-icon [class.opacity-0]="currentFramework(order.id||0)?.value !== framework.value"
+                      name="lucideCheck" hlmCmdIcon />
+                    {{ framework.label }}
+                    <span class="hidden" [(ngModel)]="idorderstatus">{{ order.id }}</span>
+                  </button>
+                </brn-cmd-group>
+              </brn-cmd-list>
+            </brn-cmd>
+          </brn-popover>
+          } @else {
+          <button disabled variant="success" hlmBtn>
+            Seleccionar
+          </button>
           }
+
         </hlm-td>
       </hlm-trow>
     </hlm-table>
@@ -151,12 +174,10 @@
 </div>
 
 <hlm-dialog class="w-[500px]">
-  <button class="hidden" hlmBtn variant="success" brnDialogTrigger
-    id="detail-show">
+  <button class="hidden" hlmBtn variant="success" brnDialogTrigger id="detail-show">
     Detalle
   </button>
-  <hlm-dialog-content class="min-w-[800px] w-full bg-success"
-    *brnDialogContent="let ctx">
+  <hlm-dialog-content class="min-w-[800px] w-full bg-success" *brnDialogContent="let ctx">
     <hlm-dialog-header>
       <h3 hlmDialogTitle>Detalle de la orden</h3>
     </hlm-dialog-header>
@@ -167,11 +188,33 @@
             <hlm-th class="flex-1">Producto</hlm-th>
             <hlm-th class="flex-1">Precio</hlm-th>
             <hlm-th class="flex-1">Cantidad</hlm-th>
+            <hlm-th class="flex-1">Status</hlm-th>
+            <hlm-th class="flex-1">Acci&oacute;n</hlm-th>
           </hlm-trow>
           <hlm-trow *ngFor="let detalle of detalles">
             <hlm-td class="flex-1">{{ detalle.product?.nombre }}</hlm-td>
             <hlm-td class="flex-1">{{ detalle.priceSingle }}</hlm-td>
             <hlm-td class="flex-1">{{ detalle.quantity }}</hlm-td>
+            <hlm-td class="flex-1">
+              @if (detalle.status === 'Pendiente') {
+              <span style="color: orange;">{{ detalle.status }}</span>
+              } @else if (detalle.status === 'Entregado') {
+              <span style="color: green;">{{ detalle.status }}</span>
+              } @else {
+              <span style="color: red;">{{ detalle.status }}</span>
+              }
+            </hlm-td>
+            <hlm-td class="flex-1">
+              @if (detalle.status === 'Pendiente') {
+              <button hlmBtn class="flex-1" variant="destructive" (click)="cancelarProducto(detalle.id||0)">
+                Cancelar
+              </button>
+              } @else {
+              <button disabled hlmBtn variant="destructive" class="flex-1">
+                Cancelar
+              </button>
+              }
+            </hlm-td>
           </hlm-trow>
         </hlm-table>
       </div>
@@ -179,10 +222,8 @@
   </hlm-dialog-content>
 </hlm-dialog>
 
-<hlm-alert-dialog variant="success">
-  <button id="edit-status" class="hidden" variant="success"
-    brnAlertDialogTrigger
-    hlmBtn>Cambiar status</button>
+<hlm-alert-dialog variant="success" (closed)="resetCombo()">
+  <button id="edit-status" class="hidden" variant="success" brnAlertDialogTrigger hlmBtn>Cambiar status</button>
   <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
     <hlm-alert-dialog-header>
       <h3 hlmAlertDialogTitle>Actualizar status de la orden</h3>
@@ -194,6 +235,27 @@
     <hlm-alert-dialog-footer>
       <button hlmAlertDialogCancel (click)="ctx.close()" variant="destructive">Cancelar</button>
       <button hlmAlertDialogAction (click)="updateStatus()" variant="success">Actualizar</button>
+    </hlm-alert-dialog-footer>
+  </hlm-alert-dialog-content>
+</hlm-alert-dialog>
+
+<hlm-alert-dialog variant="success">
+  <button id="edit-status-producto" class="hidden" variant="success" brnAlertDialogTrigger hlmBtn>
+    Cambiar status
+  </button>
+  <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
+    <hlm-alert-dialog-header>
+      <h3 hlmAlertDialogTitle>
+        Actualizar status del producto
+      </h3>
+      <p hlmAlertDialogDescription>
+        Al cambiar el status del producto, no se podrá revertir.
+        ¿Estás seguro de cambiar el status del producto?
+      </p>
+    </hlm-alert-dialog-header>
+    <hlm-alert-dialog-footer>
+      <button hlmAlertDialogCancel (click)="ctx.close()" variant="destructive">Cancelar</button>
+      <button hlmAlertDialogAction (click)="updateStatusProducto()" variant="success">Actualizar</button>
     </hlm-alert-dialog-footer>
   </hlm-alert-dialog-content>
 </hlm-alert-dialog>

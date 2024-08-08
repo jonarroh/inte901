@@ -24,4 +24,10 @@ export class VentasService {
 
   addOrder = (order: Order): Observable<Order> =>
     this.http.post<Order>(`${this.apiURL}/addOrder`, order)
+
+  updateOrderStatus = (id: number, status: string): Observable<Order> =>
+    this.http.put<Order>(`${this.apiURL}/updateOrder/${id},${status}`, {})
+
+  updateDetailOrderStatus = (id: number, status: string): Observable<DetailOrder> =>
+    this.http.put<DetailOrder>(`${this.apiURL}/updateDetailOrderStatus/${id},${status}`, {})
 }

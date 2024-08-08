@@ -15,27 +15,33 @@ import { HlmIconComponent, provideIcons } from '@spartan-ng/ui-icon-helm';
 import { HlmInputDirective, HlmInputModule } from '~/components/ui-input-helm/src';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
-import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { BrnDialogTriggerDirective, BrnDialogContentDirective } from '@spartan-ng/ui-dialog-brain';
 import { BrnTableModule, PaginatorState, useBrnColumnManager } from '@spartan-ng/ui-table-brain';
 import { HlmTableModule } from '@spartan-ng/ui-table-helm';
 import { BrnSelectModule } from '@spartan-ng/ui-select-brain';
 import { HlmSelectModule } from '@spartan-ng/ui-select-helm';
-import { hlmMuted } from '@spartan-ng/ui-typography-helm';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { SelectionModel } from '@angular/cdk/collections';
 import { from, debounceTime, map, Observable } from 'rxjs';
 import { ComprasService } from './compras.service';
 import { Compra } from './interface/compras';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgForOf } from '@angular/common';
 import { Proveedor } from './interface/proveedor';
 import { ProveedoresService } from '~/app/proveedores/proveedores.service';
 import { HlmAccordionDirective, HlmAccordionModule } from '~/components/ui-accordion-helm/src';
 import { BrnAccordionModule } from '@spartan-ng/ui-accordion-brain';
-import { ProductoService } from '../productos/service/producto.service';
 import { MateriasPrimasService } from '../materias-primas/service/materias-primas.service';
 import { MateriaPrima } from '../materias-primas/interface/materias-primas';
 import { DetailPurchase } from './interface/detailcompras';
+import { HlmAlertDialogActionButtonDirective, HlmAlertDialogCancelButtonDirective, HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogOverlayDirective, HlmAlertDialogTitleDirective } from '~/components/ui-alertdialog-helm/src';
+import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
+import { BrnPopoverComponent, BrnPopoverContentDirective, BrnPopoverTriggerDirective } from '@spartan-ng/ui-popover-brain';
+import { HlmPopoverContentDirective } from '~/components/ui-popover-helm/src';
+import { HlmCommandImports } from '~/components/ui-command-helm/src';
+import { BrnCommandImports } from '@spartan-ng/ui-command-brain';
+import { HlmToasterComponent } from '~/components/ui-sonner-helm/src';
+import { HlmSheetComponent, HlmSheetContentComponent, HlmSheetDescriptionDirective, HlmSheetFooterComponent, HlmSheetHeaderComponent, HlmSheetTitleDirective } from '~/components/ui-sheet-helm/src';
+import { BrnSheetContentDirective, BrnSheetTriggerDirective } from '@spartan-ng/ui-sheet-brain';
+
+type Framework = { label: string | '', value: string | '' };
 
 @Component({
   selector: 'app-compras',
@@ -66,7 +72,35 @@ import { DetailPurchase } from './interface/detailcompras';
     HlmInputDirective,
     HlmAccordionDirective,
     HlmAccordionModule,
-    BrnAccordionModule
+    BrnAccordionModule,
+    HlmToasterComponent,
+    BrnCommandImports,
+    HlmCommandImports,
+    BrnPopoverComponent,
+    BrnPopoverTriggerDirective,
+    HlmPopoverContentDirective,
+    BrnPopoverContentDirective,
+    BrnSheetTriggerDirective,
+    BrnSheetContentDirective,
+    HlmSheetComponent,
+    HlmSheetContentComponent,
+    HlmSheetHeaderComponent,
+    HlmSheetFooterComponent,
+    HlmSheetTitleDirective,
+    HlmSheetDescriptionDirective,
+    NgForOf,
+    HlmIconComponent,
+    BrnAlertDialogTriggerDirective,
+    BrnAlertDialogContentDirective,
+    HlmAlertDialogComponent,
+    HlmAlertDialogOverlayDirective,
+    HlmAlertDialogHeaderComponent,
+    HlmAlertDialogFooterComponent,
+    HlmAlertDialogTitleDirective,
+    HlmAlertDialogDescriptionDirective,
+    HlmAlertDialogCancelButtonDirective,
+    HlmAlertDialogActionButtonDirective,
+    HlmAlertDialogContentComponent,
   ],
   templateUrl: './compras.component.html',
   styleUrl: './compras.component.css',
@@ -85,6 +119,9 @@ export class ComprasComponent {
   insumos$: Observable<MateriaPrima[]>;
   detalles$: Observable<DetailPurchase[]>;
   editMode: boolean = false;
+  public frameworks: Framework[] = [];
+  public currentFramework = signal<Framework | undefined>(undefined);
+  public state = signal<'closed' | 'open'>('closed');
 
   constructor() {
     this.compras$ = this.compraService.getCompras();
@@ -102,6 +139,11 @@ export class ComprasComponent {
       });
     });
 
+    this.proveedores$.subscribe((proveedores) => {
+      proveedores.forEach(proveedor => {
+        return this.frameworks.push({ label: proveedor.nombreEmpresa || '', value: proveedor.nombreEmpresa || '' });
+      });
+    });
   }
 
   trackByCompraId: TrackByFunction<Compra> = (index, compra) => compra.id;
@@ -223,5 +265,18 @@ export class ComprasComponent {
         console.error('Error al consultar los detalles de la compra:', error);
       }
     );
+  }
+
+  stateChanged(state: 'open' | 'closed') {
+    this.state.set(state);
+  }
+
+  commandSelected(framework: Framework) {
+    this.state.set('closed');
+    if (this.currentFramework()?.value === framework.value) {
+      this.currentFramework.set(undefined);
+    } else {
+      this.currentFramework.set(framework);
+    }
   }
 }

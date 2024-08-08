@@ -242,6 +242,7 @@ namespace Server.Controllers
                                                 d.IdProduct,
                                                 d.Quantity,
                                                 d.PriceSingle,
+                                                d.Status,
                                                 DateOrder = DateTime.Parse(d.DateOrder.ToString() ?? ""),
                                                 Product = _context.Productos
                                                                   .Where(p => p.Id == d.IdProduct)
@@ -568,6 +569,87 @@ namespace Server.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+        [HttpPut]
+        // [Authorize]
+        [Route("updateOrder/{id},{status}")]
+        public async Task<IActionResult> UpdateOrder(int id, string status)
+        {
+            try
+            {
+                var order = await _context.Orders.FindAsync(id);
+
+                if (order == null)
+                {
+                    return NotFound("No se encontro la orden");
+                }
+
+                if (status == "Entregado")
+                {
+                    var detailOrder = await _context.DetailOrders.Where(d => d.IdOrder == order.Id).ToListAsync();
+
+                    foreach (var detail in detailOrder)
+                    {
+                        detail.Status = "Entregado";
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+
+                if (status == "Cancelado")
+                {
+                    var detailOrder = await _context.DetailOrders.Where(d => d.IdOrder == order.Id).ToListAsync();
+
+                    foreach (var detail in detailOrder)
+                    {
+                        detail.Status = "Cancelado";
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+
+                order.Status = status;
+
+                await _context.SaveChangesAsync();
+
+                return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+
+        [HttpPut]
+        // [Authorize]
+        [Route("updateDetailOrderStatus/{id},{status}")]
+        public async Task<IActionResult> UpdateDetailOrderStatus(int id, string status)
+        {
+            try
+            {
+                var detailOrder = await _context.DetailOrders.FindAsync(id);
+
+                if (detailOrder == null)
+                {
+                    return NotFound("No se encontro el detalle de la orden");
+                }
+
+                detailOrder.Status = status;
+
+                await _context.SaveChangesAsync();
+
+                return Ok(detailOrder);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
         }
