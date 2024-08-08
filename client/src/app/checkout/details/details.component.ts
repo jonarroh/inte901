@@ -11,7 +11,8 @@ import { tick } from '@angular/core/testing';
   selector: 'app-details',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
@@ -77,7 +78,9 @@ export class DetailsComponent {
       
       //hacer la orden
       this.checkoutService.postOrder(this.checkoutService.orderSignal()).subscribe({
-        complete: () => {},
+        complete: () => {
+          this.router.navigate(['orders']);
+        },
         error: (err) => {
           console.log(err);
           toast.error('Error al hacer la orden '+ JSON.stringify(err.error));
