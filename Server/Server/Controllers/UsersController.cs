@@ -12,11 +12,12 @@ using System.Security.Cryptography;
 using System.Text;
 using Server.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
+using Server.Models;
 
 namespace Server.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -57,13 +58,15 @@ namespace Server.Controllers
                     Direcciones = u.Direcciones,
                     CreditCards = await _context.CreditCard
                                                 .Where(c => c.UserId == u.Id)
-                                                .Select(c => new CreditCardDTO
+                                                .Select(c => new CreditCard
                                                 {
                                                     Id = c.Id,
                                                     CardHolderName = c.CardHolderName,
                                                     CardNumber = c.CardNumber,
                                                     ExpiryDate = c.ExpiryDate,
-                                                    UserId = c.UserId
+                                                    UserId = c.UserId,
+                                                    Estatus = c.Estatus,
+                                                    CVV = c.CVV
                                                 }).ToListAsync()
                 };
 
@@ -97,15 +100,17 @@ namespace Server.Controllers
                                             .Where(d => d.UserId == user.Id && d.Estatus == "Activo")
                                             .ToListAsync(),
                 CreditCards = await _context.CreditCard
-                                            .Where(c => c.UserId == user.Id && c.Estatus == "Activo")
-                                            .Select(c => new CreditCardDTO
-                                            {
-                                                Id = c.Id,
-                                                CardHolderName = c.CardHolderName,
-                                                CardNumber = c.CardNumber,
-                                                ExpiryDate = c.ExpiryDate,
-                                                UserId = c.UserId
-                                            }).ToListAsync()
+                                                .Where(c => c.UserId == user.Id && c.Estatus == "Activo")
+                                                .Select(c => new CreditCard
+                                                {
+                                                    Id = c.Id,
+                                                    CardHolderName = c.CardHolderName,
+                                                    CardNumber = c.CardNumber,
+                                                    ExpiryDate = c.ExpiryDate,
+                                                    UserId = c.UserId,
+                                                    Estatus = c.Estatus,
+                                                    CVV = c.CVV
+                                                }).ToListAsync()
             };
 
             return userDTO;
@@ -185,9 +190,11 @@ namespace Server.Controllers
                                             .ToListAsync(),
                 CreditCards = await _context.CreditCard
                                             .Where(c => c.UserId == user.Id && c.Estatus == "Activo")
-                                            .Select(c => new CreditCardDTO
+                                            .Select(c => new CreditCard
                                             {
                                                 Id = c.Id,
+                                                CVV = c.CVV,
+                                                Estatus = c.Estatus,
                                                 CardHolderName = c.CardHolderName,
                                                 CardNumber =c.CardNumber,
                                                 ExpiryDate = c.ExpiryDate,

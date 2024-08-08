@@ -207,9 +207,7 @@ namespace Server.Controllers
             }
         }
 
-
         [HttpPost]
-        // [Authorize]
         [Route("addOrder")]
         public async Task<IActionResult> PostOrder(OrderDTO ordertdo)
         {
@@ -241,41 +239,62 @@ namespace Server.Controllers
                     Ticket = ticket,
                 };
 
-                // Validación y guardado de la dirección solo si es una entrega
-                if (ordertdo.IsDeliver == true)
+                if (ordertdo.CreditCard != null)
                 {
-                    var tarjeta = await _context.CreditCard.FindAsync(ordertdo.IdUser);
-
-                    if (_creditCardService.IsValidCreditCard(tarjeta))
+                    var result = _creditCardService.canPay(ordertdo.CreditCard, (decimal)orden.Total);
+                    Console.WriteLine(result);
+                    if (result != "La tarjeta es válida")
                     {
-                        decimal amount = (decimal)orden.Total;
-
-                        if (_creditCardService.CardCanPay(tarjeta, amount))
-                        {
-                            var direccion = new Direcciones
-                            {
-                                Calle = ordertdo.Direcciones.Calle,
-                                NumeroExterior = ordertdo.Direcciones.NumeroExterior,
-                                Estatus = "Activo",
-                                Colonia = ordertdo.Direcciones.Colonia,
-                                Ciudad = ordertdo.Direcciones.Ciudad,
-                                Estado = ordertdo.Direcciones.Estado,
-                                Pais = ordertdo.Direcciones.Pais,
-                                CodigoPostal = ordertdo.Direcciones.CodigoPostal,
-                                UserId = ordertdo.IdUser,
-                            };
-
-                            await _context.Direcciones.AddAsync(direccion);
-                        }
-                        else
-                        {
-                            return BadRequest("No hay suficiente saldo en la tarjeta.");
-                        }
+                        return BadRequest(result);
                     }
-                    else
+                }
+                else
+                {
+                    var creditCard = new CreditCard
                     {
-                        return BadRequest("La tarjeta no es válida.");
-                    }
+                        CardHolderName = "Nombre de prueba",
+                        CardNumber = "4500000000000000", // Número de prueba válido
+                        CVV = "123",
+                        ExpiryDate = "12/25",
+                        UserId = ordertdo.IdUser
+                    };
+
+                    ordertdo.CreditCard = creditCard;
+                }
+
+                if (ordertdo.Direcciones == null)
+                {
+                    var direccion = new Direcciones
+                    {
+                        Calle = "Calle de prueba",
+                        NumeroExterior = 123,
+                        Estatus = "Activo",
+                        Colonia = "Colonia de prueba",
+                        Ciudad = "Ciudad de prueba",
+                        Estado = "Estado de prueba",
+                        Pais = "Pais de prueba",
+                        CodigoPostal = "12345",
+                        UserId = ordertdo.IdUser,
+                    };
+
+                    await _context.Direcciones.AddAsync(direccion);
+                }
+                else
+                {
+                    var direccion = new Direcciones
+                    {
+                        Calle = ordertdo.Direcciones.Calle,
+                        NumeroExterior = ordertdo.Direcciones.NumeroExterior,
+                        Estatus = "Activo",
+                        Colonia = ordertdo.Direcciones.Colonia,
+                        Ciudad = ordertdo.Direcciones.Ciudad,
+                        Estado = ordertdo.Direcciones.Estado,
+                        Pais = ordertdo.Direcciones.Pais,
+                        CodigoPostal = ordertdo.Direcciones.CodigoPostal,
+                        UserId = ordertdo.IdUser,
+                    };
+
+                    await _context.Direcciones.AddAsync(direccion);
                 }
 
                 await _context.Orders.AddAsync(orden);
@@ -319,12 +338,12 @@ namespace Server.Controllers
                     if (response.IsSuccessStatusCode)
                     {
                         responseStatus = response.StatusCode.ToString();
-                        Console.WriteLine(response.Content);
+                        Console.WriteLine(await response.Content.ReadAsStringAsync());
                     }
                     else
                     {
                         responseStatus = response.StatusCode.ToString();
-                        Console.WriteLine(response.Content);
+                        Console.WriteLine(await response.Content.ReadAsStringAsync());
                         return NotFound($"Error con el QR, status: {responseStatus}");
                     }
                 }
@@ -335,7 +354,6 @@ namespace Server.Controllers
             {
                 Console.WriteLine(ex.Message);
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
-                // return NotFound(ex.Message);
             }
         }
 
