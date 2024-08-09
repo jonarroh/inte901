@@ -25,14 +25,14 @@
         <hlm-dialog-header>
           <h3 class="text-white" hlmDialogTitle>Compra de materia prima</h3>
         </hlm-dialog-header>
-        <form>
+        <form (ngSubmit)="addToCart(comprasFormAdd)" #comprasFormAdd="ngForm">
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="flex-1" for="insumos">Proveedor*</label>
             </div>
             <div>
               <brn-popover [state]="state()" (stateChanged)="stateChanged($event)" sideOffset="5" closeDelay="100">
-                <button class="flex-1 justify-between" id="proveedores-select" variant="outline" brnPopoverTrigger
+                <button [disabled]="isProveedorDisabled()" class="flex-1 justify-between" id="selectedProveedor" variant="outline" brnPopoverTrigger
                   hlmBtn>
                   {{ currentFramework()?.label ?? 'Seleccionar' }}
                   <hlm-icon size="sm" name="lucideChevronsUpDown" />
@@ -42,7 +42,7 @@
                     <hlm-icon name="lucideSearch" />
                     <input placeholder="Buscar Proveedor" brnCmdInput hlm />
                   </hlm-cmd-input-wrapper>
-                  <div *brnCmdEmpty hlmCmdEmpty>No results found.</div>
+                  <div *brnCmdEmpty hlmCmdEmpty>No se encontr&oacute;</div>
                   <brn-cmd-list hlm>
                     <brn-cmd-group hlm>
                       <button *ngFor="let framework of frameworks" brnCmdItem [value]="framework.value"
@@ -63,7 +63,7 @@
               <label class="flex-1" for="cantidad">Cantidad*</label>
             </div>
             <div>
-              <input required type="number" hlmInput class="flex-1" [(ngModel)]="cantidad" name="cantidad">
+              <input required type="number" hlmInput class="flex-1" name="cantidad" id="cantidad" [(ngModel)]="cantidad">
             </div>
           </div>
           <br>
@@ -72,7 +72,7 @@
               <label class="flex-1" for="precio">Precio Unitario*</label>
             </div>
             <div>
-              <input required type="number" hlmInput class="w-fit" [(ngModel)]="preciounitario" name="preciounitario">
+              <input required type="number" hlmInput class="flex-1" name="preciounitario" id="preciounitario" [(ngModel)]="precioUnitario">
             </div>
           </div>
           <br>
@@ -81,43 +81,31 @@
               <label class="flex-1" for="presentacion">Presentaci&oacute;n*</label>
             </div>
             <div>
-              <brn-select class="inline-block w-fit bg-success" placeholder="Seleccionar"
-                [(ngModel)]="selectedPresentacion" name="presentacion">
-                <hlm-select-trigger class="flex-1 bg-success">
-                  <hlm-select-value />
-                </hlm-select-trigger>
-                <hlm-select-content class="bg-success">
-                  <hlm-option value="Costal 50kg">Costal 50Kg</hlm-option>
-                  <hlm-option value="Caja 350gr">Caja 350Gr</hlm-option>
-                  <hlm-option value="Carton 1lt">Carton 1Lt</hlm-option>
-                  <hlm-option value="Botella 1lt">Botella 1Lt</hlm-option>
-                  <hlm-option value="Docena 70gr">Docena 70Gr</hlm-option>
-                  <hlm-option value="Bolsa 1kg">Bolsa 1Kg</hlm-option>
-                  <hlm-option value="Galon 20lt">Galon 20Lt</hlm-option>
-                  <hlm-option value="Pieza">Pieza</hlm-option>
-                  <hlm-option value="Empacado 400gr">Empacado
-                    400Gr</hlm-option>
-                  <hlm-option value="Empacado 1kg">Empacado 1Kg</hlm-option>
-                  <hlm-option value="Empacado 200gr">Empacado
-                    200Gr</hlm-option>
-                  <hlm-option value="Caja 1kg">Caja 1Kg</hlm-option>
-                  <hlm-option value="Frasco 400gr">Frasco 400Gr</hlm-option>
-                  <hlm-option value="Barra 100gr">Barra 100Gr</hlm-option>
-                  <hlm-option value="Costal 25kg">Costal 25Kg</hlm-option>
-                  <hlm-option value="Galon 10lt">Galon 10Lt</hlm-option>
-                  <hlm-option value="Botella 500ml">Botella
-                    500ml</hlm-option>
-                  <hlm-option value="Caja 2kg">Caja 2Kg</hlm-option>
-                  <hlm-option value="Lata 250gr">Lata 250Gr</hlm-option>
-                  <hlm-option value="Bolsa 500gr">Bolsa 500Gr</hlm-option>
-                  <hlm-option value="Carton 500ml">Carton 500ml</hlm-option>
-                  <hlm-option value="Sobre 50gr">Sobre 50Gr</hlm-option>
-                  <hlm-option value="Lata 1kg">Lata 1Kg</hlm-option>
-                  <hlm-option value="Botella 750ml">Botella
-                    750ml</hlm-option>
-                  <hlm-option value="Caja 5kg">Caja 5Kg</hlm-option>
-                </hlm-select-content>
-              </brn-select>
+              <brn-popover [state]="statePresentation()" (stateChanged)="statePresentationChanged($event)"
+                sideOffset="5" closeDelay="100">
+                <button class="flex-1] justify-between" id="presentacion" variant="outline" brnPopoverTrigger
+                  hlmBtn>
+                  {{ currentPresentation() ? currentPresentation()?.label ||'' : 'Seleccionar' }}
+                  <hlm-icon size="sm" name="lucideChevronsUpDown" />
+                </button>
+                <brn-cmd *brnPopoverContent="let ctx" hlmPopoverContent hlm class="p-0 w-[200px] bg-primary">
+                  <hlm-cmd-input-wrapper>
+                    <hlm-icon name="lucideSearch" />
+                    <input placeholder="Buscar presentación" brnCmdInput hlm />
+                  </hlm-cmd-input-wrapper>
+                  <div *brnCmdEmpty hlmCmdEmpty>No hay resultados</div>
+                  <brn-cmd-list hlm>
+                    <brn-cmd-group hlm>
+                      <button *ngFor="let framework of presentations" brnCmdItem [value]="framework.value"
+                        (selected)="commandPresentationSelected(framework)" hlm>
+                        <hlm-icon [class.opacity-0]="currentPresentation()?.value !== framework.value"
+                          name="lucideCheck" hlmCmdIcon />
+                        {{ framework.label }}
+                      </button>
+                    </brn-cmd-group>
+                  </brn-cmd-list>
+                </brn-cmd>
+              </brn-popover>
             </div>
           </div>
           <br>
@@ -126,163 +114,39 @@
               <label class="flex-1" for="producto">Insumos</label>
             </div>
             <div>
-              <brn-select class="inline-block bg-success" placeholder="Seleccionar" [(ngModel)]="selectedInsumo"
-                name="selectedInsumo">
-                <hlm-select-trigger class="w-fit bg-success">
-                  <hlm-select-value />
-                </hlm-select-trigger>
-                <hlm-select-content class="bg-success">
-                  <hlm-option *ngFor="let insumo of (insumos$ | async)" [value]="insumo">
-                    {{ insumo.material }}
-                  </hlm-option>
-                </hlm-select-content>
-              </brn-select>
+              <brn-popover [state]="stateMpp()" (stateChanged)="stateMppChanged($event)" sideOffset="5" closeDelay="100">
+                <button class="w-[200px] justify-between" id="selectedInsumo" variant="outline" brnPopoverTrigger hlmBtn>
+                  {{ currentMpp() ? currentMpp()?.label || '' : 'Seleccionar' }}
+                  <hlm-icon size="sm" name="lucideChevronsUpDown" />
+                </button>
+
+                <brn-cmd *brnPopoverContent="let ctx" hlmPopoverContent hlm class="p-0 w-[200px]">
+                  <hlm-cmd-input-wrapper>
+                    <hlm-icon name="lucideSearch" />
+                    <input placeholder="Search MPP..." brnCmdInput hlm />
+                  </hlm-cmd-input-wrapper>
+
+                  <div *brnCmdEmpty hlmCmdEmpty>No results found.</div>
+
+                  <brn-cmd-list hlm>
+                    <brn-cmd-group hlm>
+                      <button *ngFor="let mpp of mppF" brnCmdItem [value]="mpp.material || ''"
+                              (selected)="commandMppSelected(mpp)" hlm>
+                        <hlm-icon [class.opacity-0]="currentMpp()?.value !== mpp.material" name="lucideCheck" hlmCmdIcon />
+                        {{ mpp.material }}
+                      </button>
+                    </brn-cmd-group>
+                  </brn-cmd-list>
+                </brn-cmd>
+              </brn-popover>
             </div>
           </div>
+          <hlm-dialog-footer>
+            <button hlmBtn type="submit" variant="primary">Agregar a lista</button>
+          </hlm-dialog-footer>
         </form>
         <br>
-        <hlm-dialog-footer>
-          <!-- <button hlmBtn type="submit" variant="primary" (click)="addPurchase()">Agregar a lista</button> -->
-          <button hlmBtn type="submit" variant="primary">Agregar a lista</button>
-        </hlm-dialog-footer>
       </hlm-dialog-content>
     </hlm-dialog>
   </div>
-  <div class="overflow-y-auto min-w-full">
-    <div class="flex flex-col justify-between gap-4 sm:flex-row">
-      <input hlmInput class="w-full md:w-80" placeholder="Filter emails..." [ngModel]="_proveedorFilter()"
-        (ngModelChange)="_rawFilterInput.set($event)" />
-      <button hlmBtn variant="outline" align="end" [brnMenuTriggerFor]="menu">
-        Columnas
-        <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
-      </button>
-      <ng-template #menu>
-        <hlm-menu class="w-32">
-          @for (column of _brnColumnManager.allColumns; track column.name) {
-          <button hlmMenuItemCheckbox [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
-            [checked]="_brnColumnManager.isColumnVisible(column.name)"
-            (triggered)="_brnColumnManager.toggleVisibility(column.name)">
-            <hlm-menu-item-check />
-            <span>{{ column.label }}</span>
-          </button>
-          }
-        </hlm-menu>
-      </ng-template>
-    </div>
-
-    <!-- Tabla basica funciona xd -->
-    <hlm-table class="w-full min-w-full">
-      <hlm-trow>
-        <hlm-th class="flex-1">Fecha Compra</hlm-th>
-        <hlm-th class="flex-1">Insumos</hlm-th>
-        <hlm-th class="flex-1">Proveedor</hlm-th>
-        <hlm-th class="flex-1">Empleado</hlm-th>
-        <hlm-th class="flex-1">Status</hlm-th>
-        <hlm-th class="flex-1">Acciones</hlm-th>
-      </hlm-trow>
-      <hlm-trow *ngIf="(compras$ | async)?.length === 0">
-        <hlm-td colspan="6">No hay registros</hlm-td>
-      </hlm-trow>
-      <hlm-trow *ngFor="let compra of (compras$ | async); trackBy: trackByCompraId">
-        <hlm-td class="flex-1">{{ compra.createdAt }}</hlm-td>
-        <hlm-td class="flex-1">
-          <button hlmBtn variant="destructive" (click)="getDetails(compra || 0)">
-            Insumos
-          </button>
-        </hlm-td>
-        <hlm-td class="flex-1">{{ compra.proveedor?.nombreEmpresa }}</hlm-td>
-        <hlm-td class="flex-1">{{ compra.user?.name }}</hlm-td>
-        @if (compra.status === 'Pendiente') {
-        <hlm-td class="flex-1" style="color: orange;">{{ compra.status
-          }}</hlm-td>
-        } @else if (compra.status === 'Entregada') {
-        <hlm-td class="flex-1" style="color: green;">{{ compra.status
-          }}</hlm-td>
-        } @else {
-        <hlm-td class="flex-1" style="color: red;">{{ compra.status }}</hlm-td>
-        }
-        <hlm-td class="flex-1">
-          @if(compra.status === 'Pendiente'){
-          <button hlmBtn variant="success" (click)="compra.id !== undefined ? onEdit(compra) : null">
-            Entrega
-          </button>
-          } @else {
-          <button disabled hlmBtn variant="success">
-            Entrega
-          </button>
-          }
-        </hlm-td>
-      </hlm-trow>
-    </hlm-table>
-  </div>
 </div>
-
-<hlm-dialog class="w-[500px]">
-  <button class="hidden" hlmBtn variant="success" brnDialogTrigger id="edit-status">
-    Status
-  </button>
-  <hlm-dialog-content class="min-w-[800px] w-full bg-success" *brnDialogContent="let ctx">
-    <hlm-dialog-header>
-      <h3 class="text-white" hlmDialogTitle>Actualizar status</h3>
-    </hlm-dialog-header>
-    <form (ngSubmit)="editStatus(statusFormEdit)" #statusFormEdit="ngForm">
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="flex-1" for="status">Status*</label>
-            </div>
-            <div>
-              <brn-select class="inline-block bg-success" placeholder="Seleccionar" [(ngModel)]="compra.status"
-                name="selectedStatus">
-                <hlm-select-trigger class="w-fit bg-success">
-                  <hlm-select-value />
-                </hlm-select-trigger>
-                <hlm-select-content class="bg-success">
-                  <hlm-option value="Entregada">Entregada</hlm-option>
-                  <hlm-option value="Cancelada">Cancelada</hlm-option>
-                </hlm-select-content>
-              </brn-select>
-            </div>
-          </div>
-        </div>
-      </div>
-      <hlm-dialog-footer>
-        <button hlmBtn type="submit" variant="primary">Actualizar</button>
-      </hlm-dialog-footer>
-    </form>
-  </hlm-dialog-content>
-</hlm-dialog>
-
-<hlm-dialog class="w-[500px]">
-  <button class="hidden" hlmBtn variant="success" brnDialogTrigger id="edit-status-detail">
-    Detalles
-  </button>
-  <hlm-dialog-content class="min-w-[800px] w-full bg-success" *brnDialogContent="let ctx">
-    <hlm-dialog-header>
-      <h3 class="text-white" hlmDialogTitle>Detalles de la compra</h3>
-    </hlm-dialog-header>
-    <form (ngSubmit)="editStatusDetalle(statusFormDetalleEdit)" #statusFormDetalleEdit="ngForm">
-      <hlm-table>
-        <hlm-trow>
-          <hlm-th class="flex-1">Material</hlm-th>
-          <hlm-th class="flex-1">Cantidad</hlm-th>
-          <hlm-th class="flex-1">Precio Unitario</hlm-th>
-          <hlm-th class="flex-1">Presentaci&oacute;n</hlm-th>
-          <hlm-th class="flex-1">Expiraci&oacute;n</hlm-th>
-          <hlm-th class="flex-1">Unidad de medida</hlm-th>
-          <hlm-th class="flex-1">Estatus</hlm-th>
-        </hlm-trow>
-        <hlm-trow *ngFor="let detalle of (detalles$ | async)">
-          <hlm-td class="flex-1">{{ detalle.product }}</hlm-td>
-          <hlm-td class="flex-1">{{ detalle.quantity }}</hlm-td>
-          <hlm-td class="flex-1">{{ detalle.priceSingle }}</hlm-td>
-          <hlm-td class="flex-1">{{ detalle.presentation }}</hlm-td>
-          <hlm-td class="flex-1">{{ detalle.expiration }}</hlm-td>
-          <hlm-td class="flex-1">{{ detalle.unitType }}</hlm-td>
-          <hlm-td class="flex-1">{{ detalle.status }}</hlm-td>
-        </hlm-trow>
-      </hlm-table>
-    </form>
-  </hlm-dialog-content>
-</hlm-dialog>

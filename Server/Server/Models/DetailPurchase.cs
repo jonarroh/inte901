@@ -31,14 +31,16 @@
 		[Required]
 		public string? Status { get; set; } // Pendiente, Cancelado, Entregado
 		[Required]
+		public int? IdProveedor { get; set; }
+		[Required]
         [ForeignKey("IdPurchase")]
         public int? IdPurchase { get; set; }
 		[Required]
-        [ForeignKey("IdProduct")]
-        public int? IdProduct { get; set; }
+		[ForeignKey("IdProduct")]
+		public int? IdProduct { get; set; }
 		[NotMapped]
-        public Purchase Purchase { get; set; }
+		public Purchase Purchase { get; set; }
 		[NotMapped]
-        public Producto Product { get; set; }
+		public Producto Producto { get; set; }
     }
 }

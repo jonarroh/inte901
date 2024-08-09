@@ -4,11 +4,11 @@ import { Usuario } from './usuario';
 
 export interface Compra {
   id?: number;
-  idProveedor?: number;
-  idUser?: number;
-  createdAt?: string;
-  status?: string;
-  details?: DetailPurchase[]; // Corrección aquí: debe ser un array de objetos, no strings
+  idProveedor: number;
+  idUser: number;
+  createdAt?: Date;
+  status?: string; // Pendiente, Aceptada, Cancelada, Entregada
+  detailPurchases: DetailPurchase[];
   proveedor?: Proveedor;
   user?: Usuario;
 }

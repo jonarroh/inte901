@@ -1,4 +1,4 @@
-import { Component, TrackByFunction, computed, effect, inject, signal } from '@angular/core';
+import { Component, TrackByFunction, computed, effect, inject, signal, ChangeDetectorRef } from '@angular/core';
 import { NavComponent } from '../componentes/nav/nav.component';
 import {
   HlmDialogComponent, HlmDialogContentComponent, HlmDialogHeaderComponent,
@@ -40,8 +40,13 @@ import { BrnCommandImports } from '@spartan-ng/ui-command-brain';
 import { HlmToasterComponent } from '~/components/ui-sonner-helm/src';
 import { HlmSheetComponent, HlmSheetContentComponent, HlmSheetDescriptionDirective, HlmSheetFooterComponent, HlmSheetHeaderComponent, HlmSheetTitleDirective } from '~/components/ui-sheet-helm/src';
 import { BrnSheetContentDirective, BrnSheetTriggerDirective } from '@spartan-ng/ui-sheet-brain';
+import { MateriaPrimaProveedor } from '~/lib/types';
+import { MppService } from './mpp.service';
+import { toast } from 'ngx-sonner';
 
 type Framework = { label: string | '', value: string | '' };
+type Presentations = { label: string | '', value: string | '' };
+type MPP = { label: string | '', value: string | '' };
 
 @Component({
   selector: 'app-compras',
@@ -109,174 +114,191 @@ type Framework = { label: string | '', value: string | '' };
   ],
 })
 export class ComprasComponent {
-  compraService = inject(ComprasService);
+  compraServe = inject(ComprasService);
+  proveedorServe = inject(ProveedoresService);
+  mppServe = inject(MppService);
+  mpServe = inject(MateriasPrimasService);
   compras$: Observable<Compra[]>;
-  compra: Compra = {};
-  detalles: DetailPurchase[] = [];
-  proveedorService = inject(ProveedoresService);
   proveedores$: Observable<Proveedor[]>;
-  insumos = inject(MateriasPrimasService);
-  insumos$: Observable<MateriaPrima[]>;
-  detalles$: Observable<DetailPurchase[]>;
-  editMode: boolean = false;
+  proveedores: Proveedor[] = [];
+  mp$: Observable<MateriaPrima[]>;
+  mpp$: Observable<MateriaPrimaProveedor[]>;
   public frameworks: Framework[] = [];
   public currentFramework = signal<Framework | undefined>(undefined);
   public state = signal<'closed' | 'open'>('closed');
+  public currentPresentation = signal<Presentations | undefined>(undefined);
+  public statePresentation = signal<'closed' | 'open'>('closed');
+  public presentations: Presentations[] = [
+    { label: 'Costal 50kg', value: 'Costal 50kg' },
+    { label: 'Caja 350gr', value: 'Caja 350gr' },
+    { label: 'Carton 1lt', value: 'Carton 1lt' },
+    { label: 'Botella 1lt', value: 'Botella 1lt' },
+    { label: 'Docena 70gr', value: 'Docena 70gr' },
+    { label: 'Bolsa 1kg', value: 'Bolsa 1kg' },
+    { label: 'Galon 20lt', value: 'Galon 20lt' },
+    { label: 'Pieza', value: 'Pieza' },
+    { label: 'Empacado 400gr', value: 'Empacado 400gr' },
+    { label: 'Empacado 1kg', value: 'Empacado 1kg' },
+    { label: 'Empacado 200gr', value: 'Empacado 200gr' },
+    { label: 'Caja 1kg', value: 'Caja 1kg' },
+    { label: 'Frasco 400gr', value: 'Frasco 400gr' },
+    { label: 'Barra 100gr', value: 'Barra 100gr' },
+    { label: 'Costal 25kg', value: 'Costal 25kg' },
+    { label: 'Galon 10lt', value: 'Galon 10lt' },
+    { label: 'Botella 500ml', value: 'Botella 500ml' },
+    { label: 'Caja 2kg', value: 'Caja 2kg' },
+    { label: 'Lata 250gr', value: 'Lata 250gr' },
+    { label: 'Bolsa 500gr', value: 'Bolsa 500gr' },
+    { label: 'Carton 500ml', value: 'Carton 500ml' },
+    { label: 'Sobre 50gr', value: 'Sobre 50gr' },
+    { label: 'Lata 1kg', value: 'Lata 1kg' },
+    { label: 'Botella 750ml', value: 'Botella 750ml' },
+    { label: 'Caja 5kg', value: 'Caja 5kg' },
+  ];
+  public mppFiltradas: MateriaPrimaProveedor[] = [];
+  public mppF: MateriaPrima[] = [];
+  public stateMpp = signal<'closed' | 'open'>('closed');
+  public currentMpp = signal<MPP | undefined>(undefined);
+  public isProveedorDisabled = signal<boolean>(false);
+  public cantidades: { [id: number]: number | null } = {};
 
-  constructor() {
-    this.compras$ = this.compraService.getCompras();
-    this.proveedores$ = this.proveedorService.getProveedores();
-    this.insumos$ = this.insumos.getMateriaPrima();
-    this.detalles$ = this.compraService.getDetailCompra(0) as Observable<DetailPurchase[]>;
+  carrito: DetailPurchase[] = [];
+  total: number = 0;
 
-    this.compras$.subscribe((compras) => {
-      compras.forEach(element => {
-        if (element.details && element.details.length > 0) {
-          element.details.forEach(detail => {
+  public selectedProveedor: string = '';
+  public cantidad: number | null = null;
+  public precioUnitario: number | null = null;
+  public presentacion: string = '';
+  public selectedInsumo: string = '';
 
-          });
-        }
-      });
-    });
+  constructor(private cdr: ChangeDetectorRef) {
+    this.compras$ = this.compraServe.getCompras();
+    this.proveedores$ = this.proveedorServe.getProveedores();
+    this.mp$ = this.mpServe.getMateriaPrima();
+    this.mpp$ = this.mppServe.getMPP();
+    this.cargarCarrito();
+    this.calcularTotal();
 
-    this.proveedores$.subscribe((proveedores) => {
+    this.proveedores$.subscribe(proveedores => {
       proveedores.forEach(proveedor => {
-        return this.frameworks.push({ label: proveedor.nombreEmpresa || '', value: proveedor.nombreEmpresa || '' });
+        var value = proveedor.nombreEmpresa + '-' + proveedor.id?.toString();
+        return this.frameworks.push({ label: proveedor.nombreEmpresa || '', value: value || '' });
       });
     });
   }
 
   trackByCompraId: TrackByFunction<Compra> = (index, compra) => compra.id;
 
-  protected readonly _proveedorFilter = signal('');
-  protected readonly _rawFilterInput = signal('');
-  protected readonly _brnColumnManager = useBrnColumnManager({
-    proveedor: { visible: true, label: 'Proveedor' },
-    user: { visible: true, label: 'Usuario' },
-    status: { visible: true, label: 'Status' },
-  });
-
-  selectedProveedor: Proveedor | null = null;
-  cantidad: number = 0;
-  preciounitario: number = 0;
-  selectedPresentacion: string = '';
-  selectedInsumo: MateriaPrima | null = null;
-
-  get unitType() {
-    return this.selectedPresentacion.slice(-2);
-  }
-
-  addPurchase() {
-    if (!this.selectedProveedor || !this.cantidad || !this.preciounitario || !this.selectedPresentacion || !this.selectedInsumo) {
-      console.log('Please fill in all required fields');
-      return;
+  cargarCarrito() {
+    const storedCart = localStorage.getItem('carrito');
+    if (storedCart) {
+      this.carrito = JSON.parse(storedCart);
     }
-
-    const newPurchase: Compra = {
-      idProveedor: this.selectedProveedor.id,
-      idUser: 1,
-      details: [
-        {
-          quantity: this.cantidad,
-          priceSingle: this.preciounitario,
-          presentation: this.selectedPresentacion,
-          idProduct: this.selectedInsumo.id,
-          unitType: this.unitType.toString(),
-          status: "Pendiente"
-        }
-      ],
-      status: "Pendiente"
-    };
-
-    this.compraService.createCompra(newPurchase).subscribe(
-      () => {
-        console.log('Compra agregada');
-
-        this.selectedProveedor = null;
-        this.cantidad = 0;
-        this.preciounitario = 0;
-        this.selectedPresentacion = '';
-        this.selectedInsumo = null;
-      },
-      (error) => {
-        console.error('Error al realizar la compra:', error);
-      }
-    );
   }
 
-  editStatus(form: NgForm) {
+  guardarCarrito() {
+    localStorage.setItem('carrito', JSON.stringify(this.carrito));
+  }
+
+  addToCart(form: NgForm) {
     if (form.valid) {
-      this.compraService.editCompra(this.compra).subscribe(
-        (response) => {
-          console.log('Compra actualizada:', response);
-          form.resetForm();
-          this.compra = {}; // Reiniciar el objeto compra
-          this.editMode = false;
-          this.compras$ = this.compraService.getCompras();
-        }
-      );
-    }
+      this.carrito.push({
+        quantity: this.cantidad || 0,
+        priceSingle: this.precioUnitario || 0,
+        presentation: this.presentacion,
+        unitType: 'kg',
+        status: 'Pendiente',
+        purchase: {
+          idProveedor: this.getProveedorIdFromValue(this.selectedProveedor) || 0,
+        },
+        materiaPrimaProveedor: {
+          materiaPrimaId: parseInt(this.selectedInsumo.split('-')[1], 10),
+          proveedorId: this.getProveedorIdFromValue(this.selectedProveedor) || 0,
+        },
+      });
+
+      // Guarda el carrito y calcula el total
+      this.guardarCarrito();
+      this.calcularTotal();
+      form.resetForm();
+    } 
   }
 
-  editStatusDetalle(form: NgForm) {
 
-  }
-
-  onEdit(compra: Compra) {
-    this.compra = { ...compra };
-    this.editMode = true;
-
-    const editButton = document.getElementById('edit-status');
-    editButton?.click();
-  }
-
-  getCompraById(id: number) {
-    this.compraService.getCompraById(id).subscribe(
-      (compra) => {
-        console.log('Compra encontrada:', compra);
-        // Do something with the compra object
-      },
-      (error) => {
-        console.error('Error al consultar la compra:', error);
-      }
-    );
-  }
-
-  getDetails(compra: Compra) {
-    const id: number = compra.id || 0;
-
-    this.compraService.getDetailCompra(id).subscribe(
-      (compra) => {
-        this.detalles$ = this.compraService.getDetailCompra(id) as Observable<DetailPurchase[]>;
-
-        this.detalles = [compra];
-
-        this.detalles.forEach(detail => {
-          this.insumos$.subscribe(insumos => {
-            return detail.product = insumos.find(insumo => insumo.id === detail.idProduct)?.material;
-          });
-        });
-
-        const editButton = document.getElementById('edit-status-detail');
-        editButton?.click();
-        console.log('Detalles de la compra:', this.detalles);
-      },
-      (error) => {
-        console.error('Error al consultar los detalles de la compra:', error);
-      }
-    );
+  calcularTotal() {
+    this.total = this.carrito.reduce((acc, item) => acc + (item.priceSingle! * item.quantity!), 0);
   }
 
   stateChanged(state: 'open' | 'closed') {
     this.state.set(state);
   }
 
+  statePresentationChanged(state: 'open' | 'closed') {
+    this.statePresentation.set(state);
+  }
+
+  stateMppChanged(state: 'open' | 'closed') {
+    this.stateMpp.set(state);
+  }
+
   commandSelected(framework: Framework) {
     this.state.set('closed');
     if (this.currentFramework()?.value === framework.value) {
       this.currentFramework.set(undefined);
+      this.isProveedorDisabled.set(false);
     } else {
       this.currentFramework.set(framework);
+      this.filtrarMppPorProveedor(framework.value ? this.getProveedorIdFromValue(framework.value) || 0 : 0);
+      this.isProveedorDisabled.set(true);
     }
+  }
+
+  commandPresentationSelected(presentation: Presentations) {
+    this.statePresentation.set('closed');
+    if (this.currentPresentation()?.value === presentation.value) {
+      this.currentPresentation.set(undefined);
+    } else {
+      this.currentPresentation.set(presentation);
+    }
+  }
+
+  commandMppSelected(mpp: MateriaPrima) {
+    this.stateMpp.set('closed');
+    if (this.currentMpp()?.value === mpp.material) {
+      this.currentMpp.set(undefined);
+    } else {
+      var value = mpp.material + '-' + mpp.id?.toString();
+      this.currentMpp.set({ label: mpp.material || '', value: value || '' });
+    }
+  }
+
+  filtrarMppPorProveedor(idProveedor: number) {
+    this.mppServe.getMPP().subscribe(mpp => {
+      this.mppFiltradas = mpp.filter(mp => mp.proveedorId === idProveedor);
+
+      let mppConNombres: MateriaPrima[] = [];
+
+      this.mppFiltradas.forEach(mp => {
+        this.mpServe.getMateriaPrima().subscribe(materiaPrima => {
+          const materiaPrimaEncontrada = materiaPrima.find(mp2 => mp2.id === mp.materiaPrimaId);
+
+          if (materiaPrimaEncontrada) {
+            mppConNombres.push(materiaPrimaEncontrada);
+          }
+
+          if (mppConNombres.length === this.mppFiltradas.length) {
+            this.mppF = mppConNombres;
+
+            this.cdr.detectChanges();
+          }
+        });
+      });
+    });
+  }
+
+  getProveedorIdFromValue(value: string): number | undefined {
+    const parts = value.split('-');
+    const id = parts[1] ? parseInt(parts[1], 10) : undefined;
+    return isNaN(id || 0) ? undefined : id;
   }
 }

@@ -46,7 +46,6 @@ namespace Server.Controllers
                 {
                     compra.CreatedAt = DateTime.Parse(compra.CreatedAt.ToString() ?? "");
                     compra.DetailPurchases = await _context.DetailPurchases.Where(d => d.IdPurchase == compra.Id).ToListAsync();
-                    compra.Proveedor = await _context.Proveedores.FindAsync(compra.IdProveedor);
                     compra.User = await _context.Users.FindAsync(compra.IdUser);
                 }
 
@@ -61,7 +60,7 @@ namespace Server.Controllers
         }
 
 
-        [HttpGet]
+         [HttpGet]
         //[Authorize]
         [Route("getCompra/{id}")]
         public async Task<IActionResult> GetCompra(int? id)
@@ -86,7 +85,7 @@ namespace Server.Controllers
         }
 
 
-        [HttpGet]
+         [HttpGet]
         // [Authorize]
         [Route("filterCompraByStatus/{status}")]
         public async Task<IActionResult> FilterCompraByStatus(string? status)
@@ -125,7 +124,6 @@ namespace Server.Controllers
 
                 var compra = new Purchase
                 {
-                    IdProveedor = compradto.IdProveedor,
                     IdUser = compradto.IdUser,
                     CreatedAt = DateTime.Now,
                     Status = "Pendiente"
@@ -219,29 +217,29 @@ namespace Server.Controllers
         [Route("getDetailCompra/{idCompra}")]
         public async Task<IActionResult> GetDetailCompra(int? idCompra)
         {
-			try
+            try
             {
-				var detail = await _context.DetailPurchases.Where(d => d.IdPurchase == idCompra).ToListAsync();
+                var detail = await _context.DetailPurchases.Where(d => d.IdPurchase == idCompra).ToListAsync();
 
-				if (detail == null)
+                if (detail == null)
                 {
-					return BadRequest("No se encontro la compra seleccionada");
-				}
+                    return BadRequest("No se encontro la compra seleccionada");
+                }
 
                 foreach (var item in detail)
                 {
-                    item.Expiration = DateTime.Parse(item.Expiration.ToString()?.Replace("T"," ") ?? "");
+                    item.Expiration = DateTime.Parse(item.Expiration.ToString()?.Replace("T", " ") ?? "");
                 }
 
-				return Ok(detail);
-			}
-			catch (Exception ex)
+                return Ok(detail);
+            }
+            catch (Exception ex)
             {
-				Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message);
 
-				return NotFound("Se produjo un error en el servidor, contacte a soporte");
-			}
-		}
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
 
 
         [HttpPut]
