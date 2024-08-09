@@ -9,24 +9,19 @@
             <ul class="flex text-lg [&>li>a]:transition-colors [&>li>a]:duration-200 [&>li>a]:text-current [&>li>a]:inline-block [&>li>a]:px-2 [&>li>a]:py-2 items-center justify-center">
                 <li class="pe-2 flex items-center">
                     <lucide-icon name="house"/> 
-                    <a href="#">Inicio</a>
+                    <a href="#sectionInicio">Inicio</a>
                 </li>
                 <li class="pe-2 flex items-center">
                     <lucide-icon name="badge-info"/> 
-                    <a href="#">Sobre nosotros</a>
+                    <a href="#sectionValores">Sobre nosotros</a>
                 </li>
                 <li class="pe-2 flex items-center">
                     <lucide-icon name="store"/> 
-                    <a href="#">Comprar</a>
+                    <a routerLink="products">Comprar</a>
                 </li>
                 <li class="relative flex items-center group">
                     <lucide-icon name="menu"/> 
-                    <a href="" class="group-hover:block me-6">Menú</a>
-                    <ul class="absolute left-0 top-full hidden mt-2 w-full bg-white shadow-lg group-hover:block min-w-full">
-                        <li><a href="#" class="block px-2 py-2 text-gray-800 hover:bg-gray-100">Opción 1</a></li>
-                        <li><a href="#" class="block px-2 py-2 text-gray-800 hover:bg-gray-100">Opción 2</a></li>
-                        <li><a href="#" class="block px-2 py-2 text-gray-800 hover:bg-gray-100">Opción 3</a></li>
-                    </ul>
+                    <a routerLink="places" class="me-6">Reservaciones</a>
                 </li>
             </ul>
         </nav>
