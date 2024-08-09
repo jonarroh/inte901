@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { NavComponent } from '../componentes/nav/nav.component';
 import {
   HlmDialogComponent, HlmDialogContentComponent, HlmDialogHeaderComponent,
@@ -9,7 +9,7 @@ import {
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import { BrnDialogTriggerDirective, BrnDialogContentDirective } from '@spartan-ng/ui-dialog-brain';
-import { from, map, Observable } from 'rxjs';
+import { from, map, Observable, of } from 'rxjs';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Producto } from './interface/producto';
 import { ProductoService } from './service/producto.service';
@@ -43,6 +43,8 @@ export class ProductosComponent {
   producto: Producto = {};
   editMode: boolean = false;
 
+  fallbackUrl = 'http://localhost:5000/static/productos/fallback.webp';
+
   constructor() {
     this.productos$ = this.productoService.getProductos().pipe(
       map(productos => productos.filter(producto => producto.estatus === 1))
@@ -51,6 +53,10 @@ export class ProductosComponent {
 
   trackByProductId(index: number, product: any): number {
     return product.id;
+  }
+
+  getImagenUrl(id: number): string {
+    return `http://localhost:5000/static/productos/${id}.webp`;
   }
 
   onFileChange(event: any) {
@@ -62,6 +68,11 @@ export class ProductosComponent {
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  onImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.src = this.fallbackUrl;
   }
 
   onSubmitAdd(form: NgForm) {
