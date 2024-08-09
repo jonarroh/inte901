@@ -128,7 +128,7 @@ def upload_file():
         return jsonify({'message': 'Error uploading image'})
         
 @app.route('/productos/upload', methods=['POST'])
-def upload_file():
+def upload_products():
     if 'file' not in request.files:
         return jsonify({'message': 'No file part'})
     
@@ -140,19 +140,27 @@ def upload_file():
         return jsonify({'message': 'No id part'})
     
     id = request.form['id']
-    #hacer la optimizacion de la imagen a webp y guardarla en la carpeta static/users
+    # Definir el tamaño de la versión grande
+    large_width = 800
+    large_height = 800
 
     if file:
         img = Image.open(file)
-        # Guardar la imagen en formato webp
+        # Guardar la imagen en formato webp en la carpeta principal
         webp_filename = id + '.webp'
         webp_filepath = os.path.join(STATIC_FOLDER, 'productos', webp_filename)
-
         img.save(webp_filepath, 'webp', quality=90)
-        return jsonify({'message': 'Image has been uploaded and optimized.'})
+
+        # Crear y guardar la versión grande de la imagen
+        img_large = img.resize((large_width, large_height), Image.LANCZOS)
+        webp_large_filename = id + '.webp'
+        webp_large_filepath = os.path.join(STATIC_FOLDER, 'productos', 'grande', webp_large_filename)
+        os.makedirs(os.path.dirname(webp_large_filepath), exist_ok=True)
+        img_large.save(webp_large_filepath, 'webp', quality=90)
+
+        return jsonify({'message': 'Image has been uploaded and optimized, including large version.'})
     else:
         return jsonify({'message': 'Error uploading image'})
-    
 
 
 @app.route('/generate_qr_order', methods=['POST'])
