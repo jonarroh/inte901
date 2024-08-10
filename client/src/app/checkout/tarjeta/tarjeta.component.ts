@@ -34,6 +34,10 @@ export class TarjetaComponent {
     this.router.navigate(['checkout/details']);
   }
 
+  obscureCard(cardNumber: string) {
+    return cardNumber.replace(/\d(?=\d{4})/g, '*');
+  }
+
   onOrderToStore() {
     this.CheackoutService.isPaidWithCard.set(false);
     this.CheackoutService.selectedCard.set({

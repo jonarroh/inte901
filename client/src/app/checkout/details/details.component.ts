@@ -91,7 +91,7 @@ export class DetailsComponent {
           this.checkoutService.isOrderToStore.set(false);
           this.checkoutService.isPaidWithCard.set(false);
           this.checkoutService.selectedCard.set({} as CreditCard);
-          this.checkoutService.selectdAddress.set({} as Address);
+          this.checkoutService.selectedAddress.set({} as Address);
           // this.router.navigate(['products']);
         }
       });

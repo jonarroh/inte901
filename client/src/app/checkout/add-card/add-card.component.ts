@@ -89,7 +89,7 @@ export class AddCardComponent {
 
   onEdit() {
 
-    const card: CreditCardWithCvv = {
+    const card: CreditCard = {
       cardHolderName: this.form.controls.cardHolderName.value(),
       cardNumber: this.form.controls.cardNumber.value(),
       expiryDate: this.form.controls.expiryDate.value(),

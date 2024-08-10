@@ -106,11 +106,6 @@ export interface CreditCard {
   estatus: string;
   cvv: string;
 }
-
-export interface FullCreditCard {
-
-}
-
 export interface User {
   id: number;
   name: string;
@@ -207,6 +202,7 @@ export interface ReservaDTO {
   idCliente: number;
   estatus: string;
   detailReserva: DetailReservaDTO;
+  creditCard: CreditCard;
 }
 
 

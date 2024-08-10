@@ -11,6 +11,7 @@ import { toast } from 'ngx-sonner';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, HlmButtonDirective, HlmToasterComponent],
+  providers: [SignalRService, OrdenServiceService, PedidosUserServiceService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

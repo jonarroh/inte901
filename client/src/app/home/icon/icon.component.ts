@@ -40,6 +40,7 @@ import { User } from '~/lib/types';
     HlmButtonDirective,
     RouterModule
   ],
+  providers: [UserService],
   templateUrl: './icon.component.html'
 })
 export class IconComponent implements OnInit {

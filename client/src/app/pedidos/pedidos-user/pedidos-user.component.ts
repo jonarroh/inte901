@@ -14,6 +14,7 @@ import { SignalRService } from '~/app/orden/signal-rorder.service';
   selector: 'app-pedidos-user',
   standalone: true,
   imports: [NavbarComponent, NgFor, CurrencyPipe, NgIf, FormsModule, CommonModule],
+  providers: [PedidosUserServiceService, ProductoService, PedidoStateService, SignalRService],
   templateUrl: './pedidos-user.component.html',
   styleUrls: ['./pedidos-user.component.css']
 })

@@ -4,7 +4,7 @@ import { format, getDaysInMonth, getDay, startOfMonth, addDays, addMonths, subMo
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { es } from 'date-fns/locale';
-import { Reserva } from '~/lib/types';
+import { Reserva, ReservaDTO } from '~/lib/types';
 import { NavbarComponent } from '~/app/home/navbar/navbar.component';
 
 @Component({
@@ -67,6 +67,8 @@ export class FormComponent implements OnInit {
     for (let i = lastDay + 1; i <= 42 - this.daysInMonth.length; i++) {
       this.daysInMonth.push(addDays(date, i - lastDay));
     }
+
+    console.log("Calenario generado", this.daysInMonth);
   }
 
   getMonthName(month: number): string {
@@ -122,7 +124,7 @@ export class FormComponent implements OnInit {
   }
 
   saveEvent() {
-    const reservaDTO = {
+    const reserva:ReservaDTO = {
       idUsuario: 1,
       idCliente: 3,
       estatus: 'Activo',
@@ -132,10 +134,20 @@ export class FormComponent implements OnInit {
         horaInicio: this.eventStartTime,
         horaFin: this.eventEndTime,
         idEspacio: this.idEspacio
+      },
+      creditCard:{
+        cardNumber: '4242424242424242',
+        expiryDate: '12/24',
+        cvv: '123',
+        cardHolderName: 'John Doe',
+        userId: 1,
+        id: 1,
+        estatus: 'Activo'
       }
+
     };
   
-    this.eventService.addEvent(reservaDTO).subscribe(
+    this.eventService.addEvent(reserva).subscribe(
       () => {
         this.closeModal();
         // Actualizar el calendario o realizar alguna otra acción

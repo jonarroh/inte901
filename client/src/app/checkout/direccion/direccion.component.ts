@@ -45,14 +45,14 @@ export class DireccionComponent {
 
 
   onSelectdAddress(address: Address) {
-    this.CheackoutService.selectdAddress.set(address as Address);
+    this.CheackoutService.selectedAddress.set(address as Address);
     this.CheackoutService.isOrderToStore.set(false);
     this.router.navigate(['checkout/payment']);
   }
 
   onOrderToStore() {
     this.CheackoutService.isOrderToStore.set(true);
-    this.CheackoutService.selectdAddress.set({
+    this.CheackoutService.selectedAddress.set({
       calle: 'aaaa',
       colonia: 'aaa',
       ciudad: 'aaa',

@@ -5,11 +5,11 @@
 
   <div class="w-full max-w-md space-y-4">
     <!-- Envio a domicilio -->
-    <div>
-      <h2 class="text-xl font-semibold mb-2">
-        Pagar con tarjeta
-      </h2>
-      
+    <h2 class="text-xl font-semibold mb-2 mt-5">
+      Pagar con tarjeta
+    </h2>
+    
+    <div class="overflow-scroll  max-h-50">
       <!-- Lista de direcciones -->
       @for (card of user().creditCards; track $index) {
         <div class="flex justify-between items-center borde rounded-lg px-4 py-2 my-2 shadow-lg  w-full border border-gray-50/30 bg-slate-50">
@@ -17,7 +17,7 @@
             <lucide-icon name="credit-card"></lucide-icon>
             <span
             class="truncate w-[200px]"
-            >{{card.cardNumber}}, {{card.expiryDate}}</span>
+            >{{obscureCard(card.cardNumber)}}, {{card.expiryDate}}</span>
 
             
           </div>
