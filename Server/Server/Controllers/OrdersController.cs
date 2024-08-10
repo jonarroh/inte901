@@ -178,6 +178,56 @@ namespace Server.Controllers
         }
 
 
+        [HttpPost]
+        [Route("productInInventory")]
+        public async Task<IActionResult> ProductInInventory(int idProduct, int quantity)
+        {
+            var product = await _context.Productos.Include(p => p.Ingredientes).FirstOrDefaultAsync(p => p.Id == idProduct);
+            if (product == null)
+            {
+                return NotFound("Producto no encontrado");
+            }
+
+            if (IsSpecialProduct(idProduct))
+            {
+                return await CheckCakeInventory(product, quantity);
+            }
+            else
+            {
+                return await CheckIngredientsInventory(product, quantity);
+            }
+        }
+
+        private bool IsSpecialProduct(int productId)
+        {
+            return productId == 1 || productId == 2;
+        }
+
+        private async Task<IActionResult> CheckCakeInventory(Producto product, int quantity)
+        {
+            var cakeInventory = await _context.InventarioPostres.FirstOrDefaultAsync(i => i.IdPostre == product.Id);
+            if (cakeInventory == null || cakeInventory.Cantidad < quantity)
+            {
+                return BadRequest($"No hay suficiente inventario para el producto {product.Nombre}");
+            }
+            return Ok(product);
+        }
+
+        private async Task<IActionResult> CheckIngredientsInventory(Producto product, int quantity)
+        {
+            foreach (var ingredient in product.Ingredientes)
+            {
+                var ingredientInventory = await _context.InventarioMPs.FirstOrDefaultAsync(i => i.Id == ingredient.Id);
+                if (ingredientInventory == null || (decimal)ingredientInventory.Cantidad < ingredient.Cantidad * quantity)
+                {
+                    return BadRequest($"No hay suficiente inventario para el producto {product.Nombre}");
+                }
+            }
+            return Ok(product);
+        }
+
+
+
         [HttpGet]
         //[Authorize]
         [Route("oneOrder/{ticket},{id}")]
