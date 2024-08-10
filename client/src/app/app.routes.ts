@@ -30,6 +30,7 @@ import { PedidosUserComponent } from './pedidos/pedidos-user/pedidos-user.compon
 import { ProcessStateComponent } from './pedidos/pedido-state/process-state/process-state.component';
 import { AdminGuard } from './auth/admin.guard';
 import { UsersComponent } from './admin/users/users.component';
+import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 
 
 
@@ -88,6 +89,10 @@ export const routes: Routes = [
       {
         path:'users',
         component: UsersComponent
+      },
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
       }
     ]
   },

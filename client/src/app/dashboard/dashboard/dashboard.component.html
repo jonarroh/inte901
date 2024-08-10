@@ -1,1 +1,15 @@
-<p>dashboard works!</p>
+<div>
+    <h1>Dashboard</h1>
+    <p>Welcome to the dashboard!</p>
+    <p>Here you can see the list of all the users and their details.</p>
+    
+    <div style="display: block;">
+        <canvas baseChart
+                [data]="chartData"
+                [options]="chartOptions"
+                chartType="bar">
+        </canvas>
+        <!-- <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="'bar'"> </canvas> -->
+    </div>           
+</div>
+
