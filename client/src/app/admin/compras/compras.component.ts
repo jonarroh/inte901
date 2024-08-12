@@ -159,6 +159,8 @@ export class ComprasComponent {
     { label: 'Botella 750ml', value: 'Botella 750ml' },
     { label: 'Caja 5kg', value: 'Caja 5kg' },
   ];
+  public presentationsFiltered: Presentations[] = [];
+  typePresentation: string = '';
   public materias: Materias[] = [];
   public currentMateria = signal<Materias | undefined>(undefined);
   public stateMateria = signal<'closed' | 'open'>('closed');
@@ -266,21 +268,6 @@ export class ComprasComponent {
     });
   }
 
-  stateChangedPresentation(state: 'open' | 'closed') {
-    this.statePresentation.set(state);
-  }
-
-  commandPresentationSelected(presentation: Presentations) {
-    this.statePresentation.set('closed');
-    if (this.currentPresentation()?.value === presentation.value) {
-      this.currentPresentation.set(undefined);
-    } else {
-      this.currentPresentation.set(presentation);
-      this.presentacion = presentation.value;
-      this.unitType = this.getUnitTypeFromValue(presentation.value) || '';
-    }
-  }
-
   stateChangedMateria(state: 'open' | 'closed') {
     this.stateMateria.set(state);
   }
@@ -293,6 +280,35 @@ export class ComprasComponent {
       var value = mpp.material + '-' + mpp.id?.toString();
       this.materiaPrimaId = mpp.id || 0;
       this.currentMateria.set({ label: mpp.material || '', value: value || '' });
+
+      var tipo = this.compraServe.getInventarioType(mpp.id || 0).subscribe((inventario) => {
+        if (inventario.unidadMedida) {
+          this.typePresentation = inventario.unidadMedida;
+        }
+      });
+    }
+  }
+
+  getFilterPresent() {
+    console.log(this.typePresentation);
+    return this.presentations.filter(presentation =>
+      presentation.value.toLowerCase().includes(this.typePresentation.toLowerCase())
+    );
+  }
+
+  stateChangedPresentation(state: 'open' | 'closed') {
+    this.statePresentation.set(state);
+    this.presentations = this.getFilterPresent();
+  }
+
+  commandPresentationSelected(presentation: Presentations) {
+    this.statePresentation.set('closed');
+    if (this.currentPresentation()?.value === presentation.value) {
+      this.currentPresentation.set(undefined);
+    } else {
+      this.currentPresentation.set(presentation);
+      this.presentacion = presentation.value;
+      this.unitType = this.getUnitTypeFromValue(presentation.value) || '';
     }
   }
 
@@ -540,7 +556,7 @@ export class ComprasComponent {
           // Formatea la fecha de expiración a YYYY-MM-DD
           const fechaFormat = fecha.toISOString().slice(0, 10);
           detalle.expiration = fechaFormat;
-      }
+        }
 
         // Obtiene el nombre de la materia prima
         this.materiaprimaServe.getMateriaPrimaById(detalle.idMP || 0).subscribe((materia) => {

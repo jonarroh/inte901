@@ -4,12 +4,14 @@ import { ENDPOINTS } from '~/lib/endpoint';
 import { Observable } from 'rxjs';
 import { Compra } from './interface/compras';
 import { DetailPurchase } from './interface/detailcompras';
+import { InventarioMP } from './interface/inventarioMP';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComprasService {
   apiURL = ENDPOINTS.compras;
+  invApi = ENDPOINTS.inventarioMP;
 
   constructor(private http: HttpClient) { }
 
@@ -27,4 +29,7 @@ export class ComprasService {
 
   getDetailCompra = (id: number): Observable<DetailPurchase[]> =>
     this.http.get<DetailPurchase[]>(`${this.apiURL}/getDetails/${id}`)
+
+  getInventarioType = (id: number): Observable<InventarioMP> =>
+    this.http.get<InventarioMP>(`${this.invApi}/${id}`)
 }
