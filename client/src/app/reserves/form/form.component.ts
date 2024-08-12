@@ -1,16 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ReserveServiceService } from '../reserve-service.service';
 import { format, getDaysInMonth, getDay, startOfMonth, addDays, addMonths, subMonths } from 'date-fns';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { es } from 'date-fns/locale';
-import { Reserva, ReservaDTO } from '~/lib/types';
+import { CreditCard, Reserva, ReservaDTO } from '~/lib/types';
 import { NavbarComponent } from '~/app/home/navbar/navbar.component';
+import { UserService } from '~/app/home/services/user.service';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'calendar-reserve',
   standalone: true,
   imports: [CommonModule, FormsModule, NavbarComponent],
+  providers: [
+    ReserveServiceService,
+    UserService
+  ],
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.css']
 })
@@ -27,7 +33,15 @@ export class FormComponent implements OnInit {
   selectedDate: Date | null = null;
   reservations: Reserva[] = [];
 
-  constructor(private eventService: ReserveServiceService) {
+  creditCards = signal<CreditCard[]>([]);
+  selectedCreditCard = signal<CreditCard>({} as CreditCard);
+
+  constructor(private eventService: ReserveServiceService,private UserService: UserService) {
+    this.creditCards.set(
+      this.UserService.userData().creditCards
+    )
+    console.log('creditCards', this.creditCards);
+
     const today = new Date();
     this.month = format(today, 'LLLL', { locale: es });
     this.year = today.getFullYear();
@@ -35,7 +49,7 @@ export class FormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadReservations();
+    // this.loadReservations();
   }
 
   loadReservations() {
@@ -124,6 +138,40 @@ export class FormComponent implements OnInit {
   }
 
   saveEvent() {
+    if(this.selectedCreditCard().id === undefined){
+      toast.error('Selecciona una tarjeta de crédito');
+      return; 
+    }
+    //si la hora de inicio es mayor a la hora de fin
+    if(this.eventStartTime >= this.eventEndTime){
+      toast.error('La hora de inicio no puede ser mayor o igual a la hora de fin');
+      return;
+    }
+
+    //si la hora de inicio es igual a la hora de fin
+    if(this.eventStartTime === this.eventEndTime){
+      toast.error('La hora de inicio no puede ser igual a la hora de fin');
+      return;
+    }
+    //si la fecha es anterior a la fecha actual
+    if(this.eventDate < this.formatDate(new Date())){
+      toast.error('La fecha no puede ser anterior a la actual');
+      return;
+    }
+    //si la fecha es igual a la fecha actual debe ser mayor a la hora actual
+    if(this.eventDate === this.formatDate(new Date())){
+      if(this.eventStartTime <= format(new Date(), 'HH:mm')){
+        toast.error('La hora de inicio no puede ser menor o igual a la hora actual');
+        return;
+      }
+    }
+
+    //si la hora es mayor a las 22:00 y menor a las 6:00
+    if(this.eventStartTime >= '22:00' || this.eventStartTime <= '06:00'){
+      toast.error('La hora de inicio no puede ser mayor a las 22:00 o menor a las 6:00');
+      return;
+    }
+
     const reserva:ReservaDTO = {
       idUsuario: 1,
       idCliente: 3,
@@ -136,12 +184,12 @@ export class FormComponent implements OnInit {
         idEspacio: this.idEspacio
       },
       creditCard:{
-        cardNumber: '4242424242424242',
-        expiryDate: '12/24',
-        cvv: '123',
-        cardHolderName: 'John Doe',
-        userId: 1,
-        id: 1,
+        cardNumber: this.selectedCreditCard().cardNumber,
+        expiryDate: this.selectedCreditCard().expiryDate,
+        cvv: this.selectedCreditCard().cvv,
+        cardHolderName: this.selectedCreditCard().cardHolderName,
+        userId: this.UserService.userData().id,
+        id: this.selectedCreditCard().id,
         estatus: 'Activo'
       }
 
@@ -156,6 +204,15 @@ export class FormComponent implements OnInit {
         console.error('Error al agregar la reserva:', error);
       }
     );
+  }
+
+  onSelectChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedCard = this.creditCards().find((card) => card.id === parseInt(selectElement.value, 10));
+    console.log('selectedCard', selectedCard);
+    if (selectedCard) {
+      this.selectedCreditCard.set(selectedCard);
+    }
   }
     
 }

@@ -178,14 +178,13 @@ namespace Server.Controllers
         }
 
 
-        [HttpPost]
-        [Route("productInInventory")]
-        public async Task<IActionResult> ProductInInventory(int idProduct, int quantity)
+        
+        private async Task<String> ProductInInventory(int idProduct, int quantity)
         {
             var product = await _context.Productos.Include(p => p.Ingredientes).FirstOrDefaultAsync(p => p.Id == idProduct);
             if (product == null)
             {
-                return NotFound("Producto no encontrado");
+                return "Producto no encontrado";
             }
 
             if (IsSpecialProduct(idProduct))
@@ -203,27 +202,27 @@ namespace Server.Controllers
             return productId == 1 || productId == 2;
         }
 
-        private async Task<IActionResult> CheckCakeInventory(Producto product, int quantity)
+        private async Task<String> CheckCakeInventory(Producto product, int quantity)
         {
             var cakeInventory = await _context.InventarioPostres.FirstOrDefaultAsync(i => i.IdPostre == product.Id);
             if (cakeInventory == null || cakeInventory.Cantidad < quantity)
             {
-                return BadRequest($"No hay suficiente inventario para el producto {product.Nombre}");
+                return $"No hay suficiente inventario para el producto {product.Nombre}";
             }
-            return Ok(product);
+            return "ok";
         }
 
-        private async Task<IActionResult> CheckIngredientsInventory(Producto product, int quantity)
+        private async Task<String> CheckIngredientsInventory(Producto product, int quantity)
         {
             foreach (var ingredient in product.Ingredientes)
             {
                 var ingredientInventory = await _context.InventarioMPs.FirstOrDefaultAsync(i => i.Id == ingredient.Id);
                 if (ingredientInventory == null || (decimal)ingredientInventory.Cantidad < ingredient.Cantidad * quantity)
                 {
-                    return BadRequest($"No hay suficiente inventario para el producto {product.Nombre}");
+                    return $"No hay suficiente inventario para el producto {product.Nombre}";
                 }
             }
-            return Ok(product);
+            return "ok";
         }
 
 
@@ -272,6 +271,7 @@ namespace Server.Controllers
                 int ticket;
                 bool ticketExists;
                 string responseStatus;
+
 
                 do
                 {
@@ -349,10 +349,17 @@ namespace Server.Controllers
 
                 await _context.Orders.AddAsync(orden);
                 await _context.SaveChangesAsync();
-
+              
                 // Guardado de los detalles de la orden
                 foreach (var d in ordertdo.DetailOrders)
                 {
+                    // Verificar si hay suficiente inventario para el producto
+                    var inventoryStatus = await ProductInInventory(d.IdProduct, d.Quantity);
+                    if (inventoryStatus != "ok")
+                    {
+                        return BadRequest(inventoryStatus);
+                    }
+
                     var detail = new DetailOrder
                     {
                         IdOrder = orden.Id,
