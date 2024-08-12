@@ -309,6 +309,7 @@ export class VentasComponent {
       cardHolderName: 'NA',
       estatus: 'NA',
       expiryDate: 'NA',
+      cvv: 'NA',
       userId: 0
     };
 
