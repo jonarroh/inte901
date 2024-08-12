@@ -309,7 +309,8 @@ export class VentasComponent {
       cardHolderName: 'NA',
       estatus: 'NA',
       expiryDate: 'NA',
-      userId: 0
+      userId: 0,
+      cvv: 'NA'
     };
 
     const direccion: Address = {
