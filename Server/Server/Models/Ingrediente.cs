@@ -22,6 +22,7 @@ namespace Server.Models
         public string? UnidadMedida { get; set; }
         [Required]
         public int? Estatus { get; set; } = 1;
+        public bool? EnMenu { get; set; }
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }

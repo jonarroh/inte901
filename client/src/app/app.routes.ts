@@ -30,6 +30,8 @@ import { PedidosUserComponent } from './pedidos/pedidos-user/pedidos-user.compon
 import { ProcessStateComponent } from './pedidos/pedido-state/process-state/process-state.component';
 import { AdminGuard } from './auth/admin.guard';
 import { UsersComponent } from './admin/users/users.component';
+import { InventarioMPComponent } from './admin/inventario-mp/inventario-mp.component';
+import { InventarioPostresComponent } from './admin/inventario-postres/inventario-postres.component';
 
 
 
@@ -80,6 +82,14 @@ export const routes: Routes = [
       {
         path: 'ingredientes',
         component: IngredientesComponent
+      },
+      {
+        path: 'inventarioMP',
+        component: InventarioMPComponent
+      },
+      {
+        path: 'inventarioPostres',
+        component: InventarioPostresComponent
       },
       {
         path: 'proveedores',

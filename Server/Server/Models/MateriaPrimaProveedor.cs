@@ -7,7 +7,7 @@ namespace Server.Models
     {
         [Key]
         public int? Id { get; set; }
-
+        public int? Estatus { get; set; } = 1;
         public int? MateriaPrimaId { get; set; }
         [ForeignKey("MateriaPrimaId")]
         public MateriaPrima? MateriaPrima { get; set; }
