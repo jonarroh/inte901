@@ -4,7 +4,8 @@
     {
         public int Id { get; set; }
         public int IdPurchase { get; set; }
-        public int IdProduct { get; set; }
+        public int IdProveedor { get; set; }
+        public int IdMP { get; set; }
         public int Quantity { get; set; }
         public decimal PriceSingle { get; set; }
         public string Presentation { get; set; }

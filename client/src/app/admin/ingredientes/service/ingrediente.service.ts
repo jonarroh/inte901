@@ -15,7 +15,7 @@ export class IngredienteService {
 
   getIngredientes = (): Observable<Ingrediente[]> =>
     this.http.get<Ingrediente[]>(`${this.apiURL}`)
-  
+
   registrarIngredientes(data: Ingrediente): Observable<Ingrediente> {
     return this.http.post<Ingrediente>(this.apiURL, data);
   }
@@ -31,5 +31,9 @@ export class IngredienteService {
         return this.http.put<void>(`${this.apiURL}/${id}`, ingrediente);
       })
     );
+  }
+
+  getIngredienteById(id: number): Observable<Ingrediente> {
+    return this.http.get<Ingrediente>(`${this.apiURL}/${id}`);
   }
 }

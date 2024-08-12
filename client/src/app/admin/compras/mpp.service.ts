@@ -1,16 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ENDPOINTS } from '~/lib/endpoint';
-import { Proveedor } from './interface/proveedor';
+import { MateriaPrimaProveedor } from '~/lib/types';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProveedoresService {
-  apiURL =ENDPOINTS.proveedor;
+export class MppService {
+  apiURL = ENDPOINTS.materiaPrimaProveedor;
 
   constructor(private http: HttpClient) { }
 
-  getProveedores = () =>
-    this.http.get<Proveedor[]>(`${this.apiURL}/`)
+  getMPP = () =>
+    this.http.get<MateriaPrimaProveedor[]>(`${this.apiURL}`)
 }
