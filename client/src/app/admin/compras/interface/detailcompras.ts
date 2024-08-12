@@ -1,4 +1,3 @@
-import { MateriaPrimaProveedor } from "~/lib/types";
 
 export interface DetailPurchase {
   id?: number;
@@ -6,13 +5,10 @@ export interface DetailPurchase {
   priceSingle?: number;
   presentation?: string;
   unitType?: string;
-  status?: string; // Pendiente, Cancelado, Entregado
+  status?: string;
   idPurchase?: number;
-  purchase?: {
-    idProveedor: number;
-  };
-  materiaPrimaProveedor?: {
-    materiaPrimaId?: number;
-    proveedorId?: number;
-  };
+  idProveedor?: number;
+  idMP?: number;
+  materiaPrima?: string;
+  expiration?: string;
 }

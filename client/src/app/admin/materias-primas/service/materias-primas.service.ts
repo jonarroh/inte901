@@ -15,7 +15,7 @@ export class MateriasPrimasService {
 
   getMateriaPrima = (): Observable<MateriaPrima[]> =>
     this.http.get<MateriaPrima[]>(`${this.apiURL}`)
-  
+
   registrarMateriaPrima(data: MateriaPrima): Observable<MateriaPrima> {
     return this.http.post<MateriaPrima>(this.apiURL, data);
   }
@@ -33,5 +33,8 @@ export class MateriasPrimasService {
       })
     );
   }
-  
+
+  getMateriaPrimaById(id: number): Observable<MateriaPrima> {
+    return this.http.get<MateriaPrima>(`${this.apiURL}/${id}`);
+  }
 }

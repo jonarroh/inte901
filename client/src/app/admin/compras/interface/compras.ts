@@ -4,11 +4,9 @@ import { Usuario } from './usuario';
 
 export interface Compra {
   id?: number;
-  idProveedor: number;
-  idUser: number;
+  idUser?: number;
   createdAt?: Date;
   status?: string; // Pendiente, Aceptada, Cancelada, Entregada
-  detailPurchases: DetailPurchase[];
-  proveedor?: Proveedor;
-  user?: Usuario;
+  total?: number;
+  details?: DetailPurchase[];
 }

@@ -15,6 +15,7 @@
 		public int? Quantity { get; set; }
 
 		[Required]
+		[Column(TypeName = "decimal(18, 2)")]
 		public decimal? PriceSingle { get; set; }
 
 		[Required]

@@ -14,7 +14,7 @@ export class VentasService {
   constructor(private http: HttpClient) { }
 
   getOrders = (): Observable<Order[]> =>
-    this.http.get<Order[]>(`${this.apiURL}/allOrders`)
+    this.http.get<Order[]>(`${this.apiURL}/getOrders`)
 
   getOrderDetail = (id: number): Observable<DetailOrder[]> =>
     this.http.get<DetailOrder[]>(`${this.apiURL}/orderDetail/${id}`)

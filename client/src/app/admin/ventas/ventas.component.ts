@@ -163,7 +163,7 @@ export class VentasComponent {
 
     this.orderService.getOrderDetail(id).subscribe(
       (details) => {
-        this.detalles = details;;
+        this.detalles = details;
 
         this.detalles.forEach(detalle => {
 
@@ -293,6 +293,13 @@ export class VentasComponent {
 
     if (!userId) {
       console.error('Usuario no autenticado.');
+      toast.error('Usuario no autenticado.',{
+        action: {
+          label: 'X',
+          onClick: () => toast.dismiss(),
+        },
+        duration: 2000
+      });
       return;
     }
 

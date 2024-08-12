@@ -15,6 +15,7 @@
 		public int? Quantity { get; set; }
 
 		[Required]
+		[Column(TypeName = "decimal(18, 2)")]
 		public decimal? PriceSingle { get; set; }
 
 		[Required]
@@ -33,14 +34,11 @@
 		[Required]
 		public int? IdProveedor { get; set; }
 		[Required]
+		public int? IdMP { get; set; }
+		[Required]
         [ForeignKey("IdPurchase")]
         public int? IdPurchase { get; set; }
-		[Required]
-		[ForeignKey("IdProduct")]
-		public int? IdProduct { get; set; }
 		[NotMapped]
 		public Purchase Purchase { get; set; }
-		[NotMapped]
-		public Producto Producto { get; set; }
     }
 }

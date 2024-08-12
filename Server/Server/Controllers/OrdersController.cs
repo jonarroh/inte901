@@ -35,6 +35,28 @@ namespace Server.Controllers
             _hubContext = hubContext;
         }
 
+        [HttpGet]
+        [Route("getOrders")]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            try
+            {
+                var orders = await _context.Orders.ToListAsync();
+
+                if (orders == null || orders.Count == 0)
+                {
+					return BadRequest("No hay ordenes registradas");
+				}
+
+                return Ok(orders);
+            } catch (Exception ex)
+            {
+				Console.WriteLine(ex.Message);
+
+				return NotFound("Se produjo un error en el servidor, contacte a soporte");
+			}
+        }
+
         [HttpPut]
         [Route("updateStatus/{id}")]
         public async Task<IActionResult> UpdateOrderStatus(int id, [FromBody] string newStatus)
