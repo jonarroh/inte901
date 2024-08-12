@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Server;
 using Server.Hubs;
@@ -18,7 +19,7 @@ using Server.Models.DTO;
 
 namespace Server.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class OrdersController : ControllerBase
     {
@@ -32,6 +33,28 @@ namespace Server.Controllers
             _context = context;
             _creditCardService = creditService;
             _hubContext = hubContext;
+        }
+
+        [HttpGet]
+        [Route("getOrders")]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            try
+            {
+                var orders = await _context.Orders.ToListAsync();
+
+                if (orders == null || orders.Count == 0)
+                {
+					return BadRequest("No hay ordenes registradas");
+				}
+
+                return Ok(orders);
+            } catch (Exception ex)
+            {
+				Console.WriteLine(ex.Message);
+
+				return NotFound("Se produjo un error en el servidor, contacte a soporte");
+			}
         }
 
         [HttpPut]
@@ -52,6 +75,34 @@ namespace Server.Controllers
 
             return Ok(order);
         }
+
+        [HttpPut]
+        [Route("updateStatusOrder/{status},{idOrder}")]
+        public async Task<IActionResult> UpdateStatusOrder(string status, int idOrder)
+        {
+			try
+            {
+				var order = await _context.Orders.FindAsync(idOrder);
+
+				if (order == null)
+                {
+					return NotFound("No se encontro la orden");
+				}
+
+				order.Status = status;
+
+				await _context.SaveChangesAsync();
+
+				return Ok(order);
+			}
+			catch (Exception ex)
+            {
+				Console.WriteLine(ex.Message);
+
+				return NotFound("Se produjo un error en el servidor, contacte a soporte");
+			}
+		}
+
 
         [HttpGet]
         [Route("allOrders")]
@@ -75,10 +126,12 @@ namespace Server.Controllers
                         .Where(d => d.IdOrder == orden.Id)
                         .ToListAsync();
 
-                   
+
                     // Asignar la fecha al campo correspondiente
                     orden.OrderDate = dateOrder != null ? new DateTime() : dateOrder.FirstOrDefault().DateOrder;
 
+                    orden.OrderDate = DateTime.Parse(orden.OrderDate.ToString() ?? "");
+                
                     // Agregar la orden a la lista
                     ordenesPendientes.Add(orden);
                 }
@@ -91,6 +144,7 @@ namespace Server.Controllers
                 return StatusCode(500, "Se produjo un error en el servidor, contacte a soporte");
             }
         }
+
 
         [HttpGet]
         [Route("ordersByUser/{userId}")]
@@ -148,10 +202,6 @@ namespace Server.Controllers
                 return StatusCode(500, "Se produjo un error en el servidor, contacte a soporte");
             }
         }
-
-
-
-
 
         [HttpGet]
         //[Authorize]
@@ -256,12 +306,70 @@ namespace Server.Controllers
             }
         }
 
+
+        [HttpGet]
+        // [Authorize]
+        [Route("orderDetail/{id}")]
+        public async Task<IActionResult> GetOrderDetail(int? id)
+        {
+            if (id == null)
+            {
+                return BadRequest("El ID de la orden no puede ser nulo");
+            }
+
+            try
+            {
+                var details = await _context.DetailOrders
+                                            .Where(d => d.IdOrder == id)
+                                            .Select(d => new
+                                            {
+                                                d.Id,
+                                                d.IdOrder,
+                                                d.IdProduct,
+                                                d.Quantity,
+                                                d.PriceSingle,
+                                                d.Status,
+                                                DateOrder = DateTime.Parse(d.DateOrder.ToString() ?? ""),
+                                                Product = _context.Productos
+                                                                  .Where(p => p.Id == d.IdProduct)
+                                                                  .Select(p => new
+                                                                  {
+                                                                      p.Id,
+                                                                      p.Nombre, // Asegúrate de que esta propiedad coincida con tu modelado de back-end
+                                                                      p.Precio,
+                                                                      // otros campos necesarios
+                                                                  }).FirstOrDefault()
+                                            }).ToListAsync();
+
+                if (details == null || !details.Any())
+                {
+                    return NotFound("No se encontraron detalles de la orden");
+                }
+
+                return Ok(details);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+
         [HttpPost]
         [Route("addOrder")]
         public async Task<IActionResult> PostOrder(OrderDTO ordertdo)
         {
             try
             {
+                if (ordertdo == null)
+                {
+                    return BadRequest("Campos incompletos, es necesario completar todos los datos.");
+                }
+
+                Console.WriteLine(JsonConvert.SerializeObject(ordertdo));
+
                 if (ordertdo == null)
                 {
                     return BadRequest("Campos incompletos, es necesario completar todos los datos.");
@@ -380,29 +488,29 @@ namespace Server.Controllers
                 // Petición para generar el QR después de guardar la orden y sus detalles
                 using (HttpClient client = new HttpClient())
                 {
-                    var data = new Dictionary<string, string?>
-            {
-                { "id", orden.Id.ToString() },
-                { "ticket", orden.Ticket.ToString() },
-            };
+                   var data = new Dictionary<string, string?>
+                {
+                   { "id", orden.Id.ToString() },
+                   { "ticket", orden.Ticket.ToString() },
+                };
 
-                    var content = new FormUrlEncodedContent(data);
+                   var content = new FormUrlEncodedContent(data);
 
-                    Console.WriteLine($"Se genero el QR, {data["id"]}, {data["ticket"]}");
+                   Console.WriteLine($"Se genero el QR, {data["id"]}, {data["ticket"]}");
 
-                    HttpResponseMessage response = await client.PostAsync("http://localhost:5000/generate_qr_order", content);
+                   HttpResponseMessage response = await client.PostAsync("http://localhost:5000/generate_qr_order", content);
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        responseStatus = response.StatusCode.ToString();
-                        Console.WriteLine(await response.Content.ReadAsStringAsync());
-                    }
-                    else
-                    {
-                        responseStatus = response.StatusCode.ToString();
-                        Console.WriteLine(await response.Content.ReadAsStringAsync());
-                        return NotFound($"Error con el QR, status: {responseStatus}");
-                    }
+                   if (response.IsSuccessStatusCode)
+                   {
+                       responseStatus = response.StatusCode.ToString();
+                       Console.WriteLine(response.Content);
+                   }
+                   else
+                   {
+                       responseStatus = response.StatusCode.ToString();
+                       Console.WriteLine(response.Content);
+                       return NotFound($"Error con el QR, status: {responseStatus}");
+                   }
                 }
 
                 return Ok(orden);
@@ -574,6 +682,87 @@ namespace Server.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+        [HttpPut]
+        // [Authorize]
+        [Route("updateOrder/{id},{status}")]
+        public async Task<IActionResult> UpdateOrder(int id, string status)
+        {
+            try
+            {
+                var order = await _context.Orders.FindAsync(id);
+
+                if (order == null)
+                {
+                    return NotFound("No se encontro la orden");
+                }
+
+                if (status == "Entregado")
+                {
+                    var detailOrder = await _context.DetailOrders.Where(d => d.IdOrder == order.Id).ToListAsync();
+
+                    foreach (var detail in detailOrder)
+                    {
+                        detail.Status = "Entregado";
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+
+                if (status == "Cancelado")
+                {
+                    var detailOrder = await _context.DetailOrders.Where(d => d.IdOrder == order.Id).ToListAsync();
+
+                    foreach (var detail in detailOrder)
+                    {
+                        detail.Status = "Cancelado";
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+
+                order.Status = status;
+
+                await _context.SaveChangesAsync();
+
+                return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+
+        [HttpPut]
+        // [Authorize]
+        [Route("updateDetailOrderStatus/{id},{status}")]
+        public async Task<IActionResult> UpdateDetailOrderStatus(int id, string status)
+        {
+            try
+            {
+                var detailOrder = await _context.DetailOrders.FindAsync(id);
+
+                if (detailOrder == null)
+                {
+                    return NotFound("No se encontro el detalle de la orden");
+                }
+
+                detailOrder.Status = status;
+
+                await _context.SaveChangesAsync();
+
+                return Ok(detailOrder);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
         }
