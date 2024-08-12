@@ -17,10 +17,35 @@ namespace Server.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Server.Models.Consumo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("IdReserva")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdReserva");
+
+                    b.ToTable("Consumo");
+                });
 
             modelBuilder.Entity("Server.Models.CreditCard", b =>
                 {
@@ -62,6 +87,44 @@ namespace Server.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("CreditCard");
+                });
+
+            modelBuilder.Entity("Server.Models.DetailConsumo", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+
+                    b.Property<int?>("ConsumoId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdConsumo")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdProduct")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("PriceSingle")
+                        .IsRequired()
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("Quantity")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConsumoId");
+
+                    b.ToTable("DetailConsumo");
                 });
 
             modelBuilder.Entity("Server.Models.DetailOrder", b =>
@@ -188,8 +251,6 @@ namespace Server.Migrations
 
                     b.HasKey("idDetailReser");
 
-                    b.HasIndex("idEspacio");
-
                     b.ToTable("DetailReservas");
                 });
 
@@ -296,6 +357,9 @@ namespace Server.Migrations
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool?>("EnMenu")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("Estatus")
                         .IsRequired()
@@ -448,6 +512,9 @@ namespace Server.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+
+                    b.Property<int?>("Estatus")
+                        .HasColumnType("int");
 
                     b.Property<int?>("MateriaPrimaId")
                         .HasColumnType("int");
@@ -642,9 +709,6 @@ namespace Server.Migrations
                     b.Property<int>("idDetailReser")
                         .HasColumnType("int");
 
-                    b.Property<int>("idUsuario")
-                        .HasColumnType("int");
-
                     b.HasKey("idReserva");
 
                     b.HasIndex("UsuarioId");
@@ -702,6 +766,17 @@ namespace Server.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Server.Models.Consumo", b =>
+                {
+                    b.HasOne("Server.Models.Reserva", "Reserva")
+                        .WithMany()
+                        .HasForeignKey("IdReserva")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Reserva");
+                });
+
             modelBuilder.Entity("Server.Models.CreditCard", b =>
                 {
                     b.HasOne("Server.Models.Usuario.Server.Models.Usuario.User", null)
@@ -709,6 +784,13 @@ namespace Server.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Server.Models.DetailConsumo", b =>
+                {
+                    b.HasOne("Server.Models.Consumo", null)
+                        .WithMany("DetailConsumo")
+                        .HasForeignKey("ConsumoId");
                 });
 
             modelBuilder.Entity("Server.Models.DetailOrder", b =>
@@ -723,17 +805,6 @@ namespace Server.Migrations
                     b.HasOne("Server.Models.Purchase", null)
                         .WithMany("DetailPurchases")
                         .HasForeignKey("PurchaseId");
-                });
-
-            modelBuilder.Entity("Server.Models.DetailReserva", b =>
-                {
-                    b.HasOne("Server.Models.Espacio", "Espacio")
-                        .WithMany()
-                        .HasForeignKey("idEspacio")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Espacio");
                 });
 
             modelBuilder.Entity("Server.Models.Direcciones", b =>
@@ -825,6 +896,11 @@ namespace Server.Migrations
                     b.Navigation("DetailReserva");
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("Server.Models.Consumo", b =>
+                {
+                    b.Navigation("DetailConsumo");
                 });
 
             modelBuilder.Entity("Server.Models.MateriaPrima", b =>

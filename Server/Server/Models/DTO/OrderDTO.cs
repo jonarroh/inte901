@@ -9,7 +9,7 @@
         public bool IsDeliver {  get; set; }
         public DateTime OrderDate { get; set; }
         public List<DetailOrderDTO> DetailOrders { get; set; } = new List<DetailOrderDTO>();
-        public CreditCardDTO CreditCard { get; set; }
-        public Direcciones Direcciones { get; set;}
+        public CreditCard? CreditCard { get; set; }
+        public Direcciones? Direcciones { get; set;}
     }
 }

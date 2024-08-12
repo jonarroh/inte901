@@ -21,7 +21,7 @@ export class ReserveServiceService {
   }
 
   getReservationsBySpaceId(idEspacio: number): Observable<Reserva[]> {
-    return this.http.get<Reserva[]>(`${this.apiUrl}/space/${idEspacio}`);
+    return this.http.get<Reserva[]>(`${this.apiUrl}/bySpace/${idEspacio}`);
   }
 
   // Este método también debe devolver un Observable

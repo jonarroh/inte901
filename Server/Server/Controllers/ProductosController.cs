@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server;
+using Server.lib;
 using Server.Models;
 using Server.Models.DTO;
 
@@ -16,6 +17,7 @@ namespace Server.Controllers
     public class ProductosController : ControllerBase
     {
         private readonly Context _context;
+        private readonly IHttpCDNService _cdnService;
 
         public ProductosController(Context context)
         {

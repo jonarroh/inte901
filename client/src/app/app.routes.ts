@@ -7,7 +7,7 @@ import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { AdminComponent } from './admin/admin.component';
 import { VentasComponent } from './admin/ventas/ventas.component';
-import { PedidoStateComponent } from './pedido-state/pedido-state.component';
+import { PedidoStateComponent } from './pedidos/pedido-state/pedido-state.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { PlaceComponent } from './place/place.component';
 
@@ -26,6 +26,13 @@ import { ReservesComponent } from './reserves/reserves.component';
 import { MateriasPrimasComponent } from './admin/materias-primas/materias-primas.component';
 import { IngredientesComponent } from './admin/ingredientes/ingredientes.component';
 import { ProveedoresComponent } from './admin/proveedores/proveedores.component';
+import { PedidosUserComponent } from './pedidos/pedidos-user/pedidos-user.component';
+import { ProcessStateComponent } from './pedidos/pedido-state/process-state/process-state.component';
+import { AdminGuard } from './auth/admin.guard';
+import { UsersComponent } from './admin/users/users.component';
+import { InventarioMPComponent } from './admin/inventario-mp/inventario-mp.component';
+import { InventarioPostresComponent } from './admin/inventario-postres/inventario-postres.component';
+import { CheckoutReComponent } from './reserves/checkout/checkout.component';
 
 
 
@@ -55,6 +62,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
+    // canActivate: [AdminGuard],
     children: [
       {
         path: 'ventas',
@@ -77,13 +85,38 @@ export const routes: Routes = [
         component: IngredientesComponent
       },
       {
+        path: 'inventarioMP',
+        component: InventarioMPComponent
+      },
+      {
+        path: 'inventarioPostres',
+        component: InventarioPostresComponent
+      },
+      {
         path: 'proveedores',
         component: ProveedoresComponent
+      },
+      {
+        path:'users',
+        component: UsersComponent
       }
     ]
   },
   {
+    path: 'orders',
+    canActivate: [AuthenticatedGuard],
+    component: PedidosUserComponent,
+    
+  },
+  {
+    path: 'estatus/:id',
+    canActivate: [AuthenticatedGuard],
+    component: PedidoStateComponent,
+    
+  },
+  {
     path: 'estatus',
+    canActivate: [AuthenticatedGuard],
     component: PedidoStateComponent
   },
   {
@@ -101,15 +134,23 @@ export const routes: Routes = [
   },{
 
     path: 'places/:id',
+    canActivate: [AuthenticatedGuard],
     component: DescriptionPlaceComponent
   },
   {
     path: 'reserves',
+    canActivate: [AuthenticatedGuard],
     component: ReservesComponent
+  },
+  {
+    path:'reserves/checkout',
+    canActivate: [AuthenticatedGuard],
+    component: CheckoutReComponent
   },
 
   {
     path: 'reserves/:id',
+    canActivate: [AuthenticatedGuard],
     component: ReservesComponent
   },
 
@@ -140,10 +181,12 @@ export const routes: Routes = [
   },
   {
     path:'edit/address',
+    canActivate: [AuthenticatedGuard],
     component: AddDireccionComponent,
   },
   {
     path:'edit/payment',
+    canActivate: [AuthenticatedGuard],
     component: AddCardComponent
   }
 ];

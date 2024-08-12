@@ -1,9 +1,81 @@
 from flask import request, jsonify, Blueprint
-from db.db import db_instance  # Import the instance of DB
+from db.db import db_instance  
 from datetime import timedelta
 from datetime import datetime
+import random
+from matplotlib import colors as mcolors
 
 reportes = Blueprint('reportes', __name__)
+
+
+@reportes.route('/reportes/users', methods=['POST'])
+def get_users():
+    query = """
+    SELECT 
+    u.Name + ' ' + u.LastName AS FullName,
+    COUNT(o.Id) AS OrderCount
+    FROM Orders o
+    INNER JOIN Users u ON o.IdClient = u.Id
+    GROUP BY u.Name, u.LastName;
+    """
+    result = db_instance.execute_query(query)
+
+    labels = [
+        user['FullName'] for user in result
+    ]
+
+    datasets = [
+        {
+            'label': 'Cantidad de ordenes',
+            'data': [user['OrderCount'] for user in result],
+            'fill': False,
+            'backgroundColor': 'rgb(255, 99, 132)',
+            'borderColor': 'rgb(255, 99, 132)',
+        }
+    ]
+
+    return jsonify({
+        'labels': labels,
+        'datasets': datasets
+    })
+
+
+# https://www.chartjs.org/docs/latest/charts/bar.html
+# Horizontal Bar Chart
+@reportes.route('/reportes/InventarioMPs', methods=['POST'])
+def get_inventory():
+    QUERY = """
+    SELECT * FROM InventarioMPs imp 
+    inner join MateriasPrimas mp on mp.Id = imp.IdMateriaPrima
+    WHERE imp.estatus = 1
+    """
+    result = db_instance.execute_query(QUERY)
+
+    labels = [
+        Material['Material'] for Material in result
+    ]
+    colors  = [
+                random.choice(list(mcolors.CSS4_COLORS.values())) for _ in range(len(result))
+
+            ]
+    datasets =[
+        {
+            'axis': 'y',
+            'label': 'Cantidad de materia prima',
+            'data': [Material['Cantidad'] for Material in result],
+            'fill': False,
+            'backgroundColor': colors,
+            'borderColor': colors,
+        }
+    ]
+
+
+
+    return jsonify({
+        'labels': labels,
+        'datasets': datasets
+    })
+
 
 
 @reportes.route('/reportes/ventas', methods=['POST'])
@@ -30,7 +102,7 @@ def get_Ventas_by_last_week():
     last_week_end = last_week_start + timedelta(days=6)
 
     query = """
-    SELECT * FROM Purchases WHERE CreatedAt BETWEEN :start_date AND :end_date
+    SELECT * FROM Orders WHERE OrderDate BETWEEN :start_date AND :end_date
     """
     params = {
         'start_date': last_week_start,
@@ -47,7 +119,7 @@ def get_ventas_by_last_day():
     last_day_end = last_day_start + timedelta(days=1)
 
     query = """
-    SELECT * FROM Purchases WHERE CreatedAt BETWEEN :start_date AND :end_date
+    SELECT * FROM   Orders WHERE OrderDate BETWEEN :start_date AND :end_date
     """
     params = {
         'start_date': last_day_start,
@@ -64,7 +136,7 @@ def get_ventas_by_last_month():
     last_month_end = last_month_start + timedelta(days=30)
 
     query = """
-    SELECT * FROM Purchases WHERE CreatedAt BETWEEN :start_date AND :end_date
+    SELECT * FROM Orders WHERE OrderDate BETWEEN :start_date AND :end_date
     """
     params = {
         'start_date': last_month_start,

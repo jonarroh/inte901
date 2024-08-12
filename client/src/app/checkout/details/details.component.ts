@@ -4,13 +4,14 @@ import { Address, CreditCard, CreditCardWithCvv, DetailOrder, Ingrediente, Order
 import { CartService } from '~/app/cart/cart.service';
 import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-details',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
@@ -20,15 +21,13 @@ export class DetailsComponent {
     constructor(private checkoutService: CheckoutService,private cartService: CartService, private router : Router) {
       
     }
-
-
-
     order = signal<Order>({} as Order);
     isOrderToStore = signal<boolean>(JSON.parse(localStorage.getItem('isOrderToStore') || 'false'));
     isPaidWithCard = signal<boolean>(JSON.parse(localStorage.getItem('isPaidWithCard') || 'false'));
     selectedCard = signal<CreditCardWithCvv>(JSON.parse(localStorage.getItem('selectedCard') || `{}`));
     selectedAddress = signal<Address>(JSON.parse(localStorage.getItem('selectedAddress') || '{}'));
     products = this.cartService.cartSignal;
+    ordes = this.checkoutService.orderSignal;
 
     getSubtotal() {
       return this.products().reduce((acc, product) => acc + product.precio, 0);
@@ -53,6 +52,8 @@ export class DetailsComponent {
         direcciones: this.selectedAddress(),
         isDeliver: !this.isOrderToStore(),
         idClient: this.getIdClient(),
+        status : 'Ordenado',
+        ticket: '',
         detailOrders: [
           ...this.products().map((product) => ({
             id: 0,
@@ -63,6 +64,7 @@ export class DetailsComponent {
             priceSingle: product.precio,
             dateOrder: new Date().toISOString(),
             status: 'Ordenado',
+            
 
           })),
         ],
@@ -73,10 +75,12 @@ export class DetailsComponent {
       
       //hacer la orden
       this.checkoutService.postOrder(this.checkoutService.orderSignal()).subscribe({
-        complete: () => {},
+        complete: () => {
+          this.router.navigate(['orders']);
+        },
         error: (err) => {
           console.log(err);
-          toast.error('Error al hacer la orden');
+          toast.error('Error al hacer la orden '+ JSON.stringify(err.error));
         },
         next: (res) => {
           console.log(res);
@@ -85,7 +89,7 @@ export class DetailsComponent {
           this.checkoutService.isOrderToStore.set(false);
           this.checkoutService.isPaidWithCard.set(false);
           this.checkoutService.selectedCard.set({} as CreditCard);
-          this.checkoutService.selectdAddress.set({} as Address);
+          this.checkoutService.selectedAddress.set({} as Address);
           // this.router.navigate(['products']);
         }
       });

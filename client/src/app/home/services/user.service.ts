@@ -80,6 +80,10 @@ export class UserService {
     localStorage.removeItem('userId');
   }
 
+  deleteUser(id: number) {
+    return this.http.delete<User>(`${this.endpoint}/${id}`);
+  }
+
 
   editTempImage(image: File) {
     const reader = new FileReader();
@@ -114,6 +118,14 @@ export class UserService {
     return this.http.put<User>(`${this.endpoint}/${userData.id}`, formData);
   }
 
+
+  createUser(userData: User) {
+      return this.http.post<User>(`${this.endpoint}`, userData);
+  }
+
+  getAllUsers() {
+    return this.http.get<User[]>(`${this.endpoint}`);
+  }
 
   
 }

@@ -21,6 +21,7 @@ interface ResponseLogin{
 
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import { UserService } from '~/app/home/services/user.service';
+import { toast } from 'ngx-sonner';
 @Component({
   selector: 'left-seccion',
   standalone: true,
@@ -33,7 +34,7 @@ import { UserService } from '~/app/home/services/user.service';
     SignalInputDirective,
     RouterModule
   ],
-  providers: [AuthService, Router],
+  providers: [AuthService, Router, UserService],
   templateUrl: './left-seccion.component.html'
 })
 export class LeftSeccionComponent {
@@ -84,15 +85,26 @@ export class LeftSeccionComponent {
       
       this.authService.login(this.formModel.value()).subscribe({
         next: (response) => {
-          this.router.navigate(['/products']);
           localStorage.setItem('token', response.jwtToken);
           localStorage.setItem('userId', response.id);
+          
+      
+          
           this.userService.getUser(response.id).subscribe({
             next: (user) => {
+              console.log('Usuario cargado correctamente', user);
               this.userService.saveUserData(user);
+              if(user.role === 'Admin'){
+                this.router.navigate(['/admin/productos']);
+              }
+              else{
+                this.router.navigate(['/products']);
+              }
+    
             },
             complete: () => {
               console.log('Usuario cargado correctamente', this.userService.userData()?.id);
+              
             },
             error: (error) => {
               console.error('Error al cargar el usuario', error);

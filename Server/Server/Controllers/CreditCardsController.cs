@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using Server.Models.DTO;
 namespace Server.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class CreditCardsController : ControllerBase
     {
@@ -24,31 +26,18 @@ namespace Server.Controllers
 
         // GET: api/CreditCards
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CreditCardDTO>>> GetCreditCard()
+        public async Task<ActionResult<IEnumerable<CreditCard>>> GetCreditCard()
         {
             var creditCards = await _context.CreditCard
                                             .Where(c => c.Estatus == "Activo")
                                             .ToListAsync();
-            var creditCardsDTO = new List<CreditCardDTO>();
 
-            foreach (var c in creditCards)
-            {
-                creditCardsDTO.Add(new CreditCardDTO
-                {
-                    Id = c.Id,
-                    CardHolderName = c.CardHolderName,
-                    CardNumber = OcultaNumero(c.CardNumber),
-                    ExpiryDate = c.ExpiryDate,
-                    UserId = c.UserId
-                });
-            }
-
-            return Ok(creditCardsDTO);
+            return Ok(creditCards);
         }
 
         // GET: api/CreditCards/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<CreditCardDTO>> GetCreditCard(int id)
+        public async Task<ActionResult<CreditCard>> GetCreditCard(int id)
         {
             var creditCard = await _context.CreditCard
                                            .Where(c => c.Id == id && c.Estatus == "Activo")
@@ -59,14 +48,7 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            return Ok(new CreditCardDTO
-            {
-                Id = creditCard.Id,
-                CardHolderName = creditCard.CardHolderName,
-                CardNumber = OcultaNumero(creditCard.CardNumber),
-                ExpiryDate = creditCard.ExpiryDate,
-                UserId = creditCard.UserId
-            });
+            return Ok(creditCard);
         }
 
         private string OcultaNumero(string numero)
@@ -159,7 +141,7 @@ namespace Server.Controllers
             {
                 Id = creditCard.Id,
                 CardHolderName = creditCard.CardHolderName,
-                CardNumber = OcultaNumero(creditCard.CardNumber),
+                CardNumber = creditCard.CardNumber,
                 ExpiryDate = creditCard.ExpiryDate,
                 UserId = creditCard.UserId
             });
@@ -183,7 +165,7 @@ namespace Server.Controllers
             {
                 Id = creditCard.Id,
                 CardHolderName = creditCard.CardHolderName,
-                CardNumber = OcultaNumero(creditCard.CardNumber),
+                CardNumber = creditCard.CardNumber,
                 ExpiryDate = creditCard.ExpiryDate,
                 UserId = creditCard.UserId
             });

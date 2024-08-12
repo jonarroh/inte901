@@ -124,11 +124,11 @@ namespace Server.Controllers
                     // Obtener la fecha del detalle de la orden de forma asíncrona
                     var dateOrder = await _context.DetailOrders
                         .Where(d => d.IdOrder == orden.Id)
-                        .FirstOrDefaultAsync();
+                        .ToListAsync();
 
 
                     // Asignar la fecha al campo correspondiente
-                    orden.OrderDate = dateOrder != null ? dateOrder.DateOrder : null;
+                    orden.OrderDate = dateOrder != null ? new DateTime() : dateOrder.FirstOrDefault().DateOrder;
 
                     orden.OrderDate = DateTime.Parse(orden.OrderDate.ToString() ?? "");
                 
@@ -154,7 +154,7 @@ namespace Server.Controllers
             {
                 // Obtén todas las órdenes del usuario específico
                 var ordenes = await _context.Orders
-                    .Where(o => o.IdUser == userId)
+                    .Where(o => o.IdClient == userId)
                     .ToListAsync();
 
                 if (ordenes == null || !ordenes.Any())
@@ -163,20 +163,36 @@ namespace Server.Controllers
                 }
 
                 var ordenesPendientes = new List<Order>();
+                var products = await _context.Productos.ToListAsync();
 
                 foreach (var orden in ordenes)
                 {
-                    // Obtener la fecha del detalle de la orden de forma asíncrona
-                    var dateOrder = await _context.DetailOrders
+                    // Obtener los detalles de la orden de forma asíncrona
+                    var detailOrders = await _context.DetailOrders
                         .Where(d => d.IdOrder == orden.Id)
-                        .FirstOrDefaultAsync();
+                        .ToListAsync();
 
-                    // Asignar la fecha al campo correspondiente
-                    orden.OrderDate = dateOrder != null ? dateOrder.DateOrder : null;
+                    // Asignar la fecha más reciente del detalle de la orden al campo correspondiente
+                    if (detailOrders.Any())
+                    {
+                        orden.OrderDate = detailOrders.Max(d => d.DateOrder);
+                    }
+
+                    foreach (var detail in detailOrders)
+                    {
+                        // Obtener el producto correspondiente al detalle de la orden
+                        var product = products.FirstOrDefault(p => p.Id == detail.IdProduct);
+
+                        // Asignar el producto al detalle de la orden
+                        detail.Product = product;
+                    }
 
                     // Agregar la orden a la lista
                     ordenesPendientes.Add(orden);
                 }
+
+                // Ordenar las órdenes por fecha de forma descendente (más recientes primero)
+                ordenesPendientes = ordenesPendientes.OrderByDescending(o => o.OrderDate).ToList();
 
                 return Ok(ordenesPendientes);
             }
@@ -186,7 +202,6 @@ namespace Server.Controllers
                 return StatusCode(500, "Se produjo un error en el servidor, contacte a soporte");
             }
         }
-
 
         [HttpGet]
         //[Authorize]
@@ -211,6 +226,55 @@ namespace Server.Controllers
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
         }
+
+
+        
+        private async Task<String> ProductInInventory(int idProduct, int quantity)
+        {
+            var product = await _context.Productos.Include(p => p.Ingredientes).FirstOrDefaultAsync(p => p.Id == idProduct);
+            if (product == null)
+            {
+                return "Producto no encontrado";
+            }
+
+            if (IsSpecialProduct(idProduct))
+            {
+                return await CheckCakeInventory(product, quantity);
+            }
+            else
+            {
+                return await CheckIngredientsInventory(product, quantity);
+            }
+        }
+
+        private bool IsSpecialProduct(int productId)
+        {
+            return productId == 1 || productId == 2;
+        }
+
+        private async Task<String> CheckCakeInventory(Producto product, int quantity)
+        {
+            var cakeInventory = await _context.InventarioPostres.FirstOrDefaultAsync(i => i.IdPostre == product.Id);
+            if (cakeInventory == null || cakeInventory.Cantidad < quantity)
+            {
+                return $"No hay suficiente inventario para el producto {product.Nombre}";
+            }
+            return "ok";
+        }
+
+        private async Task<String> CheckIngredientsInventory(Producto product, int quantity)
+        {
+            foreach (var ingredient in product.Ingredientes)
+            {
+                var ingredientInventory = await _context.InventarioMPs.FirstOrDefaultAsync(i => i.Id == ingredient.Id);
+                if (ingredientInventory == null || (decimal)ingredientInventory.Cantidad < ingredient.Cantidad * quantity)
+                {
+                    return $"No hay suficiente inventario para el producto {product.Nombre}";
+                }
+            }
+            return "ok";
+        }
+
 
 
         [HttpGet]
@@ -294,7 +358,6 @@ namespace Server.Controllers
 
 
         [HttpPost]
-        // [Authorize]
         [Route("addOrder")]
         public async Task<IActionResult> PostOrder(OrderDTO ordertdo)
         {
@@ -317,6 +380,7 @@ namespace Server.Controllers
                 bool ticketExists;
                 string responseStatus;
 
+
                 do
                 {
                     ticket = rnd.Next(10000000, 99999999);
@@ -329,53 +393,81 @@ namespace Server.Controllers
                     IdUser = ordertdo.IdUser,
                     Total = ordertdo.Total,
                     OrderDate = DateTime.Now,
-                    Status = "Pendiente",
+                    Status = "Ordenado",
                     Ticket = ticket,
                 };
 
-                // Validación y guardado de la dirección solo si es una entrega
-                if (ordertdo.IsDeliver == true)
+                if (ordertdo.CreditCard != null)
                 {
-                    var tarjeta = await _context.CreditCard.FindAsync(ordertdo.IdUser);
-
-                    if (_creditCardService.IsValidCreditCard(tarjeta))
+                    var result = _creditCardService.canPay(ordertdo.CreditCard, (decimal)orden.Total);
+                    Console.WriteLine(result);
+                    if (result != "La tarjeta es válida")
                     {
-                        decimal amount = (decimal)orden.Total;
-
-                        if (_creditCardService.CardCanPay(tarjeta, amount))
-                        {
-                            var direccion = new Direcciones
-                            {
-                                Calle = ordertdo.Direcciones.Calle,
-                                NumeroExterior = ordertdo.Direcciones.NumeroExterior,
-                                Estatus = "Activo",
-                                Colonia = ordertdo.Direcciones.Colonia,
-                                Ciudad = ordertdo.Direcciones.Ciudad,
-                                Estado = ordertdo.Direcciones.Estado,
-                                Pais = ordertdo.Direcciones.Pais,
-                                CodigoPostal = ordertdo.Direcciones.CodigoPostal,
-                                UserId = ordertdo.IdUser,
-                            };
-
-                            await _context.Direcciones.AddAsync(direccion);
-                        }
-                        else
-                        {
-                            return BadRequest("No hay suficiente saldo en la tarjeta.");
-                        }
+                        return BadRequest(result);
                     }
-                    else
+                }
+                else
+                {
+                    var creditCard = new CreditCard
                     {
-                        return BadRequest("La tarjeta no es válida.");
-                    }
+                        CardHolderName = "Nombre de prueba",
+                        CardNumber = "4500000000000000", // Número de prueba válido
+                        CVV = "123",
+                        ExpiryDate = "12/25",
+                        UserId = ordertdo.IdUser
+                    };
+
+                    ordertdo.CreditCard = creditCard;
+                }
+
+                if (ordertdo.Direcciones == null)
+                {
+                    var direccion = new Direcciones
+                    {
+                        Calle = "Calle de prueba",
+                        NumeroExterior = 123,
+                        Estatus = "Activo",
+                        Colonia = "Colonia de prueba",
+                        Ciudad = "Ciudad de prueba",
+                        Estado = "Estado de prueba",
+                        Pais = "Pais de prueba",
+                        CodigoPostal = "12345",
+                        UserId = ordertdo.IdUser,
+                    };
+
+                    await _context.Direcciones.AddAsync(direccion);
+                }
+                else
+                {
+                    var direccion = new Direcciones
+                    {
+                        Calle = ordertdo.Direcciones.Calle,
+                        NumeroExterior = ordertdo.Direcciones.NumeroExterior,
+                        Estatus = "Activo",
+                        Colonia = ordertdo.Direcciones.Colonia,
+                        Ciudad = ordertdo.Direcciones.Ciudad,
+                        Estado = ordertdo.Direcciones.Estado,
+                        Pais = ordertdo.Direcciones.Pais,
+                        CodigoPostal = ordertdo.Direcciones.CodigoPostal,
+                        UserId = ordertdo.IdUser,
+                    };
+
+                    await _context.Direcciones.AddAsync(direccion);
                 }
 
                 await _context.Orders.AddAsync(orden);
                 await _context.SaveChangesAsync();
-
+              
                 // Guardado de los detalles de la orden
                 foreach (var d in ordertdo.DetailOrders)
                 {
+                    // Verificar si hay suficiente inventario para el producto
+                    var inventoryStatus = await ProductInInventory(d.IdProduct, d.Quantity);
+                    if (inventoryStatus != "ok")
+                    {
+                        return BadRequest(inventoryStatus);
+                    }
+
                     var detail = new DetailOrder
                     {
                         IdOrder = orden.Id,
@@ -394,32 +486,32 @@ namespace Server.Controllers
                 await _context.SaveChangesAsync();
 
                 // Petición para generar el QR después de guardar la orden y sus detalles
-                //using (HttpClient client = new HttpClient())
-                //{
-                //    var data = new Dictionary<string, string?>
-                //{
-                //    { "id", orden.Id.ToString() },
-                //    { "ticket", orden.Ticket.ToString() },
-                //};
+                using (HttpClient client = new HttpClient())
+                {
+                   var data = new Dictionary<string, string?>
+                {
+                   { "id", orden.Id.ToString() },
+                   { "ticket", orden.Ticket.ToString() },
+                };
 
-                //    var content = new FormUrlEncodedContent(data);
+                   var content = new FormUrlEncodedContent(data);
 
-                //    Console.WriteLine($"Se genero el QR, {data["id"]}, {data["ticket"]}");
+                   Console.WriteLine($"Se genero el QR, {data["id"]}, {data["ticket"]}");
 
-                //    HttpResponseMessage response = await client.PostAsync("http://localhost:5000/generate_qr_order", content);
+                   HttpResponseMessage response = await client.PostAsync("http://localhost:5000/generate_qr_order", content);
 
-                //    if (response.IsSuccessStatusCode)
-                //    {
-                //        responseStatus = response.StatusCode.ToString();
-                //        Console.WriteLine(response.Content);
-                //    }
-                //    else
-                //    {
-                //        responseStatus = response.StatusCode.ToString();
-                //        Console.WriteLine(response.Content);
-                //        return NotFound($"Error con el QR, status: {responseStatus}");
-                //    }
-                //}
+                   if (response.IsSuccessStatusCode)
+                   {
+                       responseStatus = response.StatusCode.ToString();
+                       Console.WriteLine(response.Content);
+                   }
+                   else
+                   {
+                       responseStatus = response.StatusCode.ToString();
+                       Console.WriteLine(response.Content);
+                       return NotFound($"Error con el QR, status: {responseStatus}");
+                   }
+                }
 
                 return Ok(orden);
             }
@@ -427,7 +519,6 @@ namespace Server.Controllers
             {
                 Console.WriteLine(ex.Message);
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
-                // return NotFound(ex.Message);
             }
         }
 

@@ -55,6 +55,9 @@ import { RouterModule } from '@angular/router';
     BrnAlertDialogContentDirective,
     RouterModule
   ],
+  providers: [
+    UserService
+  ],
   templateUrl: './edit-user.component.html',
   styleUrl: './edit-user.component.css'
 })

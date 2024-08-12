@@ -35,7 +35,7 @@ export interface SearchItem {
     CartComponent,
     RouterModule
   ],
-  providers: [ProductosService, PlaceServiceService],
+  providers: [ProductosService, PlaceServiceService,Router],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })

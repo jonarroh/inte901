@@ -2,10 +2,14 @@ import { Component, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserService } from '~/app/home/services/user.service';
 import { User } from '~/lib/types';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'admin-nav',
   standalone: true,
+  imports: [
+    RouterModule
+  ],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css'
 })
