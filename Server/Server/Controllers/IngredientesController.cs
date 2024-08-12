@@ -63,6 +63,7 @@ namespace Server.Controllers
             ingrediente.Cantidad = ingredienteDTO.Cantidad;
             ingrediente.UnidadMedida = ingredienteDTO.UnidadMedida;
             ingrediente.Estatus = ingredienteDTO.Estatus;
+            ingrediente.EnMenu = ingredienteDTO.EnMenu;
             ingrediente.UpdatedAt = ingredienteDTO.UpdatedAt;
 
             _context.Entry(ingrediente).State = EntityState.Modified;
@@ -97,6 +98,7 @@ namespace Server.Controllers
                 Cantidad = ingredienteDTO.Cantidad,
                 UnidadMedida = ingredienteDTO.UnidadMedida,
                 Estatus = ingredienteDTO.Estatus,
+                EnMenu = ingredienteDTO.EnMenu,
                 CreatedAt = ingredienteDTO.CreatedAt ?? DateTime.Now
             };
 
@@ -117,6 +119,7 @@ namespace Server.Controllers
                 Cantidad = ingredienteDTO.Cantidad,
                 UnidadMedida = ingredienteDTO.UnidadMedida,
                 Estatus = ingredienteDTO.Estatus,
+                EnMenu = ingredienteDTO.EnMenu,
                 CreatedAt = ingredienteDTO.CreatedAt ?? DateTime.Now
             });
 
