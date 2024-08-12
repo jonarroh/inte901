@@ -55,6 +55,7 @@ export class HlmToasterComponent {
 			description: 'group-[.toast]:text-muted-foreground',
 			actionButton: 'group-[.toast]:bg-black group-[.toast]:text-primary-foreground',
 			cancelButton: 'group-[.toast]:bg-muted group-[.toast]:text-muted-foreground',
+			error: 'group-[.toast]:bg-error group-[.toast]:text-error-foreground',
 		},
 	});
 	offset = input<ToasterProps['offset']>(null);

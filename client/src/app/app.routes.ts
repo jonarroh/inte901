@@ -94,16 +94,19 @@ export const routes: Routes = [
   },
   {
     path: 'orders',
+    canActivate: [AuthenticatedGuard],
     component: PedidosUserComponent,
     
   },
   {
     path: 'estatus/:id',
+    canActivate: [AuthenticatedGuard],
     component: PedidoStateComponent,
     
   },
   {
     path: 'estatus',
+    canActivate: [AuthenticatedGuard],
     component: PedidoStateComponent
   },
   {
@@ -121,19 +124,23 @@ export const routes: Routes = [
   },{
 
     path: 'places/:id',
+    canActivate: [AuthenticatedGuard],
     component: DescriptionPlaceComponent
   },
   {
     path: 'reserves',
+    canActivate: [AuthenticatedGuard],
     component: ReservesComponent
   },
   {
     path:'reserves/checkout',
+    canActivate: [AuthenticatedGuard],
     component: CheckoutReComponent
   },
 
   {
     path: 'reserves/:id',
+    canActivate: [AuthenticatedGuard],
     component: ReservesComponent
   },
 
@@ -164,10 +171,12 @@ export const routes: Routes = [
   },
   {
     path:'edit/address',
+    canActivate: [AuthenticatedGuard],
     component: AddDireccionComponent,
   },
   {
     path:'edit/payment',
+    canActivate: [AuthenticatedGuard],
     component: AddCardComponent
   }
 ];
