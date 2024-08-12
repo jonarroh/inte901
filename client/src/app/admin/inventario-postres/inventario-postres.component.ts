@@ -9,12 +9,12 @@ import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import { BrnDialogTriggerDirective, BrnDialogContentDirective } from '@spartan-ng/ui-dialog-brain';
 import { from, map, Observable } from 'rxjs';
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { InventarioMP } from './interface/inventarioMP';
-import { InventarioMPService } from './service/inventario-mp.service';
+import { InventarioPostre } from './interface/InventarioPostres';
+import { InventarioPostresService } from './service/inventario-postres.service';
 import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
-  selector: 'app-inventario-mp',
+  selector: 'app-inventario-postres',
   standalone: true,
   imports: [
     NavComponent,
@@ -32,30 +32,30 @@ import { FormsModule, NgForm } from '@angular/forms';
     AsyncPipe,
     FormsModule
   ],
-  templateUrl: './inventario-mp.component.html',
-  styleUrls: ['./inventario-mp.component.css']
+  templateUrl: './inventario-postres.component.html',
+  styleUrls: ['./inventario-postres.component.css']
 })
-export class InventarioMPComponent {
-  inventarioMPService = inject(InventarioMPService);
-  inventarios$: Observable<InventarioMP[]>;
-  inventario: InventarioMP = {};
+export class InventarioPostresComponent {
+  inventarioPostresService = inject(InventarioPostresService);
+  inventarios$: Observable<InventarioPostre[]>;
+  inventario: InventarioPostre = {};
   editMode: boolean = false;
 
   constructor() {
-    this.inventarios$ = this.inventarioMPService.getInventarios().pipe(
+    this.inventarios$ = this.inventarioPostresService.getInventarios().pipe(
       map(inventarios => inventarios.filter(inventario => inventario.estatus === 1))
     );
   }
 
   trackByInventarioId(index: number, inventario: any): number {
-    return inventario.id!;
+    return inventario.idPostre!;
   }
 
   onSubmitAdd(form: NgForm) {
     if (form.valid) {
       this.inventario.estatus = 1;
       this.inventario.createdAt = new Date().toISOString();
-      this.inventarioMPService.registrarInventario(this.inventario).subscribe(response => {
+      this.inventarioPostresService.registrarInventario(this.inventario).subscribe(response => {
         console.log('Inventario registrado:', response);
         form.resetForm();
         this.inventario = {}; // Reiniciar el objeto inventario
@@ -66,7 +66,7 @@ export class InventarioMPComponent {
 
   onSubmitEdit(form: NgForm) {
     if (form.valid) {
-      this.inventarioMPService.editarInventario(this.inventario.id!, this.inventario).subscribe(response => {
+      this.inventarioPostresService.editarInventario(this.inventario.idPostre!, this.inventario).subscribe(response => {
         console.log('Inventario actualizado:', response);
         form.resetForm();
         this.inventario = {}; // Reiniciar el objeto inventario
@@ -82,7 +82,7 @@ export class InventarioMPComponent {
     addButton?.click();
   }
 
-  onEdit(inventario: InventarioMP) {
+  onEdit(inventario: InventarioPostre) {
     this.inventario = { ...inventario };
     this.editMode = true;
     const editButton = document.getElementById('edit-inventario-trigger');
@@ -90,14 +90,14 @@ export class InventarioMPComponent {
   }
 
   onDelete(id: number) {
-    this.inventarioMPService.eliminarInventario(id).subscribe(() => {
+    this.inventarioPostresService.eliminarInventario(id).subscribe(() => {
       console.log('Inventario eliminado');
       this.refreshInventarios();
     });
   }
 
   refreshInventarios() {
-    this.inventarios$ = this.inventarioMPService.getInventarios().pipe(
+    this.inventarios$ = this.inventarioPostresService.getInventarios().pipe(
       map(inventarios => inventarios.filter(inventario => inventario.estatus === 1))
     );
   }

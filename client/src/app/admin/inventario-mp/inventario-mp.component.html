@@ -1,1 +1,113 @@
-<p>inventario-mp works!</p>
+<div class="flex-1 flex justify-center" style="width: calc(100vw - 18rem);">
+    <h1 class="text-5xl font-bold pt-5 mt-5 text-secondary">Inventario Materia Prima</h1>
+  </div>
+  
+  <div class="flex justify-end my-5 me-5 pr-5">
+    <!-- Botón para agregar inventario -->
+    <hlm-dialog>
+      <button id="add-inventario-trigger" brnDialogTrigger hlmBtn (click)="onAdd()" class="bg-secondary text-white">Agregar Inventario</button>
+      <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+        <hlm-dialog-header>
+          <h3 hlmDialogTitle>Agregar Inventario</h3>
+          <p hlmDialogDescription>Ingresa los detalles del nuevo inventario. Haz clic en guardar cuando termines.</p>
+        </hlm-dialog-header>
+        <form (ngSubmit)="onSubmitAdd(inventarioFormAdd)" #inventarioFormAdd="ngForm">
+          <div class="py-4 grid gap-4">
+            <!-- Campos del formulario -->
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="idMateriaPrima-add" class="text-right">ID Materia Prima</label>
+              <input hlmInput id="idMateriaPrima-add" name="idMateriaPrima" type="number" [(ngModel)]="inventario.idMateriaPrima" placeholder="ID de la materia prima" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="cantidad-add" class="text-right">Cantidad</label>
+              <input hlmInput id="cantidad-add" name="cantidad" type="number" [(ngModel)]="inventario.cantidad" placeholder="Cantidad" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="unidadMedida-add" class="text-right">Unidad de Medida</label>
+              <input hlmInput id="unidadMedida-add" name="unidadMedida" [(ngModel)]="inventario.unidadMedida" placeholder="Unidad de medida" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="IdCompra-add" class="text-right">ID Compra</label>
+              <input hlmInput id="IdCompra-add" name="IdCompra" type="number" [(ngModel)]="inventario.idCompra" placeholder="ID de la compra" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="Caducidad-add" class="text-right">Caducidad</label>
+              <input hlmInput id="Caducidad-add" name="Caducidad" type="date" [(ngModel)]="inventario.caducidad" placeholder="Fecha de caducidad" class="col-span-3" required />
+            </div>
+          </div>
+          <hlm-dialog-footer>
+            <button hlmBtn type="submit">Guardar</button>
+          </hlm-dialog-footer>
+        </form>
+      </hlm-dialog-content>
+    </hlm-dialog>
+  
+    <!-- Botón para editar inventario (se muestra al hacer clic en "Editar" en la lista de inventarios) -->
+    <hlm-dialog>
+      <button id="edit-inventario-trigger" brnDialogTrigger hlmBtn class="hidden">Editar Inventario</button>
+      <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+        <hlm-dialog-header>
+          <h3 hlmDialogTitle>Editar Inventario</h3>
+          <p hlmDialogDescription>Actualiza los detalles del inventario. Haz clic en actualizar cuando termines.</p>
+        </hlm-dialog-header>
+        <form (ngSubmit)="onSubmitEdit(inventarioFormEdit)" #inventarioFormEdit="ngForm">
+          <div class="py-4 grid gap-4">
+            <!-- Campos del formulario -->
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="idMateriaPrima-edit" class="text-right">ID Materia Prima</label>
+              <input hlmInput id="idMateriaPrima-edit" name="idMateriaPrima" type="number" [(ngModel)]="inventario.idMateriaPrima" placeholder="ID de la materia prima" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="cantidad-edit" class="text-right">Cantidad</label>
+              <input hlmInput id="cantidad-edit" name="cantidad" type="number" [(ngModel)]="inventario.cantidad" placeholder="Cantidad" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="unidadMedida-edit" class="text-right">Unidad de Medida</label>
+              <input hlmInput id="unidadMedida-edit" name="unidadMedida" [(ngModel)]="inventario.unidadMedida" placeholder="Unidad de medida" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="IdCompra-edit" class="text-right">ID Compra</label>
+              <input hlmInput id="IdCompra-edit" name="IdCompra" type="number" [(ngModel)]="inventario.idCompra" placeholder="ID de la compra" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="Caducidad-edit" class="text-right">Caducidad</label>
+              <input hlmInput id="Caducidad-edit" name="Caducidad" type="date" [(ngModel)]="inventario.caducidad" placeholder="Fecha de caducidad" class="col-span-3" required />
+            </div>
+          </div>
+          <hlm-dialog-footer>
+            <button hlmBtn type="submit">Actualizar</button>
+          </hlm-dialog-footer>
+        </form>
+      </hlm-dialog-content>
+    </hlm-dialog>
+  </div>
+  
+  <div class="overflow-x-auto p-5">
+    <table class="table-auto w-full text-center">
+      <thead>
+        <tr>
+          <th class="px-4 py-2">ID</th>
+          <th class="px-4 py-2">ID Materia Prima</th>
+          <th class="px-4 py-2">Cantidad</th>
+          <th class="px-4 py-2">Unidad de Medida</th>
+          <th class="px-4 py-2">ID Compra</th>
+          <th class="px-4 py-2">Caducidad</th>
+          <th class="px-4 py-2">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let inventario of (inventarios$ | async); trackBy: trackByInventarioId">
+          <td class="border px-4 py-2">{{ inventario.id }}</td>
+          <td class="border px-4 py-2">{{ inventario.idMateriaPrima }}</td>
+          <td class="border px-4 py-2">{{ inventario.cantidad }}</td>
+          <td class="border px-4 py-2">{{ inventario.unidadMedida }}</td>
+          <td class="border px-4 py-2">{{ inventario.idCompra }}</td>
+          <td class="border px-4 py-2">{{ inventario.caducidad }}</td>
+          <td class="border px-4 py-2">
+            <button (click)="onEdit(inventario)" class="bg-white text-secondary px-4 py-2 rounded border border-secondary mr-4">Editar</button>
+            <button (click)="onDelete(inventario.id!)" class="bg-secondary text-white px-4 py-2 rounded">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
