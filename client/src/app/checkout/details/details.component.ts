@@ -21,9 +21,6 @@ export class DetailsComponent {
     constructor(private checkoutService: CheckoutService,private cartService: CartService, private router : Router) {
       
     }
-
-
-
     order = signal<Order>({} as Order);
     isOrderToStore = signal<boolean>(JSON.parse(localStorage.getItem('isOrderToStore') || 'false'));
     isPaidWithCard = signal<boolean>(JSON.parse(localStorage.getItem('isPaidWithCard') || 'false'));
