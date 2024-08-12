@@ -34,7 +34,7 @@ import { toast } from 'ngx-sonner';
     SignalInputDirective,
     RouterModule
   ],
-  providers: [AuthService, Router],
+  providers: [AuthService, Router, UserService],
   templateUrl: './left-seccion.component.html'
 })
 export class LeftSeccionComponent {

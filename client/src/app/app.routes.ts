@@ -30,6 +30,7 @@ import { PedidosUserComponent } from './pedidos/pedidos-user/pedidos-user.compon
 import { ProcessStateComponent } from './pedidos/pedido-state/process-state/process-state.component';
 import { AdminGuard } from './auth/admin.guard';
 import { UsersComponent } from './admin/users/users.component';
+import { CheckoutReComponent } from './reserves/checkout/checkout.component';
 
 
 
@@ -125,6 +126,10 @@ export const routes: Routes = [
   {
     path: 'reserves',
     component: ReservesComponent
+  },
+  {
+    path:'reserves/checkout',
+    component: CheckoutReComponent
   },
 
   {

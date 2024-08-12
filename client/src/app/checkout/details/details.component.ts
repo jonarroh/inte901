@@ -30,6 +30,7 @@ export class DetailsComponent {
     selectedCard = signal<CreditCardWithCvv>(JSON.parse(localStorage.getItem('selectedCard') || `{}`));
     selectedAddress = signal<Address>(JSON.parse(localStorage.getItem('selectedAddress') || '{}'));
     products = this.cartService.cartSignal;
+    ordes = this.checkoutService.orderSignal;
 
     getSubtotal() {
       return this.products().reduce((acc, product) => acc + product.precio, 0);

@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { es } from 'date-fns/locale';
 import { User } from '~/lib/types';
+import { toast } from 'ngx-sonner';
 
 
 @Component({
@@ -18,7 +19,11 @@ import { User } from '~/lib/types';
     FormsModule,
     SignalInputDirective,
     LucideAngularModule
+
   ],
+  providers: [
+    RegisterService,
+    Router],
   templateUrl: './form.component.html',
   styleUrl: './form.component.css'
 })
@@ -96,6 +101,14 @@ export class FormComponent {
     console.log(this.formModel.errors());
 
     this.disabled.set(true);
+    //si la fecha de nacimiento es invalida mostrar un mensaje de error con toast
+    const today = new Date();
+    const dob = new Date(this.formModel.controls.dob.value());
+    if(dob > today){
+      toast.error('La fecha de nacimiento no puede ser mayor a la fecha actual');
+      this.disabled.set(false);
+      return;
+    }
     
     const user : User = {
       creditCards:[],
@@ -119,11 +132,12 @@ export class FormComponent {
         next: (response) =>{
           console.log(response);
           console.log('Usuario registrado correctamente');
+          toast.success('Usuario registrado correctamente');
 
           this.router.navigate(['/login']);
         },
         error : (error)=>{
-          
+          toast.error('Error al registrar el usuario');
           this.disabled.set(false); // para que no le pueda dar al boton de clic
           console.error(error)
         },
