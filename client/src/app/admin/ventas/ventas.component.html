@@ -14,7 +14,8 @@
               <span>{{ item.product }}</span>
               <span>{{ item.priceSingle }}</span>
               <span>{{ item.quantity }}</span>
-              <button hlmBtn variant="destructive" (click)="quitarItem(item)">Eliminar</button>
+              <button hlmBtn variant="destructive"
+                (click)="quitarItem(item)">Eliminar</button>
             </div>
           </div>
         </div>
@@ -35,15 +36,19 @@
     </hlm-sheet>
 
     <hlm-dialog class="w-[500px] bg-white">
-      <button id="edit-profile" variant="success" brnDialogTrigger hlmBtn>Generar venta</button>
-      <hlm-dialog-content class="min-w-[970px] w-full bg-success" *brnDialogContent="let ctx">
+      <button id="edit-profile" variant="success" brnDialogTrigger
+        hlmBtn>Generar venta</button>
+      <hlm-dialog-content class="min-w-[970px] w-full bg-success"
+        *brnDialogContent="let ctx">
         <hlm-dialog-header>
           <h3 hlmDialogTitle>Nueva orden</h3>
         </hlm-dialog-header>
         <form>
           <div class="grid grid-cols-4 gap-4">
             <div *ngFor="let producto of (productos$ | async)">
-              <section class="w-56 h-40 border border-solid border-black rounded-md" hlmCard>
+              <section
+                class="w-56 h-40 border border-solid border-black rounded-md"
+                hlmCard>
                 <div hlmCardHeader>
                   <!-- <img [src]="imageUrl()" alt="producto" class="w-full h-20 object-cover" /> -->
                   <p>
@@ -54,8 +59,12 @@
                   </p>
                 </div>
                 <div hlmCardFooter class="justify-between flex items-center">
-                  <input type="number" variant="primary" hlmInput class="w-28" placeholder="Cantidad" min="0" step="1" [(ngModel)]="cantidades[producto.id||0]"  [ngModelOptions]="{standalone: true}">
-                  <button hlmBtn variant="primary" class="sm" (click)="addToCart(producto)">Agregar</button>
+                  <input type="number" variant="primary" hlmInput class="w-28"
+                    placeholder="Cantidad" min="0" step="1"
+                    [(ngModel)]="cantidades[producto.id||0]"
+                    [ngModelOptions]="{standalone: true}">
+                  <button hlmBtn variant="primary" class="sm"
+                    (click)="addToCart(producto)">Agregar</button>
                 </div>
               </section>
             </div>
@@ -65,8 +74,166 @@
     </hlm-dialog>
   </div>
 
-  <div class="overflow-y-auto min-w-full">
-    <hlm-table class="w-full min-w-full">
+  <div class="flex flex-col justify-between gap-4 sm:flex-row">
+    <input hlmInput class="w-full md:w-80" placeholder="Filtrar fechas"
+      [ngModel]="_emailFilter()"
+      (ngModelChange)="_rawFilterInput.set($event)" />
+
+    <button hlmBtn variant="outline" align="end" [brnMenuTriggerFor]="menu">
+      Ver Columnas
+      <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
+    </button>
+    <ng-template #menu>
+      <hlm-menu class="w-32">
+        @for (column of _brnColumnManager.allColumns; track column.name) {
+        <button hlmMenuItemCheckbox
+          [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
+          [checked]="_brnColumnManager.isColumnVisible(column.name)"
+          (triggered)="_brnColumnManager.toggleVisibility(column.name)">
+          <hlm-menu-item-check />
+          <span>{{ column.label }}</span>
+        </button>
+        }
+      </hlm-menu>
+    </ng-template>
+  </div>
+
+  <brn-table hlm stickyHeader
+    class="border-border mt-4 block h-[335px] overflow-auto rounded-md border"
+    [dataSource]="_filteredSortedPaginatedPayments()"
+    [displayedColumns]="_allDisplayedColumns()" [trackBy]="_trackBy">
+    <brn-column-def name="select" class="w-12">
+      <hlm-th *brnHeaderDef>
+        <hlm-checkbox [checked]="_checkboxState()"
+          (changed)="handleHeaderCheckboxChange()" />
+      </hlm-th>
+      <hlm-td *brnCellDef="let element">
+        <hlm-checkbox [checked]="_isOrderSelected(element)"
+          (changed)="togglePayment(element)" />
+      </hlm-td>
+    </brn-column-def>
+    <brn-column-def name="OrderDate" class="flex-1">
+      <hlm-th truncate *brnHeaderDef>Fecha de orden</hlm-th>
+      <hlm-td truncate *brnCellDef="let element">
+        {{ element.orderDate | titlecase }}
+      </hlm-td>
+    </brn-column-def>
+    <brn-column-def name="Total" class="flex-1">
+      <hlm-th *brnHeaderDef>Total de venta</hlm-th>
+      <hlm-td class="font-medium tabular-nums" *brnCellDef="let element">
+        $ {{ element.total }} MXN
+      </hlm-td>
+    </brn-column-def>
+    <brn-column-def name="Detalles" class="flex-1">
+      <hlm-th *brnHeaderDef>
+        Productos
+      </hlm-th>
+      <hlm-td class="font-medium tabular-nums" *brnCellDef="let element">
+        <button variant="success" hlmBtn (click)="getDetails(element || 0)">
+          Detalle
+        </button>
+      </hlm-td>
+    </brn-column-def>
+    <brn-column-def name="Status" class="w-60 lg:flex-1">
+      <hlm-th *brnHeaderDef>
+        <button hlmBtn size="sm" variant="ghost"
+          (click)="handleEmailSortChange()">
+          Status
+          <hlm-icon class="ml-3" size="sm" name="lucideArrowUpDown" />
+        </button>
+      </hlm-th>
+      <hlm-td truncate *brnCellDef="let element">
+        <ng-container [ngSwitch]="element.status">
+          <span *ngSwitchCase="'Pendiente'" style="color: orange;">{{
+            element.status }}</span>
+          <span *ngSwitchCase="'Cancelado'" style="color: red;">{{
+            element.status }}</span>
+          <span *ngSwitchCase="'Entregado'" style="color: green;">{{
+            element.status }}</span>
+        </ng-container>
+      </hlm-td>
+    </brn-column-def>
+    <brn-column-def name="Acciones" class="flex-1">
+      <hlm-th *brnHeaderDef>
+        Acciones
+      </hlm-th>
+      <hlm-td class="font-medium tabular-nums" *brnCellDef="let element">
+        @if (element.status === 'Pendiente') {
+        <brn-popover [state]="popoverStates[element.id||0] || 'closed'"
+          (stateChanged)="stateChanged($event, element.id||0)" sideOffset="5"
+          closeDelay="100">
+          <button class="flex-1 justify-between" id="{{element.id}}"
+            variant="success" brnPopoverTrigger hlmBtn>
+            {{ currentFramework(element.id||0) ?
+            currentFramework(element.id||0)?.label : 'Seleccionar' }}
+          </button>
+
+          <brn-cmd id="{{element.id}}" *brnPopoverContent="let ctx"
+            hlmPopoverContent hlm class="p-0 mx-2 flex-1">
+            <div *brnCmdEmpty hlmCmdEmpty>Sin resultados.</div>
+            <brn-cmd-list id="{{element.id}}" hlm>
+              <brn-cmd-group hlm>
+                <button *ngFor="let framework of frameworks" brnCmdItem
+                  [value]="framework.value"
+                  (selected)="commandSelected(framework, element.id||0)" hlm>
+                  <hlm-icon
+                    [class.opacity-0]="currentFramework(element.id||0)?.value !== framework.value"
+                    name="lucideCheck" hlmCmdIcon />
+                  {{ framework.label }}
+                  <span class="hidden" [(ngModel)]="idorderstatus">{{
+                    element.id }}</span>
+                </button>
+              </brn-cmd-group>
+            </brn-cmd-list>
+          </brn-cmd>
+        </brn-popover>
+        } @else {
+        <button disabled variant="success" hlmBtn>
+          Seleccionar
+        </button>
+        }
+      </hlm-td>
+    </brn-column-def>
+    <brn-column-def name="actions" class="w-16">
+
+    </brn-column-def>
+    <div class="flex items-center justify-center p-20 text-muted-foreground"
+      brnNoDataRow>No hay datos de ordenes
+      realizadas</div>
+  </brn-table>
+
+  <div class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center"
+    *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange">
+    <span class="text-sm text-muted-foreground">{{ _selected().length }} de {{
+      _totalElements() }} Ordenes
+    </span>
+    <div class="flex mt-2 sm:mt-0">
+      <brn-select class="inline-block"
+        placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
+        <hlm-select-trigger class="inline-flex mr-1 w-15 h-9">
+          <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content>
+          @for (size of _availablePageSizes; track size) {
+          <hlm-option [value]="size">
+            {{ size === 10000 ? 'All' : size }}
+          </hlm-option>
+          }
+        </hlm-select-content>
+      </brn-select>
+
+      <div class="flex space-x-1">
+        <button size="sm" variant="outline" hlmBtn
+          [disabled]="!ctx.decrementable()" (click)="ctx.decrement()">
+          Anterior
+        </button>
+        <button size="sm" variant="outline" hlmBtn
+          [disabled]="!ctx.incrementable()" (click)="ctx.increment()">
+          Siguiente
+        </button>
+      </div>
+    </div>
+    <!-- <hlm-table class="w-full min-w-full">
       <hlm-trow>
         <hlm-th class="flex-1">Ticket</hlm-th>
         <hlm-th class="flex-1">Fecha</hlm-th>
@@ -126,15 +293,17 @@
           }
         </hlm-td>
       </hlm-trow>
-    </hlm-table>
+    </hlm-table> -->
   </div>
 </div>
 
 <hlm-dialog class="w-[500px]">
-  <button class="hidden" hlmBtn variant="success" brnDialogTrigger id="detail-show">
+  <button class="hidden" hlmBtn variant="success" brnDialogTrigger
+    id="detail-show">
     Detalle
   </button>
-  <hlm-dialog-content class="min-w-[800px] w-full bg-success" *brnDialogContent="let ctx">
+  <hlm-dialog-content class="min-w-[800px] w-full bg-success"
+    *brnDialogContent="let ctx">
     <hlm-dialog-header>
       <h3 hlmDialogTitle>Detalle de la orden</h3>
     </hlm-dialog-header>
@@ -163,7 +332,8 @@
             </hlm-td>
             <hlm-td class="flex-1">
               @if (detalle.status === 'Pendiente') {
-              <button hlmBtn class="flex-1" variant="destructive" (click)="cancelarProducto(detalle.id||0)">
+              <button hlmBtn class="flex-1" variant="destructive"
+                (click)="cancelarProducto(detalle.id||0)">
                 Cancelar
               </button>
               } @else {
@@ -180,7 +350,8 @@
 </hlm-dialog>
 
 <hlm-alert-dialog variant="success" (closed)="resetCombo()">
-  <button id="edit-status" class="hidden" variant="success" brnAlertDialogTrigger hlmBtn>Cambiar status</button>
+  <button id="edit-status" class="hidden" variant="success"
+    brnAlertDialogTrigger hlmBtn>Cambiar status</button>
   <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
     <hlm-alert-dialog-header>
       <h3 hlmAlertDialogTitle>Actualizar status de la orden</h3>
@@ -190,14 +361,17 @@
       </p>
     </hlm-alert-dialog-header>
     <hlm-alert-dialog-footer>
-      <button hlmAlertDialogCancel (click)="ctx.close()" variant="destructive">Cancelar</button>
-      <button hlmAlertDialogAction (click)="updateStatus()" variant="success">Actualizar</button>
+      <button hlmAlertDialogCancel (click)="ctx.close()"
+        variant="destructive">Cancelar</button>
+      <button hlmAlertDialogAction (click)="updateStatus()"
+        variant="success">Actualizar</button>
     </hlm-alert-dialog-footer>
   </hlm-alert-dialog-content>
 </hlm-alert-dialog>
 
 <hlm-alert-dialog variant="success">
-  <button id="edit-status-producto" class="hidden" variant="success" brnAlertDialogTrigger hlmBtn>
+  <button id="edit-status-producto" class="hidden" variant="success"
+    brnAlertDialogTrigger hlmBtn>
     Cambiar status
   </button>
   <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
@@ -211,8 +385,10 @@
       </p>
     </hlm-alert-dialog-header>
     <hlm-alert-dialog-footer>
-      <button hlmAlertDialogCancel (click)="ctx.close()" variant="destructive">Cancelar</button>
-      <button hlmAlertDialogAction (click)="updateStatusProducto()" variant="success">Actualizar</button>
+      <button hlmAlertDialogCancel (click)="ctx.close()"
+        variant="destructive">Cancelar</button>
+      <button hlmAlertDialogAction (click)="updateStatusProducto()"
+        variant="success">Actualizar</button>
     </hlm-alert-dialog-footer>
   </hlm-alert-dialog-content>
 </hlm-alert-dialog>
