@@ -165,20 +165,45 @@ namespace Server.Controllers
 					{
 						detalle.Status = "Entregada";
 
-						//var match = Regex.Match(detalle.Presentation, @"\d+");
-						//int cant = int.Parse(match.Value);
-						//int totalInventario = 0;
-						//totalInventario = cant * detalle.Quantity;
+						var match = detalle.Presentation != null ? Regex.Match(detalle.Presentation, @"\d+") : null;
+						int cant = int.Parse(match?.Value ?? "0");
+
+						int totalInventario = (int)(cant * detalle.Quantity!);
 
 						if (detalle.IdMP != null)
 						{
 							var mp = await _context.InventarioMPs.Where(i => i.IdMateriaPrima == detalle.IdMP).FirstOrDefaultAsync();
+							if (mp != null)
+							{
+								// Realiza la conversión de unidades si es necesario.
+								switch (detalle.UnitType)
+								{
+									case "Kg":
+										if (mp.UnidadMedida == "Gr")
+										{
+											totalInventario *= 1000; // Convierte de Kg a Gr.
+										}
+										break;
+									case "Lt":
+										if (mp.UnidadMedida == "Ml")
+										{
+											totalInventario *= 1000; // Convierte de Lt a Ml.
+										}
+										break;
+									case "Ml":
+										if (mp.UnidadMedida == "Lt")
+										{
+											totalInventario /= 1000; // Convierte de Ml a Lt.
+										}
+										break;
+									case "Pieza":
+										// No se requiere conversión adicional.
+										break;
+								}
 
-							//if (mp != null)
-							//{
-							//	mp.Cantidad += detalle.Quantity;
-							//	_context.Update(mp);
-							//}
+								mp.Cantidad += totalInventario;
+								_context.Update(mp);
+							}
 						}
 					}
 				}
@@ -188,12 +213,12 @@ namespace Server.Controllers
 					{
 						detalle.Status = status;
 
-						//_context.Update(detalle);
+						_context.Update(detalle);
 					}
 				}
 
-				//_context.Update(compra);
-				//await _context.SaveChangesAsync();
+				_context.Update(compra);
+				await _context.SaveChangesAsync();
 
 				return Ok(compra);
 			}

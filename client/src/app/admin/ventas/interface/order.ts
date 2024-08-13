@@ -13,6 +13,6 @@ export interface Order {
   isDelivery?: boolean;
   detailOrders?: DetailOrder[];
   user?: User;
-  creditCard?: CreditCard | undefined;
-  direcciones?: Address | undefined;
+  creditCard?: CreditCard | undefined | null;
+  direcciones?: Address | undefined | null;
 }

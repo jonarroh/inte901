@@ -1,8 +1,12 @@
-<div class="container mx-auto w-full p-4">
+<div class="container mx-auto max-h-screen overflow-y-auto w-full p-4">
+  <div class="flex-1 flex justify-center">
+    <h1 class="text-5xl font-bold mt-1 mb-2 text-secondary">Ordenes</h1>
+  </div>
+  @if(rol === 'Admin' || rol === 'Caja'){
   <div class="flex space-x-3 justify-end mb-4">
     <hlm-sheet side="right" class="bg-white">
       <button id="carrito" variant="success" brnSheetTrigger hlmBtn>
-        Carrito
+        Lista de ordenes
       </button>
       <hlm-sheet-content *brnSheetContent="let ctx" class="bg-white">
         <hlm-sheet-header>
@@ -11,17 +15,18 @@
         <div class="py-4 grid gap-4">
           <div *ngFor="let item of carrito">
             <div class="flex justify-between">
-              <span>{{ item.product }}</span>
-              <span>{{ item.priceSingle }}</span>
-              <span>{{ item.quantity }}</span>
-              <button hlmBtn variant="destructive" (click)="quitarItem(item)">Eliminar</button>
+              <span class="mt-1">{{ item.product?.nombre }}</span>
+              <span class="mt-1">${{ item.priceSingle }} MXN</span>
+              <span class="mt-1">x{{ item.quantity }}</span>
+
+              <button class="ml-3" hlmBtn variant="destructive" (click)="quitarItem(item)">Eliminar</button>
             </div>
           </div>
         </div>
-        <div class="flex justify-between">
+        <div class="flex justify-between mt-4">
           <ng-container *ngIf="carrito.length > 0">
-            <span>Total:</span>
-            <span>${{ total }} MXN</span>
+            <span class="mt-2">Total:</span>
+            <span class="mt-2">${{ total }} MXN</span>
             <hlm-toaster />
             <button variant="success" hlmBtn (click)="enviarOrden()">
               Cobrar
@@ -34,9 +39,9 @@
       </hlm-sheet-content>
     </hlm-sheet>
 
-    <hlm-dialog class="w-[500px] bg-white">
+    <hlm-dialog class="bg-white">
       <button id="edit-profile" variant="success" brnDialogTrigger hlmBtn>Generar venta</button>
-      <hlm-dialog-content class="min-w-[970px] w-full bg-success" *brnDialogContent="let ctx">
+      <hlm-dialog-content class="min-w-[970px]" *brnDialogContent="let ctx">
         <hlm-dialog-header>
           <h3 hlmDialogTitle>Nueva orden</h3>
         </hlm-dialog-header>
@@ -54,19 +59,178 @@
                   </p>
                 </div>
                 <div hlmCardFooter class="justify-between flex items-center">
-                  <input type="number" variant="primary" hlmInput class="w-28" placeholder="Cantidad" min="0" step="1" [(ngModel)]="cantidades[producto.id||0]"  [ngModelOptions]="{standalone: true}">
-                  <button hlmBtn variant="primary" class="sm" (click)="addToCart(producto)">Agregar</button>
+                  <input type="number" hlmInput class="w-28" placeholder="Cantidad" min="0" step="1"
+                    [(ngModel)]="cantidades[producto.id||0]" [ngModelOptions]="{standalone: true}">
+                  <button hlmBtn variant="success" class="sm" (click)="addToCart(producto)">Agregar</button>
                 </div>
               </section>
             </div>
           </div>
         </form>
+        <br>
       </hlm-dialog-content>
     </hlm-dialog>
   </div>
+  }
 
-  <div class="overflow-y-auto min-w-full">
-    <hlm-table class="w-full min-w-full">
+  <div class="flex flex-col justify-between gap-4 sm:flex-row">
+    <input hlmInput class="w-full md:w-80" placeholder="Filtrar fechas" [ngModel]="_emailFilter()"
+      (ngModelChange)="_rawFilterInput.set($event)" />
+
+    <button hlmBtn variant="outline" align="end" [brnMenuTriggerFor]="menu">
+      Ver Columnas
+      <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
+    </button>
+    <ng-template #menu>
+      <hlm-menu class="w-32">
+        @for (column of _brnColumnManager.allColumns; track column.name) {
+        <button hlmMenuItemCheckbox [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
+          [checked]="_brnColumnManager.isColumnVisible(column.name)"
+          (triggered)="_brnColumnManager.toggleVisibility(column.name)">
+          <hlm-menu-item-check />
+          <span>{{ column.label }}</span>
+        </button>
+        }
+      </hlm-menu>
+    </ng-template>
+  </div>
+
+  <brn-table hlm stickyHeader class="border-border mt-4 block h-[335px] overflow-auto rounded-md border"
+    [dataSource]="_filteredSortedPaginatedPayments()" [displayedColumns]="_allDisplayedColumns()" [trackBy]="_trackBy">
+    <brn-column-def name="select" class="w-12">
+      <hlm-th *brnHeaderDef>
+        <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()" />
+      </hlm-th>
+      <hlm-td *brnCellDef="let element">
+        <hlm-checkbox [checked]="_isOrderSelected(element)" (changed)="togglePayment(element)" />
+      </hlm-td>
+    </brn-column-def>
+    <brn-column-def name="OrderDate" class="flex-1">
+      <hlm-th truncate *brnHeaderDef>Fecha de orden</hlm-th>
+      <hlm-td truncate *brnCellDef="let element">
+        {{ element.orderDate | titlecase }}
+      </hlm-td>
+    </brn-column-def>
+    <brn-column-def name="Total" class="flex-1">
+      <hlm-th *brnHeaderDef>Total de venta</hlm-th>
+      <hlm-td class="font-medium tabular-nums" *brnCellDef="let element">
+        $ {{ element.total }} MXN
+      </hlm-td>
+    </brn-column-def>
+    <brn-column-def name="Detalles" class="flex-1">
+      <hlm-th *brnHeaderDef>
+        Productos
+      </hlm-th>
+      <hlm-td class="font-medium tabular-nums" *brnCellDef="let element">
+        <button variant="success" hlmBtn (click)="getDetails(element || 0)">
+          Detalle
+        </button>
+      </hlm-td>
+    </brn-column-def>
+    <brn-column-def name="Status" class="w-60 lg:flex-1">
+      <hlm-th *brnHeaderDef>
+        <button hlmBtn size="sm" variant="ghost" (click)="handleEmailSortChange()">
+          Status
+          <hlm-icon class="ml-3" size="sm" name="lucideArrowUpDown" />
+        </button>
+      </hlm-th>
+      <hlm-td truncate *brnCellDef="let element">
+        <ng-container [ngSwitch]="element.status">
+          <span *ngSwitchCase="'Ordenado'" hlmBadge variant="secondary" style="color: white;">{{
+            element.status }}</span>
+          <span *ngSwitchCase="'Cancelado'" style="color: red;">{{
+            element.status }}</span>
+          <span *ngSwitchCase="'Aceptado'" style="color: lightblue;">{{
+            element.status }}</span>
+          <span *ngSwitchCase="'Recibido'" style="color: green;">{{
+            element.status }}</span>
+        </ng-container>
+      </hlm-td>
+    </brn-column-def>
+    <brn-column-def name="TipoEntrega" class="flex-1">
+      <hlm-th *brnHeaderDef>
+        Tipo de entrega
+      </hlm-th>
+      <hlm-td class="font-medium tabular-nums" *brnCellDef="let element">
+        @if (element.isDelivery === true) {
+        <span hlmBadge variant="secondary">Entrega a domicilio</span>
+        } @else {
+        <span hlmBadge variant="outline">Entrega en tienda</span>
+        }
+      </hlm-td>
+    </brn-column-def>
+    <brn-column-def name="Acciones" class="flex-1">
+      <hlm-th *brnHeaderDef>
+        Acciones
+      </hlm-th>
+      <hlm-td class="font-medium tabular-nums" *brnCellDef="let element">
+        @if (element.status === 'Ordenado') {
+        <brn-popover [state]="popoverStates[element.id||0] || 'closed'"
+          (stateChanged)="stateChanged($event, element.id||0)" sideOffset="5" closeDelay="100">
+          <button class="flex-1 justify-between" id="{{element.id}}" variant="success" brnPopoverTrigger hlmBtn>
+            {{ currentFramework(element.id||0) ?
+            currentFramework(element.id||0)?.label : 'Seleccionar' }}
+          </button>
+
+          <brn-cmd id="{{element.id}}" *brnPopoverContent="let ctx" hlmPopoverContent hlm class="p-0 mx-2 flex-1">
+            <div *brnCmdEmpty hlmCmdEmpty>Sin resultados.</div>
+            <brn-cmd-list id="{{element.id}}" hlm>
+              <brn-cmd-group hlm>
+                <button *ngFor="let framework of frameworks" brnCmdItem [value]="framework.value"
+                  (selected)="commandSelected(framework, element.id||0)" hlm>
+                  <hlm-icon [class.opacity-0]="currentFramework(element.id||0)?.value !== framework.value"
+                    name="lucideCheck" hlmCmdIcon />
+                  <span style="color: black">{{ framework.label }}</span>
+                  <span class="hidden" [(ngModel)]="idorderstatus">{{
+                    element.id }}</span>
+                </button>
+              </brn-cmd-group>
+            </brn-cmd-list>
+          </brn-cmd>
+        </brn-popover>
+        } @else {
+        <button disabled variant="success" hlmBtn>
+          Seleccionar
+        </button>
+        }
+      </hlm-td>
+    </brn-column-def>
+    <brn-column-def name="actions" class="w-16">
+
+    </brn-column-def>
+    <div class="flex items-center justify-center p-20 text-muted-foreground" brnNoDataRow>No hay datos de ordenes
+      realizadas</div>
+  </brn-table>
+
+  <div class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center"
+    *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange">
+    <span class="text-sm text-muted-foreground">{{ _selected().length }} de {{
+      _totalElements() }} Ordenes
+    </span>
+    <div class="flex mt-2 sm:mt-0">
+      <brn-select class="inline-block" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
+        <hlm-select-trigger class="inline-flex mr-1 w-15 h-9">
+          <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content>
+          @for (size of _availablePageSizes; track size) {
+          <hlm-option [value]="size">
+            {{ size === 10000 ? 'All' : size }}
+          </hlm-option>
+          }
+        </hlm-select-content>
+      </brn-select>
+
+      <div class="flex space-x-1">
+        <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.decrementable()" (click)="ctx.decrement()">
+          Anterior
+        </button>
+        <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.incrementable()" (click)="ctx.increment()">
+          Siguiente
+        </button>
+      </div>
+    </div>
+    <!-- <hlm-table class="w-full min-w-full">
       <hlm-trow>
         <hlm-th class="flex-1">Ticket</hlm-th>
         <hlm-th class="flex-1">Fecha</hlm-th>
@@ -126,7 +290,7 @@
           }
         </hlm-td>
       </hlm-trow>
-    </hlm-table>
+    </hlm-table> -->
   </div>
 </div>
 
@@ -134,7 +298,7 @@
   <button class="hidden" hlmBtn variant="success" brnDialogTrigger id="detail-show">
     Detalle
   </button>
-  <hlm-dialog-content class="min-w-[800px] w-full bg-success" *brnDialogContent="let ctx">
+  <hlm-dialog-content class="min-w-[800px] w-full bg-white" *brnDialogContent="let ctx">
     <hlm-dialog-header>
       <h3 hlmDialogTitle>Detalle de la orden</h3>
     </hlm-dialog-header>
@@ -179,7 +343,7 @@
   </hlm-dialog-content>
 </hlm-dialog>
 
-<hlm-alert-dialog variant="success" (closed)="resetCombo()">
+<hlm-alert-dialog class="bg-white" (closed)="resetCombo()">
   <button id="edit-status" class="hidden" variant="success" brnAlertDialogTrigger hlmBtn>Cambiar status</button>
   <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
     <hlm-alert-dialog-header>
@@ -196,7 +360,7 @@
   </hlm-alert-dialog-content>
 </hlm-alert-dialog>
 
-<hlm-alert-dialog variant="success">
+<hlm-alert-dialog class="bg-white">
   <button id="edit-status-producto" class="hidden" variant="success" brnAlertDialogTrigger hlmBtn>
     Cambiar status
   </button>

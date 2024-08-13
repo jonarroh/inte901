@@ -1,11 +1,13 @@
-<div class="flex-1 flex justify-center" style="width: calc(100vw - 18rem);">
-    <h1 class="text-5xl font-bold pt-5 mt-5 text-secondary">Ingredientes</h1>
+<div class="container mx-auto max-h-screen overflow-y-auto w-full p-4">
+  <div class="flex-1 flex justify-center" style="width: calc(100vw - 18rem);">
+    <h1 class="text-5xl font-bold mt-1 mb-2 text-secondary">Ingredientes</h1>
   </div>
-  
+
   <div class="flex justify-end my-5 me-5 pr-5">
     <!-- Botón para agregar ingrediente -->
     <hlm-dialog>
-      <button id="add-ingredient-trigger" brnDialogTrigger hlmBtn (click)="onAdd()" class="bg-secondary text-white">Agregar ingrediente</button>
+      <button id="add-ingredient-trigger" brnDialogTrigger hlmBtn (click)="onAdd()"
+        class="bg-secondary text-white">Agregar ingrediente</button>
       <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
         <hlm-dialog-header>
           <h3 hlmDialogTitle>Agregar ingrediente</h3>
@@ -16,19 +18,24 @@
             <!-- Campos del formulario -->
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="idProducto-add" class="text-right">ID Producto</label>
-              <input hlmInput id="idProducto-add" name="idProducto" type="number" [(ngModel)]="ingrediente.idProducto" placeholder="ID del producto" class="col-span-3" required />
+              <input hlmInput id="idProducto-add" name="idProducto" type="number" [(ngModel)]="ingrediente.idProducto"
+                placeholder="ID del producto" class="col-span-3" required />
             </div>
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="idMateriaPrima-add" class="text-right">ID Materia Prima</label>
-              <input hlmInput id="idMateriaPrima-add" name="idMateriaPrima" type="number" [(ngModel)]="ingrediente.idMateriaPrima" placeholder="ID de la materia prima" class="col-span-3" required />
+              <input hlmInput id="idMateriaPrima-add" name="idMateriaPrima" type="number"
+                [(ngModel)]="ingrediente.idMateriaPrima" placeholder="ID de la materia prima" class="col-span-3"
+                required />
             </div>
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="cantidad-add" class="text-right">Cantidad</label>
-              <input hlmInput id="cantidad-add" name="cantidad" type="number" [(ngModel)]="ingrediente.cantidad" placeholder="Cantidad" class="col-span-3" required />
+              <input hlmInput id="cantidad-add" name="cantidad" type="number" [(ngModel)]="ingrediente.cantidad"
+                placeholder="Cantidad" class="col-span-3" required />
             </div>
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="unidadMedida-add" class="text-right">Unidad de Medida</label>
-              <input hlmInput id="unidadMedida-add" name="unidadMedida" [(ngModel)]="ingrediente.unidadMedida" placeholder="Unidad de medida" class="col-span-3" required />
+              <input hlmInput id="unidadMedida-add" name="unidadMedida" [(ngModel)]="ingrediente.unidadMedida"
+                placeholder="Unidad de medida" class="col-span-3" required />
             </div>
           </div>
           <hlm-dialog-footer>
@@ -37,7 +44,7 @@
         </form>
       </hlm-dialog-content>
     </hlm-dialog>
-  
+
     <!-- Botón para editar ingrediente (se muestra al hacer clic en "Editar" en la lista de ingredientes) -->
     <hlm-dialog>
       <button id="edit-ingredient-trigger" brnDialogTrigger hlmBtn class="hidden">Editar ingrediente</button>
@@ -51,19 +58,24 @@
             <!-- Campos del formulario -->
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="idProducto-edit" class="text-right">ID Producto</label>
-              <input hlmInput id="idProducto-edit" name="idProducto" type="number" [(ngModel)]="ingrediente.idProducto" placeholder="ID del producto" class="col-span-3" required />
+              <input hlmInput id="idProducto-edit" name="idProducto" type="number" [(ngModel)]="ingrediente.idProducto"
+                placeholder="ID del producto" class="col-span-3" required />
             </div>
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="idMateriaPrima-edit" class="text-right">ID Materia Prima</label>
-              <input hlmInput id="idMateriaPrima-edit" name="idMateriaPrima" type="number" [(ngModel)]="ingrediente.idMateriaPrima" placeholder="ID de la materia prima" class="col-span-3" required />
+              <input hlmInput id="idMateriaPrima-edit" name="idMateriaPrima" type="number"
+                [(ngModel)]="ingrediente.idMateriaPrima" placeholder="ID de la materia prima" class="col-span-3"
+                required />
             </div>
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="cantidad-edit" class="text-right">Cantidad</label>
-              <input hlmInput id="cantidad-edit" name="cantidad" type="number" [(ngModel)]="ingrediente.cantidad" placeholder="Cantidad" class="col-span-3" required />
+              <input hlmInput id="cantidad-edit" name="cantidad" type="number" [(ngModel)]="ingrediente.cantidad"
+                placeholder="Cantidad" class="col-span-3" required />
             </div>
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="unidadMedida-edit" class="text-right">Unidad de Medida</label>
-              <input hlmInput id="unidadMedida-edit" name="unidadMedida" [(ngModel)]="ingrediente.unidadMedida" placeholder="Unidad de medida" class="col-span-3" required />
+              <input hlmInput id="unidadMedida-edit" name="unidadMedida" [(ngModel)]="ingrediente.unidadMedida"
+                placeholder="Unidad de medida" class="col-span-3" required />
             </div>
           </div>
           <hlm-dialog-footer>
@@ -73,7 +85,7 @@
       </hlm-dialog-content>
     </hlm-dialog>
   </div>
-  
+
   <div class="overflow-x-auto p-5">
     <table class="table-auto w-full text-center">
       <thead>
@@ -94,11 +106,13 @@
           <td class="border px-4 py-2">{{ ingredient.cantidad }}</td>
           <td class="border px-4 py-2">{{ ingredient.unidadMedida }}</td>
           <td class="border px-4 py-2">
-            <button (click)="onEdit(ingredient)" class="bg-white text-secondary px-4 py-2 rounded border border-secondary mr-4">Editar</button>
-            <button (click)="onDelete(ingredient.id!)" class="bg-secondary text-white px-4 py-2 rounded">Eliminar</button>
+            <button (click)="onEdit(ingredient)"
+              class="bg-white text-secondary px-4 py-2 rounded border border-secondary mr-4">Editar</button>
+            <button (click)="onDelete(ingredient.id!)"
+              class="bg-secondary text-white px-4 py-2 rounded">Eliminar</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-  
+</div>
