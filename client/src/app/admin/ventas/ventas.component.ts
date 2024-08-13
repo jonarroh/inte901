@@ -367,12 +367,12 @@ export class VentasComponent {
 
     const credit: CreditCard = {
       id: 0,
-      cardNumber: '',
-      cardHolderName: '',
-      estatus: '',
-      expiryDate: '',
-      cvv: '',
-      userId: 0
+      cardNumber: 'NA',
+      cardHolderName: 'NA',
+      estatus: 'NA',
+      expiryDate: 'NA',
+      userId: 0,
+      cvv: 'NA'
     };
 
     const direccion: Address = {
