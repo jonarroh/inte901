@@ -54,14 +54,42 @@ export class ProductoService {
     return this.http.put<Producto>(`${this.apiURL}/${id}`, formData);
   }
 
-  eliminarProducto(id: number): Observable<void> {
+  eliminarProducto(id: number): Observable<Producto> {
     return this.getProductoById(id).pipe(
       switchMap(producto => {
-        // Cambiamos solo el estatus a 0
+        // Cambiar solo el estatus a 0
         producto.estatus = 0;
   
-        return this.http.put<void>(`${this.apiURL}/${id}`, producto);
+        // Si tienes la imagen almacenada en el objeto producto, puedes enviarla de nuevo
+        const imagenFile = producto.imagen ? this.dataURLtoFile(producto.imagen, `producto-${id}.webp`) : undefined;
+  
+        // Reutilizar el método de editar producto
+        return this.editarProducto(id, producto, imagenFile || undefined);
       })
     );
   }
+  
+  // Método auxiliar para convertir DataURL en File
+  private dataURLtoFile(dataurl: string, filename: string): File | null {
+    const arr = dataurl.split(',');
+    const match = arr[0].match(/:(.*?);/);
+  
+    if (!match) {
+      console.error('Data URL does not contain a valid MIME type.');
+      return null;
+    }
+  
+    const mime = match[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+  
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+  
+    return new File([u8arr], filename, { type: mime });
+  }
+  
+  
 }
