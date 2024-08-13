@@ -1,4 +1,7 @@
-<div class="container mx-auto w-full p-4">
+<div class="container mx-auto max-h-screen overflow-y-hidden w-full p-4">
+  <div class="flex-1 flex justify-center">
+    <h1 class="text-5xl font-bold mt-1 mb-2 text-secondary">Compras</h1>
+  </div>
   <div class="flex space-x-3 justify-end mb-4">
     <hlm-sheet side="right" class="bg-white">
       <button id="carrito" variant="success" brnSheetTrigger hlmBtn>
@@ -26,10 +29,10 @@
             </div>
           </div>
         </div>
-        <div class="flex justify-between">
+        <div class="flex justify-between mt-4">
           <ng-container *ngIf="carrito.length > 0">
-            <span>Total:</span>
-            <span>${{ total }} MXN</span>
+            <span class="mt-2">Total:</span>
+            <span class="mt-2">${{ total }} MXN</span>
             <hlm-toaster />
             <button variant="success" hlmBtn (click)="sendCompra()">
               Comprar

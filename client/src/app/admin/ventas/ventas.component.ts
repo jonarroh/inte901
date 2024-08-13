@@ -40,6 +40,7 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { SelectionModel } from '@angular/cdk/collections';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import { HlmMenuModule } from '~/components/ui-menu-helm/src';
+import { HlmBadgeDirective } from '~/components/ui-badge-helm/src';
 
 type Framework = { label: string; value: string };
 type Status = { label: string; value: string };
@@ -96,15 +97,21 @@ type Status = { label: string; value: string };
     HlmAlertDialogContentComponent,
     BrnMenuTriggerDirective,
     HlmMenuModule,
+    HlmBadgeDirective,
   ],
   templateUrl: './ventas.component.html',
   styleUrl: './ventas.component.css'
 })
 export class VentasComponent {
+  userId = 0;
+  userData = '';
+  rol = '';
+
   orderService = inject(VentasService);
   productoService = inject(ProductoService);
   ingredientesService = inject(IngredienteService);
   orders$: Observable<Order[]>;
+  ordersDelivery$: Observable<Order[]>;
   productos$: Observable<Producto[]>;
   ingredientes$: Observable<Ingrediente[]>;
   order: Order = {};
@@ -120,13 +127,11 @@ export class VentasComponent {
   public statusProducto: string = '';
   public popoverStates: { [key: number]: 'closed' | 'open' } = {};
   public currentFrameworks: { [key: number]: Framework | undefined } = {};
-  public frameworks: Framework[] = [
-    { label: 'Cancelar', value: 'Cancelado' },
-    { label: 'Entregado', value: 'Entregado' },
-  ];
+  public frameworks: Framework[] = [];
 
   constructor() {
     this.orders$ = this.orderService.getOrders();
+    this.ordersDelivery$ = this.orderService.getOrdersNotDelivered();
     this.detalles$ = this.orderService.getOrderDetail(0) as Observable<DetailOrder[]>;
     this.productos$ = this.productoService.getProductos() as Observable<Producto[]>;
     this.ingredientes$ = this.ingredientesService.getIngredientes() as Observable<Ingrediente[]>;
@@ -145,6 +150,43 @@ export class VentasComponent {
         console.error('Error al consultar las ordenes: ', error);
       }
     });
+
+    this.ordersDelivery$.subscribe({
+      next: (orders) => {
+        this._ordersND.set(orders);
+      },
+      error: (error) => {
+        console.error('Error al consultar las ordenes: ', error);
+      }
+    });
+
+    this.userId = parseInt(localStorage.getItem('userId') || '0', 10);
+    this.userData = localStorage.getItem('userData') ?? '';
+    this.rol = JSON.parse(this.userData).role;
+
+    if (this.rol === 'Caja') {
+      this.frameworks = [
+        { label: 'Cancelar', value: 'Cancelado' },
+        { label: 'Recibido', value: 'Recibido' },
+      ];
+    } else if (this.rol === 'Produccion') {
+      this.frameworks = [
+        { label: 'Cancelar', value: 'Cancelado' },
+        { label: 'Aceptado', value: 'Aceptado' },
+      ];
+    } else if (this.rol === 'Repartidor') {
+      this.frameworks = [
+        { label: 'Recibido', value: 'Recibido' },
+      ];
+    } else {
+      this.frameworks = [
+        { label: 'Cancelar', value: 'Cancelado' },
+        { label: 'Recibido', value: 'Recibido' },
+        { label: 'Aceptado', value: 'Aceptado' },
+      ];
+    }
+
+    console.log(this.frameworks);
   }
 
   trackByOrderId: TrackByFunction<Order> = (index, order) => order.id;
@@ -224,7 +266,7 @@ export class VentasComponent {
 
   addToCart(producto: Producto) {
     const existingItem = this.carrito.find(item => item.idProduct === producto.id);
-    const cantidad = this.cantidades[producto.id||0] || 1;
+    const cantidad = this.cantidades[producto.id || 0] || 1;
     if (existingItem) {
       existingItem.quantity! += 1;
     } else {
@@ -238,7 +280,7 @@ export class VentasComponent {
         },
         priceSingle: producto.precio,
         ingredients: 'Crema',
-        status: 'Pendiente'
+        status: 'Ordenado'
       });
 
       toast.success(
@@ -313,7 +355,7 @@ export class VentasComponent {
 
     if (!userId) {
       console.error('Usuario no autenticado.');
-      toast.error('Usuario no autenticado.',{
+      toast.error('Usuario no autenticado.', {
         action: {
           label: 'X',
           onClick: () => toast.dismiss(),
@@ -325,11 +367,11 @@ export class VentasComponent {
 
     const credit: CreditCard = {
       id: 0,
-      cardNumber: 'NA',
-      cardHolderName: 'NA',
-      estatus: 'NA',
-      expiryDate: 'NA',
-      cvv: 'NA',
+      cardNumber: '',
+      cardHolderName: '',
+      estatus: '',
+      expiryDate: '',
+      cvv: '',
       userId: 0
     };
 
@@ -352,8 +394,8 @@ export class VentasComponent {
       total: this.total,
       isDelivery: false,
       detailOrders: this.carrito,
-      creditCard: credit,
-      direcciones: direccion
+      creditCard: null,
+      direcciones: null
     };
 
     console.log(nuevaOrden);
@@ -411,29 +453,6 @@ export class VentasComponent {
     );
   }
 
-  // public frameworks = [
-  //   {
-  //     label: 'Cancelar',
-  //     value: 'Cancelado',
-  //   },
-  //   {
-  //     label: 'Entregado',
-  //     value: 'Entregado',
-  //   },
-  // ];
-
-
-  // public currentFramework = signal<Framework | undefined>(undefined);
-  // public state = signal<'closed' | 'open'>('closed');
-
-
-  // stateChanged(state: 'open' | 'closed') {
-  //   this.state.set(state);
-  //   if (state === 'closed') {
-  //     const statusBtn = document.getElementById('edit-status');
-  //     statusBtn?.click();
-  //   }
-  // }
   stateChanged(state: 'open' | 'closed', orderId: number) {
     this.popoverStates[orderId] = state;
     if (state === 'closed') {
@@ -442,18 +461,6 @@ export class VentasComponent {
     }
   }
 
-  // commandSelected(framework: Framework) {
-  //   this.state.set('closed');
-  //   if (this.currentFramework()?.value === framework.value) {
-  //     this.currentFramework.set(undefined);
-  //   } else {
-  //     this.currentFramework.set(framework);
-  //     this.status = framework.value;
-  //     this.idOrden = this.idorderstatus;
-  //     console.log('Orden a actualizar: ', this.status);
-  //     console.log('ID de la orden: ', this.idOrden);
-  //   }
-  // }
   commandSelected(framework: Framework, orderId: number) {
     this.popoverStates[orderId] = 'closed'; // Cerrar el popover después de seleccionar
 
@@ -531,9 +538,9 @@ export class VentasComponent {
   private readonly _selectionModel = new SelectionModel<Order>(true);
   protected readonly _isOrderSelected = (ord: Order) => this._selectionModel.isSelected(ord);
   protected readonly _selected = toSignal(
-    this._selectionModel.changed.pipe(map(() => this._selectionModel.selected)),{
-      initialValue: []
-    }
+    this._selectionModel.changed.pipe(map(() => this._selectionModel.selected)), {
+    initialValue: []
+  }
   );
 
   protected readonly _brnColumnManager = useBrnColumnManager({
@@ -541,6 +548,7 @@ export class VentasComponent {
     Total: { visible: true, label: 'Total' },
     Detalles: { visible: true, label: 'Detalles' },
     Status: { visible: true, label: 'Status' },
+    TipoEntrega: { visible: true, label: 'Tipo de entrega' },
     Acciones: { visible: true, label: 'Acciones' },
   });
   protected readonly _allDisplayedColumns = computed(() => [
@@ -549,8 +557,16 @@ export class VentasComponent {
   ]);
 
   private readonly _orders = signal<Order[]>([]);
+  private readonly _ordersND = signal<Order[]>([]);
   private readonly _filteredOrders = computed(() => {
     const emailFilter = this._emailFilter()?.trim()?.toLowerCase();
+    if (this.rol === 'Caja') {
+      if (emailFilter && emailFilter.length > 0) {
+        return this._ordersND().filter((u) => u.status?.toLowerCase().includes(emailFilter));
+      }
+      return this._ordersND();
+    }
+
     if (emailFilter && emailFilter.length > 0) {
       return this._orders().filter((u) => u.status?.toLowerCase().includes(emailFilter));
     }
