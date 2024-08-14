@@ -2,23 +2,23 @@
 <section class="px-8 py-12 flex justify-evenly items-center flex-row space-x-8">
   <div class="flex flex-col items-center space-y-4">
     <hlm-avatar variant="profile">
-      <img 
+      <img
         [src]="imgUrl()"
-        width="250" 
-        alt='logo' 
-        hlmAvatarImage 
+        width="250"
+        alt='logo'
+        hlmAvatarImage
       />
       <span class='text-black bg-white' hlmAvatarFallback>
         {{ initials() }}
       </span>
     </hlm-avatar>
-    
+
     <label class="block mb-2 text-sm font-medium text-gray-900" for="file_input">
       Cambiar foto de perfil
     </label>
    <div>
-    <input 
-    hlmInput 
+    <input
+    hlmInput
     id="file_input"
     type="file"
     (change)="onImageChange($event)"
@@ -50,10 +50,10 @@
                 class="block w-full mt-1"
               />
             </label>
-            @if (formModel.controls.name.touched()) { 
+            @if (formModel.controls.name.touched()) {
               @if(formModel.controls.name.hasError('required')) {
             <div class="text-red-500 text-sm">La contraseña es requerida</div>
-            } 
+            }
              @else if (formModel.controls.name.hasError('maxLength')) {
             <div class="text-red-500 text-sm">
               La contraseña debe tener menos de 50 caracteres
@@ -74,10 +74,10 @@
                 class="block w-full mt-1"
               />
             </label>
-            @if (formModel.controls.lastName.touched()) { 
+            @if (formModel.controls.lastName.touched()) {
               @if(formModel.controls.lastName.hasError('required')) {
             <div class="text-red-500 text-sm">La contraseña es requerida</div>
-            } 
+            }
              @else if (formModel.controls.lastName.hasError('maxLength')) {
             <div class="text-red-500 text-sm">
               La contraseña debe tener menos de 50 caracteres
@@ -98,10 +98,10 @@
                 class="block w-full mt-1"
               />
             </label>
-            @if (formModel.controls.email.touched()) { 
+            @if (formModel.controls.email.touched()) {
               @if(formModel.controls.email.hasError('required')) {
             <div class="text-red-500 text-sm">La contraseña es requerida</div>
-            } 
+            }
              @else if (formModel.controls.email.hasError('maxLength')) {
             <div class="text-red-500 text-sm">
               La contraseña debe tener menos de 50 caracteres
@@ -141,18 +141,18 @@
             <div class="flex flex-row items-center justify-between  mt-4 w-full gap-x-4">
               <a routerLink="/edit/address"
               hlmBtn
-              class="text-sm  hover:underline bg-background"
+              class="text-sm  hover:underline bg-admin"
               >
                 editar dirección
               </a>
               <a routerLink="/edit/payment"
-              class="text-sm hover:underline bg-background"
+              class="text-sm hover:underline bg-admin"
               hlmBtn
               >
                 editar método de pago
               </a>
-              
-          
+
+
               <button
               hlmBtn
                 class="bg-secondary text-white rounded-md  flex justify-center items-center hover:bg-secondary-dark transition-colors duration-300"
@@ -161,7 +161,7 @@
               >
                 Guardar cambios
               </button>
-              
+
     <hlm-alert-dialog>
       <button id='edit-profile' variant='outline' brnAlertDialogTrigger hlmBtn
       class=" bg-error text-white rounded-md flex justify-center items-center hover:bg-error/90 transition-colors duration-300"
@@ -179,16 +179,16 @@
         </hlm-alert-dialog-footer>
       </hlm-alert-dialog-content>
     </hlm-alert-dialog>
-    
+
             </div>
           </div>
          </div>
-         
-        </div>  
-        
-        
+
+        </div>
+
+
       </form>
-      
+
     </section>
   </div>
 </section>
