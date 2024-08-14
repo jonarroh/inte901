@@ -1,8 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { NavComponent } from '../componentes/nav/nav.component';
 import {
-  HlmDialogComponent, HlmDialogContentComponent, HlmDialogHeaderComponent, HlmDialogFooterComponent,
-  HlmDialogTitleDirective, HlmDialogDescriptionDirective,
+  HlmDialogComponent,
+  HlmDialogContentComponent,
+  HlmDialogHeaderComponent,
+  HlmDialogFooterComponent,
+  HlmDialogTitleDirective,
+  HlmDialogDescriptionDirective,
 } from '~/components/ui-dialog-helm/src';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
@@ -12,6 +16,13 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { InventarioMP } from './interface/inventarioMP';
 import { InventarioMPService } from './service/inventario-mp.service';
 import { FormsModule, NgForm } from '@angular/forms';
+import { BrnTableModule } from '@spartan-ng/ui-table-brain';
+import { HlmTableModule } from '@spartan-ng/ui-table-helm';
+import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
+import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
+import { provideIcons } from '@ng-icons/core';
+import { lucideMoreHorizontal } from '@ng-icons/lucide';
+import { HlmIconComponent } from '~/components/ui-icon-helm/src';
 
 @Component({
   selector: 'app-inventario-mp',
@@ -25,21 +36,34 @@ import { FormsModule, NgForm } from '@angular/forms';
     HlmDialogTitleDirective,
     HlmDialogDescriptionDirective,
     HlmButtonDirective,
+    HlmIconComponent,
     BrnDialogTriggerDirective,
     BrnDialogContentDirective,
     HlmInputDirective,
     CommonModule,
     AsyncPipe,
-    FormsModule
+    FormsModule,
+    BrnTableModule,
+    HlmTableModule,
+    BrnMenuTriggerDirective,
+    HlmMenuModule,
   ],
   templateUrl: './inventario-mp.component.html',
-  styleUrls: ['./inventario-mp.component.css']
+  styleUrls: ['./inventario-mp.component.css'],
+  providers: [
+    provideIcons({
+      lucideMoreHorizontal,
+    }),
+  ],
 })
 export class InventarioMPComponent {
   inventarioMPService = inject(InventarioMPService);
   inventarios$: Observable<InventarioMP[]>;
   inventario: InventarioMP = {};
   editMode: boolean = false;
+
+  // Reemplazar 'ID Materia Prima' con 'Materia Prima'
+  displayedColumns = ['ID', 'Materia Prima', 'Cantidad', 'Unidad de Medida', 'ID Compra', 'Caducidad', 'actions'];
 
   constructor() {
     this.inventarios$ = this.inventarioMPService.getInventarios().pipe(

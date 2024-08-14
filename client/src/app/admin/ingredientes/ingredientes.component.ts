@@ -1,7 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { NavComponent } from '../componentes/nav/nav.component';
 import {
-  HlmDialogComponent, HlmDialogContentComponent, HlmDialogHeaderComponent,
+  HlmDialogComponent,
+  HlmDialogContentComponent,
+  HlmDialogHeaderComponent,
   HlmDialogFooterComponent,
   HlmDialogTitleDirective,
   HlmDialogDescriptionDirective,
@@ -14,6 +16,13 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { Ingrediente } from './interface/ingrediente';
 import { IngredienteService } from './service/ingrediente.service';
 import { FormsModule, NgForm } from '@angular/forms';
+import { BrnTableModule } from '@spartan-ng/ui-table-brain';
+import { HlmTableModule } from '@spartan-ng/ui-table-helm';
+import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
+import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
+import { provideIcons } from '@ng-icons/core';
+import { lucideMoreHorizontal } from '@ng-icons/lucide';
+import { HlmIconComponent } from '~/components/ui-icon-helm/src';
 
 @Component({
   selector: 'app-ingredientes',
@@ -27,15 +36,25 @@ import { FormsModule, NgForm } from '@angular/forms';
     HlmDialogTitleDirective,
     HlmDialogDescriptionDirective,
     HlmButtonDirective,
+    HlmIconComponent,
     BrnDialogTriggerDirective,
     BrnDialogContentDirective,
     HlmInputDirective,
     CommonModule,
     AsyncPipe,
-    FormsModule
+    FormsModule,
+    BrnTableModule,
+    HlmTableModule,
+    BrnMenuTriggerDirective,
+    HlmMenuModule,
   ],
   templateUrl: './ingredientes.component.html',
-  styleUrls: ['./ingredientes.component.css']
+  styleUrls: ['./ingredientes.component.css'],
+  providers: [
+    provideIcons({
+      lucideMoreHorizontal,
+    }),
+  ],
 })
 export class IngredientesComponent {
   ingredienteService = inject(IngredienteService);
@@ -43,11 +62,16 @@ export class IngredientesComponent {
   ingrediente: Ingrediente = {};
   editMode: boolean = false;
 
-  constructor() {
-    this.ingredientes$ = this.ingredienteService.getIngredientes().pipe(
-      map(ingredientes => ingredientes.filter(ingrediente => ingrediente.estatus === 1))
-    );
-  }
+  displayedColumns = ['ID', 'Producto', 'Materia Prima', 'Cantidad', 'Unidad de Medida', 'actions'];
+
+constructor() {
+  this.ingredientes$ = this.ingredienteService.getIngredientes().pipe(
+    map((ingredientes) =>
+      ingredientes.filter((ingrediente) => ingrediente.estatus === 1)
+    )
+  );
+}
+
 
   trackByIngredientId(index: number, ingredient: any): number {
     return ingredient.id!;
@@ -57,7 +81,7 @@ export class IngredientesComponent {
     if (form.valid) {
       this.ingrediente.estatus = 1;
       this.ingrediente.createdAt = new Date().toISOString();
-      this.ingredienteService.registrarIngredientes(this.ingrediente).subscribe(response => {
+      this.ingredienteService.registrarIngredientes(this.ingrediente).subscribe((response) => {
         console.log('Ingrediente registrado:', response);
         form.resetForm();
         this.ingrediente = {}; // Reiniciar el objeto ingrediente
@@ -68,7 +92,7 @@ export class IngredientesComponent {
 
   onSubmitEdit(form: NgForm) {
     if (form.valid) {
-      this.ingredienteService.editarIngrediente(this.ingrediente.id!, this.ingrediente).subscribe(response => {
+      this.ingredienteService.editarIngrediente(this.ingrediente.id!, this.ingrediente).subscribe((response) => {
         console.log('Ingrediente actualizado:', response);
         form.resetForm();
         this.ingrediente = {}; // Reiniciar el objeto ingrediente
@@ -100,7 +124,9 @@ export class IngredientesComponent {
 
   refreshIngredientes() {
     this.ingredientes$ = this.ingredienteService.getIngredientes().pipe(
-      map(ingredientes => ingredientes.filter(ingrediente => ingrediente.estatus === 1))
+      map((ingredientes) =>
+        ingredientes.filter((ingrediente) => ingrediente.estatus === 1)
+      )
     );
   }
 }

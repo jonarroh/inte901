@@ -1,10 +1,17 @@
 import { Component, inject } from '@angular/core';
 import { NavComponent } from '../componentes/nav/nav.component';
-import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogHeaderComponent, HlmDialogFooterComponent, HlmDialogTitleDirective, HlmDialogDescriptionDirective } from '~/components/ui-dialog-helm/src';
+import {
+  HlmDialogComponent,
+  HlmDialogContentComponent,
+  HlmDialogHeaderComponent,
+  HlmDialogFooterComponent,
+  HlmDialogTitleDirective,
+  HlmDialogDescriptionDirective,
+} from '~/components/ui-dialog-helm/src';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import { BrnDialogTriggerDirective, BrnDialogContentDirective } from '@spartan-ng/ui-dialog-brain';
-import { forkJoin, from, map, Observable, switchMap, tap } from 'rxjs';
+import { map, Observable, forkJoin, switchMap, tap } from 'rxjs';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { ProveedoresService } from './service/proveedores.service';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -12,6 +19,13 @@ import { MateriaPrima } from '../materias-primas/interface/materias-primas';
 import { MateriaPrimaProveedor } from './interface/materiaPrimaProveedor';
 import { Proveedor } from './interface/proveedor';
 import { MateriasPrimasService } from '../materias-primas/service/materias-primas.service';
+import { BrnTableModule } from '@spartan-ng/ui-table-brain';
+import { HlmTableModule } from '@spartan-ng/ui-table-helm';
+import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
+import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
+import { provideIcons } from '@ng-icons/core';
+import { lucideMoreHorizontal } from '@ng-icons/lucide';
+import { HlmIconComponent } from '~/components/ui-icon-helm/src';
 
 interface ProveedorConMaterias extends Proveedor {
   materiasPrimas: string;
@@ -29,15 +43,25 @@ interface ProveedorConMaterias extends Proveedor {
     HlmDialogTitleDirective,
     HlmDialogDescriptionDirective,
     HlmButtonDirective,
+    HlmIconComponent,
     BrnDialogTriggerDirective,
     BrnDialogContentDirective,
     HlmInputDirective,
     CommonModule,
     AsyncPipe,
-    FormsModule
+    FormsModule,
+    BrnTableModule,
+    HlmTableModule,
+    BrnMenuTriggerDirective,
+    HlmMenuModule,
   ],
   templateUrl: './proveedores.component.html',
-  styleUrl: './proveedores.component.css'
+  styleUrls: ['./proveedores.component.css'],
+  providers: [
+    provideIcons({
+      lucideMoreHorizontal,
+    }),
+  ],
 })
 export class ProveedoresComponent {
   proveedorService = inject(ProveedoresService);
@@ -48,6 +72,8 @@ export class ProveedoresComponent {
   proveedor: Proveedor = {};
   editMode: boolean = false;
   selectedMateriasPrimas: number[] = [];
+
+  displayedColumns = ['ID', 'Nombre Empresa', 'Dirección Empresa', 'Teléfono Empresa', 'Nombre Encargado', 'Materias Primas', 'actions'];
 
   constructor() {
     this.refreshProveedores();
@@ -152,13 +178,21 @@ export class ProveedoresComponent {
         forkJoin(proveedores.map(proveedor =>
           this.proveedorService.getMateriasPrimasProveedores().pipe(
             map(materiasPrimasProveedores => materiasPrimasProveedores.filter(mpp => mpp.proveedorId === proveedor.id)),
-            map(materiasPrimasProveedores => ({
+            switchMap(materiasPrimasProveedores =>
+              forkJoin(materiasPrimasProveedores.map(mpp =>
+                this.materiasPrimasService.getMateriaPrimaById(mpp.materiaPrimaId!).pipe(
+                  map(materiaPrima => materiaPrima.material)
+                )
+              ))
+            ),
+            map(materiasPrimas => ({
               ...proveedor,
-              materiasPrimas: materiasPrimasProveedores.map(mpp => mpp.materiaPrimaId).join(', ')
+              materiasPrimas: materiasPrimas.join(', ')
             }))
           )
         ))
       )
     );
   }
+  
 }
