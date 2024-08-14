@@ -4,7 +4,7 @@
   </div>
   <div class="flex space-x-3 justify-end mb-4">
     <hlm-sheet side="right" class="bg-white">
-      <button id="carrito" variant="success" brnSheetTrigger hlmBtn>
+      <button id="carrito" variant="warning" class="text-white" brnSheetTrigger hlmBtn>
         Lista de compras
       </button>
       <hlm-sheet-content *brnSheetContent="let ctx" class="bg-white">
@@ -23,7 +23,7 @@
               <span>
                 {{ item.priceSingle }}
               </span>
-              <button hlmBtn variant="destructive" (click)="quitarItem(item)">
+              <button hlmBtn variant="destructive" class="text-white" (click)="quitarItem(item)">
                 Eliminar
               </button>
             </div>
@@ -34,8 +34,8 @@
             <span class="mt-2">Total:</span>
             <span class="mt-2">${{ total }} MXN</span>
             <hlm-toaster />
-            <button variant="success" hlmBtn (click)="sendCompra()">
-              Comprar
+            <button variant="neutral" hlmBtn (click)="sendCompra()">
+              Solicitar compra
             </button>
           </ng-container>
           <ng-container *ngIf="carrito.length === 0">
@@ -46,7 +46,7 @@
     </hlm-sheet>
 
     <hlm-dialog class="bg-white">
-      <button id="addcompra" brnDialogTrigger hlmBtn variant="success">
+      <button id="addcompra" brnDialogTrigger hlmBtn variant="warning" class="text-white">
         Agregar conpra
       </button>
       <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
@@ -150,7 +150,7 @@
           </div>
         </form>
         <hlm-dialog-footer>
-          <button hlmBtn type="submit" (click)="onSubmit()" variant="success">Solicitar</button>
+          <button hlmBtn type="submit" (click)="onSubmit()" variant="neutral">Solicitar</button>
         </hlm-dialog-footer>
       </hlm-dialog-content>
     </hlm-dialog>
@@ -205,7 +205,7 @@
         Materias Prim.
       </hlm-th>
       <hlm-td class="font-medium tabular-nums" *brnCellDef="let element">
-        <button hlmBtn variant="success" (click)="getDetails(element || 0)">
+        <button hlmBtn variant="warning" class="text-white" (click)="getDetails(element || 0)">
           Detalles
         </button>
       </hlm-td>
@@ -260,7 +260,7 @@
           </brn-cmd>
         </brn-popover>
         } @else {
-        <button disabled variant="success" hlmBtn>
+        <button disabled variant="warning" class="text-white" hlmBtn>
           Seleccionar
         </button>
         }
@@ -272,7 +272,6 @@
       <!-- <button hlmBtn variant="ghost" class="h-6 w-6 p-0.5" align="end" [brnMenuTriggerFor]="menu">
           <hlm-icon class="w-4 h-4" name="lucideMoreHorizontal" />
         </button> -->
-
       <!-- <ng-template #menu>
           <hlm-menu>
             <hlm-menu-label>Actions</hlm-menu-label>
@@ -297,13 +296,13 @@
     <span class="text-sm text-muted-foreground">{{ _selected().length }} of {{ _totalElements() }} compras
     </span>
     <div class="flex mt-2 sm:mt-0">
-      <brn-select class="inline-block" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
+      <brn-select class="inline-block text-white" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
         <hlm-select-trigger class="inline-flex mr-1 w-15 h-9">
           <hlm-select-value />
         </hlm-select-trigger>
-        <hlm-select-content>
+        <hlm-select-content class="bg-white text-black">
           @for (size of _availablePageSizes; track size) {
-          <hlm-option [value]="size">
+          <hlm-option [value]="size" class="hover:bg-navhover">
             {{ size === 10000 ? 'All' : size }}
           </hlm-option>
           }

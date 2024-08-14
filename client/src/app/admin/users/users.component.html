@@ -7,7 +7,7 @@
       <hlm-dialog
       [state]="states()"
       >
-        <button id="edit-profile" brnDialogTrigger hlmBtn>Agregar Usuario</button>
+        <button id="edit-profile" brnDialogTrigger variant="warning" class="text-white" hlmBtn>Agregar Usuario</button>
        <form
        (submit)="onSubmit()"
        >
@@ -147,13 +147,13 @@
         </div>
         <hlm-dialog-footer>
           @if(isEditing()) {
-            <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
-            <button hlmBtn type="submit"
+            <button hlmBtn variant="error" class="text-white" (click)="onCancel()">Cancelar</button>
+            <button hlmBtn type="submit" variant="neutral"
             (click)="onEditUser()"
             >Guardar</button>
           } @else {
-            <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
-            <button hlmBtn
+            <button hlmBtn variant="error" class="text-white" (click)="onCancel()">Cancelar</button>
+            <button hlmBtn variant="neutral"
             (click)="onSubmit()"
             >Crear</button>
           }
@@ -173,7 +173,7 @@
       (ngModelChange)="_rawFilterInput.set($event)"
     />
 
-    <button hlmBtn variant="outline" align="end" [brnMenuTriggerFor]="menu">
+    <button hlmBtn variant="warning" class="text-white" align="end" [brnMenuTriggerFor]="menu">
       Ver columnas
       <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
     </button>
@@ -198,12 +198,12 @@
   <brn-table
     hlm
     stickyHeader
-    class="border-border  block h-[335px] overflow-auto rounded-md border px-20 bg-white"
+    class="border-border  block h-[335px] overflow-auto rounded-md border px-20"
     [dataSource]="_filteredSortedPaginatedPayments()"
     [displayedColumns]="_allDisplayedColumns()"
     [trackBy]="_trackBy"
   >
-    <brn-column-def name="select" class="w-12 bg-white">
+    <brn-column-def name="select" class="w-12">
       <hlm-th *brnHeaderDef class="bg-white">
         <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()"
 
