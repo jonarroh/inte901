@@ -44,6 +44,8 @@ import { MateriaPrimaProveedor } from '~/lib/types';
 import { MppService } from './mpp.service';
 import { toast } from 'ngx-sonner';
 import { fr } from 'date-fns/locale';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { SelectionModel } from '@angular/cdk/collections';
 
 type Framework = { label: string; value: string };
 type Presentations = { label: string; value: string };
@@ -159,6 +161,8 @@ export class ComprasComponent {
     { label: 'Botella 750ml', value: 'Botella 750ml' },
     { label: 'Caja 5kg', value: 'Caja 5kg' },
   ];
+  public presentationsFiltered: Presentations[] = [];
+  typePresentation: string = '';
   public materias: Materias[] = [];
   public currentMateria = signal<Materias | undefined>(undefined);
   public stateMateria = signal<'closed' | 'open'>('closed');
@@ -202,6 +206,17 @@ export class ComprasComponent {
         var value = materia.material + '-' + materia.id?.toString();
         return this.materias.push({ label: materia.material || '', value: value || '' });
       });
+    });
+
+    effect(() => this._emailFilter.set(this._debouncedFilter() ?? ''), { allowSignalWrites: true });
+
+    this.compras$.subscribe({
+      next: (compras) => {
+        this._compras.set(compras);
+      },
+      error: (error) => {
+        console.error(error);
+      },
     });
   }
 
@@ -266,21 +281,6 @@ export class ComprasComponent {
     });
   }
 
-  stateChangedPresentation(state: 'open' | 'closed') {
-    this.statePresentation.set(state);
-  }
-
-  commandPresentationSelected(presentation: Presentations) {
-    this.statePresentation.set('closed');
-    if (this.currentPresentation()?.value === presentation.value) {
-      this.currentPresentation.set(undefined);
-    } else {
-      this.currentPresentation.set(presentation);
-      this.presentacion = presentation.value;
-      this.unitType = this.getUnitTypeFromValue(presentation.value) || '';
-    }
-  }
-
   stateChangedMateria(state: 'open' | 'closed') {
     this.stateMateria.set(state);
   }
@@ -293,6 +293,35 @@ export class ComprasComponent {
       var value = mpp.material + '-' + mpp.id?.toString();
       this.materiaPrimaId = mpp.id || 0;
       this.currentMateria.set({ label: mpp.material || '', value: value || '' });
+
+      var tipo = this.compraServe.getInventarioType(mpp.id || 0).subscribe((inventario) => {
+        if (inventario.unidadMedida) {
+          this.typePresentation = inventario.unidadMedida;
+        }
+      });
+    }
+  }
+
+  getFilterPresent() {
+    console.log(this.typePresentation);
+    return this.presentations.filter(presentation =>
+      presentation.value.toLowerCase().includes(this.typePresentation.toLowerCase())
+    );
+  }
+
+  stateChangedPresentation(state: 'open' | 'closed') {
+    this.statePresentation.set(state);
+    this.presentations = this.getFilterPresent();
+  }
+
+  commandPresentationSelected(presentation: Presentations) {
+    this.statePresentation.set('closed');
+    if (this.currentPresentation()?.value === presentation.value) {
+      this.currentPresentation.set(undefined);
+    } else {
+      this.currentPresentation.set(presentation);
+      this.presentacion = presentation.value;
+      this.unitType = this.getUnitTypeFromValue(presentation.value) || '';
     }
   }
 
@@ -540,7 +569,7 @@ export class ComprasComponent {
           // Formatea la fecha de expiración a YYYY-MM-DD
           const fechaFormat = fecha.toISOString().slice(0, 10);
           detalle.expiration = fechaFormat;
-      }
+        }
 
         // Obtiene el nombre de la materia prima
         this.materiaprimaServe.getMateriaPrimaById(detalle.idMP || 0).subscribe((materia) => {
@@ -551,5 +580,93 @@ export class ComprasComponent {
 
     const detBtn = document.getElementById('edit-status-detalle');
     detBtn?.click();
+  }
+
+  protected readonly _rawFilterInput = signal('');
+  protected readonly _emailFilter = signal('');
+  private readonly _debouncedFilter = toSignal(toObservable(this._rawFilterInput).pipe(debounceTime(300)));
+
+  private readonly _displayedIndices = signal({ start: 0, end: 0 });
+  protected readonly _availablePageSizes = [5, 10, 20, 10000];
+  protected readonly _pageSize = signal(this._availablePageSizes[0]);
+
+  private readonly _selectionModel = new SelectionModel<Compra>(true);
+  protected readonly _isCompraSelected = (compr: Compra) => this._selectionModel.isSelected(compr);
+  protected readonly _selected = toSignal(
+    this._selectionModel.changed.pipe(map(() => this._selectionModel.selected)),{
+      initialValue: []
+    }
+  );
+
+  protected readonly _brnColumnManager = useBrnColumnManager({
+    CreatedAt: { visible: true, label: 'Fecha' },
+    Total: { visible: true, label: 'Total' },
+    Detalles: { visible: true, label: 'Detalles' },
+    Status: { visible: true, label: 'Status' },
+    Acciones: { visible: true, label: 'Acciones' },
+  });
+  protected readonly _allDisplayedColumns = computed(() => [
+    'select',
+    ...this._brnColumnManager.displayedColumns(),
+  ]);
+
+  private readonly _compras = signal<Compra[]>([]);
+  private readonly _filteredCompras = computed(() => {
+    const emailFilter = this._emailFilter()?.trim()?.toLowerCase();
+    if (emailFilter && emailFilter.length > 0) {
+      return this._compras().filter((u) => u.status?.toLowerCase().includes(emailFilter));
+    }
+    return this._compras();
+  });
+  private readonly _emailSort = signal<'ASC' | 'DESC' | null>(null);
+  protected readonly _filteredSortedPaginatedPayments = computed(() => {
+    const sort = this._emailSort();
+    const start = this._displayedIndices().start;
+    const end = this._displayedIndices().end + 1;
+    const payments = this._filteredCompras();
+    if (!sort) {
+      return payments.slice(start, end);
+    }
+    return [...payments]
+      .sort((p1, p2) => (sort === 'ASC' ? 1 : -1) * (p1.status && p2.status ? p1.status.localeCompare(p2.status) : 0))
+      .slice(start, end);
+  });
+  protected readonly _allFilteredPaginatedPaymentsSelected = computed(() =>
+    this._filteredSortedPaginatedPayments().every((payment) => this._selected().includes(payment)),
+  );
+  protected readonly _checkboxState = computed(() => {
+    const noneSelected = this._selected().length === 0;
+    const allSelectedOrIndeterminate = this._allFilteredPaginatedPaymentsSelected() ? true : 'indeterminate';
+    return noneSelected ? false : allSelectedOrIndeterminate;
+  });
+
+  protected readonly _trackBy: TrackByFunction<Compra> = (_: number, p: Compra) => p.id;
+  protected readonly _totalElements = computed(() => this._filteredCompras().length);
+  protected readonly _onStateChange = ({ startIndex, endIndex }: PaginatorState) =>
+    this._displayedIndices.set({ start: startIndex, end: endIndex });
+
+
+  protected togglePayment(payment: Compra) {
+    this._selectionModel.toggle(payment);
+  }
+
+  protected handleHeaderCheckboxChange() {
+    const previousCbState = this._checkboxState();
+    if (previousCbState === 'indeterminate' || !previousCbState) {
+      this._selectionModel.select(...this._filteredSortedPaginatedPayments());
+    } else {
+      this._selectionModel.deselect(...this._filteredSortedPaginatedPayments());
+    }
+  }
+
+  protected handleEmailSortChange() {
+    const sort = this._emailSort();
+    if (sort === 'ASC') {
+      this._emailSort.set('DESC');
+    } else if (sort === 'DESC') {
+      this._emailSort.set(null);
+    } else {
+      this._emailSort.set('ASC');
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal, TrackByFunction } from '@angular/core';
+import { Component, computed, effect, inject, input, signal, TrackByFunction } from '@angular/core';
 import { NavComponent } from '../componentes/nav/nav.component';
 import {
   HlmDialogComponent, HlmDialogContentComponent, HlmDialogHeaderComponent,
@@ -9,7 +9,7 @@ import {
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import { BrnDialogTriggerDirective, BrnDialogContentDirective } from '@spartan-ng/ui-dialog-brain';
-import { from, Observable, map, timer } from 'rxjs';
+import { from, Observable, map, timer, debounceTime } from 'rxjs';
 import { HlmTableModule } from '~/components/ui-table-helm/src';
 import { VentasService } from './ventas.service';
 import { Order } from './interface/order';
@@ -35,8 +35,15 @@ import { HlmPopoverContentDirective } from '~/components/ui-popover-helm/src';
 import { HlmIconComponent } from '~/components/ui-icon-helm/src';
 import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
 import { HlmAlertDialogActionButtonDirective, HlmAlertDialogCancelButtonDirective, HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogOverlayDirective, HlmAlertDialogTitleDirective } from '~/components/ui-alertdialog-helm/src';
+import { BrnTableModule, PaginatorState, useBrnColumnManager } from '@spartan-ng/ui-table-brain';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { SelectionModel } from '@angular/cdk/collections';
+import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
+import { HlmMenuModule } from '~/components/ui-menu-helm/src';
+import { HlmBadgeDirective } from '~/components/ui-badge-helm/src';
 
 type Framework = { label: string; value: string };
+type Status = { label: string; value: string };
 
 @Component({
   selector: 'app-ventas',
@@ -54,6 +61,7 @@ type Framework = { label: string; value: string };
     BrnDialogContentDirective,
     HlmInputDirective,
     HlmTableModule,
+    BrnTableModule,
     FormsModule,
     CommonModule,
     HlmSelectModule,
@@ -87,15 +95,23 @@ type Framework = { label: string; value: string };
     HlmAlertDialogCancelButtonDirective,
     HlmAlertDialogActionButtonDirective,
     HlmAlertDialogContentComponent,
+    BrnMenuTriggerDirective,
+    HlmMenuModule,
+    HlmBadgeDirective,
   ],
   templateUrl: './ventas.component.html',
   styleUrl: './ventas.component.css'
 })
 export class VentasComponent {
+  userId = 0;
+  userData = '';
+  rol = '';
+
   orderService = inject(VentasService);
   productoService = inject(ProductoService);
   ingredientesService = inject(IngredienteService);
   orders$: Observable<Order[]>;
+  ordersDelivery$: Observable<Order[]>;
   productos$: Observable<Producto[]>;
   ingredientes$: Observable<Ingrediente[]>;
   order: Order = {};
@@ -111,13 +127,11 @@ export class VentasComponent {
   public statusProducto: string = '';
   public popoverStates: { [key: number]: 'closed' | 'open' } = {};
   public currentFrameworks: { [key: number]: Framework | undefined } = {};
-  public frameworks: Framework[] = [
-    { label: 'Cancelar', value: 'Cancelado' },
-    { label: 'Entregado', value: 'Entregado' },
-  ];
+  public frameworks: Framework[] = [];
 
   constructor() {
     this.orders$ = this.orderService.getOrders();
+    this.ordersDelivery$ = this.orderService.getOrdersNotDelivered();
     this.detalles$ = this.orderService.getOrderDetail(0) as Observable<DetailOrder[]>;
     this.productos$ = this.productoService.getProductos() as Observable<Producto[]>;
     this.ingredientes$ = this.ingredientesService.getIngredientes() as Observable<Ingrediente[]>;
@@ -125,6 +139,54 @@ export class VentasComponent {
     this.calcularTotal();
     this.idOrden = 0;
     this.status = '';
+
+    effect(() => this._emailFilter.set(this._debouncedFilter() ?? ''), { allowSignalWrites: true });
+
+    this.orders$.subscribe({
+      next: (orders) => {
+        this._orders.set(orders);
+      },
+      error: (error) => {
+        console.error('Error al consultar las ordenes: ', error);
+      }
+    });
+
+    this.ordersDelivery$.subscribe({
+      next: (orders) => {
+        this._ordersND.set(orders);
+      },
+      error: (error) => {
+        console.error('Error al consultar las ordenes: ', error);
+      }
+    });
+
+    this.userId = parseInt(localStorage.getItem('userId') || '0', 10);
+    this.userData = localStorage.getItem('userData') ?? '';
+    this.rol = JSON.parse(this.userData).role;
+
+    if (this.rol === 'Caja') {
+      this.frameworks = [
+        { label: 'Cancelar', value: 'Cancelado' },
+        { label: 'Recibido', value: 'Recibido' },
+      ];
+    } else if (this.rol === 'Produccion') {
+      this.frameworks = [
+        { label: 'Cancelar', value: 'Cancelado' },
+        { label: 'Aceptado', value: 'Aceptado' },
+      ];
+    } else if (this.rol === 'Repartidor') {
+      this.frameworks = [
+        { label: 'Recibido', value: 'Recibido' },
+      ];
+    } else {
+      this.frameworks = [
+        { label: 'Cancelar', value: 'Cancelado' },
+        { label: 'Recibido', value: 'Recibido' },
+        { label: 'Aceptado', value: 'Aceptado' },
+      ];
+    }
+
+    console.log(this.frameworks);
   }
 
   trackByOrderId: TrackByFunction<Order> = (index, order) => order.id;
@@ -204,7 +266,7 @@ export class VentasComponent {
 
   addToCart(producto: Producto) {
     const existingItem = this.carrito.find(item => item.idProduct === producto.id);
-    const cantidad = this.cantidades[producto.id||0] || 1;
+    const cantidad = this.cantidades[producto.id || 0] || 1;
     if (existingItem) {
       existingItem.quantity! += 1;
     } else {
@@ -218,7 +280,7 @@ export class VentasComponent {
         },
         priceSingle: producto.precio,
         ingredients: 'Crema',
-        status: 'Pendiente'
+        status: 'Ordenado'
       });
 
       toast.success(
@@ -293,7 +355,7 @@ export class VentasComponent {
 
     if (!userId) {
       console.error('Usuario no autenticado.');
-      toast.error('Usuario no autenticado.',{
+      toast.error('Usuario no autenticado.', {
         action: {
           label: 'X',
           onClick: () => toast.dismiss(),
@@ -332,8 +394,8 @@ export class VentasComponent {
       total: this.total,
       isDelivery: false,
       detailOrders: this.carrito,
-      creditCard: credit,
-      direcciones: direccion
+      creditCard: null,
+      direcciones: null
     };
 
     console.log(nuevaOrden);
@@ -391,29 +453,6 @@ export class VentasComponent {
     );
   }
 
-  // public frameworks = [
-  //   {
-  //     label: 'Cancelar',
-  //     value: 'Cancelado',
-  //   },
-  //   {
-  //     label: 'Entregado',
-  //     value: 'Entregado',
-  //   },
-  // ];
-
-
-  // public currentFramework = signal<Framework | undefined>(undefined);
-  // public state = signal<'closed' | 'open'>('closed');
-
-
-  // stateChanged(state: 'open' | 'closed') {
-  //   this.state.set(state);
-  //   if (state === 'closed') {
-  //     const statusBtn = document.getElementById('edit-status');
-  //     statusBtn?.click();
-  //   }
-  // }
   stateChanged(state: 'open' | 'closed', orderId: number) {
     this.popoverStates[orderId] = state;
     if (state === 'closed') {
@@ -422,18 +461,6 @@ export class VentasComponent {
     }
   }
 
-  // commandSelected(framework: Framework) {
-  //   this.state.set('closed');
-  //   if (this.currentFramework()?.value === framework.value) {
-  //     this.currentFramework.set(undefined);
-  //   } else {
-  //     this.currentFramework.set(framework);
-  //     this.status = framework.value;
-  //     this.idOrden = this.idorderstatus;
-  //     console.log('Orden a actualizar: ', this.status);
-  //     console.log('ID de la orden: ', this.idOrden);
-  //   }
-  // }
   commandSelected(framework: Framework, orderId: number) {
     this.popoverStates[orderId] = 'closed'; // Cerrar el popover después de seleccionar
 
@@ -498,5 +525,103 @@ export class VentasComponent {
         console.error('Error al actualizar el producto: ', error);
       }
     );
+  }
+
+  protected readonly _rawFilterInput = signal('');
+  protected readonly _emailFilter = signal('');
+  private readonly _debouncedFilter = toSignal(toObservable(this._rawFilterInput).pipe(debounceTime(300)));
+
+  private readonly _displayedIndices = signal({ start: 0, end: 0 });
+  protected readonly _availablePageSizes = [5, 10, 20, 10000];
+  protected readonly _pageSize = signal(this._availablePageSizes[0]);
+
+  private readonly _selectionModel = new SelectionModel<Order>(true);
+  protected readonly _isOrderSelected = (ord: Order) => this._selectionModel.isSelected(ord);
+  protected readonly _selected = toSignal(
+    this._selectionModel.changed.pipe(map(() => this._selectionModel.selected)), {
+    initialValue: []
+  }
+  );
+
+  protected readonly _brnColumnManager = useBrnColumnManager({
+    OrderDate: { visible: true, label: 'Fecha' },
+    Total: { visible: true, label: 'Total' },
+    Detalles: { visible: true, label: 'Detalles' },
+    Status: { visible: true, label: 'Status' },
+    TipoEntrega: { visible: true, label: 'Tipo de entrega' },
+    Acciones: { visible: true, label: 'Acciones' },
+  });
+  protected readonly _allDisplayedColumns = computed(() => [
+    'select',
+    ...this._brnColumnManager.displayedColumns(),
+  ]);
+
+  private readonly _orders = signal<Order[]>([]);
+  private readonly _ordersND = signal<Order[]>([]);
+  private readonly _filteredOrders = computed(() => {
+    const emailFilter = this._emailFilter()?.trim()?.toLowerCase();
+    if (this.rol === 'Caja') {
+      if (emailFilter && emailFilter.length > 0) {
+        return this._ordersND().filter((u) => u.status?.toLowerCase().includes(emailFilter));
+      }
+      return this._ordersND();
+    }
+
+    if (emailFilter && emailFilter.length > 0) {
+      return this._orders().filter((u) => u.status?.toLowerCase().includes(emailFilter));
+    }
+    return this._orders();
+  });
+
+  private readonly _emailSort = signal<'ASC' | 'DESC' | null>(null);
+  protected readonly _filteredSortedPaginatedPayments = computed(() => {
+    const sort = this._emailSort();
+    const start = this._displayedIndices().start;
+    const end = this._displayedIndices().end + 1;
+    const payments = this._filteredOrders();
+    if (!sort) {
+      return payments.slice(start, end);
+    }
+    return [...payments]
+      .sort((p1, p2) => (sort === 'ASC' ? 1 : -1) * (p1.status && p2.status ? p1.status.localeCompare(p2.status) : 0))
+      .slice(start, end);
+  });
+  protected readonly _allFilteredPaginatedPaymentsSelected = computed(() =>
+    this._filteredSortedPaginatedPayments().every((payment) => this._selected().includes(payment)),
+  );
+  protected readonly _checkboxState = computed(() => {
+    const noneSelected = this._selected().length === 0;
+    const allSelectedOrIndeterminate = this._allFilteredPaginatedPaymentsSelected() ? true : 'indeterminate';
+    return noneSelected ? false : allSelectedOrIndeterminate;
+  });
+
+  protected readonly _trackBy: TrackByFunction<Order> = (_: number, p: Order) => p.id;
+  protected readonly _totalElements = computed(() => this._filteredOrders().length);
+  protected readonly _onStateChange = ({ startIndex, endIndex }: PaginatorState) =>
+    this._displayedIndices.set({ start: startIndex, end: endIndex });
+
+
+  protected togglePayment(payment: Order) {
+    this._selectionModel.toggle(payment);
+  }
+
+  protected handleHeaderCheckboxChange() {
+    const previousCbState = this._checkboxState();
+    if (previousCbState === 'indeterminate' || !previousCbState) {
+      this._selectionModel.select(...this._filteredSortedPaginatedPayments());
+    } else {
+      this._selectionModel.deselect(...this._filteredSortedPaginatedPayments());
+    }
+  }
+
+  protected handleEmailSortChange() {
+    const sort = this._emailSort();
+    if (sort === 'ASC') {
+      this._emailSort.set('DESC');
+    } else if (sort === 'DESC') {
+      this._emailSort.set(null);
+    } else {
+      this._emailSort.set('ASC');
+    }
   }
 }
