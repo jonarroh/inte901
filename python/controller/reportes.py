@@ -8,7 +8,7 @@ from matplotlib import colors as mcolors
 reportes = Blueprint('reportes', __name__)
 
 
-@reportes.route('/reportes/users', methods=['POST'])
+@reportes.route('/reportes/users', methods=['POST', 'GET'])
 def get_users():
     query = """
     SELECT 

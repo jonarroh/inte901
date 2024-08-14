@@ -20,7 +20,7 @@
           <span>{{user().name}} {{user().lastName}}</span>
           <button
             hlmBtn
-            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+            class="px-4 py-2 bg-[#785131] text-white rounded hover:bg-blue-600 transition-colors"
             (click)="onSelectdAddress(domicilio)"
           >
             Usar esta dirección
@@ -31,15 +31,7 @@
         <span class="block text-center text-gray-500 my-4">
           No tienes direcciones guardadas
         </span>
-        <div class="flex justify-center">
-          <a
-            hlmBtn
-            routerLink="/edit/address"
-            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-          >
-            Agregar dirección
-        </a>
-        </div>
+      
       }
       <a class=" text-center text-blue-500 cursor-pointer flex items-center space-x-2"
       routerLink="/edit/address"
@@ -61,7 +53,7 @@
         </div>
         <button
           hlmBtn
-          class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+          class="px-4 py-2 bg-[#785131] text-white rounded transition-colors"
           (click)="onOrderToStore()"
         >
           Recoger
