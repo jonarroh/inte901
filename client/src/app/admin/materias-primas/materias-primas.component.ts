@@ -8,25 +8,44 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
+import { BrnTableModule } from '@spartan-ng/ui-table-brain';
+import { HlmTableModule } from '@spartan-ng/ui-table-helm';
+import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
+import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
+import { provideIcons } from '@ng-icons/core';
+import { lucideMoreHorizontal } from '@ng-icons/lucide';
+import { HlmIconComponent } from '~/components/ui-icon-helm/src';
 
 @Component({
   selector: 'app-materias-primas',
   standalone: true,
-  imports: [HlmDialogComponent, 
-            HlmDialogContentComponent,
-            HlmDialogHeaderComponent,
-            HlmDialogFooterComponent,
-            HlmButtonDirective,
-            HlmInputDirective,
-            HlmDialogTitleDirective,
-            HlmDialogDescriptionDirective,
-            BrnDialogTriggerDirective,
-            BrnDialogContentDirective,
-            FormsModule,
-            CommonModule,
-            AsyncPipe],
+  imports: [
+    HlmDialogComponent,
+    HlmDialogContentComponent,
+    HlmDialogHeaderComponent,
+    HlmDialogFooterComponent,
+    HlmButtonDirective,
+    HlmInputDirective,
+    HlmDialogTitleDirective,
+    HlmDialogDescriptionDirective,
+    HlmIconComponent,
+    BrnDialogTriggerDirective,
+    BrnDialogContentDirective,
+    FormsModule,
+    CommonModule,
+    AsyncPipe,
+    BrnTableModule,
+    HlmTableModule,
+    BrnMenuTriggerDirective,
+    HlmMenuModule,
+  ],
   templateUrl: './materias-primas.component.html',
-  styleUrl: './materias-primas.component.css'
+  styleUrls: ['./materias-primas.component.css'],
+  providers: [
+    provideIcons({
+      lucideMoreHorizontal,
+    }),
+  ],
 })
 export class MateriasPrimasComponent {
   materiaService = inject(MateriasPrimasService);
@@ -34,9 +53,13 @@ export class MateriasPrimasComponent {
   materiaPrima: MateriaPrima = {};
   editMode: boolean = false;
 
+  displayedColumns = ['ID', 'Nombre', 'actions'];
+
   constructor() {
     this.materiasPrimas$ = this.materiaService.getMateriaPrima().pipe(
-      map(materiasPrimas => materiasPrimas.filter(materiaPrima => materiaPrima.estatus === 1))
+      map((materiasPrimas) =>
+        materiasPrimas.filter((materiaPrima) => materiaPrima.estatus === 1)
+      )
     );
   }
 
@@ -44,27 +67,15 @@ export class MateriasPrimasComponent {
     return materiaPrima.id;
   }
 
-  onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.materiaPrima.imagen = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
   onSubmitAdd(form: NgForm) {
     if (form.valid) {
       this.materiaPrima.estatus = 1;
       this.materiaPrima.createdAt = new Date().toISOString();
-      this.materiaPrima.updatedAt = new Date().toISOString()
-      this.materiaPrima.deletedAt = new Date().toISOString()
-      this.materiaService.registrarMateriaPrima(this.materiaPrima).subscribe(response => {
+      this.materiaPrima.updatedAt = new Date().toISOString();
+      this.materiaService.registrarMateriaPrima(this.materiaPrima).subscribe((response) => {
         console.log('Materia prima registrada:', response);
         form.resetForm();
-        this.materiaPrima = {}; // Reiniciar el objeto producto
+        this.materiaPrima = {}; // Reiniciar el objeto materia prima
         this.refreshMateriaPrima();
       });
     }
@@ -73,10 +84,10 @@ export class MateriasPrimasComponent {
   onSubmitEdit(form: NgForm) {
     if (form.valid) {
       this.materiaPrima.updatedAt = new Date().toISOString();
-      this.materiaService.editarMateriaPrima(this.materiaPrima.id!, this.materiaPrima).subscribe(response => {
+      this.materiaService.editarMateriaPrima(this.materiaPrima.id!, this.materiaPrima).subscribe((response) => {
         console.log('Materia prima actualizada:', response);
         form.resetForm();
-        this.materiaPrima = {}; // Reiniciar el objeto producto
+        this.materiaPrima = {}; // Reiniciar el objeto materia prima
         this.editMode = false;
         this.refreshMateriaPrima();
       });
@@ -84,7 +95,7 @@ export class MateriasPrimasComponent {
   }
 
   onAdd() {
-    this.materiaPrima = {}; // Limpiar el objeto producto antes de abrir el formulario de agregar
+    this.materiaPrima = {}; // Limpiar el objeto materia prima antes de abrir el formulario de agregar
     const addButton = document.getElementById('add-materia-trigger');
     addButton?.click();
   }
@@ -105,7 +116,9 @@ export class MateriasPrimasComponent {
 
   refreshMateriaPrima() {
     this.materiasPrimas$ = this.materiaService.getMateriaPrima().pipe(
-      map(materiasPrimas => materiasPrimas.filter(materiaPrima => materiaPrima.estatus === 1))
+      map((materiasPrimas) =>
+        materiasPrimas.filter((materiaPrima) => materiaPrima.estatus === 1)
+      )
     );
   }
 }
