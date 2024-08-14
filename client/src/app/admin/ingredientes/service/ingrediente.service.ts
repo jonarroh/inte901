@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, switchMap } from 'rxjs';
+import { forkJoin, map, Observable, switchMap } from 'rxjs';
 import { ENDPOINTS } from '~/lib/endpoint';
 import { Ingrediente } from '../interface/ingrediente';
+import { ProductoService } from '../../productos/service/producto.service';
+import { MateriasPrimasService } from '../../materias-primas/service/materias-primas.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +13,31 @@ export class IngredienteService {
 
   apiURL = ENDPOINTS.ingrediente;
 
-  constructor(private http:HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private productoService: ProductoService,
+    private materiaPrimaService: MateriasPrimasService
+  ) {}
 
   getIngredientes = (): Observable<Ingrediente[]> =>
-    this.http.get<Ingrediente[]>(`${this.apiURL}`)
+    this.http.get<Ingrediente[]>(`${this.apiURL}`).pipe(
+      switchMap(ingredientes => {
+        // Obtiene los nombres de productos y materias primas asociados
+        const ingredienteObservables = ingredientes.map(ingrediente =>
+          forkJoin({
+            producto: this.productoService.getProductoById(ingrediente.idProducto!),
+            materiaPrima: this.materiaPrimaService.getMateriaPrimaById(ingrediente.idMateriaPrima!)
+          }).pipe(
+            map(({ producto, materiaPrima }) => ({
+              ...ingrediente,
+              nombreProducto: producto.nombre,
+              nombreMateriaPrima: materiaPrima.material
+            }))
+          )
+        );
+        return forkJoin(ingredienteObservables);
+      })
+    );
 
   registrarIngredientes(data: Ingrediente): Observable<Ingrediente> {
     return this.http.post<Ingrediente>(this.apiURL, data);

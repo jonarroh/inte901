@@ -42,6 +42,7 @@ export class ProductosComponent {
   productos$: Observable<Producto[]>;
   producto: Producto = {};
   editMode: boolean = false;
+  imagen: File | null = null;
 
   fallbackUrl = 'http://localhost:5000/static/productos/fallback.webp';
 
@@ -60,14 +61,7 @@ export class ProductosComponent {
   }
 
   onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.producto.imagen = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
+    this.imagen = event.target.files[0];
   }
 
   onImageError(event: Event) {
@@ -79,9 +73,10 @@ export class ProductosComponent {
     if (form.valid) {
       this.producto.estatus = 1;
       this.producto.createdAt = new Date().toISOString();
-      this.productoService.registrarProductos(this.producto).subscribe(response => {
+      this.productoService.registrarProductos(this.producto, this.imagen!).subscribe(response => {
         console.log('Producto registrado:', response);
         form.resetForm();
+        this.imagen = null; // Reiniciar la imagen seleccionada
         this.producto = {}; // Reiniciar el objeto producto
         this.refreshProductos();
       });
@@ -90,9 +85,11 @@ export class ProductosComponent {
 
   onSubmitEdit(form: NgForm) {
     if (form.valid) {
-      this.productoService.editarProducto(this.producto.id!, this.producto).subscribe(response => {
+      // Si no hay una imagen seleccionada, pasamos undefined
+      this.productoService.editarProducto(this.producto.id!, this.producto, this.imagen || undefined).subscribe(response => {
         console.log('Producto actualizado:', response);
         form.resetForm();
+        this.imagen = null; // Reiniciar la imagen seleccionada
         this.producto = {}; // Reiniciar el objeto producto
         this.editMode = false;
         this.refreshProductos();
@@ -102,6 +99,7 @@ export class ProductosComponent {
 
   onAdd() {
     this.producto = {}; // Limpiar el objeto producto antes de abrir el formulario de agregar
+    this.imagen = null; // Limpiar la imagen seleccionada
     const addButton = document.getElementById('add-product-trigger');
     addButton?.click();
   }
@@ -109,6 +107,7 @@ export class ProductosComponent {
   onEdit(product: Producto) {
     this.producto = { ...product };
     this.editMode = true;
+    this.imagen = null; // Limpiar la imagen seleccionada para edición
     const editButton = document.getElementById('edit-product-trigger');
     editButton?.click();
   }
