@@ -7,7 +7,7 @@
     using System.ComponentModel.DataAnnotations.Schema;
     using Server.Models.Usuario.Server.Models.Usuario;
 
-	public class Order
+    public class Order
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -21,9 +21,10 @@
         public float? Total { get; set; }
 
         [Required]
-        public string Status { get; set; } // Pendiente, Vendido, Cancelado
+        public string Status { get; set; } // Aceptado, Cancelado, Recibido, Ordenado
         public long? Ticket { get; set; }
-        
+        public bool IsDeliver { get; set; }
+
         // Falta campo para el QR...creo
 
         public ICollection<DetailOrder>? DetailOrders { get; set; }
