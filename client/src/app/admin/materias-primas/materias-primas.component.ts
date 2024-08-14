@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { MateriasPrimasService } from './service/materias-primas.service';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { MateriaPrima } from './interface/materias-primas';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogDescriptionDirective, HlmDialogFooterComponent, HlmDialogHeaderComponent, HlmDialogTitleDirective } from '~/components/ui-dialog-helm/src';
@@ -55,17 +55,39 @@ export class MateriasPrimasComponent {
 
   displayedColumns = ['ID', 'Nombre', 'actions'];
 
+  private filterSubject = new BehaviorSubject<string>('');
+  filter$ = this.filterSubject.asObservable();
+
   constructor() {
-    this.materiasPrimas$ = this.materiaService.getMateriaPrima().pipe(
-      map((materiasPrimas) =>
-        materiasPrimas.filter((materiaPrima) => materiaPrima.estatus === 1)
+    this.materiasPrimas$ = combineLatest([
+      this.materiaService.getMateriaPrima().pipe(
+        map((materiasPrimas) => materiasPrimas.filter((materiaPrima) => materiaPrima.estatus === 1))
+      ),
+      this.filter$
+    ]).pipe(
+      map(([materiasPrimas, filterValue]) => 
+        materiasPrimas.filter(materiaPrima => 
+          materiaPrima.material?.toLowerCase().includes(filterValue.toLowerCase()) ?? false
+        )
       )
     );
   }
+  
+  
 
   trackByMateriaPrimaId(index: number, materiaPrima: any): number {
     return materiaPrima.id;
   }
+
+  applyFilter(filterValue: string) {
+    this.filterSubject.next(filterValue);
+  }
+
+  applyFilterFromEvent(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.applyFilter(inputElement.value);
+  }
+  
 
   onSubmitAdd(form: NgForm) {
     if (form.valid) {
