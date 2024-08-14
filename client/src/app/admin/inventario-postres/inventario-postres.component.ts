@@ -23,6 +23,8 @@ import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
 import { provideIcons } from '@ng-icons/core';
 import { lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmIconComponent } from '~/components/ui-icon-helm/src';
+import { ProductoService } from '../productos/service/producto.service';
+import { Producto } from '../productos/interface/producto';
 
 @Component({
   selector: 'app-inventario-postres',
@@ -58,15 +60,24 @@ import { HlmIconComponent } from '~/components/ui-icon-helm/src';
 })
 export class InventarioPostresComponent {
   inventarioPostresService = inject(InventarioPostresService);
+  productoService = inject(ProductoService);
+
   inventarios$: Observable<InventarioPostre[]>;
+  productos$: Observable<Producto[]>; // Observable para los productos
   inventario: InventarioPostre = {};
   editMode: boolean = false;
 
   displayedColumns = ['ID Postre', 'Producto', 'Cantidad', 'actions'];
 
   constructor() {
+    // Obtener la lista de inventarios filtrando por estatus
     this.inventarios$ = this.inventarioPostresService.getInventarios().pipe(
       map(inventarios => inventarios.filter(inventario => inventario.estatus === 1))
+    );
+
+    // Obtener productos activos
+    this.productos$ = this.productoService.getProductos().pipe(
+      map(productos => productos.filter(producto => producto.estatus === 1))
     );
   }
 

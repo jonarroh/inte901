@@ -23,6 +23,8 @@ import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
 import { provideIcons } from '@ng-icons/core';
 import { lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmIconComponent } from '~/components/ui-icon-helm/src';
+import { MateriasPrimasService } from '../materias-primas/service/materias-primas.service';
+import { MateriaPrima } from '../materias-primas/interface/materias-primas';
 
 @Component({
   selector: 'app-inventario-mp',
@@ -58,16 +60,24 @@ import { HlmIconComponent } from '~/components/ui-icon-helm/src';
 })
 export class InventarioMPComponent {
   inventarioMPService = inject(InventarioMPService);
+  materiasPrimasService = inject(MateriasPrimasService);
+
   inventarios$: Observable<InventarioMP[]>;
+  materiasPrimas$: Observable<MateriaPrima[]>; // Observable para las materias primas
   inventario: InventarioMP = {};
   editMode: boolean = false;
 
-  // Reemplazar 'ID Materia Prima' con 'Materia Prima'
   displayedColumns = ['ID', 'Materia Prima', 'Cantidad', 'Unidad de Medida', 'ID Compra', 'Caducidad', 'actions'];
 
   constructor() {
+    // Obtener la lista de inventarios filtrando por estatus
     this.inventarios$ = this.inventarioMPService.getInventarios().pipe(
       map(inventarios => inventarios.filter(inventario => inventario.estatus === 1))
+    );
+
+    // Obtener materias primas activas
+    this.materiasPrimas$ = this.materiasPrimasService.getMateriaPrima().pipe(
+      map(materiasPrimas => materiasPrimas.filter(materiaPrima => materiaPrima.estatus === 1))
     );
   }
 

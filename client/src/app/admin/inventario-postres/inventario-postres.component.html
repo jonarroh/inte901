@@ -13,8 +13,10 @@
       <form (ngSubmit)="onSubmitAdd(inventarioFormAdd)" #inventarioFormAdd="ngForm">
         <div class="py-4 grid gap-4">
           <div class="items-center grid grid-cols-4 gap-4">
-            <label hlmLabel for="idProducto-add" class="text-right">ID Producto</label>
-            <input hlmInput id="idProducto-add" name="idProducto" type="number" [(ngModel)]="inventario.idProducto" placeholder="ID del producto" class="col-span-3" required />
+            <label hlmLabel for="idProducto-add" class="text-right">Producto</label>
+            <select hlmInput id="idProducto-add" name="idProducto" [(ngModel)]="inventario.idProducto" class="col-span-3" required>
+              <option *ngFor="let producto of productos$ | async" [value]="producto.id">{{ producto.nombre }}</option>
+            </select>
           </div>
           <div class="items-center grid grid-cols-4 gap-4">
             <label hlmLabel for="cantidad-add" class="text-right">Cantidad</label>
@@ -38,8 +40,10 @@
       <form (ngSubmit)="onSubmitEdit(inventarioFormEdit)" #inventarioFormEdit="ngForm">
         <div class="py-4 grid gap-4">
           <div class="items-center grid grid-cols-4 gap-4">
-            <label hlmLabel for="idProducto-edit" class="text-right">ID Producto</label>
-            <input hlmInput id="idProducto-edit" name="idProducto" type="number" [(ngModel)]="inventario.idProducto" placeholder="ID del producto" class="col-span-3" required />
+            <label hlmLabel for="idProducto-edit" class="text-right">Producto</label>
+            <select hlmInput id="idProducto-edit" name="idProducto" [(ngModel)]="inventario.idProducto" class="col-span-3" required>
+              <option *ngFor="let producto of productos$ | async" [value]="producto.id">{{ producto.nombre }}</option>
+            </select>
           </div>
           <div class="items-center grid grid-cols-4 gap-4">
             <label hlmLabel for="cantidad-edit" class="text-right">Cantidad</label>

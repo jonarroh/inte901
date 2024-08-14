@@ -14,21 +14,44 @@
         <div class="py-4 grid gap-4">
           <!-- Campos del formulario -->
           <div class="items-center grid grid-cols-4 gap-4">
-            <label hlmLabel for="idProducto-add" class="text-right">ID Producto</label>
-            <input hlmInput id="idProducto-add" name="idProducto" type="number" [(ngModel)]="ingrediente.idProducto" placeholder="ID del producto" class="col-span-3" required />
+            <label hlmLabel for="idProducto-add" class="text-right">Producto</label>
+            <select hlmInput id="idProducto-add" name="idProducto" [(ngModel)]="ingrediente.idProducto" class="col-span-3" required>
+              <option *ngFor="let producto of productos$ | async" [value]="producto.id">
+                {{ producto.nombre }}
+              </option>
+            </select>
           </div>
           <div class="items-center grid grid-cols-4 gap-4">
-            <label hlmLabel for="idMateriaPrima-add" class="text-right">ID Materia Prima</label>
-            <input hlmInput id="idMateriaPrima-add" name="idMateriaPrima" type="number" [(ngModel)]="ingrediente.idMateriaPrima" placeholder="ID de la materia prima" class="col-span-3" required />
+            <label hlmLabel for="idMateriaPrima-add" class="text-right">Materia Prima</label>
+            <select hlmInput id="idMateriaPrima-add" name="idMateriaPrima" [(ngModel)]="ingrediente.idMateriaPrima" class="col-span-3" required>
+              <option *ngFor="let materiaPrima of materiasPrimas$ | async" [value]="materiaPrima.id">
+                {{ materiaPrima.material }}
+              </option>
+            </select>
           </div>
           <div class="items-center grid grid-cols-4 gap-4">
             <label hlmLabel for="cantidad-add" class="text-right">Cantidad</label>
             <input hlmInput id="cantidad-add" name="cantidad" type="number" [(ngModel)]="ingrediente.cantidad" placeholder="Cantidad" class="col-span-3" required />
           </div>
+          <!-- Dropdown para seleccionar Unidad de Medida -->
           <div class="items-center grid grid-cols-4 gap-4">
             <label hlmLabel for="unidadMedida-add" class="text-right">Unidad de Medida</label>
-            <input hlmInput id="unidadMedida-add" name="unidadMedida" [(ngModel)]="ingrediente.unidadMedida" placeholder="Unidad de medida" class="col-span-3" required />
+            <select hlmInput id="unidadMedida-add" name="unidadMedida" [(ngModel)]="ingrediente.unidadMedida" class="col-span-3" required>
+              <option value="taza">Taza</option>
+              <option value="cucharadita">Cucharadita</option>
+              <option value="cucharada">Cucharada</option>
+              <option value="unidad">Unidad</option>
+              <option value="rebanada">Rebanada</option>
+              <option value="shot">Shot</option>
+              <option value="Gr">Gr</option>
+              <option value="Kg">Kg</option>
+              <option value="Lt">Lt</option>
+              <option value="Ml">Ml</option>
+            </select>
           </div>
+
+<!-- Repetir el mismo código para el formulario de edición -->
+
         </div>
         <hlm-dialog-footer>
           <button hlmBtn type="submit">Guardar</button>
@@ -48,21 +71,44 @@
         <div class="py-4 grid gap-4">
           <!-- Campos del formulario -->
           <div class="items-center grid grid-cols-4 gap-4">
-            <label hlmLabel for="idProducto-edit" class="text-right">ID Producto</label>
-            <input hlmInput id="idProducto-edit" name="idProducto" type="number" [(ngModel)]="ingrediente.idProducto" placeholder="ID del producto" class="col-span-3" required />
+            <label hlmLabel for="idProducto-add" class="text-right">Producto</label>
+            <select hlmInput id="idProducto-add" name="idProducto" [(ngModel)]="ingrediente.idProducto" class="col-span-3" required>
+              <option *ngFor="let producto of productos$ | async" [value]="producto.id">
+                {{ producto.nombre }}
+              </option>
+            </select>
           </div>
           <div class="items-center grid grid-cols-4 gap-4">
-            <label hlmLabel for="idMateriaPrima-edit" class="text-right">ID Materia Prima</label>
-            <input hlmInput id="idMateriaPrima-edit" name="idMateriaPrima" type="number" [(ngModel)]="ingrediente.idMateriaPrima" placeholder="ID de la materia prima" class="col-span-3" required />
+            <label hlmLabel for="idMateriaPrima-add" class="text-right">Materia Prima</label>
+            <select hlmInput id="idMateriaPrima-add" name="idMateriaPrima" [(ngModel)]="ingrediente.idMateriaPrima" class="col-span-3" required>
+              <option *ngFor="let materiaPrima of materiasPrimas$ | async" [value]="materiaPrima.id">
+                {{ materiaPrima.material }}
+              </option>
+            </select>
           </div>
           <div class="items-center grid grid-cols-4 gap-4">
             <label hlmLabel for="cantidad-edit" class="text-right">Cantidad</label>
             <input hlmInput id="cantidad-edit" name="cantidad" type="number" [(ngModel)]="ingrediente.cantidad" placeholder="Cantidad" class="col-span-3" required />
           </div>
+          <!-- Dropdown para seleccionar Unidad de Medida -->
           <div class="items-center grid grid-cols-4 gap-4">
-            <label hlmLabel for="unidadMedida-edit" class="text-right">Unidad de Medida</label>
-            <input hlmInput id="unidadMedida-edit" name="unidadMedida" [(ngModel)]="ingrediente.unidadMedida" placeholder="Unidad de medida" class="col-span-3" required />
+            <label hlmLabel for="unidadMedida-add" class="text-right">Unidad de Medida</label>
+            <select hlmInput id="unidadMedida-add" name="unidadMedida" [(ngModel)]="ingrediente.unidadMedida" class="col-span-3" required>
+              <option value="taza">Taza</option>
+              <option value="cucharadita">Cucharadita</option>
+              <option value="cucharada">Cucharada</option>
+              <option value="unidad">Unidad</option>
+              <option value="rebanada">Rebanada</option>
+              <option value="shot">Shot</option>
+              <option value="Gr">Gr</option>
+              <option value="Kg">Kg</option>
+              <option value="Lt">Lt</option>
+              <option value="Ml">Ml</option>
+            </select>
           </div>
+
+<!-- Repetir el mismo código para el formulario de edición -->
+
         </div>
         <hlm-dialog-footer>
           <button hlmBtn type="submit">Actualizar</button>

@@ -23,6 +23,10 @@ import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
 import { provideIcons } from '@ng-icons/core';
 import { lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmIconComponent } from '~/components/ui-icon-helm/src';
+import { ProductoService } from '../productos/service/producto.service';
+import { MateriasPrimasService } from '../materias-primas/service/materias-primas.service';
+import { Producto } from '../productos/interface/producto';
+import { MateriaPrima } from '../materias-primas/interface/materias-primas';
 
 @Component({
   selector: 'app-ingredientes',
@@ -58,19 +62,38 @@ import { HlmIconComponent } from '~/components/ui-icon-helm/src';
 })
 export class IngredientesComponent {
   ingredienteService = inject(IngredienteService);
+  productoService = inject(ProductoService);
+  materiaPrimaService = inject(MateriasPrimasService);
+
   ingredientes$: Observable<Ingrediente[]>;
+  productos$: Observable<Producto[]>;
+  materiasPrimas$: Observable<MateriaPrima[]>;
+
   ingrediente: Ingrediente = {};
   editMode: boolean = false;
 
   displayedColumns = ['ID', 'Producto', 'Materia Prima', 'Cantidad', 'Unidad de Medida', 'actions'];
 
-constructor() {
-  this.ingredientes$ = this.ingredienteService.getIngredientes().pipe(
-    map((ingredientes) =>
-      ingredientes.filter((ingrediente) => ingrediente.estatus === 1)
-    )
-  );
-}
+  constructor() {
+    this.ingredientes$ = this.ingredienteService.getIngredientes().pipe(
+      map((ingredientes) =>
+        ingredientes.filter((ingrediente) => ingrediente.estatus === 1)
+      )
+    );
+
+    // Obtener productos y materias primas
+    this.productos$ = this.productoService.getProductos().pipe(
+      map((productos) =>
+        productos.filter((producto) => producto.estatus === 1)
+      )
+    );
+
+    this.materiasPrimas$ = this.materiaPrimaService.getMateriaPrima().pipe(
+      map((materiasPrimas) =>
+        materiasPrimas.filter((materiaPrima) => materiaPrima.estatus === 1)
+      )
+    );
+  }
 
 
   trackByIngredientId(index: number, ingredient: any): number {
