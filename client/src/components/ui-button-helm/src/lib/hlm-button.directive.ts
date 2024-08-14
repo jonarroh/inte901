@@ -18,7 +18,14 @@ export const buttonVariants = cva(
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'underline-offset-4 hover:underline text-primary',
         primary: 'bg-primary text-primary-foreground hover:bg-primary/80',
-        success: 'bg-success text-success-foregroung hover:bg-success/80'
+        success: 'bg-success text-success-foregroung hover:bg-success/80',
+        accent: 'bg-accent text-accent-foreground hover:bg-accent/80',
+        neutral: 'bg-neutral text-neutral-foreground hover:bg-neutral/80',
+        background: 'bg-background text-background-foreground hover:bg-background/80',
+        info: 'bg-info text-info-foreground hover:bg-info/80',
+        warning: 'bg-warning text-warning-foreground hover:bg-warning/80',
+        error: 'bg-error text-error-foreground hover:bg-error/80',
+        admin: 'bg-admin text-admin-foreground hover:bg-admin/80',
       },
       size: {
         default: 'h-10 py-2 px-4',
