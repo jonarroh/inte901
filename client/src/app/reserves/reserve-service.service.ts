@@ -13,15 +13,15 @@ export class ReserveServiceService {
   constructor(private http: HttpClient) {}
 
   // Obtener reservas por ID de espacio
-  getReservasByEspacio(idEspacio: number): Observable<Reserva[]> {
+  getReservasByEspacio(idEspacio: number): Observable<ReservaDTO[]> {
     const url = `${this.apiUrl}/bySpace/${idEspacio}`;
-    return this.http.get<Reserva[]>(url).pipe(
-      catchError(this.handleError<Reserva[]>('getReservasByEspacio', []))
+    return this.http.get<ReservaDTO[]>(url).pipe(
+      catchError(this.handleError<ReservaDTO[]>('getReservasByEspacio', []))
     );
   }
 
-  getReservationsBySpaceId(idEspacio: number): Observable<Reserva[]> {
-    return this.http.get<Reserva[]>(`${this.apiUrl}/bySpace/${idEspacio}`);
+  getReservationsBySpaceId(idEspacio: number): Observable<ReservaDTO[]> {
+    return this.http.get<ReservaDTO[]>(`${this.apiUrl}/bySpace/${idEspacio}`);
   }
 
   // Este método también debe devolver un Observable
@@ -44,10 +44,10 @@ export class ReserveServiceService {
     );
   }
 
-  getReservaById(id: number): Observable<Reserva> {
+  getReservaById(id: number): Observable<ReservaDTO> {
     const url = `${this.apiUrl}/${id}`;
-    return this.http.get<Reserva>(url).pipe(
-      catchError(this.handleError<Reserva>(`getReservaById id=${id}`))
+    return this.http.get<ReservaDTO>(url).pipe(
+      catchError(this.handleError<ReservaDTO>(`getReservaById id=${id}`))
     );
   }
 

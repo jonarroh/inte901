@@ -121,7 +121,7 @@ export interface User {
 
 
 export interface Espacio {
-  idEspacio: number;
+  idEspacio?: number;
   nombre: string;
   canPersonas: number;
   precio: number;
