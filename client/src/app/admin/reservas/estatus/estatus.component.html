@@ -1,58 +1,58 @@
-<div class="container mx-auto max-h-screen overflow-y-auto w-full p-4">
+<!-- <div class="container mx-auto max-h-screen overflow-y-auto w-full p-4">
   <div class="flex-1 flex justify-center">
-    <h1 class="text-5xl font-bold mt-1 mb-2 text-black">Espacios</h1>
+    <h1 class="text-5xl font-bold mt-1 mb-2 text-black">Reservas</h1>
   </div>
   <div class="flex justify-end my-5 me-5 pr-5">
     <div>
       <hlm-dialog [state]="states()">
-        <button id="edit-profile" brnDialogTrigger hlmBtn>Agregar Espacio</button>
+        <button id="edit-profile" brnDialogTrigger hlmBtn>Agregar Reserva</button>
        <form (submit)="onSubmit()">
 
           <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
             <hlm-dialog-header>
-              <h3 hlmDialogTitle>Nuevo Espacio</h3>
+              <h3 hlmDialogTitle>Nueva Reserva</h3>
               <p hlmDialogDescription></p>
             </hlm-dialog-header>
             <div class="py-4 grid gap-4">
               <div>
                 <label class="text-start">
-                  Nombre
+                  Fecha de la reserva
                   <input
                     class="w-80"
                     hlmInput
                     type="text"
-                    placeholder="Nombre"
-                    name="name"
+                    placeholder="Fecha de la reserva"
+                    name="fecha"
                     ngModel
-                    [formField]="formModel.controls.name"
+                    [formField]="formModel.controls.fecha"
                     required
                     maxlength="50"
                   />
                 </label>
-                @if (formModel.controls.name.touched()) {
-                  @if (formModel.controls.name.hasError('required')) {
+                @if (formModel.controls.fecha.touched()) {
+                  @if (formModel.controls.fecha.hasError('required')) {
                     <div class="text-red-500 text-sm">El nombre es requerido</div>
                   }
                 }
               </div>
               <div>
                 <label class="text-start">
-                  Capacidad de Personas
+                  Hora de inicio
                   <input
                     class="w-80"
                     hlmInput
                     type="number"
-                    placeholder="Capacidad de Personas"
-                    name="canPersonas"
+                    placeholder="Hota Inicio"
+                    name="horaInicio"
                     ngModel
-                    [formField]="formModel.controls.canPersonas"
+                    [formField]="formModel.controls.horaInicio"
                     required
                     min="1"
                   />
                 </label>
                 
-                @if (formModel.controls.canPersonas.touched()) {
-                  @if (formModel.controls.canPersonas.hasError('required')) {
+                @if (formModel.controls.horaInicio.touched()) {
+                  @if (formModel.controls.horaInicio.hasError('required')) {
                     <div class="text-red-500 text-sm">La capacidad de personas es requerida</div>
                   }
                   @if (formModel.controls.canPersonas.hasError('min')) {
@@ -62,64 +62,61 @@
               </div>
               <div>
                 <label class="text-start">
-                  Precio
+                  Hora de fin
                   <input
                     class="w-80"
                     hlmInput
                     type="number"
-                    placeholder="Precio"
-                    name="precio"
+                    placeholder="Hora Fin"
+                    name="horaFin"
                     ngModel
-                    [formField]="formModel.controls.precio"
+                    [formField]="formModel.controls.horaFin"
                     required
                     min="0"
                     step="0.01"
                   />
                 </label>
-                 @if (formModel.controls.precio.touched()) {
-                  @if (formModel.controls.precio.hasError('required')) {
+                 @if (formModel.controls.horaFin.touched()) {
+                  @if (formModel.controls.horaFin.hasError('required')) {
                     <div class="text-red-500 text-sm">El precio es requerido</div>
                   }
-                  @if (formModel.controls.precio.hasError('min')) {
+                  @if (formModel.controls.horaFin.hasError('min')) {
                     <div class="text-red-500 text-sm">El precio debe ser al menos 0</div>
                   }
                  }
               </div>
-              
               <div>
                 <label class="text-start">
-                  Descripción
-                  <textarea
+                  Hora de fin
+                  <input
                     class="w-80"
                     hlmInput
-                    placeholder="Descripción"
-                    name="descrip"
+                    type="number"
+                    placeholder="Hora Fin"
+                    name="horaFin"
                     ngModel
-                    [formField]="formModel.controls.descrip"
+                    [formField]="formModel.controls.horaFin"
                     required
-                    maxlength="200"
-                  ></textarea>
-                </label>  
-                @if (formModel.controls.descrip.touched()) {
-                  @if (formModel.controls.descrip.hasError('required')) {
-                    <div class="text-red-500 text-sm">La descripción es requerida</div>
+                    min="0"
+                    step="0.01"
+                  />
+                </label>
+                 @if (formModel.controls.horaFin.touched()) {
+                  @if (formModel.controls.horaFin.hasError('required')) {
+                    <div class="text-red-500 text-sm">El precio es requerido</div>
                   }
-                }
+                  @if (formModel.controls.horaFin.hasError('min')) {
+                    <div class="text-red-500 text-sm">El precio debe ser al menos 0</div>
+                  }
+                 }
               </div>
-
-              @if (!isEditing()){
-              <div class="items-center grid grid-cols-4 gap-4">
-                <label hlmLabel for="imagen-add" class="text-right">Imagen</label>
-                <input hlmInput type="file" id="imagen-add" name="imagen" class="col-span-3"
-                  (change)="onFileChange($event)" />
-              </div>
-            }
+            
             </div>
             <hlm-dialog-footer>
               @if(isEditing()) {
                 <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
                 <button hlmBtn type="submit"
-                (click)="onEditEspacio()"
+                (click)="onEditReserva()"
                 >Guardar</button>
               } @else {
                 <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
@@ -182,7 +179,7 @@
       </hlm-td>
     </brn-column-def>
     <brn-column-def name="idEspacio" class="w-32 sm:w-40 bg-white">
-      <hlm-th truncate *brnHeaderDef>ID Espacio</hlm-th>
+      <hlm-th truncate *brnHeaderDef>ID Reserva</hlm-th>
       <hlm-td truncate *brnCellDef="let element">
         {{ element.idEspacio }}
       </hlm-td>
@@ -287,4 +284,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

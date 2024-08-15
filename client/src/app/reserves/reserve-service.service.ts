@@ -83,5 +83,12 @@ export class ReserveServiceService {
     return this.events[date] || [];
   }
 
+  getReservasByCliente(idCliente: number): Observable<ReservaDTO[]> {
+    const url = `${this.apiUrl}/byClient/${idCliente}`;
+    return this.http.get<ReservaDTO[]>(url).pipe(
+      catchError(this.handleError<ReservaDTO[]>('getReservasByCliente', []))
+    );
+  }
+
   
 }

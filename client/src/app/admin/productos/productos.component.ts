@@ -14,6 +14,7 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { Producto } from './interface/producto';
 import { ProductoService } from './service/producto.service';
 import { FormsModule, NgForm } from '@angular/forms';
+import { EspacioDTO } from '~/lib/types';
 
 @Component({
   selector: 'app-productos',
@@ -129,6 +130,8 @@ export class ProductosComponent {
     const addButton = document.getElementById('add-product-trigger');
     addButton?.click();
   }
+
+  
 
   onEdit(product: Producto) {
     this.producto = { ...product };
