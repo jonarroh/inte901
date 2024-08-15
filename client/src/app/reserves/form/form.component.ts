@@ -34,6 +34,8 @@ export class FormComponent implements OnInit {
   eventDate: string = '';
   selectedDate: Date | null = null;
   reservations: ReservaDTO[] = [];
+  idCliente : number | null = null;
+
 
   creditCards = signal<CreditCard[]>([]);
   selectedCreditCard = signal<CreditCard>({} as CreditCard);
@@ -42,12 +44,17 @@ export class FormComponent implements OnInit {
     this.creditCards.set(
       this.UserService.userData().creditCards
     );
+
+    
     console.log('creditCards', this.creditCards);
 
     const today = new Date();
     this.month = format(today, 'LLLL', { locale: es });
     this.year = today.getFullYear();
     this.generateCalendar();
+
+    const storedUserId = localStorage.getItem('userId');
+    this.idCliente = storedUserId ? parseInt(storedUserId, 10) : null;
   }
 
   ngOnInit() {
@@ -180,7 +187,7 @@ export class FormComponent implements OnInit {
 
       const reserva: ReservaDTO = {
         idUsuario: 1,
-        idCliente: 3,
+        idCliente: this.idCliente ?? 0,
         estatus: 'Activo',
         detailReserva: {
           idDetailReser: 0, // Asumido, o eliminar si es autogenerado
