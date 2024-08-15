@@ -1,83 +1,159 @@
 <div class="flex-1 flex justify-center" style="width: calc(100vw - 18rem);">
-    <h1 class="text-5xl font-bold pt-5 mt-5 text-secondary">Inventario Postres</h1>
-  </div>
-  
-  <div class="flex justify-end my-5 me-5 pr-5">
-    <!-- Botón para agregar inventario -->
-    <hlm-dialog>
-      <button id="add-inventario-trigger" brnDialogTrigger hlmBtn (click)="onAdd()" class="bg-secondary text-white">Agregar Inventario</button>
-      <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
-        <hlm-dialog-header>
-          <h3 hlmDialogTitle>Agregar Inventario</h3>
-          <p hlmDialogDescription>Ingresa los detalles del nuevo inventario. Haz clic en guardar cuando termines.</p>
-        </hlm-dialog-header>
-        <form (ngSubmit)="onSubmitAdd(inventarioFormAdd)" #inventarioFormAdd="ngForm">
-          <div class="py-4 grid gap-4">
-            <!-- Campos del formulario -->
-            <div class="items-center grid grid-cols-4 gap-4">
-              <label hlmLabel for="idProducto-add" class="text-right">ID Producto</label>
-              <input hlmInput id="idProducto-add" name="idProducto" type="number" [(ngModel)]="inventario.idProducto" placeholder="ID del producto" class="col-span-3" required />
-            </div>
-            <div class="items-center grid grid-cols-4 gap-4">
-              <label hlmLabel for="cantidad-add" class="text-right">Cantidad</label>
-              <input hlmInput id="cantidad-add" name="cantidad" type="number" [(ngModel)]="inventario.cantidad" placeholder="Cantidad" class="col-span-3" required />
-            </div>
+  <h1 class="text-5xl font-bold pt-5 mt-5 text-secondary">Inventario Postres</h1>
+</div>
+
+<div class="flex justify-end my-5 me-5 pr-5">
+  <hlm-dialog>
+    <button id="add-inventario-trigger" brnDialogTrigger hlmBtn (click)="onAdd()" variant="warning" class="text-white">Agregar Inventario</button>
+    <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+      <hlm-dialog-header>
+        <h3 hlmDialogTitle>Agregar Inventario</h3>
+        <p hlmDialogDescription>Ingresa los detalles del nuevo inventario. Haz clic en guardar cuando termines.</p>
+      </hlm-dialog-header>
+      <form (ngSubmit)="onSubmitAdd(inventarioFormAdd)" #inventarioFormAdd="ngForm">
+        <div class="py-4 grid gap-4">
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="idProducto-add" class="text-right">Producto</label>
+            <select hlmInput id="idProducto-add" name="idProducto" [(ngModel)]="inventario.idProducto" class="col-span-3" required>
+              <option *ngFor="let producto of productos$ | async" [value]="producto.id">{{ producto.nombre }}</option>
+            </select>
           </div>
-          <hlm-dialog-footer>
-            <button hlmBtn type="submit">Guardar</button>
-          </hlm-dialog-footer>
-        </form>
-      </hlm-dialog-content>
-    </hlm-dialog>
-  
-    <!-- Botón para editar inventario (se muestra al hacer clic en "Editar" en la lista de inventarios) -->
-    <hlm-dialog>
-      <button id="edit-inventario-trigger" brnDialogTrigger hlmBtn class="hidden">Editar Inventario</button>
-      <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
-        <hlm-dialog-header>
-          <h3 hlmDialogTitle>Editar Inventario</h3>
-          <p hlmDialogDescription>Actualiza los detalles del inventario. Haz clic en actualizar cuando termines.</p>
-        </hlm-dialog-header>
-        <form (ngSubmit)="onSubmitEdit(inventarioFormEdit)" #inventarioFormEdit="ngForm">
-          <div class="py-4 grid gap-4">
-            <!-- Campos del formulario -->
-            <div class="items-center grid grid-cols-4 gap-4">
-              <label hlmLabel for="idProducto-edit" class="text-right">ID Producto</label>
-              <input hlmInput id="idProducto-edit" name="idProducto" type="number" [(ngModel)]="inventario.idProducto" placeholder="ID del producto" class="col-span-3" required />
-            </div>
-            <div class="items-center grid grid-cols-4 gap-4">
-              <label hlmLabel for="cantidad-edit" class="text-right">Cantidad</label>
-              <input hlmInput id="cantidad-edit" name="cantidad" type="number" [(ngModel)]="inventario.cantidad" placeholder="Cantidad" class="col-span-3" required />
-            </div>
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="cantidad-add" class="text-right">Cantidad</label>
+            <input hlmInput id="cantidad-add" name="cantidad" type="number" [(ngModel)]="inventario.cantidad" placeholder="Cantidad" class="col-span-3" required />
           </div>
-          <hlm-dialog-footer>
-            <button hlmBtn type="submit">Actualizar</button>
-          </hlm-dialog-footer>
-        </form>
-      </hlm-dialog-content>
-    </hlm-dialog>
+        </div>
+        <hlm-dialog-footer>
+          <button hlmBtn type="submit">Guardar</button>
+        </hlm-dialog-footer>
+      </form>
+    </hlm-dialog-content>
+  </hlm-dialog>
+
+  <hlm-dialog>
+    <button id="edit-inventario-trigger" brnDialogTrigger hlmBtn class="hidden">Editar Inventario</button>
+    <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+      <hlm-dialog-header>
+        <h3 hlmDialogTitle>Editar Inventario</h3>
+        <p hlmDialogDescription>Actualiza los detalles del inventario. Haz clic en actualizar cuando termines.</p>
+      </hlm-dialog-header>
+      <form (ngSubmit)="onSubmitEdit(inventarioFormEdit)" #inventarioFormEdit="ngForm">
+        <div class="py-4 grid gap-4">
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="idProducto-edit" class="text-right">Producto</label>
+            <select hlmInput id="idProducto-edit" name="idProducto" [(ngModel)]="inventario.idProducto" class="col-span-3" required>
+              <option *ngFor="let producto of productos$ | async" [value]="producto.id">{{ producto.nombre }}</option>
+            </select>
+          </div>
+          <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="cantidad-edit" class="text-right">Cantidad</label>
+            <input hlmInput id="cantidad-edit" name="cantidad" type="number" [(ngModel)]="inventario.cantidad" placeholder="Cantidad" class="col-span-3" required />
+          </div>
+        </div>
+        <hlm-dialog-footer>
+          <button hlmBtn type="submit">Actualizar</button>
+        </hlm-dialog-footer>
+      </form>
+    </hlm-dialog-content>
+  </hlm-dialog>
+</div>
+
+<div class="flex justify-between my-5 px-5">
+  <input hlmInput class="w-full md:w-80" placeholder="Buscar por producto" (input)="applyFilterFromEvent($event)" />
+  <button hlmBtn class="bg-white border border-gray-300 text-gray-600 hover:bg-gray-100 me-5" align="end" [brnMenuTriggerFor]="menu">
+    Ver columnas
+    <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
+  </button>
+  <ng-template #menu>
+    <hlm-menu class="w-32 bg-white">
+      <button
+        *ngFor="let column of _brnColumnManager.allColumns; trackBy: trackByColumnName"
+        hlmMenuItemCheckbox
+        class="bg-white hover:bg-gray-100 border border-gray-300 text-gray-600"
+        [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
+        [checked]="_brnColumnManager.isColumnVisible(column.name)"
+        (triggered)="_brnColumnManager.toggleVisibility(column.name)"
+      >
+        <hlm-menu-item-check class="bg-white" />
+        <span>{{ column.label }}</span>
+      </button>
+    </hlm-menu>
+  </ng-template>
+</div>
+
+<div class="overflow-x-auto p-5">
+  <brn-table
+    hlm
+    stickyHeader
+    class="border-border block h-[335px] overflow-auto rounded-md border bg-white"
+    [dataSource]="(inventarios$ | async) || []"
+    [displayedColumns]="displayedColumns()"
+    [trackBy]="trackByInventarioId"
+  >
+    <brn-column-def name="ID Postre" class="w-1/4 bg-white">
+      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">ID Postre</hlm-th>
+      <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.idPostre }}</hlm-td>
+    </brn-column-def>
+
+    <brn-column-def name="Producto" class="w-1/4 bg-white">
+  <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">Producto</hlm-th>
+  <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.nombreProducto }}</hlm-td>
+</brn-column-def>
+
+    <brn-column-def name="Cantidad" class="w-1/4 bg-white">
+      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">Cantidad</hlm-th>
+      <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.cantidad }}</hlm-td>
+    </brn-column-def>
+
+    <brn-column-def name="actions" class="w-1/4 bg-white">
+      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center"></hlm-th>
+      <hlm-td *brnCellDef="let element" class="bg-white flex justify-center items-center">
+        <button hlmBtn variant="ghost" class="h-6 w-6 p-0.5 hover:bg-gray-100" align="end" [brnMenuTriggerFor]="menu">
+          <hlm-icon class="w-4 h-4" name="lucideMoreHorizontal" />
+        </button>
+
+        <ng-template #menu>
+          <hlm-menu class="bg-white">
+            <hlm-menu-label>Acciones</hlm-menu-label>
+            <hlm-menu-separator />
+            <hlm-menu-group>
+              <button hlmMenuItem (click)="onEdit(element)" class="hover:bg-gray-100">Editar</button>
+            </hlm-menu-group>
+            <hlm-menu-separator />
+            <hlm-menu-group>
+              <button hlmMenuItem (click)="onDelete(element.idPostre)" class="hover:bg-gray-100">Eliminar</button>
+            </hlm-menu-group>
+          </hlm-menu>
+        </ng-template>
+      </hlm-td>
+    </brn-column-def>
+  </brn-table>
+</div>
+
+<div
+  class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center px-5"
+  *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange"
+>
+  <span class="text-sm text-muted-foreground">{{ _totalElements() }} Inventarios</span>
+  <div class="flex mt-2 sm:mt-0">
+    <brn-select class="inline-block" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
+      <hlm-select-trigger class="inline-flex mr-1 w-15 h-9 bg-white">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let size of _availablePageSizes" [value]="size">
+          {{ size === 10000 ? 'All' : size }}
+        </hlm-option>
+      </hlm-select-content>
+    </brn-select>
+
+    <div class="flex space-x-1">
+      <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.decrementable()" (click)="ctx.decrement()">
+        Anterior
+      </button>
+      <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.incrementable()" (click)="ctx.increment()">
+        Siguiente
+      </button>
+    </div>
   </div>
-  
-  <div class="overflow-x-auto p-5">
-    <table class="table-auto w-full text-center">
-      <thead>
-        <tr>
-          <th class="px-4 py-2">ID Postre</th>
-          <th class="px-4 py-2">ID Producto</th>
-          <th class="px-4 py-2">Cantidad</th>
-          <th class="px-4 py-2">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let inventario of (inventarios$ | async); trackBy: trackByInventarioId">
-          <td class="border px-4 py-2">{{ inventario.idPostre }}</td>
-          <td class="border px-4 py-2">{{ inventario.idProducto }}</td>
-          <td class="border px-4 py-2">{{ inventario.cantidad }}</td>
-          <td class="border px-4 py-2">
-            <button (click)="onEdit(inventario)" class="bg-white text-secondary px-4 py-2 rounded border border-secondary mr-4">Editar</button>
-            <button (click)="onDelete(inventario.idPostre!)" class="bg-secondary text-white px-4 py-2 rounded">Eliminar</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+</div>

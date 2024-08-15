@@ -1,14 +1,14 @@
-<div class="overflow-scroll h-screen">
-  <div class="flex-1 flex justify-center" style="width: calc(100vw - 18rem);">
-    <h1 class="text-5xl font-bold pt-5 mt-5 text-secondary">Usuarios</h1>
+<div class="container mx-auto max-h-screen overflow-y-auto w-full p-4">
+  <div class="flex-1 flex justify-center">
+    <h1 class="text-5xl font-bold mt-1 mb-2 text-secondary">Usuarios</h1>
   </div>
   <div class="flex justify-end my-5 me-5 pr-5">
     <div>
       <hlm-dialog
-      [state]="states()" 
+      [state]="states()"
       >
         <button id="edit-profile" brnDialogTrigger hlmBtn>Agregar Usuario</button>
-       <form 
+       <form
        (submit)="onSubmit()"
        >
        <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx" >
@@ -153,7 +153,7 @@
             >Guardar</button>
           } @else {
             <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
-            <button hlmBtn 
+            <button hlmBtn
             (click)="onSubmit()"
             >Crear</button>
           }
@@ -162,7 +162,7 @@
       </form>
       </hlm-dialog>
     </div>
-    
+
   </div>
   <div class="flex flex-row justify-between gap-4 px-20 py-5">
     <input
@@ -172,7 +172,7 @@
       [ngModel]="_emailFilter()"
       (ngModelChange)="_rawFilterInput.set($event)"
     />
-  
+
     <button hlmBtn variant="outline" align="end" [brnMenuTriggerFor]="menu">
       Ver columnas
       <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
@@ -194,7 +194,7 @@
       </hlm-menu>
     </ng-template>
   </div>
-  
+
   <brn-table
     hlm
     stickyHeader
@@ -205,8 +205,8 @@
   >
     <brn-column-def name="select" class="w-12 bg-white">
       <hlm-th *brnHeaderDef class="bg-white">
-        <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()" 
-        
+        <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()"
+
         class="bg-white"/>
       </hlm-th>
       <hlm-td *brnCellDef="let element" class="bg-white">
@@ -221,7 +221,7 @@
         {{ element.name }} {{ element.lastName }}
       </hlm-td>
     </brn-column-def>
-   
+
     <brn-column-def name="Email" class="w-60 lg:flex-1 bg-white">
       <hlm-th *brnHeaderDef>
         <button hlmBtn size="sm" variant="ghost" (click)="handleEmailSortChange()">
@@ -253,12 +253,12 @@
         <button hlmBtn variant="ghost" class="h-6 w-6 p-0.5 hover:bg-gray-100" align="end" [brnMenuTriggerFor]="menu">
           <hlm-icon class="w-4 h-4" name="lucideMoreHorizontal" />
         </button>
-  
+
         <ng-template #menu>
           <hlm-menu class="bg-white">
             <hlm-menu-label>
               Actions
-  
+
             </hlm-menu-label>
             <hlm-menu-separator />
             <hlm-menu-group>
@@ -279,6 +279,7 @@
           </hlm-menu>
         </ng-template>
       </hlm-td>
+      
     </brn-column-def>
     <div class="flex items-center justify-center p-20 text-muted-foreground" brnNoDataRow>No data</div>
   </brn-table>
@@ -300,15 +301,15 @@
           }
         </hlm-select-content>
       </brn-select>
-  
+
       <div class="flex space-x-1">
         <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.decrementable()" (click)="ctx.decrement()">
-          Anterior  
+          Anterior
         </button>
         <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.incrementable()" (click)="ctx.increment()">
           Siguiente
         </button>
       </div>
     </div>
-  </div>  
+  </div>
 </div>

@@ -33,6 +33,8 @@ import { UsersComponent } from './admin/users/users.component';
 import { InventarioMPComponent } from './admin/inventario-mp/inventario-mp.component';
 import { InventarioPostresComponent } from './admin/inventario-postres/inventario-postres.component';
 import { CheckoutReComponent } from './reserves/checkout/checkout.component';
+import { EspaciosComponent } from './admin/espacios/espacios.component';
+import { ClienteComponent } from './reserves/cliente/cliente.component';
 
 
 
@@ -99,6 +101,10 @@ export const routes: Routes = [
       {
         path:'users',
         component: UsersComponent
+      },
+      {
+        path: 'espacios',
+        component: EspaciosComponent
       }
     ]
   },
@@ -152,6 +158,11 @@ export const routes: Routes = [
     path: 'reserves/:id',
     canActivate: [AuthenticatedGuard],
     component: ReservesComponent
+  },
+  {
+    path: 'reservesCliente',
+    canActivate: [AuthenticatedGuard],
+    component: ClienteComponent
   },
 
   {

@@ -40,7 +40,7 @@ export class CheckoutService {
     });
   }
 
-  url = 'https://localhost:7268/Orders';
+  url = 'https://localhost:7268/api/Orders';
   urlAddress = 'https://localhost:7268/api/Direcciones';
   urlCard = 'https://localhost:7268/api/CreditCards';
 

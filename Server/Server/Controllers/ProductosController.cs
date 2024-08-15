@@ -9,6 +9,8 @@ using Server;
 using Server.lib;
 using Server.Models;
 using Server.Models.DTO;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Server.Controllers
 {
@@ -17,11 +19,12 @@ namespace Server.Controllers
     public class ProductosController : ControllerBase
     {
         private readonly Context _context;
-        private readonly IHttpCDNService _cdnService;
+        private readonly IHttpClientFactory _clientFactory;
 
-        public ProductosController(Context context)
+        public ProductosController(Context context, IHttpClientFactory clientFactory)
         {
             _context = context;
+            _clientFactory = clientFactory;
         }
 
         // GET: api/Producto
@@ -30,7 +33,7 @@ namespace Server.Controllers
         {
             var productos = await _context.Productos.ToListAsync();
 
-            foreach(var producto in productos)
+            foreach (var producto in productos)
             {
                 var ingredientes = await _context.Ingredientes
                     .Where(i => i.IdProducto == producto.Id)
@@ -100,7 +103,7 @@ namespace Server.Controllers
             producto.Tipo = productoDTO.Tipo;
             producto.Temperatura = productoDTO.Temperatura;
             producto.CantidadXReceta = productoDTO.CantidadXReceta;
-            producto.CreatedAt = productoDTO.CreatedAt;
+            producto.CreatedAt = productoDTO.CreatedAt ?? producto.CreatedAt;
 
             _context.Entry(producto).State = EntityState.Modified;
 
@@ -120,8 +123,20 @@ namespace Server.Controllers
                 }
             }
 
+            // Enviar la imagen al API de Python si se ha proporcionado una nueva imagen
+            if (productoDTO.Imagen != null)
+            {
+                var result = await UploadImageToPythonApi(productoDTO.Imagen, id);
+                if (!result.IsSuccessStatusCode)
+                {
+                    // Manejo de errores: si el envío de la imagen falla, puedes decidir cómo proceder
+                    return StatusCode((int)result.StatusCode, "Error al subir la imagen");
+                }
+            }
+
             return NoContent();
         }
+
 
         // POST: api/Producto
         [HttpPost]
@@ -142,7 +157,37 @@ namespace Server.Controllers
             _context.Productos.Add(producto);
             await _context.SaveChangesAsync();
 
+            // Obtener el Id generado
+            var id = producto.Id;
+
+            // Enviar la imagen al API de Python
+            if (productoDTO.Imagen != null)
+            {
+                var result = await UploadImageToPythonApi(productoDTO.Imagen, id.Value);
+                if (!result.IsSuccessStatusCode)
+                {
+                    // Manejo de errores: si el envío de la imagen falla, puedes decidir cómo proceder
+                    return StatusCode((int)result.StatusCode, "Error al subir la imagen");
+                }
+            }
+
             return CreatedAtAction("GetProducto", new { id = producto.Id }, producto);
+        }
+
+        private async Task<HttpResponseMessage> UploadImageToPythonApi(IFormFile imagen, int id)
+        {
+            var client = _clientFactory.CreateClient();
+
+            using var content = new MultipartFormDataContent();
+            content.Add(new StringContent(id.ToString()), "id");
+
+            using var fileStream = imagen.OpenReadStream();
+            var fileContent = new StreamContent(fileStream);
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(imagen.ContentType);
+            content.Add(fileContent, "file", imagen.FileName);
+
+            var response = await client.PostAsync("http://localhost:5000/productos/upload", content);
+            return response;
         }
 
         // DELETE: api/Producto/5
