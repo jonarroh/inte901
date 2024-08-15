@@ -17,6 +17,8 @@ import { lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmIconComponent } from '~/components/ui-icon-helm/src';
 import { HlmSelectContentDirective, HlmSelectOptionComponent, HlmSelectTriggerComponent, HlmSelectValueDirective } from '~/components/ui-select-helm/src';
 import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
+import { Producto } from '../productos/interface/producto';
+import { ProductoService } from '../productos/service/producto.service';
 
 @Component({
   selector: 'app-inventario-postres',
@@ -63,6 +65,7 @@ export class InventarioPostresComponent {
   editMode: boolean = false;
   private filterSubject = new BehaviorSubject<string>('');
   filter$ = this.filterSubject.asObservable();
+  productos: Producto[] = [];
 
   // Column manager
   protected readonly _brnColumnManager = useBrnColumnManager({
@@ -83,11 +86,15 @@ export class InventarioPostresComponent {
   protected readonly _pageSize = signal(this._availablePageSizes[0]);
   protected readonly _totalElements = signal(0);
 
-  constructor() {
+  constructor(private productoService: ProductoService) {
+    this.productoService.getProductos().subscribe((productos) => {
+      this.productos = productos;
+    });
+  
     this.inventarioPostresSource$ = this.inventarioPostresService.getInventarioPostre().pipe(
       map((inventarioPostres) => inventarioPostres.filter((inventarioPostre) => inventarioPostre.estatus === 1))
     );
-
+  
     this.inventarioPostres$ = combineLatest([
       this.inventarioPostresSource$,
       this.filter$
@@ -105,6 +112,7 @@ export class InventarioPostresComponent {
       })
     );
   }
+  
 
   private _updatePaginatedData() {
     this.inventarioPostresSource$.pipe(
@@ -152,6 +160,12 @@ export class InventarioPostresComponent {
     this.applyFilter(inputElement.value);
   }
 
+  getProductoNombre(idProducto: number | undefined): string {
+    const producto = this.productos.find(prod => prod.id === idProducto);
+    return producto ? (producto.nombre || 'Nombre no disponible') : 'Producto no encontrado';
+  }
+  
+  
   onSubmitAdd(form: NgForm) {
     if (form.valid) {
       this.inventarioPostre.estatus = 1;

@@ -14,12 +14,16 @@
               <div class="py-4 grid gap-4">
                   <!-- Campos del formulario -->
                   <div class="items-center grid grid-cols-4 gap-4">
-                      <label hlmLabel for="idProducto-add" class="text-right">ID Producto</label>
-                      <input hlmInput id="idProducto-add" name="idProducto" [(ngModel)]="ingrediente.idProducto" placeholder="ID del producto" class="col-span-3" required />
+                      <label hlmLabel for="idProducto-add" class="text-right">Producto</label>
+                      <select hlmInput id="idProducto-add" name="idProducto" [(ngModel)]="ingrediente.idProducto" class="col-span-3" required>
+                        <option *ngFor="let producto of (productos$ | async)" [value]="producto.id">{{ producto.nombre }}</option>
+                      </select>
                   </div>
                   <div class="items-center grid grid-cols-4 gap-4">
-                      <label hlmLabel for="idMateriaPrima-add" class="text-right">ID Materia Prima</label>
-                      <input hlmInput id="idMateriaPrima-add" name="idMateriaPrima" [(ngModel)]="ingrediente.idMateriaPrima" placeholder="ID de la materia prima" class="col-span-3" required />
+                      <label hlmLabel for="idMateriaPrima-add" class="text-right">Materia Prima</label>
+                      <select hlmInput id="idMateriaPrima-add" name="idMateriaPrima" [(ngModel)]="ingrediente.idMateriaPrima" class="col-span-3" required>
+                        <option *ngFor="let materiaPrima of (materiasPrimas$ | async)" [value]="materiaPrima.id">{{ materiaPrima.material }}</option>
+                      </select>
                   </div>
                   <div class="items-center grid grid-cols-4 gap-4">
                       <label hlmLabel for="cantidad-add" class="text-right">Cantidad</label>
@@ -38,38 +42,42 @@
   </hlm-dialog>
 
   <hlm-dialog>
-      <button id="edit-ingrediente-trigger" brnDialogTrigger hlmBtn class="hidden">Editar ingrediente</button>
-      <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
-          <hlm-dialog-header>
-              <h3 hlmDialogTitle>Editar ingrediente</h3>
-              <p hlmDialogDescription>Actualiza los detalles del ingrediente. Haz clic en actualizar cuando termines.</p>
-          </hlm-dialog-header>
-          <form (ngSubmit)="onSubmitEdit(ingredienteFormEdit)" #ingredienteFormEdit="ngForm">
-              <div class="py-4 grid gap-4">
-                  <!-- Campos del formulario -->
-                  <div class="items-center grid grid-cols-4 gap-4">
-                      <label hlmLabel for="idProducto-edit" class="text-right">ID Producto</label>
-                      <input hlmInput id="idProducto-edit" name="idProducto" [(ngModel)]="ingrediente.idProducto" placeholder="ID del producto" class="col-span-3" required />
-                  </div>
-                  <div class="items-center grid grid-cols-4 gap-4">
-                      <label hlmLabel for="idMateriaPrima-edit" class="text-right">ID Materia Prima</label>
-                      <input hlmInput id="idMateriaPrima-edit" name="idMateriaPrima" [(ngModel)]="ingrediente.idMateriaPrima" placeholder="ID de la materia prima" class="col-span-3" required />
-                  </div>
-                  <div class="items-center grid grid-cols-4 gap-4">
-                      <label hlmLabel for="cantidad-edit" class="text-right">Cantidad</label>
-                      <input hlmInput id="cantidad-edit" name="cantidad" [(ngModel)]="ingrediente.cantidad" placeholder="Cantidad" class="col-span-3" required />
-                  </div>
-                  <div class="items-center grid grid-cols-4 gap-4">
-                      <label hlmLabel for="unidadMedida-edit" class="text-right">Unidad de Medida</label>
-                      <input hlmInput id="unidadMedida-edit" name="unidadMedida" [(ngModel)]="ingrediente.unidadMedida" placeholder="Unidad de Medida" class="col-span-3" required />
-                  </div>
-              </div>
-              <hlm-dialog-footer>
-                  <button hlmBtn type="submit">Actualizar</button>
-              </hlm-dialog-footer>
-          </form>
-      </hlm-dialog-content>
-  </hlm-dialog>
+    <button id="edit-ingrediente-trigger" brnDialogTrigger hlmBtn class="hidden">Editar ingrediente</button>
+    <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+        <hlm-dialog-header>
+            <h3 hlmDialogTitle>Editar ingrediente</h3>
+            <p hlmDialogDescription>Actualiza los detalles del ingrediente. Haz clic en actualizar cuando termines.</p>
+        </hlm-dialog-header>
+        <form (ngSubmit)="onSubmitEdit(ingredienteFormEdit)" #ingredienteFormEdit="ngForm">
+            <div class="py-4 grid gap-4">
+                <!-- Campos del formulario -->
+                <div class="items-center grid grid-cols-4 gap-4">
+                    <label hlmLabel for="idProducto-edit" class="text-right">Producto</label>
+                    <select hlmInput id="idProducto-edit" name="idProducto" [(ngModel)]="ingrediente.idProducto" class="col-span-3" required>
+                      <option *ngFor="let producto of (productos$ | async)" [value]="producto.id">{{ producto.nombre }}</option>
+                    </select>
+                </div>
+                <div class="items-center grid grid-cols-4 gap-4">
+                    <label hlmLabel for="idMateriaPrima-edit" class="text-right">Materia Prima</label>
+                    <select hlmInput id="idMateriaPrima-edit" name="idMateriaPrima" [(ngModel)]="ingrediente.idMateriaPrima" class="col-span-3" required>
+                      <option *ngFor="let materiaPrima of (materiasPrimas$ | async)" [value]="materiaPrima.id">{{ materiaPrima.material }}</option>
+                    </select>
+                </div>
+                <div class="items-center grid grid-cols-4 gap-4">
+                    <label hlmLabel for="cantidad-edit" class="text-right">Cantidad</label>
+                    <input hlmInput id="cantidad-edit" name="cantidad" [(ngModel)]="ingrediente.cantidad" placeholder="Cantidad" class="col-span-3" required />
+                </div>
+                <div class="items-center grid grid-cols-4 gap-4">
+                    <label hlmLabel for="unidadMedida-edit" class="text-right">Unidad de Medida</label>
+                    <input hlmInput id="unidadMedida-edit" name="unidadMedida" [(ngModel)]="ingrediente.unidadMedida" placeholder="Unidad de Medida" class="col-span-3" required />
+                </div>
+            </div>
+            <hlm-dialog-footer>
+                <button hlmBtn type="submit">Actualizar</button>
+            </hlm-dialog-footer>
+        </form>
+    </hlm-dialog-content>
+</hlm-dialog>
 </div>
 
 <div class="flex justify-between my-5 px-5">
@@ -110,14 +118,14 @@
         <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.id }}</hlm-td>
     </brn-column-def>
 
-    <brn-column-def name="idProducto" class="w-1/6 bg-white">
-        <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">ID Producto</hlm-th>
-        <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.idProducto }}</hlm-td>
+    <brn-column-def name="nombreProducto" class="w-1/6 bg-white">
+        <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">Producto</hlm-th>
+        <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.nombreProducto }}</hlm-td>
     </brn-column-def>
 
-    <brn-column-def name="idMateriaPrima" class="w-1/6 bg-white">
-        <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">ID Materia Prima</hlm-th>
-        <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.idMateriaPrima }}</hlm-td>
+    <brn-column-def name="material" class="w-1/6 bg-white">
+        <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">Materia Prima</hlm-th>
+        <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.material }}</hlm-td>
     </brn-column-def>
 
     <brn-column-def name="cantidad" class="w-1/6 bg-white">

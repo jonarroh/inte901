@@ -1,7 +1,11 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { IngredienteService } from './service/ingrediente.service';
+import { ProductoService } from '../productos/service/producto.service';
+import { MateriasPrimasService } from '../materias-primas/service/materias-primas.service';
 import { BehaviorSubject, combineLatest, combineLatestWith, map, Observable, of } from 'rxjs';
 import { Ingrediente } from './interface/ingrediente';
+import { Producto } from '../productos/interface/producto';
+import { MateriaPrima } from '../materias-primas/interface/materias-primas';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogDescriptionDirective, HlmDialogFooterComponent, HlmDialogHeaderComponent, HlmDialogTitleDirective } from '~/components/ui-dialog-helm/src';
 import { AsyncPipe, CommonModule } from '@angular/common';
@@ -62,18 +66,24 @@ interface IngredienteExtendido extends Ingrediente {
 })
 export class IngredientesComponent {
   ingredienteService = inject(IngredienteService);
-  private ingredientesSource$: Observable<Ingrediente[]>;
-  ingredientes$: Observable<Ingrediente[]>;
+  productoService = inject(ProductoService);
+  materiasPrimasService = inject(MateriasPrimasService);
+
+  private ingredientesSource$: Observable<IngredienteExtendido[]>;
+  ingredientes$: Observable<IngredienteExtendido[]>;
   ingrediente: Ingrediente = {};
   editMode: boolean = false;
   private filterSubject = new BehaviorSubject<string>('');
   filter$ = this.filterSubject.asObservable();
 
+  productos$: Observable<Producto[]>;
+  materiasPrimas$: Observable<MateriaPrima[]>;
+
   // Column manager
   protected readonly _brnColumnManager = useBrnColumnManager({
     ID: { visible: true, label: 'ID', sortable: true },
-    idProducto: { visible: true, label: 'ID Producto', sortable: true },
-    idMateriaPrima: { visible: true, label: 'ID Materia Prima', sortable: true },
+    nombreProducto: { visible: true, label: 'Producto', sortable: true },
+    material: { visible: true, label: 'Materia Prima', sortable: true },
     cantidad: { visible: true, label: 'Cantidad', sortable: true },
     unidadMedida: { visible: true, label: 'Unidad de Medida', sortable: true },
   });
@@ -91,8 +101,21 @@ export class IngredientesComponent {
   protected readonly _totalElements = signal(0);
 
   constructor() {
-    this.ingredientesSource$ = this.ingredienteService.getIngredientes().pipe(
-      map((ingredientes) => ingredientes.filter((ingrediente) => ingrediente.estatus === 1))
+    this.productos$ = this.productoService.getProductos();
+    this.materiasPrimas$ = this.materiasPrimasService.getMateriaPrima();
+
+    this.ingredientesSource$ = combineLatest([
+      this.ingredienteService.getIngredientes(),
+      this.productos$,
+      this.materiasPrimas$
+    ]).pipe(
+      map(([ingredientes, productos, materiasPrimas]) =>
+        ingredientes.map(ingrediente => ({
+          ...ingrediente,
+          nombreProducto: productos.find(p => p.id === ingrediente.idProducto)?.nombre,
+          material: materiasPrimas.find(mp => mp.id === ingrediente.idMateriaPrima)?.material
+        }))
+      )
     );
 
     this.ingredientes$ = combineLatest([
@@ -101,8 +124,8 @@ export class IngredientesComponent {
     ]).pipe(
       map(([ingredientes, filterValue]) =>
         ingredientes.filter(ingrediente =>
-          (ingrediente.idProducto?.toString().includes(filterValue) ?? false) ||
-          (ingrediente.idMateriaPrima?.toString().includes(filterValue) ?? false)
+          (ingrediente.nombreProducto?.toString().includes(filterValue) ?? false) ||
+          (ingrediente.material?.toString().includes(filterValue) ?? false)
         )
       ),
       map(filteredIngredientes => {
@@ -120,8 +143,8 @@ export class IngredientesComponent {
       map(([ingredientes, filterValue]) => {
         // Filtrar los registros
         const filteredIngredientes = ingredientes.filter(ingrediente =>
-          (ingrediente.idProducto?.toString().includes(filterValue) ?? false) ||
-          (ingrediente.idMateriaPrima?.toString().includes(filterValue) ?? false)
+          (ingrediente.nombreProducto?.toString().includes(filterValue) ?? false) ||
+          (ingrediente.material?.toString().includes(filterValue) ?? false)
         );
 
         // Obtener los índices de paginación

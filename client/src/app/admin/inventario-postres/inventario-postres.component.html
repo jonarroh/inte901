@@ -15,7 +15,9 @@
                   <!-- Campos del formulario -->
                   <div class="items-center grid grid-cols-4 gap-4">
                       <label hlmLabel for="producto-add" class="text-right">Producto</label>
-                      <input hlmInput id="producto-add" name="idProducto" [(ngModel)]="inventarioPostre.idProducto" placeholder="ID del producto" class="col-span-3" required />
+                      <select hlmInput id="producto-add" name="idProducto" [(ngModel)]="inventarioPostre.idProducto" class="col-span-3" required>
+                        <option *ngFor="let producto of productos" [value]="producto.id">{{ producto.nombre }}</option>
+                      </select>
                   </div>
                   <div class="items-center grid grid-cols-4 gap-4">
                       <label hlmLabel for="cantidad-add" class="text-right">Cantidad</label>
@@ -41,7 +43,9 @@
                   <!-- Campos del formulario -->
                   <div class="items-center grid grid-cols-4 gap-4">
                       <label hlmLabel for="producto-edit" class="text-right">Producto</label>
-                      <input hlmInput id="producto-edit" name="idProducto" [(ngModel)]="inventarioPostre.idProducto" placeholder="ID del producto" class="col-span-3" required />
+                      <select hlmInput id="producto-add" name="idProducto" [(ngModel)]="inventarioPostre.idProducto" class="col-span-3" required>
+                        <option *ngFor="let producto of productos" [value]="producto.id">{{ producto.nombre }}</option>
+                      </select>
                   </div>
                   <div class="items-center grid grid-cols-4 gap-4">
                       <label hlmLabel for="cantidad-edit" class="text-right">Cantidad</label>
@@ -95,7 +99,9 @@
 
       <brn-column-def name="Producto" class="w-1/4 bg-white">
           <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">Producto</hlm-th>
-          <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.idProducto }}</hlm-td>
+          <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">
+            {{ getProductoNombre(element.idProducto) }}
+          </hlm-td>
       </brn-column-def>
 
       <brn-column-def name="Cantidad" class="w-1/4 bg-white">
