@@ -4,7 +4,7 @@
 
 <div class="flex justify-end my-5 me-5 pr-5">
     <hlm-dialog>
-        <button id="add-materia-trigger" brnDialogTrigger hlmBtn (click)="onAdd()" class="bg-secondary text-white">Agregar materia prima</button>
+        <button id="add-materia-trigger" brnDialogTrigger hlmBtn (click)="onAdd()" variant="warning" class=" text-white me-0">Agregar materia prima</button>
         <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
             <hlm-dialog-header>
                 <h3 hlmDialogTitle>Agregar materia prima</h3>
@@ -48,15 +48,39 @@
     </hlm-dialog>
 </div>
 
+<div class="flex justify-between my-5 px-5">
+    <input hlmInput class="w-full md:w-80" placeholder="Buscar por nombre" (input)="applyFilterFromEvent($event)" />
+    <button hlmBtn class="bg-white border border-gray-300 text-gray-600 hover:bg-gray-100 me-5" align="end" [brnMenuTriggerFor]="menu">
+      Ver columnas
+      <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
+    </button>
+    <ng-template #menu>
+      <hlm-menu class="w-32 bg-white">
+        <button
+          *ngFor="let column of _brnColumnManager.allColumns; trackBy: trackByColumnName"
+          hlmMenuItemCheckbox
+          class="bg-white hover:bg-gray-100 border border-gray-300 text-gray-600"
+          [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
+          [checked]="_brnColumnManager.isColumnVisible(column.name)"
+          (triggered)="_brnColumnManager.toggleVisibility(column.name)"
+        >
+          <hlm-menu-item-check class="bg-white" />
+          <span>{{ column.label }}</span>
+        </button>
+      </hlm-menu>
+    </ng-template>
+</div>
+  
 <div class="overflow-x-auto p-5">
     <brn-table
-        hlm
-        stickyHeader
-        class="border-border block h-[335px] overflow-auto rounded-md border bg-white"
-        [dataSource]="(materiasPrimas$ | async) || []"
-        [displayedColumns]="displayedColumns"
-        [trackBy]="trackByMateriaPrimaId"
-    >
+  hlm
+  stickyHeader
+  class="border-border block h-[335px] overflow-auto rounded-md border bg-white"
+  [dataSource]="(materiasPrimas$ | async) || []"
+  [displayedColumns]="displayedColumns()"
+  [trackBy]="trackByMateriaPrimaId"
+>
+
         <brn-column-def name="ID" class="w-1/3 bg-white">
             <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">ID</hlm-th>
             <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.id }}</hlm-td>
@@ -90,4 +114,32 @@
             </hlm-td>
         </brn-column-def>
     </brn-table>
+</div>
+
+<div
+  class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center px-5"
+  *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange"
+>
+  <span class="text-sm text-muted-foreground">{{ _totalElements() }} Materias Primas</span>
+  <div class="flex mt-2 sm:mt-0">
+    <brn-select class="inline-block" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
+      <hlm-select-trigger class="inline-flex mr-1 w-15 h-9 bg-white">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let size of _availablePageSizes" [value]="size">
+          {{ size === 10000 ? 'All' : size }}
+        </hlm-option>
+      </hlm-select-content>
+    </brn-select>
+
+    <div class="flex space-x-1">
+      <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.decrementable()" (click)="ctx.decrement()">
+        Anterior
+      </button>
+      <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.incrementable()" (click)="ctx.increment()">
+        Siguiente
+      </button>
+    </div>
+  </div>
 </div>
