@@ -1,48 +1,40 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { ENDPOINTS } from '~/lib/endpoint';
 import { Proveedor } from '../interface/proveedor';
-import { MateriaPrimaProveedor } from '../interface/materiaPrimaProveedor';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProveedoresService {
 
-  apiURLProveedores = ENDPOINTS.proveedor;
-  apiURLMateriaPrimaProveedor = ENDPOINTS.materiaPrimaProveedor
+  apiURL = ENDPOINTS.proveedor;
 
-  constructor(private http:HttpClient) {}
+  constructor(private http: HttpClient) {}
 
   getProveedores = (): Observable<Proveedor[]> =>
-    this.http.get<Proveedor[]>(`${this.apiURLProveedores}`)
-  
+    this.http.get<Proveedor[]>(`${this.apiURL}`)
+
   registrarProveedor(data: Proveedor): Observable<Proveedor> {
-    return this.http.post<Proveedor>(this.apiURLProveedores, data);
+    return this.http.post<Proveedor>(this.apiURL, data);
   }
 
   editarProveedor(id: number, data: Proveedor): Observable<Proveedor> {
-    return this.http.put<Proveedor>(`${this.apiURLProveedores}/${id}`, data);
+    return this.http.put<Proveedor>(`${this.apiURL}/${id}`, data);
   }
 
   eliminarProveedor(id: number): Observable<void> {
-    return this.http.get<Proveedor>(`${this.apiURLProveedores}/${id}`).pipe(
+    return this.http.get<Proveedor>(`${this.apiURL}/${id}`).pipe(
       switchMap(proveedor => {
         proveedor.estatus = 0;
-        return this.http.put<void>(`${this.apiURLProveedores}/${id}`, proveedor);
+        proveedor.deletedAt = new Date().toISOString();
+        return this.http.put<void>(`${this.apiURL}/${id}`, proveedor);
       })
     );
   }
 
-  getMateriasPrimasProveedores = (): Observable<MateriaPrimaProveedor[]> =>
-    this.http.get<MateriaPrimaProveedor[]>(`${this.apiURLMateriaPrimaProveedor}`)
-  
-  registrarMateriaPrimaProveedor(data: MateriaPrimaProveedor): Observable<MateriaPrimaProveedor> {
-    return this.http.post<MateriaPrimaProveedor>(this.apiURLMateriaPrimaProveedor, data);
-  }
-
-  editarMateriaPrimaProveedor(id: number, data: MateriaPrimaProveedor): Observable<MateriaPrimaProveedor> {
-    return this.http.put<MateriaPrimaProveedor>(`${this.apiURLMateriaPrimaProveedor}/${id}`, data);
+  getProveedorById(id: number): Observable<Proveedor> {
+    return this.http.get<Proveedor>(`${this.apiURL}/${id}`);
   }
 }

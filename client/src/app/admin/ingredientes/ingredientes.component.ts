@@ -1,21 +1,13 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { NavComponent } from '../componentes/nav/nav.component';
-import {
-  HlmDialogComponent,
-  HlmDialogContentComponent,
-  HlmDialogHeaderComponent,
-  HlmDialogFooterComponent,
-  HlmDialogTitleDirective,
-  HlmDialogDescriptionDirective,
-} from '~/components/ui-dialog-helm/src';
+import { Component, computed, effect, inject, signal } from '@angular/core';
+import { IngredienteService } from './service/ingrediente.service';
+import { BehaviorSubject, combineLatest, combineLatestWith, map, Observable, of } from 'rxjs';
+import { Ingrediente } from './interface/ingrediente';
+import { FormsModule, NgForm } from '@angular/forms';
+import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogDescriptionDirective, HlmDialogFooterComponent, HlmDialogHeaderComponent, HlmDialogTitleDirective } from '~/components/ui-dialog-helm/src';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
-import { BrnDialogTriggerDirective, BrnDialogContentDirective } from '@spartan-ng/ui-dialog-brain';
-import { BehaviorSubject, combineLatest, from, map, Observable, of } from 'rxjs';
-import { AsyncPipe, CommonModule } from '@angular/common';
-import { Ingrediente } from './interface/ingrediente';
-import { IngredienteService } from './service/ingrediente.service';
-import { FormsModule, NgForm } from '@angular/forms';
 import { BrnTableModule, PaginatorState, useBrnColumnManager } from '@spartan-ng/ui-table-brain';
 import { HlmTableModule } from '@spartan-ng/ui-table-helm';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
@@ -23,25 +15,26 @@ import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
 import { provideIcons } from '@ng-icons/core';
 import { lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmIconComponent } from '~/components/ui-icon-helm/src';
-import { ProductoService } from '../productos/service/producto.service';
-import { MateriasPrimasService } from '../materias-primas/service/materias-primas.service';
-import { Producto } from '../productos/interface/producto';
-import { MateriaPrima } from '../materias-primas/interface/materias-primas';
-import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
 import { HlmSelectContentDirective, HlmSelectOptionComponent, HlmSelectTriggerComponent, HlmSelectValueDirective } from '~/components/ui-select-helm/src';
+import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
+
+interface IngredienteExtendido extends Ingrediente {
+  material?: string;
+  nombreProducto?: string;
+}
 
 @Component({
   selector: 'app-ingredientes',
   standalone: true,
   imports: [
-    NavComponent,
     HlmDialogComponent,
     HlmDialogContentComponent,
     HlmDialogHeaderComponent,
     HlmDialogFooterComponent,
+    HlmButtonDirective,
+    HlmInputDirective,
     HlmDialogTitleDirective,
     HlmDialogDescriptionDirective,
-    HlmButtonDirective,
     HlmIconComponent,
     HlmSelectTriggerComponent,
     HlmSelectValueDirective,
@@ -49,11 +42,11 @@ import { HlmSelectContentDirective, HlmSelectOptionComponent, HlmSelectTriggerCo
     HlmSelectOptionComponent,
     BrnDialogTriggerDirective,
     BrnDialogContentDirective,
+    BrnTableModule,
     BrnSelectImports,
-    HlmInputDirective,
+    FormsModule,
     CommonModule,
     AsyncPipe,
-    FormsModule,
     BrnTableModule,
     HlmTableModule,
     BrnMenuTriggerDirective,
@@ -69,26 +62,20 @@ import { HlmSelectContentDirective, HlmSelectOptionComponent, HlmSelectTriggerCo
 })
 export class IngredientesComponent {
   ingredienteService = inject(IngredienteService);
-  productoService = inject(ProductoService);
-  materiaPrimaService = inject(MateriasPrimasService);
-
+  private ingredientesSource$: Observable<Ingrediente[]>;
   ingredientes$: Observable<Ingrediente[]>;
-  productos$: Observable<Producto[]>;
-  materiasPrimas$: Observable<MateriaPrima[]>;
-
   ingrediente: Ingrediente = {};
   editMode: boolean = false;
-
   private filterSubject = new BehaviorSubject<string>('');
   filter$ = this.filterSubject.asObservable();
 
   // Column manager
   protected readonly _brnColumnManager = useBrnColumnManager({
-    ID: {visible: true, label: 'ID', sortable: true},
-    Producto: {visible: true, label: 'Producto', sortable: true},
-    'Materia Prima': {visible: true, label: 'Materia Prima', sortable: true},
-    Cantidad: {visible: true, label: 'Cantidad', sortable: true},
-    'Unidad de Medida': {visible: true, label: 'Unidad de Medida', sortable: true},
+    ID: { visible: true, label: 'ID', sortable: true },
+    idProducto: { visible: true, label: 'ID Producto', sortable: true },
+    idMateriaPrima: { visible: true, label: 'ID Materia Prima', sortable: true },
+    cantidad: { visible: true, label: 'Cantidad', sortable: true },
+    unidadMedida: { visible: true, label: 'Unidad de Medida', sortable: true },
   });
 
   // Columnas visibles
@@ -104,36 +91,19 @@ export class IngredientesComponent {
   protected readonly _totalElements = signal(0);
 
   constructor() {
-    this.productos$ = this.productoService.getProductos().pipe(
-      map((productos) => productos.filter((producto) => producto.estatus === 1))
-    );
-
-    this.materiasPrimas$ = this.materiaPrimaService.getMateriaPrima().pipe(
-      map((materiasPrimas) =>
-        materiasPrimas.filter((materiaPrima) => materiaPrima.estatus === 1)
-      )
+    this.ingredientesSource$ = this.ingredienteService.getIngredientes().pipe(
+      map((ingredientes) => ingredientes.filter((ingrediente) => ingrediente.estatus === 1))
     );
 
     this.ingredientes$ = combineLatest([
-      this.ingredienteService.getIngredientes().pipe(
-        map((ingredientes) =>
-          ingredientes.filter((ingrediente) => ingrediente.estatus === 1)
-        )
-      ),
-      this.productos$,
-      this.materiasPrimas$,
+      this.ingredientesSource$,
       this.filter$
     ]).pipe(
-      map(([ingredientes, productos, materiasPrimas, filterValue]) => 
-        ingredientes
-          .map((ingrediente) => ({
-            ...ingrediente,
-            nombreProducto: productos.find(p => p.id === ingrediente.idProducto)?.nombre || 'Desconocido',
-            nombreMateriaPrima: materiasPrimas.find(mp => mp.id === ingrediente.idMateriaPrima)?.material || 'Desconocido',
-          }))
-          .filter(ingrediente =>
-            ingrediente.nombreProducto?.toLowerCase().includes(filterValue.toLowerCase())
-          )
+      map(([ingredientes, filterValue]) =>
+        ingredientes.filter(ingrediente =>
+          (ingrediente.idProducto?.toString().includes(filterValue) ?? false) ||
+          (ingrediente.idMateriaPrima?.toString().includes(filterValue) ?? false)
+        )
       ),
       map(filteredIngredientes => {
         this._totalElements.set(filteredIngredientes.length);
@@ -145,12 +115,24 @@ export class IngredientesComponent {
   }
 
   private _updatePaginatedData() {
-    this.ingredientes$.pipe(
-      map(ingredientes => {
+    this.ingredientesSource$.pipe(
+      combineLatestWith(this.filter$),
+      map(([ingredientes, filterValue]) => {
+        // Filtrar los registros
+        const filteredIngredientes = ingredientes.filter(ingrediente =>
+          (ingrediente.idProducto?.toString().includes(filterValue) ?? false) ||
+          (ingrediente.idMateriaPrima?.toString().includes(filterValue) ?? false)
+        );
+
+        // Obtener los índices de paginación
         const start = this._displayedIndices().start;
         const end = this._displayedIndices().end + 1;
-        this._totalElements.set(ingredientes.length);
-        return ingredientes.slice(start, end);
+
+        // Actualizar la cantidad total de elementos
+        this._totalElements.set(filteredIngredientes.length);
+
+        // Retornar el subconjunto de datos basado en la paginación
+        return filteredIngredientes.slice(start, end);
       })
     ).subscribe(paginatedIngredientes => {
       this.ingredientes$ = of(paginatedIngredientes);
@@ -162,8 +144,8 @@ export class IngredientesComponent {
     this._updatePaginatedData();
   };
 
-  trackByIngredientId(index: number, ingredient: any): number {
-    return ingredient.id!;
+  trackByIngredienteId(index: number, ingrediente: any): number {
+    return ingrediente.id;
   }
 
   trackByColumnName(index: number, column: any): string {
@@ -183,48 +165,50 @@ export class IngredientesComponent {
     if (form.valid) {
       this.ingrediente.estatus = 1;
       this.ingrediente.createdAt = new Date().toISOString();
-      this.ingredienteService.registrarIngredientes(this.ingrediente).subscribe((response) => {
+      this.ingrediente.updatedAt = new Date().toISOString();
+      this.ingredienteService.registrarIngrediente(this.ingrediente).subscribe((response) => {
         console.log('Ingrediente registrado:', response);
         form.resetForm();
         this.ingrediente = {}; // Reiniciar el objeto ingrediente
-        this.refreshIngredientes();
+        this.refreshIngrediente();
       });
     }
   }
 
   onSubmitEdit(form: NgForm) {
     if (form.valid) {
+      this.ingrediente.updatedAt = new Date().toISOString();
       this.ingredienteService.editarIngrediente(this.ingrediente.id!, this.ingrediente).subscribe((response) => {
         console.log('Ingrediente actualizado:', response);
         form.resetForm();
         this.ingrediente = {}; // Reiniciar el objeto ingrediente
         this.editMode = false;
-        this.refreshIngredientes();
+        this.refreshIngrediente();
       });
     }
   }
 
   onAdd() {
     this.ingrediente = {}; // Limpiar el objeto ingrediente antes de abrir el formulario de agregar
-    const addButton = document.getElementById('add-ingredient-trigger');
+    const addButton = document.getElementById('add-ingrediente-trigger');
     addButton?.click();
   }
 
-  onEdit(ingredient: Ingrediente) {
-    this.ingrediente = { ...ingredient };
+  onEdit(ingrediente: Ingrediente) {
+    this.ingrediente = { ...ingrediente };
     this.editMode = true;
-    const editButton = document.getElementById('edit-ingredient-trigger');
+    const editButton = document.getElementById('edit-ingrediente-trigger');
     editButton?.click();
   }
 
   onDelete(id: number) {
     this.ingredienteService.eliminarIngrediente(id).subscribe(() => {
       console.log('Ingrediente eliminado');
-      this.refreshIngredientes();
+      this.refreshIngrediente();
     });
   }
 
-  refreshIngredientes() {
+  refreshIngrediente() {
     this.ingredientes$ = this.ingredienteService.getIngredientes().pipe(
       map((ingredientes) =>
         ingredientes.filter((ingrediente) => ingrediente.estatus === 1)
