@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { NavComponent } from '../componentes/nav/nav.component';
 import {
   HlmDialogComponent,
@@ -11,7 +11,7 @@ import {
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import { BrnDialogTriggerDirective, BrnDialogContentDirective } from '@spartan-ng/ui-dialog-brain';
-import { map, Observable, forkJoin, switchMap, tap } from 'rxjs';
+import { map, Observable, forkJoin, switchMap, tap, BehaviorSubject, combineLatest, of } from 'rxjs';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { ProveedoresService } from './service/proveedores.service';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -19,13 +19,15 @@ import { MateriaPrima } from '../materias-primas/interface/materias-primas';
 import { MateriaPrimaProveedor } from './interface/materiaPrimaProveedor';
 import { Proveedor } from './interface/proveedor';
 import { MateriasPrimasService } from '../materias-primas/service/materias-primas.service';
-import { BrnTableModule } from '@spartan-ng/ui-table-brain';
+import { BrnTableModule, PaginatorState, useBrnColumnManager } from '@spartan-ng/ui-table-brain';
 import { HlmTableModule } from '@spartan-ng/ui-table-helm';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
 import { provideIcons } from '@ng-icons/core';
 import { lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmIconComponent } from '~/components/ui-icon-helm/src';
+import { HlmSelectContentDirective, HlmSelectOptionComponent, HlmSelectTriggerComponent, HlmSelectValueDirective } from '~/components/ui-select-helm/src';
+import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
 
 interface ProveedorConMaterias extends Proveedor {
   materiasPrimas: string;
@@ -44,8 +46,13 @@ interface ProveedorConMaterias extends Proveedor {
     HlmDialogDescriptionDirective,
     HlmButtonDirective,
     HlmIconComponent,
+    HlmSelectTriggerComponent,
+    HlmSelectValueDirective,
+    HlmSelectContentDirective,
+    HlmSelectOptionComponent,
     BrnDialogTriggerDirective,
     BrnDialogContentDirective,
+    BrnSelectImports,
     HlmInputDirective,
     CommonModule,
     AsyncPipe,
@@ -72,19 +79,91 @@ export class ProveedoresComponent {
   proveedor: Proveedor = {};
   editMode: boolean = false;
   selectedMateriasPrimas: number[] = [];
+  private filterSubject = new BehaviorSubject<string>('');
+  filter$ = this.filterSubject.asObservable();
 
-  displayedColumns = ['ID', 'Nombre Empresa', 'Dirección Empresa', 'Teléfono Empresa', 'Nombre Encargado', 'Materias Primas', 'actions'];
+  // Column manager
+  protected readonly _brnColumnManager = useBrnColumnManager({
+    ID: {visible: true, label: 'ID', sortable: true},
+    'Nombre Empresa': {visible: true, label: 'Nombre Empresa', sortable: true},
+    'Dirección Empresa': {visible: true, label: 'Dirección Empresa', sortable: true},
+    'Teléfono Empresa': {visible: true, label: 'Teléfono Empresa', sortable: true},
+    'Nombre Encargado': {visible: true, label: 'Nombre Encargado', sortable: true},
+    'Materias Primas': {visible: true, label: 'Materias Primas', sortable: true},
+  });
+
+  // Columnas visibles
+  protected readonly displayedColumns = computed(() => [
+    ...this._brnColumnManager.displayedColumns(),
+    'actions',
+  ]);
+
+  // Paginación
+  private readonly _displayedIndices = signal({ start: 0, end: 0 });
+  protected readonly _availablePageSizes = [5, 10, 20, 10000];
+  protected readonly _pageSize = signal(this._availablePageSizes[0]);
+  protected readonly _totalElements = signal(0);
 
   constructor() {
     this.refreshProveedores();
     this.materiasPrimas$ = this.materiasPrimasService.getMateriaPrima().pipe(
       map(materiasPrimas => materiasPrimas.filter(mp => mp.estatus === 1))
     );
+
+    // Aplicar filtro sobre la lista de proveedores
+    this.proveedores$ = combineLatest([
+      this.proveedores$,
+      this.filter$
+    ]).pipe(
+      map(([proveedores, filterValue]) =>
+        proveedores.filter(proveedor =>
+          proveedor.nombreEmpresa?.toLowerCase().includes(filterValue.toLowerCase())
+        )
+      ),
+      map(filteredProveedores => {
+        this._totalElements.set(filteredProveedores.length);
+        const start = this._displayedIndices().start;
+        const end = this._displayedIndices().end + 1;
+        return filteredProveedores.slice(start, end);
+      })
+    );
   }
+
+  private _updatePaginatedData() {
+    this.proveedores$.pipe(
+      map(proveedores => {
+        const start = this._displayedIndices().start;
+        const end = this._displayedIndices().end + 1;
+        this._totalElements.set(proveedores.length);
+        return proveedores.slice(start, end);
+      })
+    ).subscribe(paginatedProveedores => {
+      this.proveedores$ = of(paginatedProveedores);
+    });
+  }
+
+  protected readonly _onStateChange = ({ startIndex, endIndex }: PaginatorState) => {
+    this._displayedIndices.set({ start: startIndex, end: endIndex });
+    this._updatePaginatedData();
+  };
 
   trackByProveedorId(index: number, proveedor: any): number {
     return proveedor.id!;
   }
+
+  trackByColumnName(index: number, column: any): string {
+    return column.name;
+  }
+
+  applyFilter(filterValue: string) {
+    this.filterSubject.next(filterValue);
+  }
+
+  applyFilterFromEvent(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.applyFilter(inputElement.value);
+  }
+  
 
   onSubmitAdd(form: NgForm) {
     if (form.valid) {

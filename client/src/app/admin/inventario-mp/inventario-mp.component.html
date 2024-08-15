@@ -4,7 +4,7 @@
 
 <div class="flex justify-end my-5 me-5 pr-5">
   <hlm-dialog>
-    <button id="add-inventario-trigger" brnDialogTrigger hlmBtn (click)="onAdd()" class="bg-secondary text-white">Agregar Inventario</button>
+    <button id="add-inventario-trigger" brnDialogTrigger hlmBtn (click)="onAdd()" variant="warning" class="text-white">Agregar Inventario</button>
     <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
       <hlm-dialog-header>
         <h3 hlmDialogTitle>Agregar Inventario</h3>
@@ -92,49 +92,73 @@
   </hlm-dialog>
 </div>
 
+<div class="flex justify-between my-5 px-5">
+  <input hlmInput class="w-full md:w-80" placeholder="Buscar por materia prima" (input)="applyFilterFromEvent($event)" />
+  <button hlmBtn class="bg-white border border-gray-300 text-gray-600 hover:bg-gray-100 me-5" align="end" [brnMenuTriggerFor]="menu">
+    Ver columnas
+    <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
+  </button>
+  <ng-template #menu>
+    <hlm-menu class="w-32 bg-white">
+      <button
+        *ngFor="let column of _brnColumnManager.allColumns; trackBy: trackByColumnName"
+        hlmMenuItemCheckbox
+        class="bg-white hover:bg-gray-100 border border-gray-300 text-gray-600"
+        [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
+        [checked]="_brnColumnManager.isColumnVisible(column.name)"
+        (triggered)="_brnColumnManager.toggleVisibility(column.name)"
+      >
+        <hlm-menu-item-check class="bg-white" />
+        <span>{{ column.label }}</span>
+      </button>
+    </hlm-menu>
+  </ng-template>
+</div>
+
+
 <div class="overflow-x-auto p-5">
   <brn-table
     hlm
     stickyHeader
     class="border-border block h-[335px] overflow-auto rounded-md border bg-white"
     [dataSource]="(inventarios$ | async) || []"
-    [displayedColumns]="displayedColumns"
+    [displayedColumns]="displayedColumns()"
     [trackBy]="trackByInventarioId"
   >
-    <brn-column-def name="ID" class="w-1/6 bg-white">
-      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">ID</hlm-th>
-      <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.id }}</hlm-td>
+    <brn-column-def name="ID" class="w-1/12 bg-white">
+      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center text-xs">ID</hlm-th>
+      <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center text-xs">{{ element.id }}</hlm-td>
     </brn-column-def>
 
-    <!-- Cambiar el nombre de la columna y el contenido para mostrar el nombre de la materia prima -->
-    <brn-column-def name="Materia Prima" class="w-1/6 bg-white">
-      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">Materia Prima</hlm-th>
-      <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.nombreMateriaPrima }}</hlm-td>
+    <!-- Columna para mostrar el nombre de la materia prima -->
+    <brn-column-def name="Materia Prima" class="w-2/12 bg-white">
+      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center text-xs">Materia Prima</hlm-th>
+      <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center text-xs">{{ element.nombreMateriaPrima }}</hlm-td>
     </brn-column-def>
 
-    <brn-column-def name="Cantidad" class="w-1/6 bg-white">
-      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">Cantidad</hlm-th>
-      <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.cantidad }}</hlm-td>
+    <brn-column-def name="Cantidad" class="w-2/12 bg-white">
+      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center text-xs">Cantidad</hlm-th>
+      <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center text-xs">{{ element.cantidad }}</hlm-td>
     </brn-column-def>
 
-    <brn-column-def name="Unidad de Medida" class="w-1/6 bg-white">
-      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">Unidad de Medida</hlm-th>
-      <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.unidadMedida }}</hlm-td>
+    <brn-column-def name="Unidad de Medida" class="w-2/12 bg-white">
+      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center text-xs">Unidad de Medida</hlm-th>
+      <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center text-xs">{{ element.unidadMedida }}</hlm-td>
     </brn-column-def>
 
-    <brn-column-def name="ID Compra" class="w-1/6 bg-white">
-      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">ID Compra</hlm-th>
-      <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.idCompra }}</hlm-td>
+    <brn-column-def name="ID Compra" class="w-2/12 bg-white">
+      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center text-xs">ID Compra</hlm-th>
+      <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center text-xs">{{ element.idCompra }}</hlm-td>
     </brn-column-def>
 
-    <brn-column-def name="Caducidad" class="w-1/6 bg-white">
-      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">Caducidad</hlm-th>
-      <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.caducidad }}</hlm-td>
+    <brn-column-def name="Caducidad" class="w-2/12 bg-white">
+      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center text-xs">Caducidad</hlm-th>
+      <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center text-xs">{{ element.caducidad }}</hlm-td>
     </brn-column-def>
 
-    <brn-column-def name="actions" class="w-1/6 bg-white">
-      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center"></hlm-th>
-      <hlm-td *brnCellDef="let element" class="bg-white flex justify-center items-center">
+    <brn-column-def name="actions" class="w-1/12 bg-white">
+      <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center text-xs"></hlm-th>
+      <hlm-td *brnCellDef="let element" class="bg-white flex justify-center items-center text-xs">
         <button hlmBtn variant="ghost" class="h-6 w-6 p-0.5 hover:bg-gray-100" align="end" [brnMenuTriggerFor]="menu">
           <hlm-icon class="w-4 h-4" name="lucideMoreHorizontal" />
         </button>
@@ -155,4 +179,32 @@
       </hlm-td>
     </brn-column-def>
   </brn-table>
+</div>
+
+<div
+  class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center px-5"
+  *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange"
+>
+  <span class="text-sm text-muted-foreground">{{ _totalElements() }} Inventarios</span>
+  <div class="flex mt-2 sm:mt-0">
+    <brn-select class="inline-block" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
+      <hlm-select-trigger class="inline-flex mr-1 w-15 h-9 bg-white">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let size of _availablePageSizes" [value]="size">
+          {{ size === 10000 ? 'All' : size }}
+        </hlm-option>
+      </hlm-select-content>
+    </brn-select>
+
+    <div class="flex space-x-1">
+      <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.decrementable()" (click)="ctx.decrement()">
+        Anterior
+      </button>
+      <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.incrementable()" (click)="ctx.increment()">
+        Siguiente
+      </button>
+    </div>
+  </div>
 </div>
