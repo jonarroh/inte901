@@ -232,10 +232,6 @@ export class IngredientesComponent {
   }
 
   refreshIngrediente() {
-    this.ingredientes$ = this.ingredienteService.getIngredientes().pipe(
-      map((ingredientes) =>
-        ingredientes.filter((ingrediente) => ingrediente.estatus === 1)
-      )
-    );
+    location.reload();
   }
 }

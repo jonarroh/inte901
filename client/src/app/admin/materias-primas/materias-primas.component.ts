@@ -208,10 +208,6 @@ applyFilterFromEvent(event: Event) {
   }
 
   refreshMateriaPrima() {
-    this.materiasPrimas$ = this.materiaService.getMateriaPrima().pipe(
-      map((materiasPrimas) =>
-        materiasPrimas.filter((materiaPrima) => materiaPrima.estatus === 1)
-      )
-    );
+    location.reload();
   }
 }
