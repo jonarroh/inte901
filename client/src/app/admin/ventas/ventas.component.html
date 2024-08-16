@@ -283,10 +283,10 @@
 </hlm-dialog>
 
 <hlm-alert-dialog class="bg-white" (closed)="resetCombo()">
-  <button id="edit-status" class="hidden" variant="success" brnAlertDialogTrigger hlmBtn>Cambiar status</button>
+  <button id="edit-status" class="hidden" variant="admin" brnAlertDialogTrigger hlmBtn>Cambiar status</button>
   <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
     <hlm-alert-dialog-header>
-      <h3 class="text-white" hlmAlertDialogTitle>Actualizar status de la orden</h3>
+      <h3 class="text-white" hlmAlertDialogTitle>Actualizar Estatus de la orden</h3>
       <p class="text-white" hlmAlertDialogDescription>
         Al cambiar el status de la orden, no se podrá revertir.
         ¿Estás seguro de cambiar el status de la orden?
@@ -300,7 +300,7 @@
 </hlm-alert-dialog>
 
 <hlm-alert-dialog class="bg-white">
-  <button id="edit-status-producto" class="hidden" variant="success" brnAlertDialogTrigger hlmBtn>
+  <button id="edit-status-producto" class="hidden" variant="admin" brnAlertDialogTrigger hlmBtn>
     Cambiar status
   </button>
   <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
