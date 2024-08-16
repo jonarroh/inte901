@@ -1,6 +1,6 @@
-export interface MateriaPrimaproveedor{
-    id:number
-    estatus: number
-    materiaPrimaId: number
-    proveedorId: number
+export interface MateriaPrimaProveedor{
+    id?:number
+    estatus?: number
+    materiaPrimaId?: number
+    proveedorId?: number
 }
