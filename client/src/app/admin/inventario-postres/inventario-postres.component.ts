@@ -212,10 +212,6 @@ export class InventarioPostresComponent {
   }
 
   refreshInventarioPostres() {
-    this.inventarioPostres$ = this.inventarioPostresService.getInventarioPostre().pipe(
-      map((inventarioPostres) =>
-        inventarioPostres.filter((inventarioPostre) => inventarioPostre.estatus === 1)
-      )
-    );
+    location.reload();
   }
 }

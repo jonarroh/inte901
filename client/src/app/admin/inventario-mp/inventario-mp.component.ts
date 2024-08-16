@@ -75,11 +75,11 @@ export class InventarioMPComponent {
 
   // Column manager
   protected readonly _brnColumnManager = useBrnColumnManager({
-    ID: {visible: true, label: 'ID', sortable: true},
-    MateriaPrima: {visible: true, label: 'Materia Prima', sortable: true},
-    UnidadMedida: {visible: true, label: 'Unidad Medida', sortable: true},
-    Cantidad: {visible: true, label: 'Cantidad', sortable: true},
-    Caducidad: {visible: true, label: 'Caducidad', sortable: true},
+    ID: { visible: true, label: 'ID', sortable: true },
+    MateriaPrima: { visible: true, label: 'Materia Prima', sortable: true },
+    UnidadMedida: { visible: true, label: 'Unidad Medida', sortable: true },
+    Cantidad: { visible: true, label: 'Cantidad', sortable: true },
+    Caducidad: { visible: true, label: 'Caducidad', sortable: true },
   });
 
   // Columnas visibles
@@ -112,10 +112,9 @@ export class InventarioMPComponent {
     );
 
     this.inventariosMP$ = combineLatest([this.inventariosMPSource$, this.filter$]).pipe(
-      map(([inventariosMP, filterValue]) => 
-        inventariosMP.filter(inventario => 
-          inventario.material?.toLowerCase().includes(filterValue.toLowerCase()) ||
-          inventario.cantidad?.toString().includes(filterValue)
+      map(([inventariosMP, filterValue]) =>
+        inventariosMP.filter(inventario =>
+          inventario.material?.toLowerCase().includes(filterValue)
         )
       ),
       map(filteredInventariosMP => {
@@ -127,32 +126,25 @@ export class InventarioMPComponent {
     );
   }
 
-
   private _updatePaginatedData() {
     this.inventariosMPSource$.pipe(
       combineLatestWith(this.filter$),
       map(([inventariosMP, filterValue]) => {
-        // Filtrar los registros
         const filteredInventariosMP = inventariosMP.filter(inventario =>
-          inventario.idMateriaPrima?.toString().includes(filterValue) ||
-          inventario.cantidad?.toString().includes(filterValue)
+          inventario.material?.toLowerCase().includes(filterValue)
         );
-  
-        // Obtener los índices de paginación
+
         const start = this._displayedIndices().start;
         const end = this._displayedIndices().end + 1;
-  
-        // Actualizar la cantidad total de elementos
+
         this._totalElements.set(filteredInventariosMP.length);
-  
-        // Retornar el subconjunto de datos basado en la paginación
+
         return filteredInventariosMP.slice(start, end);
       })
     ).subscribe(paginatedInventariosMP => {
       this.inventariosMP$ = of(paginatedInventariosMP);
     });
   }
-  
 
   protected readonly _onStateChange = ({ startIndex, endIndex }: PaginatorState) => {
     this._displayedIndices.set({ start: startIndex, end: endIndex });
@@ -167,15 +159,8 @@ export class InventarioMPComponent {
     return column.name;
   }
 
-  // Nueva propiedad computada para obtener el número de registros filtrados
-  protected readonly _filteredInventariosMP = computed(() => {
-    let count = 0;
-    this.inventariosMP$.subscribe(inventariosMP => count = inventariosMP.length);
-    return count;
-  });
-
   applyFilter(filterValue: string) {
-    this.filterSubject.next(filterValue);
+    this.filterSubject.next(filterValue.toLowerCase());
   }
 
   applyFilterFromEvent(event: Event) {
@@ -229,10 +214,6 @@ export class InventarioMPComponent {
   }
 
   refreshInventarioMP() {
-    this.inventariosMP$ = this.inventarioService.getInventarioMP().pipe(
-      map((inventariosMP) =>
-        inventariosMP.filter((inventario) => inventario.estatus === 1)
-      )
-    );
+    location.reload();
   }
 }
