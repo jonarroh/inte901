@@ -12,8 +12,8 @@ using Server;
 namespace Server.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240812042605_ingredientesEnMenu")]
-    partial class ingredientesEnMenu
+    [Migration("20240816005815_asd")]
+    partial class asd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -159,7 +159,7 @@ namespace Server.Migrations
 
                     b.Property<decimal?>("PriceSingle")
                         .IsRequired()
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<int?>("Quantity")
                         .IsRequired()
@@ -192,7 +192,11 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("IdProduct")
+                    b.Property<int?>("IdMP")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdProveedor")
                         .IsRequired()
                         .HasColumnType("int");
 
@@ -206,7 +210,7 @@ namespace Server.Migrations
 
                     b.Property<decimal?>("PriceSingle")
                         .IsRequired()
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<int?>("PurchaseId")
                         .HasColumnType("int");
@@ -549,6 +553,9 @@ namespace Server.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeliver")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("OrderDate")
                         .HasColumnType("datetime2");
 
@@ -673,18 +680,20 @@ namespace Server.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
                     b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("IdProveedor")
                         .IsRequired()
-                        .HasColumnType("int");
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("IdUser")
                         .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<float?>("Total")
+                        .IsRequired()
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
