@@ -1,21 +1,13 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { NavComponent } from '../componentes/nav/nav.component';
-import {
-  HlmDialogComponent,
-  HlmDialogContentComponent,
-  HlmDialogHeaderComponent,
-  HlmDialogFooterComponent,
-  HlmDialogTitleDirective,
-  HlmDialogDescriptionDirective,
-} from '~/components/ui-dialog-helm/src';
+import { Component, computed, effect, inject, signal } from '@angular/core';
+import { InventarioMPService } from './service/inventario-mp.service';
+import { BehaviorSubject, combineLatest, combineLatestWith, map, Observable, of } from 'rxjs';
+import { InventarioMP } from './interface/inventarioMP';
+import { FormsModule, NgForm } from '@angular/forms';
+import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogDescriptionDirective, HlmDialogFooterComponent, HlmDialogHeaderComponent, HlmDialogTitleDirective } from '~/components/ui-dialog-helm/src';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
-import { BrnDialogTriggerDirective, BrnDialogContentDirective } from '@spartan-ng/ui-dialog-brain';
-import { BehaviorSubject, combineLatest, from, map, Observable, of } from 'rxjs';
-import { AsyncPipe, CommonModule } from '@angular/common';
-import { InventarioMP } from './interface/inventarioMP';
-import { InventarioMPService } from './service/inventario-mp.service';
-import { FormsModule, NgForm } from '@angular/forms';
 import { BrnTableModule, PaginatorState, useBrnColumnManager } from '@spartan-ng/ui-table-brain';
 import { HlmTableModule } from '@spartan-ng/ui-table-helm';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
@@ -23,23 +15,27 @@ import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
 import { provideIcons } from '@ng-icons/core';
 import { lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmIconComponent } from '~/components/ui-icon-helm/src';
-import { MateriasPrimasService } from '../materias-primas/service/materias-primas.service';
-import { MateriaPrima } from '../materias-primas/interface/materias-primas';
 import { HlmSelectContentDirective, HlmSelectOptionComponent, HlmSelectTriggerComponent, HlmSelectValueDirective } from '~/components/ui-select-helm/src';
 import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
+import { MateriasPrimasService } from '../materias-primas/service/materias-primas.service';
+import { MateriaPrima } from '../materias-primas/interface/materias-primas';
+
+export interface InventarioMPExtended extends InventarioMP {
+  material?: string;
+}
 
 @Component({
   selector: 'app-inventario-mp',
   standalone: true,
   imports: [
-    NavComponent,
     HlmDialogComponent,
     HlmDialogContentComponent,
     HlmDialogHeaderComponent,
     HlmDialogFooterComponent,
+    HlmButtonDirective,
+    HlmInputDirective,
     HlmDialogTitleDirective,
     HlmDialogDescriptionDirective,
-    HlmButtonDirective,
     HlmIconComponent,
     HlmSelectTriggerComponent,
     HlmSelectValueDirective,
@@ -47,11 +43,11 @@ import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
     HlmSelectOptionComponent,
     BrnDialogTriggerDirective,
     BrnDialogContentDirective,
+    BrnTableModule,
     BrnSelectImports,
-    HlmInputDirective,
+    FormsModule,
     CommonModule,
     AsyncPipe,
-    FormsModule,
     BrnTableModule,
     HlmTableModule,
     BrnMenuTriggerDirective,
@@ -66,12 +62,13 @@ import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
   ],
 })
 export class InventarioMPComponent {
-  inventarioMPService = inject(InventarioMPService);
+  inventarioService = inject(InventarioMPService);
   materiasPrimasService = inject(MateriasPrimasService);
 
-  inventarios$: Observable<InventarioMP[]>;
-  materiasPrimas$: Observable<MateriaPrima[]>;
-  inventario: InventarioMP = {};
+  private inventariosMPSource$: Observable<InventarioMPExtended[]>;
+  inventariosMP$: Observable<InventarioMP[]>;
+  inventarioMP: InventarioMPExtended = {};
+  materiasPrimas: MateriaPrima[] = [];
   editMode: boolean = false;
   private filterSubject = new BehaviorSubject<string>('');
   filter$ = this.filterSubject.asObservable();
@@ -79,10 +76,9 @@ export class InventarioMPComponent {
   // Column manager
   protected readonly _brnColumnManager = useBrnColumnManager({
     ID: {visible: true, label: 'ID', sortable: true},
-    'Materia Prima': {visible: true, label: 'Materia Prima', sortable: true},
+    MateriaPrima: {visible: true, label: 'Materia Prima', sortable: true},
+    UnidadMedida: {visible: true, label: 'Unidad Medida', sortable: true},
     Cantidad: {visible: true, label: 'Cantidad', sortable: true},
-    'Unidad de Medida': {visible: true, label: 'Unidad de Medida', sortable: true},
-    'ID Compra': {visible: true, label: 'ID Compra', sortable: true},
     Caducidad: {visible: true, label: 'Caducidad', sortable: true},
   });
 
@@ -99,48 +95,64 @@ export class InventarioMPComponent {
   protected readonly _totalElements = signal(0);
 
   constructor() {
-    this.materiasPrimas$ = this.materiasPrimasService.getMateriaPrima().pipe(
-      map(materiasPrimas => materiasPrimas.filter(materiaPrima => materiaPrima.estatus === 1))
+    this.materiasPrimasService.getMateriaPrima().subscribe((materias) => {
+      this.materiasPrimas = materias;
+    });
+
+    this.inventariosMPSource$ = this.inventarioService.getInventarioMP().pipe(
+      map((inventariosMP: InventarioMPExtended[]) => {
+        return inventariosMP.map((inventario) => {
+          const materiaPrima = this.materiasPrimas.find(mp => mp.id === inventario.idMateriaPrima);
+          return {
+            ...inventario,
+            material: materiaPrima ? materiaPrima.material : 'N/A'
+          };
+        }).filter((inventario) => inventario.estatus === 1);
+      })
     );
 
-    this.inventarios$ = combineLatest([
-      this.inventarioMPService.getInventarios().pipe(
-        map(inventarios => inventarios.filter(inventario => inventario.estatus === 1))
+    this.inventariosMP$ = combineLatest([this.inventariosMPSource$, this.filter$]).pipe(
+      map(([inventariosMP, filterValue]) => 
+        inventariosMP.filter(inventario => 
+          inventario.material?.toLowerCase().includes(filterValue.toLowerCase()) ||
+          inventario.cantidad?.toString().includes(filterValue)
+        )
       ),
-      this.materiasPrimas$,
-      this.filter$
-    ]).pipe(
-      map(([inventarios, materiasPrimas, filterValue]) =>
-        inventarios
-          .map(inventario => ({
-            ...inventario,
-            nombreMateriaPrima: materiasPrimas.find(mp => mp.id === inventario.idMateriaPrima)?.material || 'Desconocido'
-          }))
-          .filter(inventario =>
-            inventario.nombreMateriaPrima?.toLowerCase().includes(filterValue.toLowerCase())
-          )
-      ),
-      map(filteredInventarios => {
-        this._totalElements.set(filteredInventarios.length);
+      map(filteredInventariosMP => {
+        this._totalElements.set(filteredInventariosMP.length);
         const start = this._displayedIndices().start;
         const end = this._displayedIndices().end + 1;
-        return filteredInventarios.slice(start, end);
+        return filteredInventariosMP.slice(start, end);
       })
     );
   }
+
 
   private _updatePaginatedData() {
-    this.inventarios$.pipe(
-      map(inventarios => {
+    this.inventariosMPSource$.pipe(
+      combineLatestWith(this.filter$),
+      map(([inventariosMP, filterValue]) => {
+        // Filtrar los registros
+        const filteredInventariosMP = inventariosMP.filter(inventario =>
+          inventario.idMateriaPrima?.toString().includes(filterValue) ||
+          inventario.cantidad?.toString().includes(filterValue)
+        );
+  
+        // Obtener los índices de paginación
         const start = this._displayedIndices().start;
         const end = this._displayedIndices().end + 1;
-        this._totalElements.set(inventarios.length);
-        return inventarios.slice(start, end);
+  
+        // Actualizar la cantidad total de elementos
+        this._totalElements.set(filteredInventariosMP.length);
+  
+        // Retornar el subconjunto de datos basado en la paginación
+        return filteredInventariosMP.slice(start, end);
       })
-    ).subscribe(paginatedInventarios => {
-      this.inventarios$ = of(paginatedInventarios);
+    ).subscribe(paginatedInventariosMP => {
+      this.inventariosMP$ = of(paginatedInventariosMP);
     });
   }
+  
 
   protected readonly _onStateChange = ({ startIndex, endIndex }: PaginatorState) => {
     this._displayedIndices.set({ start: startIndex, end: endIndex });
@@ -148,12 +160,19 @@ export class InventarioMPComponent {
   };
 
   trackByInventarioId(index: number, inventario: any): number {
-    return inventario.id!;
+    return inventario.id;
   }
 
   trackByColumnName(index: number, column: any): string {
     return column.name;
   }
+
+  // Nueva propiedad computada para obtener el número de registros filtrados
+  protected readonly _filteredInventariosMP = computed(() => {
+    let count = 0;
+    this.inventariosMP$.subscribe(inventariosMP => count = inventariosMP.length);
+    return count;
+  });
 
   applyFilter(filterValue: string) {
     this.filterSubject.next(filterValue);
@@ -164,55 +183,56 @@ export class InventarioMPComponent {
     this.applyFilter(inputElement.value);
   }
 
-
   onSubmitAdd(form: NgForm) {
     if (form.valid) {
-      this.inventario.estatus = 1;
-      this.inventario.createdAt = new Date().toISOString();
-      this.inventarioMPService.registrarInventario(this.inventario).subscribe(response => {
+      this.inventarioMP.estatus = 1;
+      this.inventarioMP.createdAt = new Date().toISOString();
+      this.inventarioService.registrarInventarioMP(this.inventarioMP).subscribe((response) => {
         console.log('Inventario registrado:', response);
         form.resetForm();
-        this.inventario = {}; // Reiniciar el objeto inventario
-        this.refreshInventarios();
+        this.inventarioMP = {}; // Reiniciar el objeto inventario
+        this.refreshInventarioMP();
       });
     }
   }
 
   onSubmitEdit(form: NgForm) {
     if (form.valid) {
-      this.inventarioMPService.editarInventario(this.inventario.id!, this.inventario).subscribe(response => {
+      this.inventarioService.editarInventarioMP(this.inventarioMP.id!, this.inventarioMP).subscribe((response) => {
         console.log('Inventario actualizado:', response);
         form.resetForm();
-        this.inventario = {}; // Reiniciar el objeto inventario
+        this.inventarioMP = {}; // Reiniciar el objeto inventario
         this.editMode = false;
-        this.refreshInventarios();
+        this.refreshInventarioMP();
       });
     }
   }
 
   onAdd() {
-    this.inventario = {}; // Limpiar el objeto inventario antes de abrir el formulario de agregar
+    this.inventarioMP = {}; // Limpiar el objeto inventario antes de abrir el formulario de agregar
     const addButton = document.getElementById('add-inventario-trigger');
     addButton?.click();
   }
 
   onEdit(inventario: InventarioMP) {
-    this.inventario = { ...inventario };
+    this.inventarioMP = { ...inventario };
     this.editMode = true;
     const editButton = document.getElementById('edit-inventario-trigger');
     editButton?.click();
   }
 
   onDelete(id: number) {
-    this.inventarioMPService.eliminarInventario(id).subscribe(() => {
+    this.inventarioService.eliminarInventarioMP(id).subscribe(() => {
       console.log('Inventario eliminado');
-      this.refreshInventarios();
+      this.refreshInventarioMP();
     });
   }
 
-  refreshInventarios() {
-    this.inventarios$ = this.inventarioMPService.getInventarios().pipe(
-      map(inventarios => inventarios.filter(inventario => inventario.estatus === 1))
+  refreshInventarioMP() {
+    this.inventariosMP$ = this.inventarioService.getInventarioMP().pipe(
+      map((inventariosMP) =>
+        inventariosMP.filter((inventario) => inventario.estatus === 1)
+      )
     );
   }
 }

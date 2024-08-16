@@ -35,6 +35,7 @@ import { InventarioPostresComponent } from './admin/inventario-postres/inventari
 import { CheckoutReComponent } from './reserves/checkout/checkout.component';
 import { EspaciosComponent } from './admin/espacios/espacios.component';
 import { ClienteComponent } from './reserves/cliente/cliente.component';
+import { MateriasPrimasProveedorComponent } from './admin/materias-primas-proveedor/materias-primas-proveedor.component';
 
 
 
@@ -97,6 +98,10 @@ export const routes: Routes = [
       {
         path: 'proveedores',
         component: ProveedoresComponent
+      },
+      {
+        path: 'materiaProveedor',
+        component: MateriasPrimasProveedorComponent
       },
       {
         path:'users',
