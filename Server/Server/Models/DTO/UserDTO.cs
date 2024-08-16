@@ -12,7 +12,7 @@
 
         public ICollection<Direcciones>? Direcciones { get; set; }
 
-        public ICollection<CreditCardDTO>? CreditCards { get; set; }
+        public ICollection<CreditCard>? CreditCards { get; set; }
     }
 
 
@@ -34,6 +34,6 @@
 
         public ICollection<Direcciones>? Direcciones { get; set; }
 
-        public ICollection<CreditCardDTO>? CreditCards { get; set; }
+        public ICollection<CreditCard>? CreditCards { get; set; }
     }
 }

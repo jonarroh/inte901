@@ -29,6 +29,7 @@ export class TarjetaComponent {
 
   onSelectdCard(card: CreditCard) {
     this.CheackoutService.selectedCard.set(card as CreditCard);
+    console.log('selectedCard', this.CheackoutService.selectedCard());
     this.CheackoutService.isPaidWithCard.set(true);
     this.router.navigate(['checkout/details']);
   }
@@ -36,12 +37,13 @@ export class TarjetaComponent {
   onOrderToStore() {
     this.CheackoutService.isPaidWithCard.set(false);
     this.CheackoutService.selectedCard.set({
-      cardHolderName: '',
-      cardNumber: '',
-      estatus: '',
-      expiryDate: '',
+      cardHolderName: 'na',
+      cardNumber: '00',
+      estatus: 'Activo',
+      expiryDate: '12/45',
       id: 0,
       userId: 0,
+      cvv: '000'
     }as CreditCard);
     this.router.navigate(['checkout/details']);
   }

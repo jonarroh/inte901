@@ -128,8 +128,42 @@ def upload_file():
         img.save(webp_filepath, 'webp', quality=90)
         return jsonify({'message': 'Image has been uploaded and optimized.'},)
     else:
-        return jsonify({'message': 'Error uploading image'},)
+        return jsonify({'message': 'Error uploading image'})
+        
+@app.route('/productos/upload', methods=['POST'])
+def upload_products():
+    if 'file' not in request.files:
+        return jsonify({'message': 'No file part'})
     
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'message': 'No selected file'})
+    
+    if 'id' not in request.form:
+        return jsonify({'message': 'No id part'})
+    
+    id = request.form['id']
+    # Definir el tamaño de la versión grande
+    large_width = 800
+    large_height = 800
+
+    if file:
+        img = Image.open(file)
+        # Guardar la imagen en formato webp en la carpeta principal
+        webp_filename = id + '.webp'
+        webp_filepath = os.path.join(STATIC_FOLDER, 'productos', webp_filename)
+        img.save(webp_filepath, 'webp', quality=90)
+
+        # Crear y guardar la versión grande de la imagen
+        img_large = img.resize((large_width, large_height), Image.LANCZOS)
+        webp_large_filename = id + '.webp'
+        webp_large_filepath = os.path.join(STATIC_FOLDER, 'productos', 'grande', webp_large_filename)
+        os.makedirs(os.path.dirname(webp_large_filepath), exist_ok=True)
+        img_large.save(webp_large_filepath, 'webp', quality=90)
+
+        return jsonify({'message': 'Image has been uploaded and optimized, including large version.'})
+    else:
+        return jsonify({'message': 'Error uploading image'})
 
 
 @app.route('/generate_qr_order', methods=['POST'])
@@ -165,6 +199,45 @@ def generate_qr():
     # Devolver la URL del archivo guardado
     file_url = url_for('static', filename=f'qr-orders/{filename}', _external=True)
     return jsonify({"file_url": file_url},)
+
+
+
+
+@app.route('/generate_qr_reservation', methods=['POST'])
+def generate_qr_reservation():
+    # Obtener el string del request
+    data = request.form.get('ticket')
+    id = request.form.get('id')
+    qr_orders_folder = os.path.join(STATIC_FOLDER, 'reservaciones')
+    
+    if not data:
+        return {"error": "No data provided"}, 400
+
+    # Crear un código QR
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill='black', back_color='white')
+
+    # Generar un nombre de archivo único para evitar colisiones
+    
+    filename = f"{id}.png"
+    filepath = os.path.join(qr_orders_folder, filename)
+
+    # Guardar la imagen en el directorio 'static/qr-orders'
+    img.save(filepath)
+
+    # Devolver la URL del archivo guardado
+    file_url = url_for('static', filename=f'reservaciones/{filename}', _external=True)
+    return jsonify({"file_url": file_url})
+
+
 
 
 

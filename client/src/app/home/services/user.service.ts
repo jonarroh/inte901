@@ -80,6 +80,10 @@ export class UserService {
     localStorage.removeItem('userId');
   }
 
+  deleteUser(id: number) {
+    return this.http.delete<User>(`${this.endpoint}/${id}`);
+  }
+
 
   editTempImage(image: File) {
     const reader = new FileReader();

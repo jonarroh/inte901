@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Server.lib;
 using Server.Models;
 using Server.Models.DTO;
 using System.Collections.Generic;
@@ -13,10 +14,12 @@ namespace Server.Controllers
     public class ReservesController : ControllerBase
     {
         private readonly Context _context;
+        private readonly CreditCardService _creditCardService;
 
-        public ReservesController(Context context)
+        public ReservesController(Context context, CreditCardService creditService)
         {
             _context = context;
+            _creditCardService = creditService;
         }
 
         // GET: api/Reserves
@@ -60,11 +63,9 @@ namespace Server.Controllers
 
             return Ok(reservas);
         }
-
         [HttpPost]
         public async Task<ActionResult<Reserva>> PostReserva([FromBody] ReservaDTO reservaDTO)
-        { 
-
+        {
             if (reservaDTO == null)
             {
                 return BadRequest("ReservaDTO is null.");
@@ -82,6 +83,41 @@ namespace Server.Controllers
             if (espacioExists == null)
             {
                 return BadRequest("Espacio does not exist.");
+            }
+
+            if (reservaDTO.creditCard != null)
+            {
+                if (reservaDTO == null)
+                {
+                    return BadRequest("ReservaDTO is null.");
+                }
+
+                if (reservaDTO.detailReserva == null)
+                {
+                    return BadRequest("El detalle de la reserva no puede ser nulo");
+                }
+
+                var espacio = _context.Espacios.Find(reservaDTO.detailReserva.idEspacio);
+
+                decimal amountPlace = (decimal)espacio.precio;
+
+                if (amountPlace == 0)
+                {
+                    return BadRequest("El espacio no tiene precio");
+                }
+
+                var result = _creditCardService.canPay(reservaDTO.creditCard, amountPlace);
+                Console.WriteLine(result);
+                if (result != "La tarjeta es válida")
+                {
+                    return BadRequest(result);
+                }
+
+                reservaDTO.estatus = "Pagado";
+            }
+            else
+            {
+                reservaDTO.estatus = "Pendiente";
             }
 
             // Crear el detalle de la reserva
@@ -111,8 +147,37 @@ namespace Server.Controllers
             _context.Reservas.Add(reserva);
             await _context.SaveChangesAsync();
 
+
+
+            using (HttpClient client = new HttpClient())
+            {
+                var data = new Dictionary<string, string?>
+            {
+                { "id", reserva.idReserva.ToString() },
+                { "ticket", "0"},
+            };
+
+                var content = new FormUrlEncodedContent(data);
+
+                Console.WriteLine($"Se genero el QR, {data["id"]}, {data["ticket"]}");
+
+                HttpResponseMessage response = await client.PostAsync("http://localhost:5000/generate_qr_reservation", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine(response.Content);
+                }
+                else
+                {
+                    Console.WriteLine(response.Content);
+                    return NotFound($"Error con el QR, status: {response.StatusCode}");
+                }
+            }
+
+
             return CreatedAtAction("GetReserva", new { id = reserva.idReserva }, reserva);
         }
+
 
 
         // PUT: api/Reserves/5

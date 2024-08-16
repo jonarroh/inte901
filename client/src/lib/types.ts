@@ -104,6 +104,11 @@ export interface CreditCard {
   cardHolderName: string;
   userId: number;
   estatus: string;
+  cvv: string;
+}
+
+export interface FullCreditCard {
+
 }
 
 export interface User {

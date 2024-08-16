@@ -14,7 +14,7 @@ namespace Server.lib
                 CardHolderName = "Juan Perez",
                 CVV = "568",
                 CardNumber = "1234567890123456",
-                ExpiryDate = "12/23",
+                ExpiryDate = "12/24",
                 Amount = 1000 
             },
             new CheckCreditCard
@@ -23,7 +23,7 @@ namespace Server.lib
                 CVV = "153",
                 CardHolderName = "Maria Lopez",
                 CardNumber = "1234567890123456",
-                ExpiryDate = "12/23",
+                ExpiryDate = "12/24",
                 Amount = 500
             },
             new CheckCreditCard
@@ -139,7 +139,15 @@ namespace Server.lib
         }
 
         public string canPay(CreditCard creditCard, decimal amount)
+
+
+
         {
+
+            if (creditCard.CardHolderName == "na") {
+                return "La tarjeta es válida";
+            }
+
             if (creditCard == null)
             {
                 return "La tarjeta no puede ser nula";

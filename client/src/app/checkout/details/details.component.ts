@@ -4,14 +4,14 @@ import { Address, CreditCard, CreditCardWithCvv, DetailOrder, Ingrediente, Order
 import { CartService } from '~/app/cart/cart.service';
 import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
-import { Router } from '@angular/router';
-import { tick } from '@angular/core/testing';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-details',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
@@ -77,10 +77,12 @@ export class DetailsComponent {
       
       //hacer la orden
       this.checkoutService.postOrder(this.checkoutService.orderSignal()).subscribe({
-        complete: () => {},
+        complete: () => {
+          this.router.navigate(['orders']);
+        },
         error: (err) => {
           console.log(err);
-          toast.error('Error al hacer la orden');
+          toast.error('Error al hacer la orden '+ JSON.stringify(err.error));
         },
         next: (res) => {
           console.log(res);
