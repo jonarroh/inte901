@@ -3,8 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\urieh\\aqui\\inte901\\Server\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\urieh\\aqui\\inte901\\server\\server\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\urieh\\aqui\\inte901\\server\\server\\controllers\\reservescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\controllers\\reservescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\urieh\\aqui\\inte901\\server\\server\\lib\\creditcardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\lib\\creditcardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Migrations\\20240816005815_asd.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Server\\Migrations\\20240816005815_asd.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\urieh\\aqui\\inte901\\server\\server\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\urieh\\aqui\\inte901\\server\\server\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\urieh\\aqui\\inte901\\server\\server\\controllers\\espacioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -27,28 +47,12 @@
       "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\models\\consumo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\urieh\\aqui\\inte901\\server\\server\\lib\\creditcardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\lib\\creditcardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\urieh\\aqui\\inte901\\server\\server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\urieh\\aqui\\inte901\\server\\server\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\urieh\\aqui\\inte901\\server\\server\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\urieh\\aqui\\inte901\\server\\server\\server.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
       "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\server.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\urieh\\aqui\\inte901\\server\\server\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\urieh\\aqui\\inte901\\server\\server\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -69,10 +73,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\urieh\\aqui\\inte901\\server\\server\\models\\dto\\orderdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\models\\dto\\orderdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|c:\\users\\urieh\\aqui\\inte901\\server\\server\\migrations\\20240812220119_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AFD6AC17-AE57-42DC-9095-33E161612409}|Server\\Server.csproj|solutionrelative:server\\migrations\\20240812220119_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -82,17 +82,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 16,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "ReservesController.cs",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Controllers\\ReservesController.cs",
               "RelativeDocumentMoniker": "Server\\Controllers\\ReservesController.cs",
               "ToolTip": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Controllers\\ReservesController.cs",
               "RelativeToolTip": "Server\\Controllers\\ReservesController.cs",
-              "ViewState": "AQIAAMsAAAAAAAAAAAAwwNcAAAAAAAAA",
+              "ViewState": "AQIAACwAAAAAAAAAAAAgwAYAAAASAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-07T23:52:53.457Z",
               "IsPinned": true,
@@ -115,8 +115,25 @@
               "Name": "ST:129:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
+              "Title": "20240816005815_asd.cs",
+              "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Migrations\\20240816005815_asd.cs",
+              "RelativeDocumentMoniker": "Server\\Migrations\\20240816005815_asd.cs",
+              "ToolTip": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Migrations\\20240816005815_asd.cs",
+              "RelativeToolTip": "Server\\Migrations\\20240816005815_asd.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-16T00:58:15.39Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "EspaciosController.cs",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Controllers\\EspaciosController.cs",
               "RelativeDocumentMoniker": "Server\\Controllers\\EspaciosController.cs",
@@ -128,7 +145,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 7,
               "Title": "EspacioDTO.cs",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Models\\DTO\\EspacioDTO.cs",
               "RelativeDocumentMoniker": "Server\\Models\\DTO\\EspacioDTO.cs",
@@ -140,19 +157,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 5,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "Server\\Properties\\launchSettings.json",
               "ToolTip": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Properties\\launchSettings.json",
               "RelativeToolTip": "Server\\Properties\\launchSettings.json",
-              "ViewState": "AQIAABIAAAAAAAAAAAAAABcAAAAgAAAA",
+              "ViewState": "AQIAABIAAAAAAAAAAAAAABoAAABCAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-08-13T20:50:04.006Z"
+              "WhenOpened": "2024-08-13T20:50:04.006Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "Server.http",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Server.http",
               "RelativeDocumentMoniker": "Server\\Server.http",
@@ -164,7 +182,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "appsettings.Development.json",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\appsettings.Development.json",
               "RelativeDocumentMoniker": "Server\\appsettings.Development.json",
@@ -176,7 +194,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 11,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Program.cs",
               "RelativeDocumentMoniker": "Server\\Program.cs",
@@ -188,19 +206,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "20240812220119_init.cs",
-              "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Migrations\\20240812220119_init.cs",
-              "RelativeDocumentMoniker": "Server\\Migrations\\20240812220119_init.cs",
-              "ToolTip": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Migrations\\20240812220119_init.cs",
-              "RelativeToolTip": "Server\\Migrations\\20240812220119_init.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-12T22:01:19.158Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "20240812214939_asd.cs",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Migrations\\20240812214939_asd.cs",
               "RelativeDocumentMoniker": "Server\\Migrations\\20240812214939_asd.cs",
@@ -212,7 +218,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "UserDTO.cs",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Models\\DTO\\UserDTO.cs",
               "RelativeDocumentMoniker": "Server\\Models\\DTO\\UserDTO.cs",
@@ -224,7 +230,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "Server\\Controllers\\UsersController.cs",
@@ -236,19 +242,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 0,
               "Title": "OrdersController.cs",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Controllers\\OrdersController.cs",
               "RelativeDocumentMoniker": "Server\\Controllers\\OrdersController.cs",
               "ToolTip": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Controllers\\OrdersController.cs",
               "RelativeToolTip": "Server\\Controllers\\OrdersController.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAACQAAAAAAAAA",
+              "ViewState": "AQIAADkAAAAAAAAAAAAYwEEAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-07T23:50:05.819Z"
+              "WhenOpened": "2024-08-07T23:50:05.819Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "OrderDTO.cs",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Models\\DTO\\OrderDTO.cs",
               "RelativeDocumentMoniker": "Server\\Models\\DTO\\OrderDTO.cs",
@@ -260,19 +267,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 2,
               "Title": "CreditCardService.cs",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\lib\\CreditCardService.cs",
               "RelativeDocumentMoniker": "Server\\lib\\CreditCardService.cs",
               "ToolTip": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\lib\\CreditCardService.cs",
               "RelativeToolTip": "Server\\lib\\CreditCardService.cs",
-              "ViewState": "AQIAAAgAAAAAAAAAAAAgwCsAAAAjAAAA",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAABcAAAAiAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-07T23:57:40.186Z"
+              "WhenOpened": "2024-08-07T23:57:40.186Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "ReservaDTO.cs",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Models\\DTO\\ReservaDTO.cs",
               "RelativeDocumentMoniker": "Server\\Models\\DTO\\ReservaDTO.cs",
@@ -284,7 +292,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 10,
               "Title": "Consumo.cs",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Models\\Consumo.cs",
               "RelativeDocumentMoniker": "Server\\Models\\Consumo.cs",
@@ -296,7 +304,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 9,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\appsettings.json",
               "RelativeDocumentMoniker": "Server\\appsettings.json",
@@ -308,7 +316,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 4,
               "Title": "Order.cs",
               "DocumentMoniker": "C:\\Users\\urieh\\aqui\\inte901\\Server\\Server\\Models\\Order.cs",
               "RelativeDocumentMoniker": "Server\\Models\\Order.cs",
@@ -316,11 +324,8 @@
               "RelativeToolTip": "Server\\Models\\Order.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-31T02:03:47.222Z"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+              "WhenOpened": "2024-07-31T02:03:47.222Z",
+              "EditorCaption": ""
             }
           ]
         }
