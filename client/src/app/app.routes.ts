@@ -34,7 +34,7 @@ import { InventarioMPComponent } from './admin/inventario-mp/inventario-mp.compo
 import { InventarioPostresComponent } from './admin/inventario-postres/inventario-postres.component';
 import { CheckoutReComponent } from './reserves/checkout/checkout.component';
 import { EspaciosComponent } from './admin/espacios/espacios.component';
-// import { ClienteComponent } from './reserves/cliente/cliente.component';
+import { ClienteComponent } from './reserves/cliente/cliente.component';
 
 
 
@@ -159,11 +159,11 @@ export const routes: Routes = [
     canActivate: [AuthenticatedGuard],
     component: ReservesComponent
   },
-  // {
-  //   path: 'reservesCliente',
-  //   canActivate: [AuthenticatedGuard],
-  //   component: ClienteComponent
-  // },
+  {
+    path: 'reservesCliente',
+    canActivate: [AuthenticatedGuard],
+    component: ClienteComponent
+  },
 
   {
 

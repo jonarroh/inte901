@@ -44,4 +44,6 @@ import { toast } from 'ngx-sonner';
 })
 export class EstatusComponent {
 
+  
+
 }
