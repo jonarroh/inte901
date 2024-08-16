@@ -247,6 +247,27 @@ namespace Server.Controllers
             return NoContent();
         }
 
+
+        // GET: api/Reserves/byClient/1
+        [HttpGet("byClient/{idCliente}")]
+        public async Task<ActionResult<IEnumerable<Reserva>>> GetReservasByCliente(int idCliente)
+        {
+            var reservas = await _context.Reservas
+                .Where(r => r.idCliente == idCliente)
+                .Where(r => r.estatus == "Pagado" || r.estatus == "Cancelado" || r.estatus == "Finalizada")
+                .Include(r => r.DetailReserva) // Incluir detalles de la reserva
+                .Include(r => r.Usuario) // Incluir usuario de la reserva
+                .ToListAsync();
+
+            if (reservas == null || !reservas.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(reservas);
+        }
+
+
         private bool ReservaExists(int id)
         {
             return _context.Reservas.Any(e => e.idReserva == id);
