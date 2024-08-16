@@ -10,4 +10,7 @@ export const ENDPOINTS = {
   ingrediente: `${API_URL}/api/Ingredientes`,
   proveedor: `${API_URL}/api/Proveedores`,
   materiaPrimaProveedor: `${API_URL}/api/MateriasPrimasProveedores`,
+  ventas: `${API_URL}/api/Orders`,
+  inventarioMP: `${API_URL}/api/InventarioMPs`,
+  inventarioPostre: `${API_URL}/api/InventarioPostres`,
 } as const;

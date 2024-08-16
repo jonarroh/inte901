@@ -12,16 +12,15 @@
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? Id { get; set; }
         [Required]
-        [ForeignKey("IdProveedor")]
-        public int? IdProveedor { get; set; }
-        [Required]
         [ForeignKey("IdUser")]
         public int? IdUser { get; set; }
+        [Required]
         public DateTime? CreatedAt { get; set; }
-        public string? Status { get; set; } // Pendiente, Aceptada, Cancelada, Entregada
+        [Required]
+        public float? Total { get; set; }
+        [Required]
+        public string Status { get; set; }
         public ICollection<DetailPurchase>? DetailPurchases { get; set; }
-        [NotMapped]
-        public Proveedor? Proveedor { get; set; }
         [NotMapped]
         public User? User { get; set; }
         public Purchase()

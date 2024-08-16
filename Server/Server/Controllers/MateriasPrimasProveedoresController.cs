@@ -57,7 +57,7 @@ namespace Server.Controllers
             {
                 return NotFound();
             }
-
+            materiaPrimaProveedor.Estatus = materiaPrimaProveedorDTO.Estatus;
             materiaPrimaProveedor.MateriaPrimaId = materiaPrimaProveedorDTO.MateriaPrimaId;
             materiaPrimaProveedor.ProveedorId = materiaPrimaProveedorDTO.ProveedorId;
 
@@ -88,6 +88,7 @@ namespace Server.Controllers
         {
             var materiaPrimaProveedor = new MateriaPrimaProveedor
             {
+                Estatus = materiaPrimaProveedorDTO.Estatus,
                 MateriaPrimaId = materiaPrimaProveedorDTO.MateriaPrimaId,
                 ProveedorId = materiaPrimaProveedorDTO.ProveedorId
             };
@@ -124,6 +125,7 @@ namespace Server.Controllers
             {
                 var materiaPrimaProveedor = new MateriaPrimaProveedor
                 {
+                    Estatus = materiaPrimaProveedorDTO.Estatus,
                     MateriaPrimaId = materiaPrimaProveedorDTO.MateriaPrimaId,
                     ProveedorId = materiaPrimaProveedorDTO.ProveedorId
                 };

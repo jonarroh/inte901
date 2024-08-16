@@ -14,6 +14,7 @@ type FilterProduct = 'All' | 'Postre' | 'Bebida';
     HlmBadgeDirective,
     RouterModule
   ],
+  providers: [Router],
   templateUrl: './card-product.component.html'
 })
 export class CardProductComponent {

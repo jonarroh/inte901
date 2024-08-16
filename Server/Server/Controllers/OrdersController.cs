@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Server;
 using Server.Hubs;
@@ -18,7 +19,7 @@ using Server.Models.DTO;
 
 namespace Server.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class OrdersController : ControllerBase
     {
@@ -32,6 +33,91 @@ namespace Server.Controllers
             _context = context;
             _creditCardService = creditService;
             _hubContext = hubContext;
+        }
+
+        [HttpGet]
+        [Route("getOrders")]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            try
+            {
+                var orders = await _context.Orders.ToListAsync();
+
+                if (orders == null || orders.Count == 0)
+                {
+					return BadRequest("No hay ordenes registradas");
+				}
+
+                return Ok(orders);
+            } catch (Exception ex)
+            {
+				Console.WriteLine(ex.Message);
+
+				return NotFound("Se produjo un error en el servidor, contacte a soporte");
+			}
+        }
+
+        [HttpGet]
+        // [Authorize]
+        [Route("getOrdersDelivery")]
+        public async Task<IActionResult> GetOrdersDelivery()
+        {
+            try
+            {
+                var orders = await _context.Orders.Where(o => o.IsDeliver == true).ToListAsync();
+
+                foreach (var order in orders)
+                {
+                    var details = await _context.DetailOrders.Where(d => d.IdOrder == order.Id).ToListAsync();
+                    order.DetailOrders = details;
+                    foreach (var detail in details)
+                    {
+                        var product = await _context.Productos.FindAsync(detail.IdProduct);
+                        detail.Product = product;
+                    }
+
+                    var user = await _context.Users.FindAsync(order.IdClient);
+                    order.User = user;
+                }
+
+
+                if (orders == null || orders.Count == 0)
+                {
+                    return BadRequest("No hay ordenes registradas");
+                }
+
+                return Ok(orders);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+        [HttpGet]
+        // [Authorize]
+        [Route("getOrdersNoDelivery")]
+        public async Task<IActionResult> GetOrdersNoDelivery()
+        {
+            try
+            {
+                var orders = await _context.Orders.Where(o => o.IsDeliver == false).ToListAsync();
+
+                if (orders == null || orders.Count == 0)
+                {
+                    return BadRequest("No hay ordenes registradas");
+                }
+
+                return Ok(orders);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
         }
 
         [HttpPut]
@@ -52,6 +138,34 @@ namespace Server.Controllers
 
             return Ok(order);
         }
+
+        [HttpPut]
+        [Route("updateStatusOrder/{status},{idOrder}")]
+        public async Task<IActionResult> UpdateStatusOrder(string status, int idOrder)
+        {
+			try
+            {
+				var order = await _context.Orders.FindAsync(idOrder);
+
+				if (order == null)
+                {
+					return NotFound("No se encontro la orden");
+				}
+
+				order.Status = status;
+
+				await _context.SaveChangesAsync();
+
+				return Ok(order);
+			}
+			catch (Exception ex)
+            {
+				Console.WriteLine(ex.Message);
+
+				return NotFound("Se produjo un error en el servidor, contacte a soporte");
+			}
+		}
+
 
         [HttpGet]
         [Route("allOrders")]
@@ -75,10 +189,12 @@ namespace Server.Controllers
                         .Where(d => d.IdOrder == orden.Id)
                         .ToListAsync();
 
-                   
+
                     // Asignar la fecha al campo correspondiente
                     orden.OrderDate = dateOrder != null ? new DateTime() : dateOrder.FirstOrDefault().DateOrder;
 
+                    orden.OrderDate = DateTime.Parse(orden.OrderDate.ToString() ?? "");
+                
                     // Agregar la orden a la lista
                     ordenesPendientes.Add(orden);
                 }
@@ -91,6 +207,7 @@ namespace Server.Controllers
                 return StatusCode(500, "Se produjo un error en el servidor, contacte a soporte");
             }
         }
+
 
         [HttpGet]
         [Route("ordersByUser/{userId}")]
@@ -149,10 +266,6 @@ namespace Server.Controllers
             }
         }
 
-
-
-
-
         [HttpGet]
         //[Authorize]
         [Route("orderFilterByStatus/{status}")]
@@ -176,6 +289,55 @@ namespace Server.Controllers
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
         }
+
+
+        
+        private async Task<String> ProductInInventory(int idProduct, int quantity)
+        {
+            var product = await _context.Productos.Include(p => p.Ingredientes).FirstOrDefaultAsync(p => p.Id == idProduct);
+            if (product == null)
+            {
+                return "Producto no encontrado";
+            }
+
+            if (IsSpecialProduct(idProduct))
+            {
+                return await CheckCakeInventory(product, quantity);
+            }
+            else
+            {
+                return await CheckIngredientsInventory(product, quantity);
+            }
+        }
+
+        private bool IsSpecialProduct(int productId)
+        {
+            return productId == 1 || productId == 2;
+        }
+
+        private async Task<String> CheckCakeInventory(Producto product, int quantity)
+        {
+            var cakeInventory = await _context.InventarioPostres.FirstOrDefaultAsync(i => i.IdPostre == product.Id);
+            if (cakeInventory == null || cakeInventory.Cantidad < quantity)
+            {
+                return $"No hay suficiente inventario para el producto {product.Nombre}";
+            }
+            return "ok";
+        }
+
+        private async Task<String> CheckIngredientsInventory(Producto product, int quantity)
+        {
+            foreach (var ingredient in product.Ingredientes)
+            {
+                var ingredientInventory = await _context.InventarioMPs.FirstOrDefaultAsync(i => i.Id == ingredient.Id);
+                if (ingredientInventory == null || (decimal)ingredientInventory.Cantidad < ingredient.Cantidad * quantity)
+                {
+                    return $"No hay suficiente inventario para el producto {product.Nombre}";
+                }
+            }
+            return "ok";
+        }
+
 
 
         [HttpGet]
@@ -207,6 +369,57 @@ namespace Server.Controllers
             }
         }
 
+
+        [HttpGet]
+        // [Authorize]
+        [Route("orderDetail/{id}")]
+        public async Task<IActionResult> GetOrderDetail(int? id)
+        {
+            if (id == null)
+            {
+                return BadRequest("El ID de la orden no puede ser nulo");
+            }
+
+            try
+            {
+                var details = await _context.DetailOrders
+                                            .Where(d => d.IdOrder == id)
+                                            .Select(d => new
+                                            {
+                                                d.Id,
+                                                d.IdOrder,
+                                                d.IdProduct,
+                                                d.Quantity,
+                                                d.PriceSingle,
+                                                d.Status,
+                                                DateOrder = DateTime.Parse(d.DateOrder.ToString() ?? ""),
+                                                Product = _context.Productos
+                                                                  .Where(p => p.Id == d.IdProduct)
+                                                                  .Select(p => new
+                                                                  {
+                                                                      p.Id,
+                                                                      p.Nombre, // Asegúrate de que esta propiedad coincida con tu modelado de back-end
+                                                                      p.Precio,
+                                                                      // otros campos necesarios
+                                                                  }).FirstOrDefault()
+                                            }).ToListAsync();
+
+                if (details == null || !details.Any())
+                {
+                    return NotFound("No se encontraron detalles de la orden");
+                }
+
+                return Ok(details);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+
         [HttpPost]
         [Route("addOrder")]
         public async Task<IActionResult> PostOrder(OrderDTO ordertdo)
@@ -218,10 +431,18 @@ namespace Server.Controllers
                     return BadRequest("Campos incompletos, es necesario completar todos los datos.");
                 }
 
+                Console.WriteLine(JsonConvert.SerializeObject(ordertdo));
+
+                if (ordertdo == null)
+                {
+                    return BadRequest("Campos incompletos, es necesario completar todos los datos.");
+                }
+
                 Random rnd = new Random();
                 int ticket;
                 bool ticketExists;
                 string responseStatus;
+
 
                 do
                 {
@@ -237,6 +458,7 @@ namespace Server.Controllers
                     OrderDate = DateTime.Now,
                     Status = "Ordenado",
                     Ticket = ticket,
+                    IsDeliver = ordertdo.IsDeliver
                 };
 
                 if (ordertdo.CreditCard != null)
@@ -262,7 +484,7 @@ namespace Server.Controllers
                     ordertdo.CreditCard = creditCard;
                 }
 
-                if (ordertdo.Direcciones == null)
+                if (ordertdo.Direcciones == null && ordertdo.IsDeliver == false)
                 {
                     var direccion = new Direcciones
                     {
@@ -299,10 +521,17 @@ namespace Server.Controllers
 
                 await _context.Orders.AddAsync(orden);
                 await _context.SaveChangesAsync();
-
+              
                 // Guardado de los detalles de la orden
                 foreach (var d in ordertdo.DetailOrders)
                 {
+                    // Verificar si hay suficiente inventario para el producto
+                    var inventoryStatus = await ProductInInventory(d.IdProduct, d.Quantity);
+                    if (inventoryStatus != "ok")
+                    {
+                        return BadRequest(inventoryStatus);
+                    }
+
                     var detail = new DetailOrder
                     {
                         IdOrder = orden.Id,
@@ -311,7 +540,7 @@ namespace Server.Controllers
                         PriceSingle = d.PriceSingle,
                         DateOrder = DateTime.Now,
                         Ingredients = d.Ingredients,
-                        Status = "Pendiente"
+                        Status = "Ordenado"
                     };
 
                     orden.DetailOrders?.Add(detail);
@@ -321,32 +550,32 @@ namespace Server.Controllers
                 await _context.SaveChangesAsync();
 
                 // Petición para generar el QR después de guardar la orden y sus detalles
-                using (HttpClient client = new HttpClient())
-                {
-                    var data = new Dictionary<string, string?>
-            {
-                { "id", orden.Id.ToString() },
-                { "ticket", orden.Ticket.ToString() },
-            };
+                //using (HttpClient client = new HttpClient())
+                //{
+                //   var data = new Dictionary<string, string?>
+                //{
+                //   { "id", orden.Id.ToString() },
+                //   { "ticket", orden.Ticket.ToString() },
+                //};
 
-                    var content = new FormUrlEncodedContent(data);
+                //   var content = new FormUrlEncodedContent(data);
 
-                    Console.WriteLine($"Se genero el QR, {data["id"]}, {data["ticket"]}");
+                //   Console.WriteLine($"Se genero el QR, {data["id"]}, {data["ticket"]}");
 
-                    HttpResponseMessage response = await client.PostAsync("http://localhost:5000/generate_qr_order", content);
+                //   HttpResponseMessage response = await client.PostAsync("http://localhost:5000/generate_qr_order", content);
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        responseStatus = response.StatusCode.ToString();
-                        Console.WriteLine(await response.Content.ReadAsStringAsync());
-                    }
-                    else
-                    {
-                        responseStatus = response.StatusCode.ToString();
-                        Console.WriteLine(await response.Content.ReadAsStringAsync());
-                        return NotFound($"Error con el QR, status: {responseStatus}");
-                    }
-                }
+                //   if (response.IsSuccessStatusCode)
+                //   {
+                //       responseStatus = response.StatusCode.ToString();
+                //       Console.WriteLine(response.Content);
+                //   }
+                //   else
+                //   {
+                //       responseStatus = response.StatusCode.ToString();
+                //       Console.WriteLine(response.Content);
+                //       return NotFound($"Error con el QR, status: {responseStatus}");
+                //   }
+                //}
 
                 return Ok(orden);
             }
@@ -410,10 +639,10 @@ namespace Server.Controllers
 
                 foreach (var detail in detailOrden)
                 {
-                    detail.Status = "Vendido";
+                    detail.Status = "Recibido";
                 }
 
-                orden.Status = "Vendido";
+                orden.Status = "Recibido";
 
                 await _context.SaveChangesAsync();
 
@@ -478,7 +707,7 @@ namespace Server.Controllers
                     PriceSingle = detaildto.PriceSingle,
                     DateOrder = DateTime.Now,
                     Ingredients = detaildto.Ingredients,
-                    Status = "Pendiente"
+                    Status = "Ordenado"
                 };
 
                 await _context.DetailOrders.AddAsync(product);
@@ -517,6 +746,87 @@ namespace Server.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+        [HttpPut]
+        // [Authorize]
+        [Route("updateOrder/{id},{status}")]
+        public async Task<IActionResult> UpdateOrder(int id, string status)
+        {
+            try
+            {
+                var order = await _context.Orders.FindAsync(id);
+
+                if (order == null)
+                {
+                    return NotFound("No se encontro la orden");
+                }
+
+                if (status == "Recibido")
+                {
+                    var detailOrder = await _context.DetailOrders.Where(d => d.IdOrder == order.Id).ToListAsync();
+
+                    foreach (var detail in detailOrder)
+                    {
+                        detail.Status = "Recibido";
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+
+                if (status == "Cancelado")
+                {
+                    var detailOrder = await _context.DetailOrders.Where(d => d.IdOrder == order.Id).ToListAsync();
+
+                    foreach (var detail in detailOrder)
+                    {
+                        detail.Status = "Cancelado";
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+
+                order.Status = status;
+
+                await _context.SaveChangesAsync();
+
+                return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+
+        [HttpPut]
+        // [Authorize]
+        [Route("updateDetailOrderStatus/{id},{status}")]
+        public async Task<IActionResult> UpdateDetailOrderStatus(int id, string status)
+        {
+            try
+            {
+                var detailOrder = await _context.DetailOrders.FindAsync(id);
+
+                if (detailOrder == null)
+                {
+                    return NotFound("No se encontro el detalle de la orden");
+                }
+
+                detailOrder.Status = status;
+
+                await _context.SaveChangesAsync();
+
+                return Ok(detailOrder);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
         }

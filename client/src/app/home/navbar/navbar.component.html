@@ -52,8 +52,15 @@
       </div>
     </div>
   </div>
+
   <div class="flex items-center gap-x-4 justify-self-end">
     <app-cart/>
+    
+      <a routerLink="/places" class="flex text-white">
+        <lucide-icon name="calendar-range"></lucide-icon>
+      Reservaciones
+      </a>
+    
     <div>
       <nav-icon [isLogged]="isLogged()"></nav-icon>
     </div>

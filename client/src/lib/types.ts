@@ -106,11 +106,6 @@ export interface CreditCard {
   estatus: string;
   cvv: string;
 }
-
-export interface FullCreditCard {
-
-}
-
 export interface User {
   id: number;
   name: string;
@@ -126,12 +121,33 @@ export interface User {
 
 
 export interface Espacio {
-  idEspacio: number;
+  idEspacio?: number;
   nombre: string;
   canPersonas: number;
   precio: number;
   estatus: string;
   descripcion: string;
+  
+}
+
+export interface Espacio2 {
+  idEspacio?: number;
+  nombre: string;
+  canPersonas: number;
+  precio: number;
+  descripcion: string;
+  imagen : File;
+  
+}
+
+export interface EspacioDTO {
+  idEspacio?: number;
+  nombre: string;
+  canPersonas: number;
+  precio: number;
+  estatus: string;
+  descripcion: string;
+  imagen : File;
 }
 
 export interface DetailOrder {
@@ -207,6 +223,7 @@ export interface ReservaDTO {
   idCliente: number;
   estatus: string;
   detailReserva: DetailReservaDTO;
+  creditCard: CreditCard;
 }
 
 

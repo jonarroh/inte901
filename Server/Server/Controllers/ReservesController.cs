@@ -26,7 +26,13 @@ namespace Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Reserva>>> GetReserves()
         {
-            return Ok(await _context.Reservas.Include(r => r.DetailReserva).Include(r => r.Usuario).ToListAsync());
+            var ReservacionesActivas = await _context.Reservas
+                .Include(r => r.DetailReserva)
+                .Include(r => r.Usuario)
+                .Where(r => r.estatus == "Pagado" || r.estatus == "Pendiente" || r.estatus == "Activo")
+                .ToListAsync();
+
+            return Ok(ReservacionesActivas);
         }
 
         // GET: api/Reserves/5
@@ -36,6 +42,7 @@ namespace Server.Controllers
             var reserva = await _context.Reservas
                 .Include(r => r.DetailReserva)
                 .Include(r => r.Usuario)
+
                 .FirstOrDefaultAsync(r => r.idReserva == id);
 
             if (reserva == null)
@@ -52,6 +59,7 @@ namespace Server.Controllers
         {
             var reservas = await _context.Reservas
                 .Where(r => r.DetailReserva.idEspacio == idEspacio)
+                .Where(r => r.estatus == "Pagado" || r.estatus == "Pendiente" || r.estatus == "Activo")
                 .Include(r => r.DetailReserva) // Incluir detalles de la reserva
                 .Include(r => r.Usuario) // Incluir usuario de la reserva
                 .ToListAsync();
@@ -222,17 +230,43 @@ namespace Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReserva(int id)
         {
+            //canbiar el estatus a cancelado
             var reserva = await _context.Reservas.FindAsync(id);
             if (reserva == null)
             {
                 return NotFound();
             }
 
-            _context.Reservas.Remove(reserva);
+            reserva.estatus = "Cancelado";
+
+
             await _context.SaveChangesAsync();
+
+
 
             return NoContent();
         }
+
+
+        // GET: api/Reserves/byClient/1
+        [HttpGet("byClient/{idCliente}")]
+        public async Task<ActionResult<IEnumerable<Reserva>>> GetReservasByCliente(int idCliente)
+        {
+            var reservas = await _context.Reservas
+                .Where(r => r.idCliente == idCliente)
+                .Where(r => r.estatus == "Pagado" || r.estatus == "Cancelado" || r.estatus == "Finalizada")
+                .Include(r => r.DetailReserva) // Incluir detalles de la reserva
+                .Include(r => r.Usuario) // Incluir usuario de la reserva
+                .ToListAsync();
+
+            if (reservas == null || !reservas.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(reservas);
+        }
+
 
         private bool ReservaExists(int id)
         {

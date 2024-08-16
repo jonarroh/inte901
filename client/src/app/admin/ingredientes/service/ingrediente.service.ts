@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { ENDPOINTS } from '~/lib/endpoint';
 import { Ingrediente } from '../interface/ingrediente';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +11,12 @@ export class IngredienteService {
 
   apiURL = ENDPOINTS.ingrediente;
 
-  constructor(private http:HttpClient) {}
+  constructor(private http: HttpClient) {}
 
   getIngredientes = (): Observable<Ingrediente[]> =>
-    this.http.get<Ingrediente[]>(`${this.apiURL}`)
-  
-  registrarIngredientes(data: Ingrediente): Observable<Ingrediente> {
+    this.http.get<Ingrediente[]>(`${this.apiURL}`);
+
+  registrarIngrediente(data: Ingrediente): Observable<Ingrediente> {
     return this.http.post<Ingrediente>(this.apiURL, data);
   }
 
@@ -28,8 +28,13 @@ export class IngredienteService {
     return this.http.get<Ingrediente>(`${this.apiURL}/${id}`).pipe(
       switchMap(ingrediente => {
         ingrediente.estatus = 0;
+        ingrediente.deletedAt = new Date().toISOString();
         return this.http.put<void>(`${this.apiURL}/${id}`, ingrediente);
       })
     );
+  }
+
+  getIngredienteById(id: number): Observable<Ingrediente> {
+    return this.http.get<Ingrediente>(`${this.apiURL}/${id}`);
   }
 }

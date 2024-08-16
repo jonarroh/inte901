@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, HlmButtonDirective, HlmToasterComponent, HttpClientModule],
+  providers: [SignalRService, OrdenServiceService, PedidosUserServiceService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
