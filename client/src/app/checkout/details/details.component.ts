@@ -19,7 +19,8 @@ import { Router, RouterModule } from '@angular/router';
 export class DetailsComponent {
 
     constructor(private checkoutService: CheckoutService,private cartService: CartService, private router : Router) {
-      
+      console.log(this.order());
+      console.log("llego al constructor");
     }
     order = signal<Order>({} as Order);
     isOrderToStore = signal<boolean>(JSON.parse(localStorage.getItem('isOrderToStore') || 'false'));
@@ -28,6 +29,7 @@ export class DetailsComponent {
     selectedAddress = signal<Address>(JSON.parse(localStorage.getItem('selectedAddress') || '{}'));
     products = this.cartService.cartSignal;
     ordes = this.checkoutService.orderSignal;
+  
 
     getSubtotal() {
       return this.products().reduce((acc, product) => acc + product.precio, 0);
