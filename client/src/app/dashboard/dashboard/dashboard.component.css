@@ -1,0 +1,14 @@
+.multi-select {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .multi-select-option {
+    margin-bottom: 8px;
+  }
+  
+  button[disabled] {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
