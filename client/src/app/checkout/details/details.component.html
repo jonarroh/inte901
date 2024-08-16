@@ -17,7 +17,7 @@
     <div class="space-y-2">
       <p class="flex justify-between"><span>Subtotal:</span> <span>{{ getSubtotal() | currency }}</span></p>
       <p class="flex justify-between"><span>Envio:</span> <span>{{ isOrderToStore() ? 'Recogida en tienda' : 'Envío a domicilio' }}</span></p>
-      <p class="flex justify-between font-bold"><span>Total:</span> <span>{{ ordes().total | currency }}</span></p>
+      <p class="flex justify-between font-bold"><span>Total:</span> <span>{{ total() }}</span></p>
       <p *ngIf="isPaidWithCard()" class="flex justify-between"><span>Tarjeta de crédito:</span> <span>{{ selectedCard().cardHolderName }} - **** **** **** {{ selectedCard().cardNumber.slice(-4) }}</span></p>
       <p *ngIf="!isOrderToStore()" class="text-sm text-gray-600">
         Dirección de envío: {{ selectedAddress().calle }}, {{ selectedAddress().colonia }}, {{ selectedAddress().ciudad }}, {{ selectedAddress().estado }}, {{ selectedAddress().pais }} - {{ selectedAddress().codigoPostal }}

@@ -1,8 +1,8 @@
-<div class="container mx-auto max-h-screen overflow-y-auto w-full p-4">
+<!-- <div class="container mx-auto max-h-screen overflow-y-auto w-full p-4">
   <div class="flex-1 flex justify-center">
     <h1 class="text-5xl font-bold mt-1 mb-2 text-black">Reservas</h1>
   </div>
-  <!-- <div class="flex justify-end my-5 me-5 pr-5">
+  <div class="flex justify-end my-5 me-5 pr-5">
     <div>
       <hlm-dialog [state]="states()">
         <button id="edit-profile" brnDialogTrigger hlmBtn>Agregar Reserva</button>
@@ -129,7 +129,7 @@
         </form>
       </hlm-dialog>
     </div>
-  </div> -->
+  </div>
   <div class="flex flex-row justify-between gap-4 px-20 py-5">
     <input
       hlmInput
@@ -145,13 +145,13 @@
     <ng-template #menu>
       <hlm-menu class="w-32 bg-white">
 
-        @for (column of _brnColumnManager.allColumns; track column.name) {
+        @for (column of _brnColumnManager.allColumns; track column.fecha) {
           <button
             hlmMenuItemCheckbox
             class="bg-white hover:bg-gray-100"
-            [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
-            [checked]="_brnColumnManager.isColumnVisible(column.name)"
-            (triggered)="_brnColumnManager.toggleVisibility(column.name)"
+            [disabled]="_brnColumnManager.isColumnDisabled(column.fecha)"
+            [checked]="_brnColumnManager.isColumnVisible(column.fecha)"
+            (triggered)="_brnColumnManager.toggleVisibility(column.fecha)"
           >
             <hlm-menu-item-check  class="bg-white"/>
             <span>{{ column.label }}</span>
@@ -233,16 +233,10 @@
 
             </hlm-menu-label>
             <hlm-menu-separator />
-            <hlm-menu-group>
-              <button hlmMenuItem (click)="onClickEdit(element)"
-              class="hover:bg-gray-100"
-              >
-                Editar
-              </button>
-            </hlm-menu-group>
+           
             <hlm-menu-separator />
             <hlm-menu-group>
-              <button hlmMenuItem  (click)="onDeletePlace(element)"
+              <button hlmMenuItem  
               class="hover:bg-gray-100"
               >
                               Eliminar
@@ -284,4 +278,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

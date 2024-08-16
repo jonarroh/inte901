@@ -1,4 +1,4 @@
-import { Component, computed, effect, OnInit, signal, TrackByFunction } from '@angular/core';
+import { Component, computed, OnInit, signal, TrackByFunction } from '@angular/core';
 import { ReservaSerService } from '~/app/admin/reservas/reserva-ser.service';
 import { NavbarComponent } from '~/app/home/navbar/navbar.component';
 import { DetailReservaDTO, ReservaDTO } from '~/lib/types';
@@ -6,10 +6,9 @@ import { ReserveServiceService } from '../reserve-service.service';
 import { CommonModule } from '@angular/common';
 import { PlaceServiceService } from '~/app/place/place-service.service';
 import { useBrnColumnManager } from '@spartan-ng/ui-table-brain';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { debounceTime, map } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
-import { createFormField, createFormGroup, V } from 'ng-signal-forms';
 
 @Component({
   selector: 'app-cliente',
@@ -25,28 +24,14 @@ export class ClienteComponent implements OnInit {
   selectedFilter: string = '';
   placeNames: Map<number, string> = new Map();
 
-  
-  // constructor(
-  //   private reservaUsuario: ReserveServiceService,
-  //   private placeService: PlaceServiceService
-  // ) {}
-
-  constructor(private reservaService: ReserveServiceService) {
-    effect(() => this._nameFilter.set(this._debouncedFilter() ?? ''), { allowSignalWrites: true });
-    this.userService.getAllUsers().subscribe({
-      next: (users) => {
-        this._users.set(users);
-      },
-      error: (error) => {
-        console.error('Error al cargar los usuarios', error);
-      }
-    });
-  }
+  constructor(
+    private reservaUsuario: ReserveServiceService,
+    private placeService: PlaceServiceService
+  ) {}
 
 
   protected readonly _rawFilterInput = signal('');
   protected readonly _nameFilter = signal('');
-  private readonly _debouncedFilter = toSignal(toObservable(this._rawFilterInput).pipe(debounceTime(300)));
 
   private readonly _selectionModel = new SelectionModel<DetailReservaDTO>(true);
   protected readonly _isUserSelected = (reser: DetailReservaDTO) => this._selectionModel.isSelected(reser);
@@ -103,18 +88,6 @@ export class ClienteComponent implements OnInit {
   });
 
   protected readonly _trackBy: TrackByFunction<DetailReservaDTO> = (_: number, p: DetailReservaDTO) => p.idDetailReser;
-  protected toggleUser(payment: DetailReservaDTO) {
-    this._selectionModel.toggle(payment);
-  }
-
-  protected handleHeaderCheckboxChange() {
-    const previousCbState = this._checkboxState();
-    if (previousCbState === 'indeterminate' || !previousCbState) {
-      this._selectionModel.select(...this._filteredSortedPaginatedPayments());
-    } else {
-      this._selectionModel.deselect(...this._filteredSortedPaginatedPayments());
-    }
-  }
 
   ngOnInit(): void {
     const userId = this.getUserIdFromLocalStorage();
@@ -188,21 +161,4 @@ export class ClienteComponent implements OnInit {
   getSpaceName(id: number): string {
     return this.placeNames.get(id) || 'Desconocido';
   }
-
-  onDeletedUser(resr: DetailReservaDTO) {
-    this.userService.deleteUser(user.id).subscribe({
-      next: () => {
-        console.log('Usuario eliminado correctamente');
-        toast.success('Usuario eliminado correctamente');
-
-        this._users.set(this._users().filter((u) => u.id !== user.id));
-      },
-      error: (error) => {
-        console.error('Error al eliminar el usuario', error);
-        toast.error('Error al eliminar el usuario');
-  }
-  });
-  }
-
-  
 }

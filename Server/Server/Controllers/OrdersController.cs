@@ -66,6 +66,21 @@ namespace Server.Controllers
             {
                 var orders = await _context.Orders.Where(o => o.IsDeliver == true).ToListAsync();
 
+                foreach (var order in orders)
+                {
+                    var details = await _context.DetailOrders.Where(d => d.IdOrder == order.Id).ToListAsync();
+                    order.DetailOrders = details;
+                    foreach (var detail in details)
+                    {
+                        var product = await _context.Productos.FindAsync(detail.IdProduct);
+                        detail.Product = product;
+                    }
+
+                    var user = await _context.Users.FindAsync(order.IdClient);
+                    order.User = user;
+                }
+
+
                 if (orders == null || orders.Count == 0)
                 {
                     return BadRequest("No hay ordenes registradas");

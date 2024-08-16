@@ -22,7 +22,7 @@
         <!-- Datos de la reserva -->
         <div class="flex-1">
           <h5 class="mb-2 text-2xl font-bold text-gray-900">
-            Reserva: {{ getSpaceName(order.detailReserva.idEspacio) }}
+            Reserva: {{ order.detailReserva.idEspacio }}
           </h5>
           <p class="text-gray-500">Fecha: {{ order.detailReserva.fecha | date: 'shortDate' }}</p>
           <p class="text-gray-500">Inicio: {{ order.detailReserva.horaInicio }}</p>

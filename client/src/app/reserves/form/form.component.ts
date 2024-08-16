@@ -8,7 +8,7 @@ import { CreditCard, ReservaDTO } from '~/lib/types';
 import { NavbarComponent } from '~/app/home/navbar/navbar.component';
 import { UserService } from '~/app/home/services/user.service';
 import { toast } from 'ngx-sonner';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 
 @Component({
@@ -147,6 +147,8 @@ export class FormComponent implements OnInit {
   }
 
   saveEvent() {
+console.log('save')
+
     if (this.selectedCreditCard().id === undefined) {
       toast.error('Selecciona una tarjeta de crédito');
       return; 
@@ -211,6 +213,7 @@ export class FormComponent implements OnInit {
         () => {
           this.closeModal();
           // Actualizar el calendario o realizar alguna otra acción
+          this.loadReservations();
         },
         (error) => {
           console.error('Error al agregar la reserva:', error);
@@ -237,7 +240,7 @@ export class FormComponent implements OnInit {
             const reservationStartTime = reservation.detailReserva.horaInicio;
             const reservationEndTime = reservation.detailReserva.horaFin;
   
-            console.log("Existing reservationss:", { reservationStartTime, reservationEndTime });
+            console.log("Existing reservations:", { reservationStartTime, reservationEndTime });
   
             // Verificar solapamiento o igualdad de hora de inicio y fin
             return (
@@ -248,6 +251,15 @@ export class FormComponent implements OnInit {
           }
           return false;
         });
+      }),
+      catchError((error: any) => {
+        if (error.status === 404) {
+          console.log("No reservations found, returning true.");
+          return of(false);
+        } else {
+          console.error("Error fetching reservations:", error);
+          return throwError(error);
+        }
       })
     );
   }
