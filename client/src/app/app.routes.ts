@@ -33,6 +33,7 @@ import { UsersComponent } from './admin/users/users.component';
 import { InventarioMPComponent } from './admin/inventario-mp/inventario-mp.component';
 import { InventarioPostresComponent } from './admin/inventario-postres/inventario-postres.component';
 import { CheckoutReComponent } from './reserves/checkout/checkout.component';
+import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 
 
 
@@ -107,6 +108,10 @@ export const routes: Routes = [
       {
         path: 'places',
         component: PlaceComponent
+      },
+      {
+        path: 'dashboard',
+        component: DashboardComponent
       }
     ]
   },
