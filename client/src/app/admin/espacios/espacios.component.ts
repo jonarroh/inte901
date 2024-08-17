@@ -87,7 +87,7 @@ export class EspaciosComponent {
       validators: [
         {
           validator: V.required(),
-          message: 'La descripcion es necesaria'
+          message: 'La descripción es necesaria'
         }
       ]
     }),
@@ -265,7 +265,7 @@ export class EspaciosComponent {
     Nombre: {visible: true, label: 'nombre', sortable: true},
     canPersonas: {visible: true, label: 'Cantidad', sortable: true},
     precio: {visible: true, label: 'Precio', sortable: true},
-    descripcion: {visible: true, label: 'Descripcion', sortable: true},
+    descripcion: {visible: true, label: 'Descripción', sortable: true},
   });
 
 

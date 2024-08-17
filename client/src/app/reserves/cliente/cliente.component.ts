@@ -43,7 +43,7 @@ export class ClienteComponent implements OnInit {
   );
 
   protected readonly _brnColumnManager = useBrnColumnManager({
-    Fecha: {visible: true, label: 'fecha', sortable: true},
+    Fecha: {visible: true, label: 'Fecha', sortable: true},
     HoraInicio: {visible: true, label: 'horaInicio', sortable: true},
     HoraFin: {visible: true, label: 'horaFin', sortable: true},
   })

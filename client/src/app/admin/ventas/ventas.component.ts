@@ -404,7 +404,7 @@ export class VentasComponent {
       (order) => {
         console.log('Orden enviada: ', order);
         toast.success(
-          'Se realizo la orden', {
+          'Se realizó la orden', {
           action: {
             label: 'X',
             onClick: () => toast.dismiss(),
@@ -434,7 +434,7 @@ export class VentasComponent {
       (order) => {
         console.log('Orden actualizada: ', order);
         toast.success(
-          'Se actualizo el estatus de la orden', {
+          'Se actualizó el estatus de la orden', {
           action: {
             label: 'X',
             onClick: () => toast.dismiss(),
@@ -508,7 +508,7 @@ export class VentasComponent {
       (order) => {
         console.log('Producto actualizado: ', order);
         toast.success(
-          'Se actualizo el estatus del producto', {
+          'Se actualizó el estatus del producto', {
           action: {
             label: 'X',
             onClick: () => toast.dismiss(),

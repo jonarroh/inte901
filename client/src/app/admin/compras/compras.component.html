@@ -47,7 +47,7 @@
 
     <hlm-dialog class="bg-white">
       <button id="addcompra" brnDialogTrigger hlmBtn variant="warning" class="text-white">
-        Agregar conpra
+        Agregar compra
       </button>
       <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
         <hlm-dialog-header>
@@ -68,7 +68,7 @@
                     <hlm-icon name="lucideSearch" />
                     <input placeholder="Buscar proveedor" brnCmdInput hlm />
                   </hlm-cmd-input-wrapper>
-                  <div *brnCmdEmpty hlmCmdEmpty>No results found.</div>
+                  <div *brnCmdEmpty hlmCmdEmpty>No se encontraron resultados</div>
                   <brn-cmd-list hlm>
                     <brn-cmd-group hlm>
                       <button *ngFor="let framework of frameworks" brnCmdItem [value]="framework.value"
@@ -84,7 +84,7 @@
             </div>
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="username" class="text-right">Materia
-                Prim.</label>
+                Prima.</label>
               <brn-popover [state]="stateMateria()" (stateChanged)="stateChangedMateria($event)" sideOffset="5"
                 closeDelay="100">
                 <button class="w-[200px] justify-between" variant="outline" brnPopoverTrigger hlmBtn>
@@ -97,7 +97,7 @@
                     <hlm-icon name="lucideSearch" />
                     <input placeholder="Buscar insumo" brnCmdInput hlm />
                   </hlm-cmd-input-wrapper>
-                  <div *brnCmdEmpty hlmCmdEmpty>No results found.</div>
+                  <div *brnCmdEmpty hlmCmdEmpty>No se encontraron resultados.</div>
                   <brn-cmd-list hlm>
                     <brn-cmd-group hlm>
                       <button *ngFor="let framework of mppF" brnCmdItem [value]="framework.material || ''"
@@ -125,7 +125,7 @@
                     <hlm-icon name="lucideSearch" />
                     <input placeholder="Buscar presentación" brnCmdInput hlm />
                   </hlm-cmd-input-wrapper>
-                  <div *brnCmdEmpty hlmCmdEmpty>No results found.</div>
+                  <div *brnCmdEmpty hlmCmdEmpty>No se encontraron resultados.</div>
                   <brn-cmd-list hlm>
                     <brn-cmd-group hlm>
                       <button *ngFor="let framework of getFilterPresent()" brnCmdItem [value]="framework.value"
@@ -202,7 +202,7 @@
     </brn-column-def>
     <brn-column-def name="Detalles" class="flex-1">
       <hlm-th *brnHeaderDef>
-        Materias Prim.
+        Materias Primas.
       </hlm-th>
       <hlm-td class="font-medium tabular-nums" *brnCellDef="let element">
         <button hlmBtn variant="warning" class="text-white" (click)="getDetails(element || 0)">

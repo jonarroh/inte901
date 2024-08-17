@@ -52,11 +52,11 @@
             </label>
             @if (formModel.controls.name.touched()) {
               @if(formModel.controls.name.hasError('required')) {
-            <div class="text-red-500 text-sm">La contraseña es requerida</div>
+            <div class="text-red-500 text-sm">El nombre es requerida</div>
             }
              @else if (formModel.controls.name.hasError('maxLength')) {
             <div class="text-red-500 text-sm">
-              La contraseña debe tener menos de 50 caracteres
+              El nombre debe tener menos de 50 caracteres
             </div>
             } }
           </div>
@@ -76,11 +76,11 @@
             </label>
             @if (formModel.controls.lastName.touched()) {
               @if(formModel.controls.lastName.hasError('required')) {
-            <div class="text-red-500 text-sm">La contraseña es requerida</div>
+            <div class="text-red-500 text-sm">El apellido es requerida</div>
             }
              @else if (formModel.controls.lastName.hasError('maxLength')) {
             <div class="text-red-500 text-sm">
-              La contraseña debe tener menos de 50 caracteres
+              El apellido debe tener menos de 50 caracteres
             </div>
             } }
           </div>
@@ -100,11 +100,11 @@
             </label>
             @if (formModel.controls.email.touched()) {
               @if(formModel.controls.email.hasError('required')) {
-            <div class="text-red-500 text-sm">La contraseña es requerida</div>
+            <div class="text-red-500 text-sm">El correo electrónico es requerida</div>
             }
              @else if (formModel.controls.email.hasError('maxLength')) {
             <div class="text-red-500 text-sm">
-              La contraseña debe tener menos de 50 caracteres
+              El correo electrónico e debe tener menos de 50 caracteres
             </div>
             } }
           </div>
@@ -143,13 +143,13 @@
               hlmBtn
               class="text-sm  hover:underline bg-admin"
               >
-                editar dirección
+                Editar dirección
               </a>
               <a routerLink="/edit/payment"
               class="text-sm hover:underline bg-admin"
               hlmBtn
               >
-                editar método de pago
+                Editar método de pago
               </a>
 
 
@@ -168,7 +168,7 @@
       >Eliminar cuenta</button>
       <hlm-alert-dialog-content *brnAlertDialogContent='let ctx'>
         <hlm-alert-dialog-header>
-          <h3 hlmAlertDialogTitle>¿Estas seguro que deseas eliminar tu cuenta?</h3>
+          <h3 hlmAlertDialogTitle>¿Estás seguro que deseas eliminar tu cuenta?</h3>
           <p hlmAlertDialogDescription>
             Esta acción no se puede deshacer y perderás todos tus datos.
           </p>
