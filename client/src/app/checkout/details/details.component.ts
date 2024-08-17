@@ -86,7 +86,7 @@ export class DetailsComponent {
         },
         next: (res) => {
           console.log(res);
-          toast.success('Orden realizada con exito');
+          toast.success('Orden realizada con éxito');
           this.cartService.clearCart();
           this.checkoutService.isOrderToStore.set(false);
           this.checkoutService.isPaidWithCard.set(false);

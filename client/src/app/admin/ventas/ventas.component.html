@@ -130,7 +130,7 @@
     <brn-column-def name="Status" class="w-60 lg:flex-1">
       <hlm-th *brnHeaderDef>
         <button hlmBtn size="sm" variant="ghost" (click)="handleEmailSortChange()">
-          Status
+          Estatus
           <hlm-icon class="ml-3" size="sm" name="lucideArrowUpDown" />
         </button>
       </hlm-th>
@@ -286,10 +286,10 @@
   <button id="edit-status" class="hidden" variant="success" brnAlertDialogTrigger hlmBtn>Cambiar status</button>
   <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
     <hlm-alert-dialog-header>
-      <h3 class="text-white" hlmAlertDialogTitle>Actualizar status de la orden</h3>
+      <h3 class="text-white" hlmAlertDialogTitle>Actualizar estatus de la orden</h3>
       <p class="text-white" hlmAlertDialogDescription>
-        Al cambiar el status de la orden, no se podrá revertir.
-        ¿Estás seguro de cambiar el status de la orden?
+        Al cambiar el estatus de la orden, no se podrá revertir.
+        ¿Estás seguro de cambiar el estatus de la orden?
       </p>
     </hlm-alert-dialog-header>
     <hlm-alert-dialog-footer>
@@ -301,16 +301,16 @@
 
 <hlm-alert-dialog class="bg-white">
   <button id="edit-status-producto" class="hidden" variant="success" brnAlertDialogTrigger hlmBtn>
-    Cambiar status
+    Cambiar estatus
   </button>
   <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
     <hlm-alert-dialog-header>
       <h3 hlmAlertDialogTitle>
-        Actualizar status del producto
+        Actualizar estatus del producto
       </h3>
       <p hlmAlertDialogDescription>
-        Al cambiar el status del producto, no se podrá revertir.
-        ¿Estás seguro de cambiar el status del producto?
+        Al cambiar el estatus del producto, no se podrá revertir.
+        ¿Estás seguro de cambiar el estatus del producto?
       </p>
     </hlm-alert-dialog-header>
     <hlm-alert-dialog-footer>
