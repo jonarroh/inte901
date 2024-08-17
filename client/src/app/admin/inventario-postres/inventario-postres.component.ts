@@ -1,50 +1,49 @@
-import { Component, inject } from '@angular/core';
-import { NavComponent } from '../componentes/nav/nav.component';
-import {
-  HlmDialogComponent,
-  HlmDialogContentComponent,
-  HlmDialogHeaderComponent,
-  HlmDialogFooterComponent,
-  HlmDialogTitleDirective,
-  HlmDialogDescriptionDirective,
-} from '~/components/ui-dialog-helm/src';
+import { Component, computed, effect, inject, signal } from '@angular/core';
+import { InventarioPostresService } from './service/inventario-postres.service';
+import { BehaviorSubject, combineLatest, combineLatestWith, map, Observable, of } from 'rxjs';
+import { InventarioPostre } from './interface/InventarioPostres';
+import { FormsModule, NgForm } from '@angular/forms';
+import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogDescriptionDirective, HlmDialogFooterComponent, HlmDialogHeaderComponent, HlmDialogTitleDirective } from '~/components/ui-dialog-helm/src';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
-import { BrnDialogTriggerDirective, BrnDialogContentDirective } from '@spartan-ng/ui-dialog-brain';
-import { from, map, Observable } from 'rxjs';
-import { AsyncPipe, CommonModule } from '@angular/common';
-import { InventarioPostre } from './interface/InventarioPostres';
-import { InventarioPostresService } from './service/inventario-postres.service';
-import { FormsModule, NgForm } from '@angular/forms';
-import { BrnTableModule } from '@spartan-ng/ui-table-brain';
+import { BrnTableModule, PaginatorState, useBrnColumnManager } from '@spartan-ng/ui-table-brain';
 import { HlmTableModule } from '@spartan-ng/ui-table-helm';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
 import { provideIcons } from '@ng-icons/core';
 import { lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmIconComponent } from '~/components/ui-icon-helm/src';
-import { ProductoService } from '../productos/service/producto.service';
+import { HlmSelectContentDirective, HlmSelectOptionComponent, HlmSelectTriggerComponent, HlmSelectValueDirective } from '~/components/ui-select-helm/src';
+import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
 import { Producto } from '../productos/interface/producto';
+import { ProductoService } from '../productos/service/producto.service';
 
 @Component({
   selector: 'app-inventario-postres',
   standalone: true,
   imports: [
-    NavComponent,
     HlmDialogComponent,
     HlmDialogContentComponent,
     HlmDialogHeaderComponent,
     HlmDialogFooterComponent,
+    HlmButtonDirective,
+    HlmInputDirective,
     HlmDialogTitleDirective,
     HlmDialogDescriptionDirective,
-    HlmButtonDirective,
     HlmIconComponent,
+    HlmSelectTriggerComponent,
+    HlmSelectValueDirective,
+    HlmSelectContentDirective,
+    HlmSelectOptionComponent,
     BrnDialogTriggerDirective,
     BrnDialogContentDirective,
-    HlmInputDirective,
+    BrnTableModule,
+    BrnSelectImports,
+    FormsModule,
     CommonModule,
     AsyncPipe,
-    FormsModule,
     BrnTableModule,
     HlmTableModule,
     BrnMenuTriggerDirective,
@@ -60,79 +59,159 @@ import { Producto } from '../productos/interface/producto';
 })
 export class InventarioPostresComponent {
   inventarioPostresService = inject(InventarioPostresService);
-  productoService = inject(ProductoService);
-
-  inventarios$: Observable<InventarioPostre[]>;
-  productos$: Observable<Producto[]>; // Observable para los productos
-  inventario: InventarioPostre = {};
+  private inventarioPostresSource$: Observable<InventarioPostre[]>;
+  inventarioPostres$: Observable<InventarioPostre[]>;
+  inventarioPostre: InventarioPostre = {};
   editMode: boolean = false;
+  private filterSubject = new BehaviorSubject<string>('');
+  filter$ = this.filterSubject.asObservable();
+  productos: Producto[] = [];
 
-  displayedColumns = ['ID Postre', 'Producto', 'Cantidad', 'actions'];
+  // Column manager
+  protected readonly _brnColumnManager = useBrnColumnManager({
+    ID: {visible: true, label: 'ID', sortable: true},
+    Producto: {visible: true, label: 'Producto', sortable: true},
+    Cantidad: {visible: true, label: 'Cantidad', sortable: true},
+  });
 
-  constructor() {
-    // Obtener la lista de inventarios filtrando por estatus
-    this.inventarios$ = this.inventarioPostresService.getInventarios().pipe(
-      map(inventarios => inventarios.filter(inventario => inventario.estatus === 1))
+  // Columnas visibles
+  protected readonly displayedColumns = computed(() => [
+    ...this._brnColumnManager.displayedColumns(),
+    'actions',
+  ]);
+
+  // Paginación
+  private readonly _displayedIndices = signal({ start: 0, end: 0 });
+  protected readonly _availablePageSizes = [5, 10, 20, 10000];
+  protected readonly _pageSize = signal(this._availablePageSizes[0]);
+  protected readonly _totalElements = signal(0);
+
+  constructor(private productoService: ProductoService) {
+    this.productoService.getProductos().subscribe((productos) => {
+      this.productos = productos;
+    });
+  
+    this.inventarioPostresSource$ = this.inventarioPostresService.getInventarioPostre().pipe(
+      map((inventarioPostres) => inventarioPostres.filter((inventarioPostre) => inventarioPostre.estatus === 1))
     );
-
-    // Obtener productos activos
-    this.productos$ = this.productoService.getProductos().pipe(
-      map(productos => productos.filter(producto => producto.estatus === 1))
+  
+    this.inventarioPostres$ = combineLatest([
+      this.inventarioPostresSource$,
+      this.filter$
+    ]).pipe(
+      map(([inventarioPostres, filterValue]) => 
+        inventarioPostres.filter(inventarioPostre => 
+          inventarioPostre.idProducto?.toString().includes(filterValue.toLowerCase()) ?? false
+        )
+      ),
+      map(filteredInventarioPostres => {
+        this._totalElements.set(filteredInventarioPostres.length);
+        const start = this._displayedIndices().start;
+        const end = this._displayedIndices().end + 1;
+        return filteredInventarioPostres.slice(start, end);
+      })
     );
   }
+  
 
-  trackByInventarioId(index: number, inventario: any): number {
-    return inventario.idPostre!;
+  private _updatePaginatedData() {
+    this.inventarioPostresSource$.pipe(
+      combineLatestWith(this.filter$),
+      map(([inventarioPostres, filterValue]) => {
+        // Filtrar los registros
+        const filteredInventarioPostres = inventarioPostres.filter(inventarioPostre =>
+          inventarioPostre.idProducto?.toString().includes(filterValue.toLowerCase()) ?? false
+        );
+  
+        // Obtener los índices de paginación
+        const start = this._displayedIndices().start;
+        const end = this._displayedIndices().end + 1;
+  
+        // Actualizar la cantidad total de elementos
+        this._totalElements.set(filteredInventarioPostres.length);
+  
+        // Retornar el subconjunto de datos basado en la paginación
+        return filteredInventarioPostres.slice(start, end);
+      })
+    ).subscribe(paginatedInventarioPostres => {
+      this.inventarioPostres$ = of(paginatedInventarioPostres);
+    });
   }
 
+  protected readonly _onStateChange = ({ startIndex, endIndex }: PaginatorState) => {
+    this._displayedIndices.set({ start: startIndex, end: endIndex });
+    this._updatePaginatedData();
+  };
+
+  trackByInventarioPostreId(index: number, inventarioPostre: any): number {
+    return inventarioPostre.idPostre;
+  }
+
+  trackByColumnName(index: number, column: any): string {
+    return column.name;
+  }
+
+  applyFilter(filterValue: string) {
+    this.filterSubject.next(filterValue);
+  }
+
+  applyFilterFromEvent(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.applyFilter(inputElement.value);
+  }
+
+  getProductoNombre(idProducto: number | undefined): string {
+    const producto = this.productos.find(prod => prod.id === idProducto);
+    return producto ? (producto.nombre || 'Nombre no disponible') : 'Producto no encontrado';
+  }
+  
+  
   onSubmitAdd(form: NgForm) {
     if (form.valid) {
-      this.inventario.estatus = 1;
-      this.inventario.createdAt = new Date().toISOString();
-      this.inventarioPostresService.registrarInventario(this.inventario).subscribe(response => {
-        console.log('Inventario registrado:', response);
+      this.inventarioPostre.estatus = 1;
+      this.inventarioPostre.createdAt = new Date().toISOString();
+      this.inventarioPostresService.registrarInventarioPostre(this.inventarioPostre).subscribe((response) => {
+        console.log('Inventario de postre registrado:', response);
         form.resetForm();
-        this.inventario = {}; // Reiniciar el objeto inventario
-        this.refreshInventarios();
+        this.inventarioPostre = {}; // Reiniciar el objeto inventario de postre
+        this.refreshInventarioPostres();
       });
     }
   }
 
   onSubmitEdit(form: NgForm) {
     if (form.valid) {
-      this.inventarioPostresService.editarInventario(this.inventario.idPostre!, this.inventario).subscribe(response => {
-        console.log('Inventario actualizado:', response);
+      this.inventarioPostresService.editarInventarioPostre(this.inventarioPostre.idPostre!, this.inventarioPostre).subscribe((response) => {
+        console.log('Inventario de postre actualizado:', response);
         form.resetForm();
-        this.inventario = {}; // Reiniciar el objeto inventario
+        this.inventarioPostre = {}; // Reiniciar el objeto inventario de postre
         this.editMode = false;
-        this.refreshInventarios();
+        this.refreshInventarioPostres();
       });
     }
   }
 
   onAdd() {
-    this.inventario = {}; // Limpiar el objeto inventario antes de abrir el formulario de agregar
+    this.inventarioPostre = {}; // Limpiar el objeto inventario de postre antes de abrir el formulario de agregar
     const addButton = document.getElementById('add-inventario-trigger');
     addButton?.click();
   }
 
-  onEdit(inventario: InventarioPostre) {
-    this.inventario = { ...inventario };
+  onEdit(inventarioPostre: InventarioPostre) {
+    this.inventarioPostre = { ...inventarioPostre };
     this.editMode = true;
     const editButton = document.getElementById('edit-inventario-trigger');
     editButton?.click();
   }
 
   onDelete(id: number) {
-    this.inventarioPostresService.eliminarInventario(id).subscribe(() => {
-      console.log('Inventario eliminado');
-      this.refreshInventarios();
+    this.inventarioPostresService.eliminarInventarioPostre(id).subscribe(() => {
+      console.log('Inventario de postre eliminado');
+      this.refreshInventarioPostres();
     });
   }
 
-  refreshInventarios() {
-    this.inventarios$ = this.inventarioPostresService.getInventarios().pipe(
-      map(inventarios => inventarios.filter(inventario => inventario.estatus === 1))
-    );
+  refreshInventarioPostres() {
+    location.reload();
   }
 }

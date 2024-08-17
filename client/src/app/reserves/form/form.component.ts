@@ -4,15 +4,17 @@ import { format, getDaysInMonth, getDay, startOfMonth, addDays, addMonths, subMo
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { es } from 'date-fns/locale';
-import { CreditCard, Reserva, ReservaDTO } from '~/lib/types';
+import { CreditCard, ReservaDTO } from '~/lib/types';
 import { NavbarComponent } from '~/app/home/navbar/navbar.component';
 import { UserService } from '~/app/home/services/user.service';
 import { toast } from 'ngx-sonner';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
+import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 
 @Component({
   selector: 'calendar-reserve',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavbarComponent],
+  imports: [CommonModule, FormsModule, NavbarComponent, HlmButtonDirective],
   providers: [
     ReserveServiceService,
     UserService
@@ -31,30 +33,37 @@ export class FormComponent implements OnInit {
   eventEndTime: string = '';
   eventDate: string = '';
   selectedDate: Date | null = null;
-  reservations: Reserva[] = [];
+  reservations: ReservaDTO[] = [];
+  idCliente : number | null = null;
+
 
   creditCards = signal<CreditCard[]>([]);
   selectedCreditCard = signal<CreditCard>({} as CreditCard);
 
-  constructor(private eventService: ReserveServiceService,private UserService: UserService) {
+  constructor(private eventService: ReserveServiceService, private UserService: UserService) {
     this.creditCards.set(
       this.UserService.userData().creditCards
-    )
+    );
+
+    
     console.log('creditCards', this.creditCards);
 
     const today = new Date();
     this.month = format(today, 'LLLL', { locale: es });
     this.year = today.getFullYear();
     this.generateCalendar();
+
+    const storedUserId = localStorage.getItem('userId');
+    this.idCliente = storedUserId ? parseInt(storedUserId, 10) : null;
   }
 
   ngOnInit() {
-    // this.loadReservations();
+    this.loadReservations();
   }
 
   loadReservations() {
     this.eventService.getReservationsBySpaceId(this.idEspacio).subscribe(
-      (data: Reserva[]) => {
+      (data: ReservaDTO[]) => {
         this.reservations = data;
         this.generateCalendar();
       },
@@ -82,7 +91,7 @@ export class FormComponent implements OnInit {
       this.daysInMonth.push(addDays(date, i - lastDay));
     }
 
-    console.log("Calenario generado", this.daysInMonth);
+    console.log("Calendario generado", this.daysInMonth);
   }
 
   getMonthName(month: number): string {
@@ -108,9 +117,9 @@ export class FormComponent implements OnInit {
     this.generateCalendar();
   }
 
-  getEvents(date: Date): Reserva[] {
+  getEvents(date: Date): ReservaDTO[] {
     const dateString = this.formatDate(date);
-    return this.reservations.filter((event) => this.formatDate(new Date(event.startTime)) === dateString);
+    return this.reservations.filter((event) => this.formatDate(new Date(event.detailReserva.fecha)) === dateString);
   }
 
   formatDate(date: Date): string {
@@ -138,81 +147,124 @@ export class FormComponent implements OnInit {
   }
 
   saveEvent() {
-    if(this.selectedCreditCard().id === undefined){
+console.log('save')
+
+    if (this.selectedCreditCard().id === undefined) {
       toast.error('Selecciona una tarjeta de crédito');
       return; 
     }
-    //si la hora de inicio es mayor a la hora de fin
-    if(this.eventStartTime >= this.eventEndTime){
+
+    if (this.eventStartTime >= this.eventEndTime) {
       toast.error('La hora de inicio no puede ser mayor o igual a la hora de fin');
       return;
     }
 
-    //si la hora de inicio es igual a la hora de fin
-    if(this.eventStartTime === this.eventEndTime){
+    if (this.eventStartTime === this.eventEndTime) {
       toast.error('La hora de inicio no puede ser igual a la hora de fin');
       return;
     }
-    //si la fecha es anterior a la fecha actual
-    if(this.eventDate < this.formatDate(new Date())){
+
+    if (this.eventDate < this.formatDate(new Date())) {
       toast.error('La fecha no puede ser anterior a la actual');
       return;
     }
-    //si la fecha es igual a la fecha actual debe ser mayor a la hora actual
-    if(this.eventDate === this.formatDate(new Date())){
-      if(this.eventStartTime <= format(new Date(), 'HH:mm')){
+
+    if (this.eventDate === this.formatDate(new Date())) {
+      if (this.eventStartTime <= format(new Date(), 'HH:mm')) {
         toast.error('La hora de inicio no puede ser menor o igual a la hora actual');
         return;
       }
     }
 
-    //si la hora es mayor a las 22:00 y menor a las 6:00
-    if(this.eventStartTime >= '22:00' || this.eventStartTime <= '06:00'){
+    if (this.eventStartTime >= '22:00' || this.eventStartTime <= '06:00') {
       toast.error('La hora de inicio no puede ser mayor a las 22:00 o menor a las 6:00');
       return;
     }
 
-    const reserva:ReservaDTO = {
-      idUsuario: 1,
-      idCliente: 3,
-      estatus: 'Activo',
-      detailReserva: {
-        idDetailReser: 0, // Asumido, o eliminar si es autogenerado
-        fecha: this.eventDate,
-        horaInicio: this.eventStartTime,
-        horaFin: this.eventEndTime,
-        idEspacio: this.idEspacio
-      },
-      creditCard:{
-        cardNumber: this.selectedCreditCard().cardNumber,
-        expiryDate: this.selectedCreditCard().expiryDate,
-        cvv: this.selectedCreditCard().cvv,
-        cardHolderName: this.selectedCreditCard().cardHolderName,
-        userId: this.UserService.userData().id,
-        id: this.selectedCreditCard().id,
-        estatus: 'Activo'
+    this.checkConflict(this.eventDate, this.eventStartTime, this.eventEndTime).subscribe(conflict => {
+      if (conflict) {
+        toast.error('Ya existe una reserva en ese horario');
+        return;
       }
 
-    };
-  
-    this.eventService.addEvent(reserva).subscribe(
-      () => {
-        this.closeModal();
-        // Actualizar el calendario o realizar alguna otra acción
-      },
-      (error) => {
-        console.error('Error al agregar la reserva:', error);
-      }
-    );
+      const reserva: ReservaDTO = {
+        idUsuario: 1,
+        idCliente: this.idCliente ?? 0,
+        estatus: 'Activo',
+        detailReserva: {
+          idDetailReser: 0, // Asumido, o eliminar si es autogenerado
+          fecha: this.eventDate,
+          horaInicio: this.eventStartTime,
+          horaFin: this.eventEndTime,
+          idEspacio: this.idEspacio
+        },
+        creditCard: {
+          cardNumber: this.selectedCreditCard().cardNumber,
+          expiryDate: this.selectedCreditCard().expiryDate,
+          cvv: this.selectedCreditCard().cvv,
+          cardHolderName: this.selectedCreditCard().cardHolderName,
+          userId: this.UserService.userData().id,
+          id: this.selectedCreditCard().id,
+          estatus: 'Activo'
+        }
+      };
+
+      this.eventService.addEvent(reserva).subscribe(
+        () => {
+          this.closeModal();
+          // Actualizar el calendario o realizar alguna otra acción
+          this.loadReservations();
+        },
+        (error) => {
+          console.error('Error al agregar la reserva:', error);
+        }
+      );
+    });
   }
 
   onSelectChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const selectedCard = this.creditCards().find((card) => card.id === parseInt(selectElement.value, 10));
-    console.log('selectedCard', selectedCard);
     if (selectedCard) {
       this.selectedCreditCard.set(selectedCard);
     }
   }
-    
+
+  checkConflict(date: string, startTime: string, endTime: string): Observable<boolean> {
+    return this.eventService.getReservationsBySpaceId(this.idEspacio).pipe(
+      map((reservations: ReservaDTO[]) => {
+        console.log("Checking conflicts for:", { date, startTime, endTime });
+  
+        return reservations.some(reservation => {
+          if (reservation.detailReserva.fecha === date) {
+            const reservationStartTime = reservation.detailReserva.horaInicio;
+            const reservationEndTime = reservation.detailReserva.horaFin;
+  
+            console.log("Existing reservations:", { reservationStartTime, reservationEndTime });
+  
+            // Verificar solapamiento o igualdad de hora de inicio y fin
+            return (
+              (startTime < reservationEndTime && endTime > reservationStartTime) || // Solapamiento
+              (startTime === reservationStartTime) || // Igualdad de hora de inicio
+              (endTime === reservationEndTime) // Igualdad de hora de fin
+            );
+          }
+          return false;
+        });
+      }),
+      catchError((error: any) => {
+        if (error.status === 404) {
+          console.log("No reservations found, returning true.");
+          return of(false);
+        } else {
+          console.error("Error fetching reservations:", error);
+          return throwError(error);
+        }
+      })
+    );
+  }
+  
+  
+  
+  
 }

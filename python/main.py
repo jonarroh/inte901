@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request, send_file, url_for
 from PIL import Image
 import os
 from io import BytesIO
+
+from flask_cors import CORS
 from controller.models import models
 from controller.ridge import rid
 from controller.reportes import reportes
@@ -13,6 +15,7 @@ app = Flask(__name__)
 app.register_blueprint(models)
 app.register_blueprint(rid)
 app.register_blueprint(reportes)
+CORS(app)
 
 STATIC_FOLDER = 'static'
 
@@ -43,7 +46,7 @@ def convert_images():
             
 
 
-    return jsonify({'message': 'Images have been converted to .webp format.', 'converted_images': converted_images})
+    return jsonify({'message': 'Images have been converted to .webp format.', 'converted_images': converted_images},)
 
 
 @app.route('/clipProduct', methods=['POST', 'GET'])
@@ -71,7 +74,7 @@ def clipProduct():
             else:
                 convert_images.append(filename)
 
-    return jsonify({'message': 'Images have been clipped.', 'clipped_images': convert_images})
+    return jsonify({'message': 'Images have been clipped.', 'clipped_images': convert_images},)
 
 @app.route('/clipProduct2', methods=['POST', 'GET'])
 def clipProduct2():
@@ -97,12 +100,38 @@ def clipProduct2():
                 img.save(filepath, quality=90)  # Guardar la imagen con alta calidad
                 convert_images.append(filename)
 
-    return jsonify({'message': 'Images have been clipped.', 'clipped_images': convert_images})
+    return jsonify({'message': 'Images have been clipped.', 'clipped_images': convert_images},)
 
 
 
 @app.route('/user/upload', methods=['POST'])
 def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'message': 'No file part'},)
+    
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'message': 'No selected file'},)
+    
+    if 'id' not in request.form:
+        return jsonify({'message': 'No id part'},)
+    
+    id = request.form['id']
+    #hacer la optimizacion de la imagen a webp y guardarla en la carpeta static/users
+
+    if file:
+        img = Image.open(file)
+        # Guardar la imagen en formato webp
+        webp_filename = id + '.webp'
+        webp_filepath = os.path.join(STATIC_FOLDER, 'users', webp_filename)
+
+        img.save(webp_filepath, 'webp', quality=90)
+        return jsonify({'message': 'Image has been uploaded and optimized.'},)
+    else:
+        return jsonify({'message': 'Error uploading image'})
+    
+@app.route('/places/upload', methods=['POST'])
+def upload_place():
     if 'file' not in request.files:
         return jsonify({'message': 'No file part'})
     
@@ -126,6 +155,7 @@ def upload_file():
         return jsonify({'message': 'Image has been uploaded and optimized.'})
     else:
         return jsonify({'message': 'Error uploading image'})
+    
         
 @app.route('/productos/upload', methods=['POST'])
 def upload_products():
@@ -171,7 +201,7 @@ def generate_qr():
     qr_orders_folder = os.path.join(STATIC_FOLDER, 'qr-orders')
     
     if not data:
-        return {"error": "No data provided"}, 400
+        return {"error": "No data provided"}, 400,
 
     # Crear un código QR
     qr = qrcode.QRCode(
@@ -195,7 +225,7 @@ def generate_qr():
 
     # Devolver la URL del archivo guardado
     file_url = url_for('static', filename=f'qr-orders/{filename}', _external=True)
-    return jsonify({"file_url": file_url})
+    return jsonify({"file_url": file_url},)
 
 
 

@@ -7,7 +7,7 @@
   <div class="flex justify-end my-5 me-5 pr-5">
     <!-- Botón para agregar producto -->
     <hlm-dialog>
-      <button id="add-product-trigger" brnDialogTrigger hlmBtn (click)="onAdd()" class="bg-secondary text-white">Agregar
+      <button id="add-product-trigger" brnDialogTrigger hlmBtn (click)="onAdd()" variant="warning" class="text-white">Agregar
         producto</button>
       <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
         <hlm-dialog-header>
@@ -123,8 +123,12 @@
     </hlm-dialog>
   </div>
 
+  <div class="flex justify-start my-5 ms-5 pr-5">
+    <input hlmInput class="w-full md:w-80" placeholder="Buscar por producto" (input)="applyFilterFromEvent($event)" />
+  </div>
+  
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-5">
-    <div *ngFor="let product of (productos$ | async); trackBy: trackByProductId"
+    <div *ngFor="let product of (filteredProductos$ | async); trackBy: trackByProductId"
       class="bg-white shadow-md rounded-lg p-4 flex flex-col justify-between">
       <div>
         <img [src]="getImagenUrl(product.id!)" alt="{{ product.nombre }}" class="w-full h-48 object-cover rounded-t-lg"
@@ -141,4 +145,5 @@
       </div>
     </div>
   </div>
+  
 </div>
