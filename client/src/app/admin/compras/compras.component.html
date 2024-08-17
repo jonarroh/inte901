@@ -160,7 +160,7 @@
     <input hlmInput class="w-full md:w-80" placeholder="Filtrar fechas" [ngModel]="_emailFilter()"
       (ngModelChange)="_rawFilterInput.set($event)" />
 
-    <button hlmBtn variant="outline" align="end" [brnMenuTriggerFor]="menu">
+    <button hlmBtn variant="warning" class="text-white" align="end" [brnMenuTriggerFor]="menu">
       Ver Columnas
       <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
     </button>
@@ -236,7 +236,7 @@
         @if(element.status === 'Pendiente'){
         <brn-popover [state]="popoverStates[element.id||0] || 'closed'"
           (stateChanged)="stateChangedStatus($event, element.id||0)" sideOffset="5" closeDelay="100">
-          <button class="flex-1 justify-between" id="{{element.id}}" variant="success" brnPopoverTrigger hlmBtn>
+          <button class="flex-1 justify-between text-white" id="{{element.id}}" variant="warning" brnPopoverTrigger hlmBtn>
             {{ currentStatusCompras(element.id||0) ?
             currentStatusCompras(element.id||0)?.label : 'Seleccionar' }}
           </button>
@@ -387,12 +387,12 @@
   </div> -->
 </div>
 
-<hlm-alert-dialog class="bg-white">
-  <button id="statuscompra" variant="outline" brnAlertDialogTrigger hlmBtn></button>
-  <hlm-alert-dialog-content *brnAlertDialogContent="let ctx" class="bg-white">
+<hlm-alert-dialog class="bg-admin">
+  <button id="statuscompra" variant="admin" brnAlertDialogTrigger hlmBtn></button>
+  <hlm-alert-dialog-content *brnAlertDialogContent="let ctx" class="">
     <hlm-alert-dialog-header>
-      <h3 hlmAlertDialogTitle>Actualizar estatus de la compra</h3>
-      <p hlmAlertDialogDescription>
+      <h3 hlmAlertDialogTitle class="text-white">Actualizar estatus de la compra</h3>
+      <p hlmAlertDialogDescription class="text-white">
         Al cambiar el status de la compra, no se podrá revertir.
         ¿Estás seguro de cambiar el status de la orden?
       </p>
