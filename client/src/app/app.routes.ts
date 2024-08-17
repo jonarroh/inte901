@@ -36,6 +36,7 @@ import { CheckoutReComponent } from './reserves/checkout/checkout.component';
 import { EspaciosComponent } from './admin/espacios/espacios.component';
 import { ClienteComponent } from './reserves/cliente/cliente.component';
 import { MateriasPrimasProveedorComponent } from './admin/materias-primas-proveedor/materias-primas-proveedor.component';
+import { EstatusComponent } from './admin/reservas/estatus/estatus.component';
 
 
 
@@ -110,7 +111,12 @@ export const routes: Routes = [
       {
         path: 'espacios',
         component: EspaciosComponent
+      },
+      {
+        path: 'reservas',
+        component: EstatusComponent
       }
+
     ]
   },
   {
