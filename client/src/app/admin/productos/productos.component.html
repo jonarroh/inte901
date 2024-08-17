@@ -34,8 +34,11 @@
             </div>
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="tipo-add" class="text-right">Tipo</label>
-              <input hlmInput id="tipo-add" name="tipo" [(ngModel)]="producto.tipo" placeholder="Tipo de producto"
-                class="col-span-3" />
+              <select hlmInput id="tipo-add" name="tipo" [(ngModel)]="producto.tipo" class="col-span-3">
+                <option value="Comidas">Comidas</option>
+                <option value="Bebidas">Bebidas</option>
+                <option value="Postres">Postres</option>
+              </select>
             </div>
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="cantidadXReceta-add" class="text-right">Cantidad por receta</label>
@@ -91,9 +94,12 @@
                 placeholder="Descripción del producto" class="col-span-3" />
             </div>
             <div class="items-center grid grid-cols-4 gap-4">
-              <label hlmLabel for="tipo-edit" class="text-right">Tipo</label>
-              <input hlmInput id="tipo-edit" name="tipo" [(ngModel)]="producto.tipo" placeholder="Tipo de producto"
-                class="col-span-3" />
+              <label hlmLabel for="tipo-add" class="text-right">Tipo</label>
+              <select hlmInput id="tipo-add" name="tipo" [(ngModel)]="producto.tipo" class="col-span-3">
+                <option value="Comidas">Comidas</option>
+                <option value="Bebidas">Bebidas</option>
+                <option value="Postres">Postres</option>
+              </select>
             </div>
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="cantidadXReceta-edit" class="text-right">Cantidad por receta</label>
