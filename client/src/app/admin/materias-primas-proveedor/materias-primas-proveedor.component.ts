@@ -220,10 +220,6 @@ export class MateriasPrimasProveedorComponent {
   }
 
   refreshMateriaPrimaProveedor() {
-    this.materiasPrimasProveedor$ = this.materiaPrimaProveedorService.getMateriasPrimasProveedor().pipe(
-      map((materiasPrimasProveedor) =>
-        materiasPrimasProveedor.filter((materiaPrimaProveedor) => materiaPrimaProveedor.estatus === 1)
-      )
-    );
+    location.reload();
   }
 }

@@ -19,10 +19,21 @@
                         <option *ngFor="let materiaPrima of materiasPrimas" [value]="materiaPrima.id">{{ materiaPrima.material }}</option>
                     </select>
                 </div>
-                  <div class="items-center grid grid-cols-4 gap-4">
-                      <label hlmLabel for="unidadMedida-add" class="text-right">Unidad de Medida</label>
-                      <input hlmInput id="unidadMedida-add" name="unidadMedida" [(ngModel)]="inventarioMP.unidadMedida" placeholder="Unidad de medida" class="col-span-3" required />
-                  </div>
+                <div class="items-center grid grid-cols-4 gap-4">
+                  <label hlmLabel for="unidadMedida-add" class="text-right">Unidad de Medida</label>
+                  <select hlmInput id="unidadMedida-add" name="unidadMedida" [(ngModel)]="inventarioMP.unidadMedida" class="col-span-3" required>
+                    <option value="taza">Taza</option>
+                    <option value="cucharadita">Cucharadita</option>
+                    <option value="cucharada">Cucharada</option>
+                    <option value="unidad">Unidad</option>
+                    <option value="shot">Shot</option>
+                    <option value="Gr">Gr</option>
+                    <option value="Kg">Kg</option>
+                    <option value="Lt">Lt</option>
+                    <option value="Ml">Ml</option>
+                  </select>
+                </div>
+                
                   <div class="items-center grid grid-cols-4 gap-4">
                       <label hlmLabel for="cantidad-add" class="text-right">Cantidad</label>
                       <input hlmInput id="cantidad-add" name="cantidad" [(ngModel)]="inventarioMP.cantidad" placeholder="Cantidad" class="col-span-3" required />
@@ -55,10 +66,21 @@
                         <option *ngFor="let materiaPrima of materiasPrimas" [value]="materiaPrima.id">{{ materiaPrima.material }}</option>
                     </select>
                 </div>
-                  <div class="items-center grid grid-cols-4 gap-4">
-                      <label hlmLabel for="unidadMedida-edit" class="text-right">Unidad de Medida</label>
-                      <input hlmInput id="unidadMedida-edit" name="unidadMedida" [(ngModel)]="inventarioMP.unidadMedida" placeholder="Unidad de medida" class="col-span-3" required />
-                  </div>
+                <div class="items-center grid grid-cols-4 gap-4">
+                  <label hlmLabel for="unidadMedida-add" class="text-right">Unidad de Medida</label>
+                  <select hlmInput id="unidadMedida-add" name="unidadMedida" [(ngModel)]="inventarioMP.unidadMedida" class="col-span-3" required>
+                    <option value="taza">Taza</option>
+                    <option value="cucharadita">Cucharadita</option>
+                    <option value="cucharada">Cucharada</option>
+                    <option value="unidad">Unidad</option>
+                    <option value="shot">Shot</option>
+                    <option value="Gr">Gr</option>
+                    <option value="Kg">Kg</option>
+                    <option value="Lt">Lt</option>
+                    <option value="Ml">Ml</option>
+                  </select>
+                </div>
+                
                   <div class="items-center grid grid-cols-4 gap-4">
                       <label hlmLabel for="cantidad-edit" class="text-right">Cantidad</label>
                       <input hlmInput id="cantidad-edit" name="cantidad" [(ngModel)]="inventarioMP.cantidad" placeholder="Cantidad" class="col-span-3" required />
@@ -77,7 +99,7 @@
 </div>
 
 <div class="flex justify-between my-5 px-5">
-  <input hlmInput class="w-full md:w-80" placeholder="Buscar por ID o cantidad" (input)="applyFilterFromEvent($event)" />
+  <input hlmInput class="w-full md:w-80" placeholder="Buscar por materia prima" (input)="applyFilterFromEvent($event)" />
   <button hlmBtn class="bg-white border border-gray-300 text-gray-600 hover:bg-gray-100 me-5" align="end" [brnMenuTriggerFor]="menu">
     Ver columnas
     <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />

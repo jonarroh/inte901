@@ -202,10 +202,6 @@ export class ProveedoresComponent {
   }
 
   refreshProveedores() {
-    this.proveedores$ = this.proveedoresService.getProveedores().pipe(
-      map((proveedores) =>
-        proveedores.filter((proveedor) => proveedor.estatus === 1)
-      )
-    );
+    location.reload();
   }
 }
