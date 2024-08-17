@@ -28,8 +28,7 @@ namespace Server.Controllers
         {
             var ReservacionesActivas = await _context.Reservas
                 .Include(r => r.DetailReserva)
-                .Include(r => r.Usuario)
-                .Where(r => r.estatus == "Pagado" || r.estatus == "Pendiente" || r.estatus == "Activo")
+                .Include(r => r.Usuario) 
                 .ToListAsync();
 
             return Ok(ReservacionesActivas);
@@ -246,6 +245,30 @@ namespace Server.Controllers
 
             return NoContent();
         }
+
+        [HttpPut("estatus/{id}")]
+        public async Task<IActionResult> EstatusReserva(int id, [FromBody] string estatus)
+        {
+
+            Console.WriteLine(estatus);
+            // Cambiar el estatus a cancelado
+            var reserva = await _context.Reservas.FindAsync(id);
+            if (reserva == null)
+            {
+                return NotFound();
+            }
+
+            reserva.estatus = estatus;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+
+
+
+
 
 
         // GET: api/Reserves/byClient/1
