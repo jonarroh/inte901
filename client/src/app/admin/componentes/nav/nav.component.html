@@ -8,7 +8,7 @@
         </div>
       </li>
       @if(rol == 'Admin'){
-      <a href="#">
+      <a routerLink="/admin/dashboard">
         <li class="relative transition mt-7">
           <div
             class="relative m-2 flex cursor-pointer items-center rounded-xl py-3 pl-5 text-sm text-white hover:bg-navhover hover:text-black">
@@ -82,7 +82,7 @@
       }
       @if(rol === 'Admin' || rol === 'Produccion'){
       <li class="relative transition">
-        <input class="peer hidden" type="checkbox" id="menu-1" />
+        <input class="peer hidden" type="checkbox" id="menu-9" />
         <div
           class="relative m-2 flex items-center rounded-xl border-b-4 bg-navhover py-3 pl-5 text-sm text-white hover:text-black">
           <span class="mr-5 flex w-5 text-white">
@@ -94,7 +94,7 @@
             </svg>
           </span>
           Reservaciones
-          <label for="menu-1"
+          <label for="menu-9"
             class="absolute inset-0 h-full w-full cursor-pointer"></label>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg"
@@ -106,7 +106,7 @@
         </svg>
         <ul
           class="duration-400 peer-checked:max-h-96 m-2 flex max-h-0 flex-col overflow-hidden rounded-2xl transition-all duration-300">
-          <a routerLink="/admin/reserves">
+          <a routerLink="/admin/reservas">
             <li
               class="m-2 flex cursor-pointer rounded-xl py-3 pl-5 text-sm text-white hover:bg-navhover hover:text-black">
               <span class="mr-5">
@@ -121,7 +121,7 @@
               Reservar
             </li>
           </a>
-          <a routerLink="/admin/places">
+          <a routerLink="/admin/espacios">
             <li
               class="m-2 flex cursor-pointer rounded-xl py-3 pl-5 text-sm text-white hover:bg-navhover hover:text-black">
               <span class="mr-5">
@@ -262,64 +262,21 @@
         </ul>
       </li>
       }
-      <li class="relative transition">
-        <input class="peer hidden" type="checkbox" id="menu-2" />
-        <div
-          class="relative m-2 flex items-center rounded-xl border-b-4 border-gray-300 bg-navhover hover:text-black py-3 pl-5 text-sm text-white">
-          <span class="mr-5 flex w-5 text-white">
+      <a href="#">
+        <li
+          class="m-2 flex cursor-pointer rounded-xl py-3 pl-5 text-sm text-white hover:bg-navhover hover:text-black">
+          <span class="mr-3">
             <svg class="w-6 h-6 text-gray-800 dark:text-white"
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
               width="24" height="24" fill="none" viewBox="0 0 24 24">
-              <path stroke="currentColor" stroke-linecap="square"
+              <path stroke="currentColor" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width="2"
-                d="M10 19H5a1 1 0 0 1-1-1v-1a3 3 0 0 1 3-3h2m10 1a3 3 0 0 1-3 3m3-3a3 3 0 0 0-3-3m3 3h1m-4 3a3 3 0 0 1-3-3m3 3v1m-3-4a3 3 0 0 1 3-3m-3 3h-1m4-3v-1m-2.121 1.879-.707-.707m5.656 5.656-.707-.707m-4.242 0-.707.707m5.656-5.656-.707.707M12 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                d="m9 5 7 7-7 7" />
             </svg>
           </span>
-          Configuracion
-          <label for="menu-2"
-            class="absolute inset-0 h-full w-full cursor-pointer"></label>
-        </div>
-        <svg xmlns="http://www.w3.org/2000/svg"
-          class="peer-checked:rotate-180 absolute right-0 top-6 mr-5 ml-auto h-4 text-white transition"
-          fill="none"
-          viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M19 9l-7 7-7-7" />
-        </svg>
-        <ul
-          class="duration-400 peer-checked:max-h-96 m-2 flex max-h-0 flex-col overflow-hidden rounded-2xl transition-all duration-300">
-          <a routerLink="/profile">
-            <li
-              class="m-2 flex cursor-pointer rounded-xl py-3 pl-5 text-sm text-white hover:bg-navhover hover:text-black">
-              <span class="mr-5">
-                <svg class="w-6 h-6 text-gray-800 dark:text-white"
-                  aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                  width="24" height="24" fill="none" viewBox="0 0 24 24">
-                  <path stroke="currentColor" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width="2"
-                    d="m9 5 7 7-7 7" />
-                </svg>
-              </span>
-              Perfil
-            </li>
-          </a>
-          <button (click)="logout()">
-            <li
-              class="m-2 flex cursor-pointer rounded-xl py-3 pl-5 text-sm text-white hover:bg-navhover hover:text-black">
-              <span class="mr-3">
-                <svg class="w-6 h-6 text-gray-800 dark:text-white"
-                  aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                  width="24" height="24" fill="none" viewBox="0 0 24 24">
-                  <path stroke="currentColor" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width="2"
-                    d="m9 5 7 7-7 7" />
-                </svg>
-              </span>
-              Salir
-            </li>
-          </button>
-        </ul>
-      </li>
+          Salir
+        </li>
+      </a>
     </ul>
   </div>
 </div>

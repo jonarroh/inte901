@@ -34,10 +34,10 @@ import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 import { InventarioMPComponent } from './admin/inventario-mp/inventario-mp.component';
 import { InventarioPostresComponent } from './admin/inventario-postres/inventario-postres.component';
 import { CheckoutReComponent } from './reserves/checkout/checkout.component';
-import { EspaciosComponent } from './admin/espacios/espacios.component';
-import { ClienteComponent } from './reserves/cliente/cliente.component';
 import { MateriasPrimasProveedorComponent } from './admin/materias-primas-proveedor/materias-primas-proveedor.component';
+import { EspaciosComponent } from './admin/espacios/espacios.component';
 import { EstatusComponent } from './admin/reservas/estatus/estatus.component';
+import { ClienteComponent } from './reserves/cliente/cliente.component';
 
 
 

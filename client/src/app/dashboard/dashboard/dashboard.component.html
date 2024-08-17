@@ -1,19 +1,19 @@
-<div class="container w-full h-full">
+<div class="container mx-auto max-h-screen overflow-y-hidden w-full p-4">
     <h1 class="text-3xl mt-2 text-center font-semibold">Dashboard</h1>
 
     <div class="items-center grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4 mx-3 justify-center text-center">
 
-        
+
         <div class="chart-container ">
             <h2 class="text-2xl font-semibold">Ventas totales</h2>
             <!-- <label for="selectFecha">Selecciona una fecha para filtrar las ventas</label> -->
 
-            <select 
-                class="mt-1 flex items-center rounded-md border border-slate-400 bg-white text-md 
-                    placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring 
+            <select
+                class="mt-1 flex items-center rounded-md border border-slate-400 bg-white text-md
+                    placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
                     focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 lg:h-10 lg:py-2 lg:px-2 md:h-8 md:py-2 md:px-2
-                    sm:h-8 sm:py-2 sm:px-2 min-w-full max-w-full w-full hover:border-hover focus-visible:border-focus " 
-                id="selectFecha" 
+                    sm:h-8 sm:py-2 sm:px-2 min-w-full max-w-full w-full hover:border-hover focus-visible:border-focus "
+                id="selectFecha"
                 (change)="onChange($event)">
                     <option value="last_day">Último día</option>
                     <option value="last_week">Última semana</option>
@@ -21,7 +21,7 @@
                     <option value="last_trimester">Último trimestre</option>
             </select>
 
-            
+
 
             <canvas id="ventas" class="max-h-fit">
                 {{chart}}
@@ -46,13 +46,13 @@
             </div>
         </div>
 
-        
+
         <div class="col-span-2">
             <h2 class="text-2xl mb-4">Predicciones</h2>
             <div class="grid grid-cols-2 gap-3">
                 <div class="relative">
-                    <div 
-                    class="border border-slate-600 w-full bg-white p-2 rounded flex justify-between items-center cursor-pointer" 
+                    <div
+                    class="border border-slate-600 w-full bg-white p-2 rounded flex justify-between items-center cursor-pointer"
                     (click)="toggleDropdown()"
                     >
                         <span *ngIf="!selectedLabels.length" class="text-black">Selecciona los productos</span>
@@ -61,9 +61,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </div>
-                    
+
                     <ul *ngIf="isOpen" class="absolute border border-slate-600 bg-white w-full mt-2 max-h-40 overflow-y-auto rounded shadow-lg z-10">
-                        <li *ngFor="let option of availableOptions" 
+                        <li *ngFor="let option of availableOptions"
                             class="p-2 hover:bg-slate-100 cursor-pointer flex justify-between items-center"
                             (click)="selectOption(option)">
                                 {{ option.label }}
@@ -84,7 +84,7 @@
             </div>
         </div>
 
-    
+
 
 
 </div>
