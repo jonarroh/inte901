@@ -102,9 +102,6 @@ export class ProductosComponent {
       this.producto.createdAt = new Date().toISOString();
       this.productoService.registrarProductos(this.producto, this.imagen!).subscribe(response => {
         console.log('Producto registrado:', response);
-        form.resetForm();
-        this.imagen = null; // Reiniciar la imagen seleccionada
-        this.producto = {}; // Reiniciar el objeto producto
         this.refreshProductos();
       });
     }
@@ -115,10 +112,6 @@ export class ProductosComponent {
       // Si no hay una imagen seleccionada, pasamos undefined
       this.productoService.editarProducto(this.producto.id!, this.producto, this.imagen || undefined).subscribe(response => {
         console.log('Producto actualizado:', response);
-        form.resetForm();
-        this.imagen = null; // Reiniciar la imagen seleccionada
-        this.producto = {}; // Reiniciar el objeto producto
-        this.editMode = false;
         this.refreshProductos();
       });
     }
@@ -149,8 +142,6 @@ export class ProductosComponent {
   }
 
   refreshProductos() {
-    this.productos$ = this.productoService.getProductos().pipe(
-      map(productos => productos.filter(producto => producto.estatus === 1))
-    );
+    location.reload();
   }
 }
