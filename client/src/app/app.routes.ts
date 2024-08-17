@@ -37,6 +37,7 @@ import { CheckoutReComponent } from './reserves/checkout/checkout.component';
 import { EspaciosComponent } from './admin/espacios/espacios.component';
 import { ClienteComponent } from './reserves/cliente/cliente.component';
 import { MateriasPrimasProveedorComponent } from './admin/materias-primas-proveedor/materias-primas-proveedor.component';
+import { EstatusComponent } from './admin/reservas/estatus/estatus.component';
 
 
 
@@ -109,26 +110,38 @@ export const routes: Routes = [
         component: UsersComponent
       },
       {
+        path: 'reserves',
+        component: ReservesComponent
+      },
+      {
+        path: 'places',
+        component: PlaceComponent
+      },{
         path: 'dashboard',
         component: DashboardComponent,
       },
       {
         path: 'espacios',
         component: EspaciosComponent
+      },
+      {
+        path: 'reservas',
+        component: EstatusComponent
       }
+
     ]
   },
   {
     path: 'orders',
     canActivate: [AuthenticatedGuard],
     component: PedidosUserComponent,
-    
+
   },
   {
     path: 'estatus/:id',
     canActivate: [AuthenticatedGuard],
     component: PedidoStateComponent,
-    
+
   },
   {
     path: 'estatus',
