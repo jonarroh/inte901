@@ -9,6 +9,9 @@ import { LucideAngularModule } from 'lucide-angular';
     LucideAngularModule,
     RouterModule
   ],
+  providers: [
+    RouterModule 
+  ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })

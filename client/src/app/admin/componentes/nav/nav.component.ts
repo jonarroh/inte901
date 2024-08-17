@@ -32,4 +32,10 @@ export class NavComponent {
     const userId = localStorage.getItem('userId') ?? '';
     return parseInt(userId);
   }
+
+
+  logout(){
+    localStorage.clear();
+    window.location.href = '/';
+  }
 }

@@ -31,10 +31,18 @@
         <hlm-menu-separator />
       </hlm-menu-group>
       <hlm-menu-group class="flex items-center gap-6">
+        <lucide-icon name="history"></lucide-icon>
+        <a routerLink="/reservesCliente"
+        class="hover:underline">
+          Mis reservas
+        </a>        
+        <hlm-menu-separator />
+      </hlm-menu-group>
+      <hlm-menu-group class="flex items-center gap-6">
         <lucide-icon name="log-out"></lucide-icon>
-        <button hlmMenuItem (triggered)="logout()" class="hover:text-gray-200">
+        <button hlmMenuItem (triggered)="logout()" class="hover:underline hover:bg-white">
           <hlm-icon name="lucideUndo2" hlmMenuIcon />
-          Reiniciar
+          Cerrar sesión
         </button>       
         <hlm-menu-separator />
       </hlm-menu-group>

@@ -3,7 +3,7 @@
     <ul class="mt-3 flex flex-col">
       <li class="relative transition">
         <div class="flex justify-center">
-          <img src="../assets/img/logo-white.webp" alt="logo-heaven"
+          <img src="http://localhost:5000/static/logo.webp" alt="Logo"
             width="150">
         </div>
       </li>
@@ -303,7 +303,7 @@
               Perfil
             </li>
           </a>
-          <a href="#">
+          <button (click)="logout()">
             <li
               class="m-2 flex cursor-pointer rounded-xl py-3 pl-5 text-sm text-white hover:bg-navhover hover:text-black">
               <span class="mr-3">
@@ -317,7 +317,7 @@
               </span>
               Salir
             </li>
-          </a>
+          </button>
         </ul>
       </li>
     </ul>

@@ -133,13 +133,14 @@ export class DashboardComponent implements OnInit {
     ngOnInit(): void {
         this.reportService.getUsersReport().subscribe((data: any) => {
             console.log(data);
-            this.cfgUser.data.lables = data.labels || [];
+            this.cfgUser.data.labels = data.labels || [];
             this.cfgUser.data.datasets = data.datasets || [];
 
             if(this.chart){
                 this.chart.update();
             } else{
                 this.chart = new Chart('userMostOrder', this.cfgUser);
+                console.log('chart:', this.chart);
             }
 
         });        

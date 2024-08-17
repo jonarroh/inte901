@@ -15,7 +15,7 @@ app = Flask(__name__)
 app.register_blueprint(models)
 app.register_blueprint(rid)
 app.register_blueprint(reportes)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 STATIC_FOLDER = 'static'
 

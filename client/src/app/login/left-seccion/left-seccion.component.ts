@@ -94,12 +94,15 @@ export class LeftSeccionComponent {
             next: (user) => {
               console.log('Usuario cargado correctamente', user);
               this.userService.saveUserData(user);
-              if(user.role === 'Admin'){
-                this.router.navigate(['/admin/productos']);
-              }
-              else{
-                this.router.navigate(['/products']);
-              }
+              console.log('role:', user.role);
+              setInterval(() => {
+                if(user.role === 'Admin'){
+                  this.router.navigate(['/admin/productos']);
+                }
+                else{
+                  this.router.navigate(['/products']);
+                }
+              }, 2000);
     
             },
             complete: () => {
