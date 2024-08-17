@@ -99,6 +99,14 @@ export const routes: Routes = [
       {
         path:'users',
         component: UsersComponent
+      },
+      {
+        path: 'reserves',
+        component: ReservesComponent
+      },
+      {
+        path: 'places',
+        component: PlaceComponent
       }
     ]
   },
@@ -106,13 +114,13 @@ export const routes: Routes = [
     path: 'orders',
     canActivate: [AuthenticatedGuard],
     component: PedidosUserComponent,
-    
+
   },
   {
     path: 'estatus/:id',
     canActivate: [AuthenticatedGuard],
     component: PedidoStateComponent,
-    
+
   },
   {
     path: 'estatus',
