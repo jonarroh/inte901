@@ -30,10 +30,14 @@ import { PedidosUserComponent } from './pedidos/pedidos-user/pedidos-user.compon
 import { ProcessStateComponent } from './pedidos/pedido-state/process-state/process-state.component';
 import { AdminGuard } from './auth/admin.guard';
 import { UsersComponent } from './admin/users/users.component';
+import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 import { InventarioMPComponent } from './admin/inventario-mp/inventario-mp.component';
 import { InventarioPostresComponent } from './admin/inventario-postres/inventario-postres.component';
 import { CheckoutReComponent } from './reserves/checkout/checkout.component';
-import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
+import { MateriasPrimasProveedorComponent } from './admin/materias-primas-proveedor/materias-primas-proveedor.component';
+import { EspaciosComponent } from './admin/espacios/espacios.component';
+import { EstatusComponent } from './admin/reservas/estatus/estatus.component';
+import { ClienteComponent } from './reserves/cliente/cliente.component';
 
 
 
@@ -63,7 +67,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
-    // canActivate: [AdminGuard],
+    canActivate: [AdminGuard],
     children: [
       {
         path: 'ventas',
@@ -98,6 +102,10 @@ export const routes: Routes = [
         component: ProveedoresComponent
       },
       {
+        path: 'materiaProveedor',
+        component: MateriasPrimasProveedorComponent
+      },
+      {
         path:'users',
         component: UsersComponent
       },
@@ -108,11 +116,19 @@ export const routes: Routes = [
       {
         path: 'places',
         component: PlaceComponent
+      },{
+        path: 'dashboard',
+        component: DashboardComponent,
       },
       {
-        path: 'dashboard',
-        component: DashboardComponent
+        path: 'espacios',
+        component: EspaciosComponent
+      },
+      {
+        path: 'reservas',
+        component: EstatusComponent
       }
+
     ]
   },
   {
@@ -165,6 +181,11 @@ export const routes: Routes = [
     path: 'reserves/:id',
     canActivate: [AuthenticatedGuard],
     component: ReservesComponent
+  },
+  {
+    path: 'reservesCliente',
+    canActivate: [AuthenticatedGuard],
+    component: ClienteComponent
   },
 
   {

@@ -6,6 +6,8 @@ import { LucideAngularModule, icons } from 'lucide-angular';
 import { routes } from './app.routes';
 import { authInterceptor } from './auth/auth.interceptor';
 
+
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),

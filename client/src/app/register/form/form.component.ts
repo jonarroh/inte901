@@ -90,8 +90,6 @@ export class FormComponent {
         },
       ],
     }),
-
-
   });
 
   register(){

@@ -3,12 +3,12 @@
     <ul class="mt-3 flex flex-col">
       <li class="relative transition">
         <div class="flex justify-center">
-          <img src="../assets/img/logo-white.webp" alt="logo-heaven"
+          <img src="http://localhost:5000/static/logo.webp" alt="Logo"
             width="150">
         </div>
       </li>
       @if(rol == 'Admin'){
-      <a href="#">
+      <a routerLink="/admin/dashboard">
         <li class="relative transition mt-7">
           <div
             class="relative m-2 flex cursor-pointer items-center rounded-xl py-3 pl-5 text-sm text-white hover:bg-navhover hover:text-black">
@@ -82,7 +82,7 @@
       }
       @if(rol === 'Admin' || rol === 'Produccion'){
       <li class="relative transition">
-        <input class="peer hidden" type="checkbox" id="menu-1" />
+        <input class="peer hidden" type="checkbox" id="menu-9" />
         <div
           class="relative m-2 flex items-center rounded-xl border-b-4 bg-navhover py-3 pl-5 text-sm text-white hover:text-black">
           <span class="mr-5 flex w-5 text-white">
@@ -94,7 +94,7 @@
             </svg>
           </span>
           Reservaciones
-          <label for="menu-1"
+          <label for="menu-9"
             class="absolute inset-0 h-full w-full cursor-pointer"></label>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg"
@@ -106,7 +106,7 @@
         </svg>
         <ul
           class="duration-400 peer-checked:max-h-96 m-2 flex max-h-0 flex-col overflow-hidden rounded-2xl transition-all duration-300">
-          <a routerLink="/admin/reserves">
+          <a routerLink="/admin/reservas">
             <li
               class="m-2 flex cursor-pointer rounded-xl py-3 pl-5 text-sm text-white hover:bg-navhover hover:text-black">
               <span class="mr-5">
@@ -121,7 +121,7 @@
               Reservar
             </li>
           </a>
-          <a routerLink="/admin/places">
+          <a routerLink="/admin/espacios">
             <li
               class="m-2 flex cursor-pointer rounded-xl py-3 pl-5 text-sm text-white hover:bg-navhover hover:text-black">
               <span class="mr-5">

@@ -19,7 +19,8 @@ import { Router, RouterModule } from '@angular/router';
 export class DetailsComponent {
 
     constructor(private checkoutService: CheckoutService,private cartService: CartService, private router : Router) {
-      
+      console.log(this.order());
+      console.log("llego al constructor");
     }
     order = signal<Order>({} as Order);
     isOrderToStore = signal<boolean>(JSON.parse(localStorage.getItem('isOrderToStore') || 'false'));
@@ -27,7 +28,8 @@ export class DetailsComponent {
     selectedCard = signal<CreditCardWithCvv>(JSON.parse(localStorage.getItem('selectedCard') || `{}`));
     selectedAddress = signal<Address>(JSON.parse(localStorage.getItem('selectedAddress') || '{}'));
     products = this.cartService.cartSignal;
-    ordes = this.checkoutService.orderSignal;
+    total = this.cartService.total;
+  
 
     getSubtotal() {
       return this.products().reduce((acc, product) => acc + product.precio, 0);
@@ -84,7 +86,7 @@ export class DetailsComponent {
         },
         next: (res) => {
           console.log(res);
-          toast.success('Orden realizada con exito');
+          toast.success('Orden realizada con éxito');
           this.cartService.clearCart();
           this.checkoutService.isOrderToStore.set(false);
           this.checkoutService.isPaidWithCard.set(false);

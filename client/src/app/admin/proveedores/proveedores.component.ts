@@ -1,55 +1,47 @@
-import { Component, inject } from '@angular/core';
-import { NavComponent } from '../componentes/nav/nav.component';
-import {
-  HlmDialogComponent,
-  HlmDialogContentComponent,
-  HlmDialogHeaderComponent,
-  HlmDialogFooterComponent,
-  HlmDialogTitleDirective,
-  HlmDialogDescriptionDirective,
-} from '~/components/ui-dialog-helm/src';
+import { Component, computed, inject, signal } from '@angular/core';
+import { ProveedoresService } from './service/proveedores.service';
+import { BehaviorSubject, combineLatest, combineLatestWith, map, Observable, of } from 'rxjs';
+import { Proveedor } from './interface/proveedor';
+import { FormsModule, NgForm } from '@angular/forms';
+import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogDescriptionDirective, HlmDialogFooterComponent, HlmDialogHeaderComponent, HlmDialogTitleDirective } from '~/components/ui-dialog-helm/src';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
-import { BrnDialogTriggerDirective, BrnDialogContentDirective } from '@spartan-ng/ui-dialog-brain';
-import { map, Observable, forkJoin, switchMap, tap } from 'rxjs';
-import { AsyncPipe, CommonModule } from '@angular/common';
-import { ProveedoresService } from './service/proveedores.service';
-import { FormsModule, NgForm } from '@angular/forms';
-import { MateriaPrima } from '../materias-primas/interface/materias-primas';
-import { MateriaPrimaProveedor } from './interface/materiaPrimaProveedor';
-import { Proveedor } from './interface/proveedor';
-import { MateriasPrimasService } from '../materias-primas/service/materias-primas.service';
-import { BrnTableModule } from '@spartan-ng/ui-table-brain';
+import { BrnTableModule, PaginatorState, useBrnColumnManager } from '@spartan-ng/ui-table-brain';
 import { HlmTableModule } from '@spartan-ng/ui-table-helm';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
 import { provideIcons } from '@ng-icons/core';
 import { lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmIconComponent } from '~/components/ui-icon-helm/src';
-
-interface ProveedorConMaterias extends Proveedor {
-  materiasPrimas: string;
-}
+import { HlmSelectContentDirective, HlmSelectOptionComponent, HlmSelectTriggerComponent, HlmSelectValueDirective } from '~/components/ui-select-helm/src';
+import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
 
 @Component({
   selector: 'app-proveedores',
   standalone: true,
   imports: [
-    NavComponent,
     HlmDialogComponent,
     HlmDialogContentComponent,
     HlmDialogHeaderComponent,
     HlmDialogFooterComponent,
+    HlmButtonDirective,
+    HlmInputDirective,
     HlmDialogTitleDirective,
     HlmDialogDescriptionDirective,
-    HlmButtonDirective,
     HlmIconComponent,
+    HlmSelectTriggerComponent,
+    HlmSelectValueDirective,
+    HlmSelectContentDirective,
+    HlmSelectOptionComponent,
     BrnDialogTriggerDirective,
     BrnDialogContentDirective,
-    HlmInputDirective,
+    BrnTableModule,
+    BrnSelectImports,
+    FormsModule,
     CommonModule,
     AsyncPipe,
-    FormsModule,
     BrnTableModule,
     HlmTableModule,
     BrnMenuTriggerDirective,
@@ -64,89 +56,133 @@ interface ProveedorConMaterias extends Proveedor {
   ],
 })
 export class ProveedoresComponent {
-  proveedorService = inject(ProveedoresService);
-  materiasPrimasService = inject(MateriasPrimasService);
-  proveedores$: Observable<ProveedorConMaterias[]> = new Observable<ProveedorConMaterias[]>();
-  materiasPrimas$: Observable<MateriaPrima[]>;
-  materiaPrimaProveedor: MateriaPrimaProveedor = {};
+  proveedoresService = inject(ProveedoresService);
+  private proveedoresSource$: Observable<Proveedor[]>;
+  proveedores$: Observable<Proveedor[]>;
   proveedor: Proveedor = {};
   editMode: boolean = false;
-  selectedMateriasPrimas: number[] = [];
+  private filterSubject = new BehaviorSubject<string>('');
+  filter$ = this.filterSubject.asObservable();
 
-  displayedColumns = ['ID', 'Nombre Empresa', 'Dirección Empresa', 'Teléfono Empresa', 'Nombre Encargado', 'Materias Primas', 'actions'];
+  // Column manager
+  protected readonly _brnColumnManager = useBrnColumnManager({
+    ID: { visible: true, label: 'ID', sortable: true },
+    'Nombre Empresa': { visible: true, label: 'Nombre Empresa', sortable: true },
+    'Dirección Empresa': { visible: true, label: 'Dirección Empresa', sortable: true },
+    'Teléfono Empresa': { visible: true, label: 'Teléfono Empresa', sortable: true },
+    'Nombre Encargado': { visible: true, label: 'Nombre Encargado', sortable: true },
+  });
+  
+
+  // Columnas visibles
+  protected readonly displayedColumns = computed(() => [
+    ...this._brnColumnManager.displayedColumns(),
+    'actions',
+  ]);
+
+  // Paginación
+  private readonly _displayedIndices = signal({ start: 0, end: 0 });
+  protected readonly _availablePageSizes = [5, 10, 20, 10000];
+  protected readonly _pageSize = signal(this._availablePageSizes[0]);
+  protected readonly _totalElements = signal(0);
 
   constructor() {
-    this.refreshProveedores();
-    this.materiasPrimas$ = this.materiasPrimasService.getMateriaPrima().pipe(
-      map(materiasPrimas => materiasPrimas.filter(mp => mp.estatus === 1))
+    this.proveedoresSource$ = this.proveedoresService.getProveedores().pipe(
+      map((proveedores) => proveedores.filter((proveedor) => proveedor.estatus === 1))
+    );
+
+    this.proveedores$ = combineLatest([
+      this.proveedoresSource$,
+      this.filter$
+    ]).pipe(
+      map(([proveedores, filterValue]) => 
+        proveedores.filter(proveedor => 
+          proveedor.nombreEmpresa?.toLowerCase().includes(filterValue.toLowerCase()) ?? false
+        )
+      ),
+      map(filteredProveedores => {
+        this._totalElements.set(filteredProveedores.length);
+        const start = this._displayedIndices().start;
+        const end = this._displayedIndices().end + 1;
+        return filteredProveedores.slice(start, end);
+      })
     );
   }
 
+  private _updatePaginatedData() {
+    this.proveedoresSource$.pipe(
+      combineLatestWith(this.filter$),
+      map(([proveedores, filterValue]) => {
+        // Filtrar los registros
+        const filteredProveedores = proveedores.filter(proveedor =>
+          proveedor.nombreEmpresa?.toLowerCase().includes(filterValue.toLowerCase()) ?? false
+        );
+  
+        // Obtener los índices de paginación
+        const start = this._displayedIndices().start;
+        const end = this._displayedIndices().end + 1;
+  
+        // Actualizar la cantidad total de elementos
+        this._totalElements.set(filteredProveedores.length);
+  
+        // Retornar el subconjunto de datos basado en la paginación
+        return filteredProveedores.slice(start, end);
+      })
+    ).subscribe(paginatedProveedores => {
+      this.proveedores$ = of(paginatedProveedores);
+    });
+  }
+
+  protected readonly _onStateChange = ({ startIndex, endIndex }: PaginatorState) => {
+    this._displayedIndices.set({ start: startIndex, end: endIndex });
+    this._updatePaginatedData();
+  };
+
   trackByProveedorId(index: number, proveedor: any): number {
-    return proveedor.id!;
+    return proveedor.id;
+  }
+
+  trackByColumnName(index: number, column: any): string {
+    return column.name;
+  }
+
+  applyFilter(filterValue: string) {
+    this.filterSubject.next(filterValue);
+  }
+
+  applyFilterFromEvent(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.applyFilter(inputElement.value);
   }
 
   onSubmitAdd(form: NgForm) {
     if (form.valid) {
       this.proveedor.estatus = 1;
       this.proveedor.createdAt = new Date().toISOString();
-      this.proveedorService.registrarProveedor(this.proveedor).pipe(
-        switchMap(response => {
-          const materiaPrimaProveedores = this.selectedMateriasPrimas.map(materiaPrimaId => ({
-            proveedorId: response.id,
-            materiaPrimaId
-          }));
-          return forkJoin(materiaPrimaProveedores.map(materiaPrimaProveedor =>
-            this.proveedorService.registrarMateriaPrimaProveedor(materiaPrimaProveedor)
-          ));
-        }),
-        tap(() => {
-          console.log('Proveedor y materias primas asociados');
-          form.resetForm();
-          this.proveedor = {};
-          this.materiaPrimaProveedor = {};
-          this.selectedMateriasPrimas = [];
-          this.refreshProveedores();
-        })
-      ).subscribe();
+      this.proveedoresService.registrarProveedor(this.proveedor).subscribe((response) => {
+        console.log('Proveedor registrado:', response);
+        form.resetForm();
+        this.proveedor = {}; // Reiniciar el objeto proveedor
+        this.refreshProveedores();
+      });
     }
   }
 
   onSubmitEdit(form: NgForm) {
     if (form.valid) {
-      this.proveedorService.editarProveedor(this.proveedor.id!, this.proveedor).pipe(
-        switchMap(() => {
-          return this.proveedorService.getMateriasPrimasProveedores().pipe(
-            map(materiasPrimasProveedores =>
-              materiasPrimasProveedores.filter(mpp => mpp.proveedorId === this.proveedor.id)
-            ),
-            switchMap(existingMateriasPrimasProveedores => {
-              const toAdd = this.selectedMateriasPrimas.filter(
-                mpId => !existingMateriasPrimasProveedores.some(emp => emp.materiaPrimaId === mpId)
-              ).map(mpId => this.proveedorService.registrarMateriaPrimaProveedor({
-                proveedorId: this.proveedor.id!,
-                materiaPrimaId: mpId
-              }));
-              return forkJoin(toAdd);
-            })
-          );
-        }),
-        tap(() => {
-          console.log('Proveedor y materias primas asociados');
-          form.resetForm();
-          this.proveedor = {};
-          this.materiaPrimaProveedor = {};
-          this.selectedMateriasPrimas = [];
-          this.editMode = false;
-          this.refreshProveedores();
-        })
-      ).subscribe();
+      this.proveedor.updatedAt = new Date().toISOString();
+      this.proveedoresService.editarProveedor(this.proveedor.id!, this.proveedor).subscribe((response) => {
+        console.log('Proveedor actualizado:', response);
+        form.resetForm();
+        this.proveedor = {}; // Reiniciar el objeto proveedor
+        this.editMode = false;
+        this.refreshProveedores();
+      });
     }
   }
 
   onAdd() {
-    this.proveedor = {};
-    this.selectedMateriasPrimas = [];
+    this.proveedor = {}; // Limpiar el objeto proveedor antes de abrir el formulario de agregar
     const addButton = document.getElementById('add-proveedor-trigger');
     addButton?.click();
   }
@@ -154,45 +190,18 @@ export class ProveedoresComponent {
   onEdit(proveedor: Proveedor) {
     this.proveedor = { ...proveedor };
     this.editMode = true;
-    this.proveedorService.getMateriasPrimasProveedores().pipe(
-      map(materiasPrimasProveedores =>
-        materiasPrimasProveedores.filter(mpp => mpp.proveedorId === proveedor.id).map(mpp => mpp.materiaPrimaId!)
-      ),
-      tap(materiaPrimaIds => this.selectedMateriasPrimas = materiaPrimaIds)
-    ).subscribe();
     const editButton = document.getElementById('edit-proveedor-trigger');
     editButton?.click();
   }
 
   onDelete(id: number) {
-    this.proveedorService.eliminarProveedor(id).subscribe(() => {
+    this.proveedoresService.eliminarProveedor(id).subscribe(() => {
       console.log('Proveedor eliminado');
       this.refreshProveedores();
     });
   }
 
   refreshProveedores() {
-    this.proveedores$ = this.proveedorService.getProveedores().pipe(
-      map(proveedores => proveedores.filter(proveedor => proveedor.estatus === 1)),
-      switchMap(proveedores =>
-        forkJoin(proveedores.map(proveedor =>
-          this.proveedorService.getMateriasPrimasProveedores().pipe(
-            map(materiasPrimasProveedores => materiasPrimasProveedores.filter(mpp => mpp.proveedorId === proveedor.id)),
-            switchMap(materiasPrimasProveedores =>
-              forkJoin(materiasPrimasProveedores.map(mpp =>
-                this.materiasPrimasService.getMateriaPrimaById(mpp.materiaPrimaId!).pipe(
-                  map(materiaPrima => materiaPrima.material)
-                )
-              ))
-            ),
-            map(materiasPrimas => ({
-              ...proveedor,
-              materiasPrimas: materiasPrimas.join(', ')
-            }))
-          )
-        ))
-      )
-    );
+    location.reload();
   }
-  
 }

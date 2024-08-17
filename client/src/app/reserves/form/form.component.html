@@ -1,84 +1,84 @@
 <div class="container mx-auto mt-10">
-    <div class="wrapper bg-white rounded shadow w-full">
-      <div class="header flex justify-between border-b p-2">
-        <span class="text-lg font-bold">{{ month }} {{ year }}</span>
-        <div class="buttons">
-          <button class="p-1" (click)="prevMonth()">
-            <!-- SVG para botón anterior -->
-          </button>
-          <button class="p-1" (click)="nextMonth()">
-            <!-- SVG para botón siguiente -->
-          </button>
-          <button class="p-1 bg-blue-500 text-white rounded" (click)="openModal(null)">Agregar Evento</button>
-        </div>
+  <div class="wrapper bg-white rounded shadow w-full">
+    <div class="header flex justify-between items-center border-b p-2" style="padding: 20px;">
+      <div class="header-left flex items-center">
+        <button class="p-1" (click)="prevMonth()">
+          <!-- SVG para botón anterior -->
+          &lt;
+        </button>
+        <span class="text-lg font-bold mx-2">{{ month }} {{ year }}</span>
+        <button class="p-1" (click)="nextMonth()">
+          <!-- SVG para botón siguiente -->
+          &gt;
+        </button>
       </div>
-      <table class="w-full">
-        <thead>
-          <!-- Encabezado de la tabla -->
-        </thead>
-        <tbody>
-          <tr *ngFor="let week of [0,1,2,3,4]">
-            <td *ngFor="let day of daysInMonth.slice(week * 7, (week + 1) * 7)" class="p-2 border cursor-pointer" (click)="openModal(day)">
-              <div class="flex flex-col h-40 xl:w-40 lg:w-30 md:w-30 sm:w-full w-10 mx-auto overflow-hidden">
-                <div class="top h-5 w-full">
-                  <span class="text-gray-500">{{ day.getDate() }}</span>
-                </div>
-                <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer">
-                  <div *ngFor="let event of getEvents(day)" class="event bg-purple-400 text-white rounded p-1 text-sm mb-1">
-                    <span class="event-name">{{ event.name }}</span>
-                    <span class="time">{{ event.startTime }} - {{ event.endTime }}</span>
-                  </div>
+      <div class="header-right">
+        <button hlmBtn class="p-1 text-white rounded" (click)="openModal(null)" style="background-color: #A6754C;">Agregar reserva</button>
+      </div>
+    </div>
+    <table class="w-full">
+      <thead>
+        <tr>
+          <th *ngFor="let day of ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']" class="p-1 border text-center">
+            {{ day }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let week of [0,1,2,3,4]">
+          <td *ngFor="let day of daysInMonth.slice(week * 7, (week + 1) * 7)" class="p-2 border cursor-pointer" (click)="openModal(day)">
+            <div class="flex flex-col h-20 xl:w-24 lg:w-10 md:w-20 sm:w-16 w-12 mx-auto overflow-hidden">
+              <div class="top h-4 w-full">
+                <span class="text-gray-500">{{ day.getDate() }}</span>
+              </div>
+              <div class="bottom flex-grow h-20 py-1 w-full cursor-pointer">
+                <div *ngFor="let event of getEvents(day)" class="event bg-amber-400 text-white rounded p-1 text-sm mb-1">
+                  {{event.detailReserva.horaInicio}} - {{event.detailReserva.horaFin}}
                 </div>
               </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  
-    <div *ngIf="showModal" class="modal fixed w-full h-full top-0 left-0 flex items-center justify-center">
-      <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50" (click)="closeModal()"></div>
-      
-      <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
-        <div class="modal-content py-4 text-left px-6">
-          <div class="flex justify-between items-center pb-3">
-            <p class="text-2xl font-bold">Agregar Evento</p>
-            <div class="modal-close cursor-pointer z-50" (click)="closeModal()">
-              <!-- SVG para cerrar modal -->
             </div>
-          </div>
-  
-          <div class="my-5">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="eventDate">Fecha del Evento</label>
-            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="eventDate" type="date" [(ngModel)]="eventDate">
-          
-            <label class="block text-gray-700 text-sm font-bold mb-2 mt-4" for="eventStartTime">Hora de Inicio</label>
-            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="eventStartTime" type="time" [(ngModel)]="eventStartTime">
-          
-            <label class="block text-gray-700 text-sm font-bold mb-2 mt-4" for="eventEndTime">Hora de Fin</label>
-            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="eventEndTime" type="time" [(ngModel)]="eventEndTime">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-            <label class="block text-gray-700 text-sm font-bold mb-2 mt-4" for="eventEndTime">Tarjeta de Crédito</label>
-            <select class="bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="creditCard" 
-            (change)="onSelectChange($event)"
-            >
+  <div *ngIf="showModal" class="modal fixed w-full h-full top-0 left-0 flex items-center justify-center">
+    <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50" (click)="closeModal()"></div>
+    
+    <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+      <div class="modal-content py-4 text-left px-6">
+        <div class="flex justify-between items-center pb-3">
+          <p class="text-2xl font-bold">Agregar Evento</p>
+          <div class="modal-close cursor-pointer z-50" (click)="closeModal()">
+            <!-- SVG para cerrar modal -->
+            &times;
+          </div>
+        </div>
+
+        <div class="my-5">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="eventDate">Fecha del Evento</label>
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="eventDate" type="date" [(ngModel)]="eventDate">
+        
+          <label class="block text-gray-700 text-sm font-bold mb-2 mt-4" for="eventStartTime">Hora de Inicio</label>
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="eventStartTime" type="time" [(ngModel)]="eventStartTime">
+        
+          <label class="block text-gray-700 text-sm font-bold mb-2 mt-4" for="eventEndTime">Hora de Fin</label>
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="eventEndTime" type="time" [(ngModel)]="eventEndTime">
+
+          <label class="block text-gray-700 text-sm font-bold mb-2 mt-4" for="creditCard">Tarjeta de Crédito</label>
+          <select class="bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="creditCard" (change)="onSelectChange($event)">
             <option value="0">Selecciona una tarjeta de crédito</option>
-              @for (c of creditCards(); track $index) {
-                <option value="{{ c.id }}">{{ c.cardNumber }} - {{ c.expiryDate }}</option>
-              }
-              @empty {
-                <option value="0">No hay tarjetas de crédito</option>
-              }
-            </select>
-          </div>
-          
-  
-          <div class="flex justify-end pt-2">
-            <button class="bg-blue-500 text-white px-4 py-2 rounded mr-2" (click)="saveEvent()">Guardar</button>
-            <button class="bg-gray-500 text-white px-4 py-2 rounded" (click)="closeModal()">Cancelar</button>
-          </div>
+            <option *ngFor="let c of creditCards()" [value]="c.id">{{ c.cardNumber }} - {{ c.expiryDate }}</option>
+            <option *ngIf="!creditCards().length" value="0">No hay tarjetas de crédito</option>
+          </select>
+        </div>
+
+        <div class="flex justify-end pt-2">
+          <button class="bg-blue-500 text-white px-4 py-2 rounded mr-2" (click)="saveEvent()">Guardar</button>
+          <button class="bg-gray-500 text-white px-4 py-2 rounded" (click)="closeModal()">Cancelar</button>
         </div>
       </div>
     </div>
   </div>
-  
+</div>
