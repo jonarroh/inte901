@@ -1,4 +1,4 @@
-<div class="container mx-auto max-h-screen overflow-y-hidden w-full p-4">
+<div class="container mx-auto max-h-screen overflow-y-auto w-full p-4">
   <div class="flex-1 flex justify-center">
     <h1 class="text-5xl font-bold mt-1 mb-2 text-secondary">Compras</h1>
   </div>
@@ -388,7 +388,7 @@
 </div>
 
 <hlm-alert-dialog class="bg-admin">
-  <button id="statuscompra" variant="admin" brnAlertDialogTrigger hlmBtn></button>
+  <button class="hidden" id="statuscompra" variant="admin" brnAlertDialogTrigger hlmBtn></button>
   <hlm-alert-dialog-content *brnAlertDialogContent="let ctx" class="">
     <hlm-alert-dialog-header>
       <h3 hlmAlertDialogTitle class="text-white">Actualizar estatus de la compra</h3>
