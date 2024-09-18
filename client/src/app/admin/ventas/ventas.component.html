@@ -2,7 +2,7 @@
   <div class="flex-1 flex justify-center">
     <h1 class="text-5xl font-bold mt-1 mb-2 text-secondary">Ordenes</h1>
   </div>
-  @if(rol === 'Admin' || rol === 'Caja'){
+  @if(rol === 'Admin' || rol === 'Caja' || rol === 'Produccion'){
   <div class="flex space-x-3 justify-end mb-4">
     <hlm-sheet side="right" class="">
       <button id="carrito" variant="warning" class="text-white" brnSheetTrigger hlmBtn>
@@ -152,7 +152,7 @@
         Tipo de entrega
       </hlm-th>
       <hlm-td class="font-medium tabular-nums" *brnCellDef="let element">
-        @if (element.isDelivery === true) {
+        @if (element.isDeliver == true) {
         <span hlmBadge variant="secondary">Entrega a domicilio</span>
         } @else {
         <span hlmBadge variant="outline">Entrega en tienda</span>

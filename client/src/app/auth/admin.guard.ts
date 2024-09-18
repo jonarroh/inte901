@@ -12,11 +12,12 @@ export class AdminGuard implements CanActivate {
 
   canActivate(): boolean {
 
-    const userData = this.userService.userData;
-    const role = userData().role;
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    const role = userData.role;
 
-    const allowdRoles:Roles[] = ['Admin'];
+    console.log(`el rol es ${role}`);
 
+    const allowdRoles = ['Admin'];
     if (allowdRoles.includes(role as Roles)) {
       return true;
     } else {
