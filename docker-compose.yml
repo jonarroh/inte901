@@ -1,0 +1,70 @@
+
+services:
+  # SQL Server Service
+  # mssql:
+    # image: mcr.microsoft.com/mssql/server:2022-latest
+    # container_name: mssql
+    # environment:
+      # - ACCEPT_EULA=Y
+      # - SA_PASSWORD=1234
+    # ports:
+      # - "1433:1433"
+    # networks:
+      # - app-network
+    # volumes:
+      # - mssql-data:/var/opt/mssql
+
+  # # TypeScript (Node.js) Service
+  # typescript-app:
+    # build:
+      # context: ./client
+      # dockerfile: Dockerfile
+    # container_name: typescript-app
+    # networks:
+      # - app-network
+    # depends_on:
+      # - mssql
+    # volumes:
+      # - ./client:/usr/src/app
+    # ports:
+      # - "3000:3000"
+    # command: "npm run dev" # Ejecutar en modo desarrollo
+
+  # # .NET 8 API Service
+  # dotnet-api:
+    # build:
+      # context: ./Server
+      # dockerfile: Dockerfile
+    # container_name: dotnet-api
+    # networks:
+      # - app-network
+    # depends_on:
+      # - mssql
+    # volumes:
+      # - ./Server:/app
+    # ports:
+      # - "5000:5000"
+    # environment:
+      # - ASPNETCORE_ENVIRONMENT=Development
+    # command: "dotnet watch run"
+
+  # Python 3.10 Service
+  python:
+    build:
+      context: ./python
+      dockerfile: Dockerfile
+    container_name: python
+    networks:
+      - app-network
+    volumes:
+      - ./python:/usr/src/app
+    ports:
+      - "8000:8000"
+    command: "python3 /usr/src/app/app.py"
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mssql-data:
