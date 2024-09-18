@@ -38,7 +38,7 @@ class DB:
 
 db_instance = DB(
     user="sa",
-    password="conn0407",
+    password="12345678",
     host="CAVE",
     database="Inte2DB"
 )
