@@ -137,6 +137,16 @@ export const routes: Routes = [
     path: 'orders',
     canActivate: [AuthenticatedGuard],
     component: PedidosUserComponent,
+    data: { breadcrumb: [
+      {
+        label:'Productos',
+        route:'/products'
+      },
+      {
+        label:'Pedidos',
+        route:'/orders'
+      }
+    ]}
 
   },
   {

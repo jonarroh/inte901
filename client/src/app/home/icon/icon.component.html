@@ -39,6 +39,14 @@
         <hlm-menu-separator />
       </hlm-menu-group>
       <hlm-menu-group class="flex items-center gap-6">
+        <lucide-icon name="calendar"></lucide-icon>
+        <a routerLink="/places"
+        class="hover:underline">
+          Hacer reservación
+        </a>        
+        <hlm-menu-separator />
+      </hlm-menu-group>
+      <hlm-menu-group class="flex items-center gap-6">
         <lucide-icon name="log-out"></lucide-icon>
         <button hlmMenuItem (triggered)="logout()" class="hover:underline hover:bg-white">
           <hlm-icon name="lucideUndo2" hlmMenuIcon />
