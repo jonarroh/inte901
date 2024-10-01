@@ -1,14 +1,17 @@
 <home-navbar></home-navbar>
+<div class="ms-4">
+  <app-breadcrumb [separator]="'>'"></app-breadcrumb>
+</div>
 <section class="flex flex-col items-center justify-between p-8 h-[calc(100vh-3rem)] w-screen">
   <div class="grid grid-cols-12 w-full h-full">
-    <div class="col-span-4 only-border-right h-full">
+    <div class="col-span-12 md:col-span-4 lg:only-border-right h-full">
       <div>
         <h2
-        class="text-2xl font-bold"
+        class="text-2xl font-bold text-center"
         >Tus Tarjetas</h2>
         @for (card of user().creditCards; track $index) {
           <div class="flex justify-between items-center borde rounded-lg px-4 py-2 my-2 shadow-md  w-full border border-gray-50/30 bg-slate-50 ">
-            <div class="flex items-center w-full">
+            <div class="flex items-center w-3/6">
               <lucide-icon name="house"></lucide-icon>
               <span class="mx-2 truncate w-full">
                 {{obscureCardNumber(card.cardNumber)}}, {{card.expiryDate}}
@@ -47,9 +50,9 @@
       </div>
     </div>
     
-    <div class="col-span-8 px-4">
+    <div class="col-span-12 md:col-span-8 px-4">
       <h2
-      class="text-2xl font-bold"
+      class="text-2xl font-bold px-6 text-center"
       >Agregar tarjeta</h2>
       <div>
         <form class="bg-white w-full max-w-3xl mx-auto px-6 py-8  rounded-md flex flex-col justify-center items-center">
@@ -138,18 +141,17 @@
               </div>
             </div>
           </div>
-          <div class="w-full flex justify-between mt-4">
+          <div class="w-full flex justify-between mt-4 items-center">
             <button hlmBtn (click)="isEdit() ? onEdit() : onSave()"
             
             >
               {{ isEdit() ? 'Editar tarjeta' : 'Guardar tarjeta' }}
             </button>
-            <button>
-              <a hlmBtn class="mt-4"
+              <button hlmBtn
               (click)="onClearForm()"
               variant="destructive"
-              >Cancelar</a>
-            </button>
+              >Cancelar</button>
+         
           </div>
           </form>
       </div>

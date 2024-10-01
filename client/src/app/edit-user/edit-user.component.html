@@ -1,4 +1,7 @@
 <home-navbar></home-navbar>
+<div class="ms-4">
+  <app-breadcrumb [separator]="'>'"></app-breadcrumb>
+</div>
 <section class="px-8 py-12 flex justify-evenly items-center flex-col md:flex-row space-x-8">
   <div class="flex flex-col items-center space-y-4">
     <hlm-avatar variant="profile">
@@ -179,7 +182,7 @@
 
               <button
               hlmBtn
-                class="bg-secondary text-white rounded-md  flex justify-center items-center hover:bg-secondary-dark transition-colors duration-300"
+                class="bg-secondary text-white rounded-md  flex justify-center items-center hover:bg-yellow-700 transition-colors duration-300"
                 [disabled]="disabled()"
                 (click)="onSaveData()"
               >
@@ -188,7 +191,7 @@
 
     <hlm-alert-dialog>
       <button id='edit-profile' variant='outline' brnAlertDialogTrigger hlmBtn
-      class=" bg-error text-white rounded-md flex justify-center items-center hover:bg-error/90 transition-colors duration-300"
+      class=" bg-error text-white rounded-md flex justify-center items-center hover:bg-red-800 transition-colors duration-300 hover:text-white"
       >Eliminar cuenta</button>
       <hlm-alert-dialog-content *brnAlertDialogContent='let ctx'>
         <hlm-alert-dialog-header>

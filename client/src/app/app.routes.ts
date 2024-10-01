@@ -267,16 +267,54 @@ export const routes: Routes = [
   {
     path: 'profile',
     component: EditUserComponent,
-    canActivate: [AuthenticatedGuard]
+    canActivate: [AuthenticatedGuard],
+    data: { breadcrumb: [
+      {
+        label:'Productos',
+        route:'/products'
+      },
+      {
+        label:'Perfil',
+        route:'/profile'
+      }
+    ]}
   },
   {
     path:'edit/address',
     canActivate: [AuthenticatedGuard],
     component: AddDireccionComponent,
+    data: { breadcrumb: [
+      {
+        label:'Productos',
+        route:'/products'
+      },
+      {
+        label:'Perfil',
+        route:'/profile'
+      },
+      {
+        label:'Dirección',
+        route:'/edit/address'
+      }
+    ]}
   },
   {
     path:'edit/payment',
     canActivate: [AuthenticatedGuard],
-    component: AddCardComponent
+    component: AddCardComponent,
+    data: { breadcrumb: [
+      {
+        label:'Productos',
+        route:'/products'
+      },
+      {
+        label:'Perfil',
+        route:'/profile'
+      },
+      {
+        label:'Tarjeta',
+        route:'/edit/payment'
+      }
+    ]}
   }
 ];

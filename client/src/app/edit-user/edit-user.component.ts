@@ -28,6 +28,7 @@ import {
 } from '@spartan-ng/ui-alertdialog-helm';
 import { toast } from 'ngx-sonner';
 import { RouterModule } from '@angular/router';
+import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-edit-user',
@@ -53,7 +54,8 @@ import { RouterModule } from '@angular/router';
     HlmAlertDialogCancelButtonDirective,
     BrnAlertDialogTriggerDirective,
     BrnAlertDialogContentDirective,
-    RouterModule
+    RouterModule,
+    BreadcrumbComponent
   ],
   providers: [
     UserService
@@ -159,6 +161,7 @@ export class EditUserComponent {
           this.userService.saveUserData(user);
           this.isUpdatedImage.set(false);
           toast('Usuario actualizado correctamente', {  });
+          this.formModel.reset();
           
         },
         error: (error) => {
