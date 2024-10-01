@@ -18,6 +18,7 @@ import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { ContadorComponent } from './contador/contador.component';
 import { CheckoutService } from '../checkout/checkout.service';
 import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.component';
+import { MoneyComponent } from '~/components/money/money.component';
 
 @Component({
   selector: 'app-product-detail',
@@ -35,7 +36,8 @@ import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.componen
     BrnAccordionContentComponent,
     HlmIconComponent,
     ContadorComponent,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    MoneyComponent,
   ],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']

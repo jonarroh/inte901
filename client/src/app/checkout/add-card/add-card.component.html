@@ -20,7 +20,7 @@
                 <button id='edit-profile' brnAlertDialogTrigger hlmBtn class="bg-slate-50">
                   <lucide-icon name='trash' ></lucide-icon>
                 </button>
-                <hlm-alert-dialog-content *brnAlertDialogContent='let ctx'>
+                <hlm-alert-dialog-content *brnAlertDialogContent='let ctx' class="bg-background">
                   <hlm-alert-dialog-header>
                     <h3 hlmAlertDialogTitle>¿Estás seguro que deseas eliminar esta tarjeta?</h3>
                     <p hlmAlertDialogDescription>
@@ -28,7 +28,9 @@
                     </p>
                   </hlm-alert-dialog-header>
                   <hlm-alert-dialog-footer>
-                    <button hlmAlertDialogCancel (click)='ctx.close()'>Cancelar</button>
+                    <button hlmAlertDialogCancel (click)='ctx.close()'
+                    class="bg-destructive text-white"
+                    >Cancelar</button>
                     <button hlmAlertDialogAction (click)='ctx.close()' (click)="onDelete(card)">Eliminar tarjeta</button>
                   </hlm-alert-dialog-footer>
                 </hlm-alert-dialog-content>

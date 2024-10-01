@@ -27,11 +27,19 @@
 
   <!-- Botones para agregar al carrito o proceder con la compra -->
   <div class="flex flex-col md:space-y-2 items-center justify-center">
-    <button hlmBtn class="px-4 py-2 bg-[#785131] text-white rounded transition-colors text-center" (click)="agregarAlCarrito()">
+    <button hlmBtn class="px-4 py-2 bg-[#785131] text-white rounded transition-colors text-center
+    hover:bg-[#6a472c] 
+    " (click)="agregarAlCarrito()">
       Agregar y seguir comprando
     </button>
-    <a hlmBtn class="px-4 py-2 bg-secondary text-white rounded hover:bg-secondary/20 transition-colors text-center" (click)="setOrder()">
-      Agregar e ir a pagar $ {{ total }}
-    </a>
+    <a hlmBtn class="px-4 py-2 bg-secondary text-white rounded hover:bg-yellow-800 transition-colors text-center
+    flex items-center justify-center"
+    (click)="setOrder()">
+    <!-- Agrupamos el texto y el componente money -->
+    <span class="flex items-center gap-1">
+      Agregar e ir a pagar <app-money [amount]="total" [baseClass]="'text-white'"></app-money>
+    </span>
+</a>
+
   </div>
 </div>

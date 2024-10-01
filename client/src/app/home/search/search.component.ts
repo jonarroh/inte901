@@ -1,54 +1,33 @@
 import { Component } from '@angular/core';
-import { LucideAngularModule } from 'lucide-angular';
-import { HlmInputDirective } from '~/components/ui-input-helm/src';
-import { IconComponent } from '../icon/icon.component';
-import { BrnCommandImports } from '@spartan-ng/ui-command-brain';
-import { HlmCommandImports } from '@spartan-ng/ui-command-helm';
+import { SearchItem } from '../navbar/navbar.component';
 import { ProductosService } from '../services/productos.service';
-import { NgFor, NgIf } from '@angular/common';
-import { Espacio, Producto } from '~/lib/types';
-import { FormsModule } from '@angular/forms';
-import { CartComponent } from '~/app/cart/cart.component';
-import { Router, RouterModule } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { Router } from '@angular/router';
 import { PlaceServiceService } from '~/app/place/place-service.service';
-import { ReserveComponent } from '../reserve/reserve.component';
-import { SearchComponent } from '../search/search.component';
-
-export interface SearchItem {
-  id: string;
-  nombre: string;
-  descripcion: string;
-  tipo: string;
-}
+import { Espacio, Producto } from '~/lib/types';
+import { forkJoin } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Input } from '@angular/core';
+import { tr } from 'date-fns/locale';
 
 @Component({
-  selector: 'home-navbar',
+  selector: 'nav-search',
   standalone: true,
   imports: [
-    HlmInputDirective,
-    LucideAngularModule,
-    IconComponent,
-    BrnCommandImports,
-    HlmCommandImports,
-    NgIf,
-    NgFor,
-    FormsModule,
-    CartComponent,
-    RouterModule,
-    ReserveComponent,
-    SearchComponent
+    CommonModule,
+    FormsModule
   ],
-  providers: [ProductosService, PlaceServiceService,Router],
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  templateUrl: './search.component.html',
+  styleUrl: './search.component.css',
+  providers: [ProductosService, PlaceServiceService, Router]
 })
-export class NavbarComponent {
+export class SearchComponent {
   items: SearchItem[] = [];
   filteredItems: SearchItem[] = [];
   dropdownOpen = false;
   searchTerm = '';
   currentFilter = 'Todo';
+  @Input() isHiddenInMobile = true;
 
   constructor(private productosService: ProductosService, private router: Router, private espaciosService: PlaceServiceService) {
     this.loadData();
@@ -114,8 +93,5 @@ export class NavbarComponent {
       ]);
     }
   }
-  
-  isLogged(): boolean {
-    return !!localStorage.getItem('token');
-  }
+
 }

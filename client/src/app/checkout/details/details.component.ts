@@ -5,13 +5,15 @@ import { CartService } from '~/app/cart/cart.service';
 import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
 import { Router, RouterModule } from '@angular/router';
+import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-details',
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    BreadcrumbComponent
   ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'

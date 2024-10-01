@@ -4,13 +4,15 @@ import { UserService } from '~/app/home/services/user.service';
 import { CheckoutService } from '../checkout.service';
 import { Router, RouterModule } from '@angular/router';
 import { CreditCard } from '~/lib/types';
+import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-tarjeta',
   standalone: true,
   imports: [
     LucideAngularModule,
-    RouterModule
+    RouterModule,
+    BreadcrumbComponent
 
   ],
   templateUrl: './tarjeta.component.html',

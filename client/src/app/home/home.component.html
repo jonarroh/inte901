@@ -1,14 +1,15 @@
 <main>
   <home-navbar></home-navbar>
-  <div>
-    <app-breadcrumb></app-breadcrumb>
-  </div>
   @if(isLoading()){
     
 <hlm-skeleton class='h-full w-full' />
 
   } @else {
-    <div class="grid grid-cols-4 mt-8"> 
+    <div class="mt-4">
+      <nav-search [isHiddenInMobile]="false"/>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4">
+      
       @for (producto of productos; track $index) {
         <card-product
         [id]="producto.id"

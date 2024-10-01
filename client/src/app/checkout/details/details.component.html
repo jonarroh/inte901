@@ -1,18 +1,10 @@
+<div>
+  <app-breadcrumb [separator]="'>'"></app-breadcrumb>
+</div>
+
 <section class="grid grid-cols-12 gap-4 p-4">
-  <div class="col-span-8 bg-white shadow-lg rounded-lg p-6">
-    <h1 class="text-2xl font-semibold mb-4">Detalle de productos</h1>
-    <div *ngFor="let product of products()" class="flex items-center space-x-4 mb-4">
-      <img [src]="getImageUrl(product.id)" alt="{{ product.nombre }}" class="w-16 h-16 object-cover rounded-lg shadow-md" />
-      <div>
-        <p class="text-lg font-medium">{{ product.nombre }} - {{ product.precio | currency }} x {{ product.quantity }}
-
-        </p>
-        <p class="text-sm text-gray-600">{{ product.descripcion }}</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-span-4 bg-white shadow-lg rounded-lg p-6">
+  <!-- Resumen de compra - se mostrará arriba en móviles -->
+  <div class="col-span-12 order-1 md:order-2 md:col-span-4 bg-white shadow-lg rounded-lg p-6">
     <h1 class="text-2xl font-semibold mb-4">Resumen de compra</h1>
     <div class="space-y-2">
       <p class="flex justify-between"><span>Subtotal:</span> <span>{{ getSubtotal() | currency }}</span></p>
@@ -25,6 +17,18 @@
     </div>
     <div>
       <button hlmBtn class="w-full bg-[#785131] text-white rounded-lg py-2 mt-4" (click)="onOrder()">Pagar</button>
+    </div>
+  </div>
+
+  <!-- Detalle de productos - se mostrará abajo en móviles -->
+  <div class="col-span-12 order-2 md:order-1 md:col-span-8 bg-white shadow-lg rounded-lg p-6">
+    <h1 class="text-2xl font-semibold mb-4">Detalle de productos</h1>
+    <div *ngFor="let product of products()" class="flex items-center space-x-4 mb-4">
+      <img [src]="getImageUrl(product.id)" alt="{{ product.nombre }}" class="w-16 h-16 object-cover rounded-lg shadow-md" />
+      <div>
+        <p class="text-lg font-medium">{{ product.nombre }} - {{ product.precio | currency }} x {{ product.quantity }}</p>
+        <p class="text-sm text-gray-600">{{ product.descripcion }}</p>
+      </div>
     </div>
   </div>
 </section>

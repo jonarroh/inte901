@@ -18,10 +18,14 @@
         <div class="flex flex-col lg:flex-row justify-between space-y-4 lg:space-y-0">
           <!-- Detalles del Producto -->
           <div class="flex flex-col space-y-4 px-16">
-            <span class="text-4xl font-bold text-gray-800 text-center">{{ product.nombre }}</span>
-           <div class="flex flex-row  items-center gap-x-5">
+            <span class="text-4xl font-bold text-gray-800 text-center ">{{ product.nombre }}</span>
+           <div class="flex flex-row  items-center gap-x-5 ">
             <span class="text-2xl font-bold text-gray-700">Precio:
-              <span class="font-normal text-gray-600">$ {{ product.precio }}</span>
+              <span class="font-normal text-gray-600">
+                <app-money [amount]="3.5"
+                [baseClass]="'font-normal text-gray-600'"
+                ></app-money>
+              </span>
             </span>
             <span class="text-2xl font-bold text-gray-700">Categoría:
               <span class="font-normal text-gray-600">{{ product.tipo }}</span>

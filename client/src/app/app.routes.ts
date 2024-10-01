@@ -38,6 +38,7 @@ import { MateriasPrimasProveedorComponent } from './admin/materias-primas-provee
 import { EspaciosComponent } from './admin/espacios/espacios.component';
 import { EstatusComponent } from './admin/reservas/estatus/estatus.component';
 import { ClienteComponent } from './reserves/cliente/cliente.component';
+import { CanPayGuard } from './auth/canPay.guard';
 
 
 
@@ -205,19 +206,61 @@ export const routes: Routes = [
 
     path:'checkout',
     component: CheckoutComponent,
-    canActivate: [AuthenticatedGuard],
+    canActivate: [AuthenticatedGuard,CanPayGuard],
     children:[
       {
         path:'address',
         component: DireccionComponent,
+        data: { breadcrumb: [
+          {
+            label: 'Productos',
+            route: '/products'
+          },
+          {
+            label: 'Dirección',
+            route: '/checkout/address'
+          }
+        ] }
       },
       {
         path:'payment',
-        component: TarjetaComponent
+        component: TarjetaComponent,
+        data: { breadcrumb: [
+          {
+            label: 'Productos',
+            route: '/products'
+          },
+          {
+            label: 'Dirección',
+            route: '/checkout/address'
+          },
+          {
+            label: 'Pago',
+            route: '/checkout/payment'
+          }
+        ] }
       },
       {
         'path': 'details',
-        'component': DetailsComponent
+        'component': DetailsComponent,
+        data: { breadcrumb: [
+          {
+            label: 'Productos',
+            route: '/products'
+          },
+          {
+            label: 'Dirección',
+            route: '/checkout/address'
+          },
+          {
+            label: 'Pago',
+            route: '/checkout/payment'
+          },
+          {
+            label: 'Detalles',
+            route: '/checkout/details'
+          }
+        ] }
       }
     ]
   },
