@@ -58,7 +58,8 @@ export const routes: Routes = [
   },
   {
     path: 'products',
-    component: HomeComponent
+    component: HomeComponent,
+    data: { breadcrumb: 'Products' }
   },
   {
     path: 'register',
@@ -150,7 +151,19 @@ export const routes: Routes = [
   },
   {
     path: 'products/:id',
-    component: ProductDetailComponent
+    component: ProductDetailComponent,
+    data: {
+      breadcrumb: [
+        {
+          label: 'Products',
+          route: '/products'
+        },
+        {
+          label: 'Product Details',
+          route: '/products/:id'
+        }
+      ]
+    }
   },
   {
     path: 'places',

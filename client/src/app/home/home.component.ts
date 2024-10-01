@@ -5,12 +5,13 @@ import { Producto } from '~/lib/types';
 import { CardProductComponent } from './card-product/card-product.component';
 
 import { HlmSkeletonComponent } from '@spartan-ng/ui-skeleton-helm';
+import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
-    NavbarComponent,CardProductComponent,HlmSkeletonComponent
+    NavbarComponent,CardProductComponent,HlmSkeletonComponent,BreadcrumbComponent
   ],
   providers: [ProductosService],
   templateUrl: './home.component.html'

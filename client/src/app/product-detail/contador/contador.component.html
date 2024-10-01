@@ -1,39 +1,37 @@
-<div class=" w-screen h-20 flex justify-between items-center sticky bottom-0 px-4">
-  <div class="flex items-center border border-gray-300 rounded space-x-2 p-2 bg-white">
-    
-    @if (contador() == 1) {
-      <button (click)="returnToProducts()" aria-label="Decrementar" class="p-2 bg-white">
-        <lucide-icon name="trash"></lucide-icon>
-      </button>
-
-    }@else {
+<!-- Componente para manejar el contador y las opciones de compra en modo columna -->
+<div class="w-full h-25 md:h-[calc(100vh-10rem)] flex  flex-row md:flex-col justify-between items-center fixed md:static bottom-0 left-0 z-50 md:px-8 px-4 bg-white space-y-4 md:space-y-0 shadow-lg">
+  <!-- Contador: Se apila en columnas en móviles, en filas en pantallas más grandes -->
+  <div class="flex flex-row items-center md:items-start border-gray-300 rounded space-y-0 md:space-y-0 md:space-x-4 p-2 md:p-4 bg-white border">
+    <!-- Botón para disminuir cantidad o eliminar producto -->
+    <button *ngIf="contador() === 1; else decrementBtn" (click)="returnToProducts()" aria-label="Eliminar" class="p-2 bg-white">
+      <lucide-icon name="trash"></lucide-icon>
+    </button>
+    <ng-template #decrementBtn>
       <button (click)="decrement()" aria-label="Decrementar" class="p-2 bg-white">
         <lucide-icon name="minus"></lucide-icon>
       </button>
-    }
+    </ng-template>
 
-
+    <!-- Input que muestra el valor del contador -->
     <input type="text" 
            [value]="contador()" 
-           class="w-10 h-10 text-center border-none focus:outline-none
-           border border-x-2
-           " 
-           aria-live="polite"
+           class="w-10 h-10 text-center border-none focus:outline-none border border-x-2" 
+           aria-live="polite" 
            readonly>
+
+    <!-- Botón para aumentar cantidad -->
     <button (click)="increment()" aria-label="Incrementar" class="p-2 bg-white">
       <lucide-icon name="plus"></lucide-icon>
     </button>
   </div>
-  <div class="flex space-x-2">
-    <button hlmBtn class="px-4 py-2 bg-[#785131] text-white rounded transition-colors"
-    (click)="agregarAlCarrito()"
-    >
+
+  <!-- Botones para agregar al carrito o proceder con la compra -->
+  <div class="flex flex-col md:space-y-2 items-center justify-center">
+    <button hlmBtn class="px-4 py-2 bg-[#785131] text-white rounded transition-colors text-center" (click)="agregarAlCarrito()">
       Agregar y seguir comprando
     </button>
-    <a hlmBtn class="px-4 py-2 bg-secondary text-white rounded hover:bg-secondary/20 transition-colors"
-    (click)="setOrder()"
-    >
-      Agregar e ir a pagar $ {{total}}
-  </a>
+    <a hlmBtn class="px-4 py-2 bg-secondary text-white rounded hover:bg-secondary/20 transition-colors text-center" (click)="setOrder()">
+      Agregar e ir a pagar $ {{ total }}
+    </a>
   </div>
 </div>
