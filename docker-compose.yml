@@ -1,0 +1,53 @@
+services:
+  # SQL Server Service
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=123456789
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+
+  # TypeScript (Node.js) Service
+  client:
+    build:
+      context: ./client
+    container_name: client
+    volumes:
+      - ./client:/usr/src/app
+    ports:
+      - "4200:4200"
+
+  # .NET 8 API Service
+  server:
+    build:
+      context: ./Server
+    container_name: server
+    depends_on:
+      - mssql
+    volumes:
+      - ./Server:/app
+      - server-data:/app/publish # Volumen para persistir la publicación
+    ports:
+      - "7268:7268"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    command: "dotnet watch run"
+
+  # Python 3.10 Service
+  python:
+    build:
+      context: python
+    container_name: python
+    volumes:
+      - ./python:/usr/src/app
+    ports:
+      - "5000:5000"
+    command: "python3 /usr/src/app/main.py"
+
+volumes:
+  mssql-data:
+  server-data: # Volumen para el servicio .NET

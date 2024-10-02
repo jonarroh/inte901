@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.0.5",
-    "@angular/cli": "^18.0.5",
+    "@angular/cli": "^18.2.4",
     "@angular/compiler-cli": "^18.0.4",
     "@spartan-ng/cli": "^0.0.1-alpha.357",
     "@types/jasmine": "~5.1.0",
