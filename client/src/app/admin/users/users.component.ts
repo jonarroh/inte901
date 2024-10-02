@@ -117,11 +117,11 @@ import { User, UserEditDTO } from "~/lib/types";
   styleUrl: './users.component.css',
   standalone: true,
   providers:[provideIcons({ lucideChevronsUpDown, lucideSearch, lucideCheck, lucideChevronDown, lucideMoreHorizontal, lucideArrowUpDown })],
-  
+
 })
 export class UsersComponent {
 
-  
+
   isLoading = signal(false);
   role = '';
 
@@ -237,7 +237,7 @@ export class UsersComponent {
         role: this.currentRole()?.value || 'Admin',
         token: ''
       } as User;
-  
+
       this.isLoading.set(true);
       this.onAddUser(newUser);
     }
@@ -262,7 +262,7 @@ export class UsersComponent {
       initialValue: []
     }
   );
-  
+
   protected readonly _brnColumnManager = useBrnColumnManager({
     Name: {visible: true, label: 'Nombre', sortable: true},
     Email: {visible: true, label: 'Email', sortable: true},
@@ -374,7 +374,7 @@ export class UsersComponent {
 
   onEditUser() {
 
-  
+
    const  user2: UserEditDTO ={
     actualPassword: this.formModel.controls.password.value() || '',
     creditCards: [],
@@ -400,7 +400,7 @@ export class UsersComponent {
             console.error('Error al cargar los usuarios', error);
           }
         });
-        
+
       },
       error: (error) => {
         console.error('Error al actualizar el usuario', error);

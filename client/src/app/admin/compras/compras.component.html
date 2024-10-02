@@ -165,7 +165,7 @@
       <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
     </button>
     <ng-template #menu>
-      <hlm-menu class="w-32">
+      <hlm-menu class="w-32 bg-white">
         @for (column of _brnColumnManager.allColumns; track column.name) {
         <button hlmMenuItemCheckbox [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
           [checked]="_brnColumnManager.isColumnVisible(column.name)"
@@ -182,10 +182,10 @@
     [dataSource]="_filteredSortedPaginatedPayments()" [displayedColumns]="_allDisplayedColumns()" [trackBy]="_trackBy">
     <brn-column-def name="select" class="w-12">
       <hlm-th *brnHeaderDef>
-        <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()" />
+        <!-- <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()" /> -->
       </hlm-th>
       <hlm-td *brnCellDef="let element">
-        <hlm-checkbox [checked]="_isCompraSelected(element)" (changed)="togglePayment(element)" />
+        <!-- <hlm-checkbox [checked]="_isCompraSelected(element)" (changed)="togglePayment(element)" /> -->
       </hlm-td>
     </brn-column-def>
     <brn-column-def name="CreatedAt" class="flex-1">
@@ -212,7 +212,7 @@
     </brn-column-def>
     <brn-column-def name="Status" class="w-60 lg:flex-1">
       <hlm-th *brnHeaderDef>
-        <button hlmBtn size="sm" variant="ghost" (click)="handleEmailSortChange()">
+        <button hlmBtn class="hover:bg-slate-400" size="sm" variant="ghost" (click)="handleEmailSortChange()">
           Status
           <hlm-icon class="ml-3" size="sm" name="lucideArrowUpDown" />
         </button>
@@ -291,14 +291,15 @@
     <div class="flex items-center justify-center p-20 text-muted-foreground" brnNoDataRow>No hay datos de compras
       realizadas</div>
   </brn-table>
+  
   <div class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center"
     *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange">
-    <span class="text-sm text-muted-foreground">{{ _selected().length }} of {{ _totalElements() }} compras
+    <span class="text-sm text-muted-foreground">{{ _selected().length }} de {{ _totalElements() }} Compras
     </span>
     <div class="flex mt-2 sm:mt-0">
       <brn-select class="inline-block text-white" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
-        <hlm-select-trigger class="inline-flex mr-1 w-15 h-9">
-          <hlm-select-value />
+        <hlm-select-trigger class="inline-flex mr-1 w-15 h-9" variant="warning">
+          <hlm-select-value class="" />
         </hlm-select-trigger>
         <hlm-select-content class="bg-white text-black">
           @for (size of _availablePageSizes; track size) {
