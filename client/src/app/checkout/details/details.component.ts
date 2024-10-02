@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
 import { Router, RouterModule } from '@angular/router';
 import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.component';
+import { MoneyComponent } from '~/components/money/money.component';
 
 @Component({
   selector: 'app-details',
@@ -13,7 +14,8 @@ import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.componen
   imports: [
     CommonModule,
     RouterModule,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    MoneyComponent
   ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'

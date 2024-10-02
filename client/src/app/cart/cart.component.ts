@@ -27,6 +27,7 @@ import {
   HlmDialogTitleDirective,
 } from '@spartan-ng/ui-dialog-helm';
 import { RouterModule } from '@angular/router';
+import { MoneyComponent } from '~/components/money/money.component';
 
 
 @Component({
@@ -53,7 +54,8 @@ import { RouterModule } from '@angular/router';
     HlmDialogDescriptionDirective,
     BrnDialogTriggerDirective,
     BrnDialogContentDirective,
-    RouterModule
+    RouterModule,
+    MoneyComponent
 
   ],
   templateUrl: './cart.component.html',
