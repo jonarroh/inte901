@@ -21,6 +21,10 @@ import { lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmIconComponent } from '~/components/ui-icon-helm/src';
 import { HlmSelectContentDirective, HlmSelectOptionComponent, HlmSelectTriggerComponent, HlmSelectValueDirective } from '~/components/ui-select-helm/src';
 import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
+import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
+import { HlmAlertDialogActionButtonDirective, HlmAlertDialogCancelButtonDirective, HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogOverlayDirective, HlmAlertDialogTitleDirective } from '~/components/ui-alertdialog-helm/src';
+import { LucideAngularModule } from 'lucide-angular';
+import { toast } from 'ngx-sonner';
 
 interface IngredienteExtendido extends Ingrediente {
   material?: string;
@@ -55,6 +59,18 @@ interface IngredienteExtendido extends Ingrediente {
     HlmTableModule,
     BrnMenuTriggerDirective,
     HlmMenuModule,
+    BrnAlertDialogTriggerDirective,
+    BrnAlertDialogContentDirective,
+    HlmAlertDialogComponent,
+    HlmAlertDialogOverlayDirective,
+    HlmAlertDialogHeaderComponent,
+    HlmAlertDialogFooterComponent,
+    HlmAlertDialogTitleDirective,
+    HlmAlertDialogDescriptionDirective,
+    HlmAlertDialogCancelButtonDirective,
+    HlmAlertDialogActionButtonDirective,
+    HlmAlertDialogContentComponent,
+    LucideAngularModule
   ],
   templateUrl: './ingredientes.component.html',
   styleUrls: ['./ingredientes.component.css'],
@@ -189,11 +205,33 @@ export class IngredientesComponent {
       this.ingrediente.estatus = 1;
       this.ingrediente.createdAt = new Date().toISOString();
       this.ingrediente.updatedAt = new Date().toISOString();
-      this.ingredienteService.registrarIngrediente(this.ingrediente).subscribe((response) => {
-        console.log('Ingrediente registrado:', response);
-        form.resetForm();
-        this.ingrediente = {}; // Reiniciar el objeto ingrediente
-        this.refreshIngrediente();
+      // this.ingredienteService.registrarIngrediente(this.ingrediente).subscribe((response) => {
+      //   console.log('Ingrediente registrado:', response);
+      //   form.resetForm();
+      //   this.ingrediente = {}; // Reiniciar el objeto ingrediente
+      //   this.refreshIngrediente();
+      // });
+      this.ingredienteService.registrarIngrediente(this.ingrediente).subscribe({
+        next: (response) => {
+          console.log('Ingrediente registrado:', response);
+          form.resetForm();
+          this.ingrediente = {}; // Reiniciar el objeto ingrediente
+          toast.success('Ingrediente registrado correctamente', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            })),
+          });
+        },
+        error: (error) => {
+          console.error('Error al registrar el ingrediente:', error);
+          toast.error('Error al registrar el ingrediente', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            })),
+          });
+        },
       });
     }
   }
@@ -201,12 +239,35 @@ export class IngredientesComponent {
   onSubmitEdit(form: NgForm) {
     if (form.valid) {
       this.ingrediente.updatedAt = new Date().toISOString();
-      this.ingredienteService.editarIngrediente(this.ingrediente.id!, this.ingrediente).subscribe((response) => {
-        console.log('Ingrediente actualizado:', response);
-        form.resetForm();
-        this.ingrediente = {}; // Reiniciar el objeto ingrediente
-        this.editMode = false;
-        this.refreshIngrediente();
+      // this.ingredienteService.editarIngrediente(this.ingrediente.id!, this.ingrediente).subscribe((response) => {
+      //   console.log('Ingrediente actualizado:', response);
+      //   form.resetForm();
+      //   this.ingrediente = {}; // Reiniciar el objeto ingrediente
+      //   this.editMode = false;
+      //   this.refreshIngrediente();
+      // });
+      this.ingredienteService.editarIngrediente(this.ingrediente.id!, this.ingrediente).subscribe({
+        next: (response) => {
+          console.log('Ingrediente actualizado:', response);
+          form.resetForm();
+          this.ingrediente = {}; // Reiniciar el objeto ingrediente
+          this.editMode = false;
+          toast.success('Ingrediente actualizado correctamente', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            })),
+          });
+        },
+        error: (error) => {
+          console.error('Error al actualizar el ingrediente:', error);
+          toast.error('Error al actualizar el ingrediente', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            })),
+          });
+        },
       });
     }
   }
@@ -225,13 +286,29 @@ export class IngredientesComponent {
   }
 
   onDelete(id: number) {
-    this.ingredienteService.eliminarIngrediente(id).subscribe(() => {
-      console.log('Ingrediente eliminado');
-      this.refreshIngrediente();
+    // this.ingredienteService.eliminarIngrediente(id).subscribe(() => {
+    //   console.log('Ingrediente eliminado');
+    //   this.refreshIngrediente();
+    // });
+    this.ingredienteService.eliminarIngrediente(id).subscribe({
+      next: () => {
+        console.log('Ingrediente eliminado');
+        toast.success('Ingrediente eliminado correctamente', {
+          duration: 1200,
+          onAutoClose: ((toast => {
+            location.reload();
+          })),
+        });
+      },
+      error: (error) => {
+        console.error('Error al eliminar el ingrediente:', error);
+        toast.error('Error al eliminar el ingrediente', {
+          duration: 1200,
+          onAutoClose: ((toast => {
+            location.reload();
+          })),
+        });
+      },
     });
-  }
-
-  refreshIngrediente() {
-    location.reload();
   }
 }

@@ -49,7 +49,7 @@
             </div>
           </div>
           <hlm-dialog-footer>
-            <button hlmBtn type="submit">Guardar</button>
+            <button hlmBtn type="submit" variant="warning" class="text-white">Registrar</button>
           </hlm-dialog-footer>
         </form>
       </hlm-dialog-content>
@@ -101,7 +101,7 @@
             </div>
           </div>
           <hlm-dialog-footer>
-            <button hlmBtn type="submit">Actualizar</button>
+            <button hlmBtn type="submit" variant="warning" class="text-white">Actualizar</button>
           </hlm-dialog-footer>
         </form>
       </hlm-dialog-content>
@@ -111,7 +111,7 @@
   <div class="flex flex-col justify-between gap-4 sm:flex-row">
     <input hlmInput class="w-full md:w-80" placeholder="Buscar por materia prima"
       (input)="applyFilterFromEvent($event)" />
-    <button hlmBtn variant="warning" class="text-white me-5" align="end" [brnMenuTriggerFor]="menu">
+    <button hlmBtn variant="warning" class="text-white me-3" align="end" [brnMenuTriggerFor]="menu">
       Ver columnas
       <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
     </button>
@@ -142,49 +142,51 @@
     </brn-column-def>
 
     <brn-column-def name="MateriaPrima" class="flex-1">
-      <hlm-th *brnHeaderDef >Materia Prima</hlm-th>
-      <hlm-td *brnCellDef="let element" >{{
+      <hlm-th *brnHeaderDef>Materia Prima</hlm-th>
+      <hlm-td *brnCellDef="let element">{{
         element.material }}</hlm-td>
     </brn-column-def>
 
     <brn-column-def name="UnidadMedida" class="flex-1">
-      <hlm-th *brnHeaderDef >Unidad Medida</hlm-th>
-      <hlm-td *brnCellDef="let element" >{{
+      <hlm-th *brnHeaderDef>Unidad Medida</hlm-th>
+      <hlm-td *brnCellDef="let element">Unidad en {{
         element.unidadMedida }}</hlm-td>
     </brn-column-def>
 
     <brn-column-def name="Cantidad" class="flex-1">
-      <hlm-th *brnHeaderDef >Cantidad</hlm-th>
-      <hlm-td *brnCellDef="let element" >{{
+      <hlm-th *brnHeaderDef>Cantidad</hlm-th>
+      <hlm-td *brnCellDef="let element">{{
         element.cantidad }}</hlm-td>
     </brn-column-def>
 
     <brn-column-def name="Caducidad" class="flex-1">
-      <hlm-th *brnHeaderDef >Caducidad</hlm-th>
-      <hlm-td *brnCellDef="let element" >{{
+      <hlm-th *brnHeaderDef>Caducidad</hlm-th>
+      <hlm-td *brnCellDef="let element">{{
         element.caducidad | date:'dd/MM/yyyy' }}</hlm-td>
     </brn-column-def>
 
     <brn-column-def name="actions" class="flex-1">
-      <hlm-th *brnHeaderDef >Acciones</hlm-th>
+      <hlm-th *brnHeaderDef>Acciones</hlm-th>
       <hlm-td *brnCellDef="let element" class="font-medium tabular-nums">
-        <button hlmBtn variant="ghost" class="h-6 w-6 p-0.5 hover:bg-gray-100" align="end" [brnMenuTriggerFor]="menu">
-          <hlm-icon class="w-4 h-4" name="lucideMoreHorizontal" />
+        <button hlmBtn variant="warning" class="text-white" (click)="onEdit(element)">
+          Editar
         </button>
-
-        <ng-template #menu>
-          <hlm-menu class="bg-white">
-            <hlm-menu-label>Acciones</hlm-menu-label>
-            <hlm-menu-separator />
-            <hlm-menu-group>
-              <button hlmMenuItem (click)="onEdit(element)" class="hover:bg-gray-100">Editar</button>
-            </hlm-menu-group>
-            <hlm-menu-separator />
-            <hlm-menu-group>
-              <button hlmMenuItem (click)="onDelete(element.id)" class="hover:bg-gray-100">Eliminar</button>
-            </hlm-menu-group>
-          </hlm-menu>
-        </ng-template>
+        &nbsp;
+        <hlm-alert-dialog>
+          <button class="text-white" id="edit-profile" variant="destructive" brnAlertDialogTrigger hlmBtn>Eliminar</button>
+          <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
+            <hlm-alert-dialog-header>
+              <h3 hlmAlertDialogTitle>Confirmar eliminaci&oacute;n</h3>
+              <p hlmAlertDialogDescription>
+                Al confirmar esta acci&oacute;n, el registro ser&aacute; eliminado de forma permanente.
+              </p>
+            </hlm-alert-dialog-header>
+            <hlm-alert-dialog-footer>
+              <button hlmAlertDialogCancel (click)="ctx.close()">Cancelar</button>
+              <button class="text-white" hlmAlertDialogAction (click)="onDelete(element.id)">Eliminar</button>
+            </hlm-alert-dialog-footer>
+          </hlm-alert-dialog-content>
+        </hlm-alert-dialog>
       </hlm-td>
     </brn-column-def>
   </brn-table>
@@ -199,7 +201,7 @@
         </hlm-select-trigger>
         <hlm-select-content class="bg-white text-black">
           <hlm-option *ngFor="let size of _availablePageSizes" [value]="size" class="hover:bg-navhover">
-            {{ size === 10000 ? 'All' : size }}
+            {{ size === 10000 ? 'Todo' : size }}
           </hlm-option>
         </hlm-select-content>
       </brn-select>
@@ -215,5 +217,3 @@
     </div>
   </div>
 </div>
-
-

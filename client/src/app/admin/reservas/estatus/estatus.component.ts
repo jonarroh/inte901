@@ -36,10 +36,10 @@ import { HlmAlertDialogComponent } from '~/components/ui-alertdialog-helm/src';
   imports: [
     NavbarComponent, HlmDialogComponent, HlmDialogContentComponent, HlmDialogFooterComponent,
     LucideAngularModule, BrnDialogContentDirective, BrnDialogTriggerDirective, HlmDialogHeaderComponent,
-    HlmDialogTitleDirective,HlmDialogDescriptionDirective, HlmLabelDirective, HlmInputDirective, HlmButtonDirective,
+    HlmDialogTitleDirective, HlmDialogDescriptionDirective, HlmLabelDirective, HlmInputDirective, HlmButtonDirective,
     SignalInputDirective, BrnSelectImports, HlmSelectImports, FormsModule, BrnCommandImports, HlmCommandImports, HlmIconComponent,
     HlmButtonDirective, BrnPopoverComponent, BrnPopoverTriggerDirective, BrnPopoverTriggerDirective, BrnPopoverContentDirective,
-    NgForOf, BrnMenuTriggerDirective, HlmMenuModule, BrnTableModule, HlmTableModule,HlmButtonModule, DecimalPipe, TitleCasePipe, HlmIconComponent,
+    NgForOf, BrnMenuTriggerDirective, HlmMenuModule, BrnTableModule, HlmTableModule, HlmButtonModule, DecimalPipe, TitleCasePipe, HlmIconComponent,
     HlmInputDirective, HlmCheckboxCheckIconComponent, HlmCheckboxComponent, BrnSelectModule, HlmSelectModule, CommonModule
   ],
   templateUrl: './estatus.component.html',
@@ -56,7 +56,7 @@ export class EstatusComponent implements OnInit {
   constructor(
     private reservaUsuario: ReservaSerService,
     private placeService: PlaceServiceService
-  ) {}
+  ) { }
 
 
   protected readonly _rawFilterInput = signal('');
@@ -66,15 +66,15 @@ export class EstatusComponent implements OnInit {
   protected readonly _isUserSelected = (reser: DetailReservaDTO) => this._selectionModel.isSelected(reser);
   private readonly _displayedIndices = signal({ start: 0, end: 0 });
   protected readonly _selected = toSignal(
-    this._selectionModel.changed.pipe(map(() => this._selectionModel.selected)),{
-      initialValue: []
-    }
+    this._selectionModel.changed.pipe(map(() => this._selectionModel.selected)), {
+    initialValue: []
+  }
   );
 
   protected readonly _brnColumnManager = useBrnColumnManager({
-    Fecha: {visible: true, label: 'fecha', sortable: true},
-    HoraInicio: {visible: true, label: 'horaInicio', sortable: true},
-    HoraFin: {visible: true, label: 'horaFin', sortable: true},
+    Fecha: { visible: true, label: 'fecha', sortable: true },
+    HoraInicio: { visible: true, label: 'horaInicio', sortable: true },
+    HoraFin: { visible: true, label: 'horaFin', sortable: true },
   })
 
   protected readonly _allDisplayedColumns = computed(() => [
@@ -131,8 +131,8 @@ export class EstatusComponent implements OnInit {
       }
     });
   }
-  
-  
+
+
   private mapToReservaDTO(reserva: ReservaDTO): ReservaDTO {
     return {
       idUsuario: reserva.idUsuario || 0, // Default value if missing
@@ -148,8 +148,8 @@ export class EstatusComponent implements OnInit {
       creditCard: reserva.creditCard || {}, // Default empty object if missing
     };
   }
-  
-  
+
+
 
   private getUserIdFromLocalStorage(): number | null {
     const userData = localStorage.getItem('userData');
@@ -206,20 +206,31 @@ export class EstatusComponent implements OnInit {
     return this.placeNames.get(id) || 'Desconocido';
   }
 
-  
+
   updateStatus(id: number, estatus: Event): void {
     const newStatus = (estatus.target as HTMLInputElement).value;
     this.reservaUsuario.updateReservaStatus(id, newStatus).subscribe({
       next: () => {
         console.log(`Status updated to ${estatus} for reservation ${id}`);
-        // Optionally refresh the list or update the local status
+        toast.success('Estatus actualizado', {
+          duration: 1200,
+          onAutoClose: ((toast) => {
+            location.reload();
+          })
+        });
       },
       error: (err) => {
         console.error('Error updating status', err);
         this.error = 'No se pudo actualizar el estatus. Por favor, inténtelo de nuevo más tarde.';
+        toast.error('Error al actualizar el estatus', {
+          duration: 1200,
+          onAutoClose: ((toast) => {
+            location.reload();
+          })
+        });
       }
     });
   }
-  
+
 
 }

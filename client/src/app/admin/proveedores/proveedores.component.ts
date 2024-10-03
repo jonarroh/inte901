@@ -17,6 +17,10 @@ import { lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmIconComponent } from '~/components/ui-icon-helm/src';
 import { HlmSelectContentDirective, HlmSelectOptionComponent, HlmSelectTriggerComponent, HlmSelectValueDirective } from '~/components/ui-select-helm/src';
 import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
+import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
+import { HlmAlertDialogActionButtonDirective, HlmAlertDialogCancelButtonDirective, HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogOverlayDirective, HlmAlertDialogTitleDirective } from '~/components/ui-alertdialog-helm/src';
+import { LucideAngularModule } from 'lucide-angular';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-proveedores',
@@ -46,6 +50,18 @@ import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
     HlmTableModule,
     BrnMenuTriggerDirective,
     HlmMenuModule,
+    BrnAlertDialogTriggerDirective,
+    BrnAlertDialogContentDirective,
+    HlmAlertDialogComponent,
+    HlmAlertDialogOverlayDirective,
+    HlmAlertDialogHeaderComponent,
+    HlmAlertDialogFooterComponent,
+    HlmAlertDialogTitleDirective,
+    HlmAlertDialogDescriptionDirective,
+    HlmAlertDialogCancelButtonDirective,
+    HlmAlertDialogActionButtonDirective,
+    HlmAlertDialogContentComponent,
+    LucideAngularModule
   ],
   templateUrl: './proveedores.component.html',
   styleUrls: ['./proveedores.component.css'],
@@ -72,7 +88,7 @@ export class ProveedoresComponent {
     'Teléfono Empresa': { visible: true, label: 'Teléfono Empresa', sortable: true },
     'Nombre Encargado': { visible: true, label: 'Nombre Encargado', sortable: true },
   });
-  
+
 
   // Columnas visibles
   protected readonly displayedColumns = computed(() => [
@@ -95,8 +111,8 @@ export class ProveedoresComponent {
       this.proveedoresSource$,
       this.filter$
     ]).pipe(
-      map(([proveedores, filterValue]) => 
-        proveedores.filter(proveedor => 
+      map(([proveedores, filterValue]) =>
+        proveedores.filter(proveedor =>
           proveedor.nombreEmpresa?.toLowerCase().includes(filterValue.toLowerCase()) ?? false
         )
       ),
@@ -117,14 +133,14 @@ export class ProveedoresComponent {
         const filteredProveedores = proveedores.filter(proveedor =>
           proveedor.nombreEmpresa?.toLowerCase().includes(filterValue.toLowerCase()) ?? false
         );
-  
+
         // Obtener los índices de paginación
         const start = this._displayedIndices().start;
         const end = this._displayedIndices().end + 1;
-  
+
         // Actualizar la cantidad total de elementos
         this._totalElements.set(filteredProveedores.length);
-  
+
         // Retornar el subconjunto de datos basado en la paginación
         return filteredProveedores.slice(start, end);
       })
@@ -159,11 +175,33 @@ export class ProveedoresComponent {
     if (form.valid) {
       this.proveedor.estatus = 1;
       this.proveedor.createdAt = new Date().toISOString();
-      this.proveedoresService.registrarProveedor(this.proveedor).subscribe((response) => {
-        console.log('Proveedor registrado:', response);
-        form.resetForm();
-        this.proveedor = {}; // Reiniciar el objeto proveedor
-        this.refreshProveedores();
+      // this.proveedoresService.registrarProveedor(this.proveedor).subscribe((response) => {
+      //   console.log('Proveedor registrado:', response);
+      //   form.resetForm();
+      //   this.proveedor = {}; // Reiniciar el objeto proveedor
+      //   this.refreshProveedores();
+      // });
+      this.proveedoresService.registrarProveedor(this.proveedor).subscribe({
+        next: (response) => {
+          console.log('Proveedor registrado:', response);
+          form.resetForm();
+          this.proveedor = {}; // Reiniciar el objeto proveedor
+          toast.success('Proveedor registrado', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        },
+        error: (error) => {
+          console.error('Error al registrar el proveedor:', error);
+          toast.error('Error al registrar el proveedor', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        }
       });
     }
   }
@@ -171,12 +209,35 @@ export class ProveedoresComponent {
   onSubmitEdit(form: NgForm) {
     if (form.valid) {
       this.proveedor.updatedAt = new Date().toISOString();
-      this.proveedoresService.editarProveedor(this.proveedor.id!, this.proveedor).subscribe((response) => {
-        console.log('Proveedor actualizado:', response);
-        form.resetForm();
-        this.proveedor = {}; // Reiniciar el objeto proveedor
-        this.editMode = false;
-        this.refreshProveedores();
+      // this.proveedoresService.editarProveedor(this.proveedor.id!, this.proveedor).subscribe((response) => {
+      //   console.log('Proveedor actualizado:', response);
+      //   form.resetForm();
+      //   this.proveedor = {}; // Reiniciar el objeto proveedor
+      //   this.editMode = false;
+      //   this.refreshProveedores();
+      // });
+      this.proveedoresService.editarProveedor(this.proveedor.id!, this.proveedor).subscribe({
+        next: (response) => {
+          console.log('Proveedor actualizado:', response);
+          form.resetForm();
+          this.proveedor = {}; // Reiniciar el objeto proveedor
+          this.editMode = false;
+          toast.success('Proveedor actualizado', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        },
+        error: (error) => {
+          console.error('Error al actualizar el proveedor:', error);
+          toast.error('Error al actualizar el proveedor', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        }
       });
     }
   }
@@ -195,13 +256,29 @@ export class ProveedoresComponent {
   }
 
   onDelete(id: number) {
-    this.proveedoresService.eliminarProveedor(id).subscribe(() => {
-      console.log('Proveedor eliminado');
-      this.refreshProveedores();
+    // this.proveedoresService.eliminarProveedor(id).subscribe(() => {
+    //   console.log('Proveedor eliminado');
+    //   this.refreshProveedores();
+    // });
+    this.proveedoresService.eliminarProveedor(id).subscribe({
+      next: () => {
+        console.log('Proveedor eliminado');
+        toast.success('Proveedor eliminado', {
+          duration: 1200,
+          onAutoClose: ((toast => {
+            location.reload();
+          }))
+        });
+      },
+      error: (error) => {
+        console.error('Error al eliminar el proveedor:', error);
+        toast.error('Error al eliminar el proveedor', {
+          duration: 1200,
+          onAutoClose: ((toast => {
+            location.reload();
+          }))
+        });
+      }
     });
-  }
-
-  refreshProveedores() {
-    location.reload();
   }
 }

@@ -106,11 +106,11 @@
           </div>
           <hlm-dialog-footer>
             @if(isEditing()) {
-            <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
-            <button hlmBtn type="submit" (click)="onEditUser()">Guardar</button>
+            <button hlmBtn variant="destructive" (click)="onCancel()" class="text-white">Cancelar</button>
+            <button hlmBtn type="submit" (click)="onEditUser()" variant="warning" class="text-white">Actualizar</button>
             } @else {
-            <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
-            <button hlmBtn (click)="onSubmit()">Crear</button>
+            <button hlmBtn variant="destructive" (click)="onCancel()" class="text-white">Cancelar</button>
+            <button hlmBtn (click)="onSubmit()" variant="warning" class="text-white">Crear</button>
             }
           </hlm-dialog-footer>
         </hlm-dialog-content>
@@ -149,7 +149,7 @@
 
         class="bg-white"/> -->
       </hlm-th>
-      <hlm-td *brnCellDef="let element" class="flex-1">
+      <hlm-td *brnCellDef="let element" class="">
         <!-- <hlm-checkbox [checked]="_isUserSelected(element)" (changed)="toggleUser(element)"
         class="bg-white"
         /> -->
@@ -177,43 +177,38 @@
       <hlm-th *brnHeaderDef>Rol</hlm-th>
       <hlm-td class="font-medium tabular-nums" *brnCellDef="let element">
         @if (element.role === 'Admin') {
-        <span class="bg-green-300 text-white rounded-full px-2 py-1">
+        <span class="bg-warning text-white rounded-full px-2 py-1">
           {{ element.role }}
         </span>
         }@else if (element.role === "Cliente") {
-        <span class="bg-secondary text-white rounded-full px-2 py-1">
+        <span class="bg-navhover text-white rounded-full px-2 py-1">
           {{ element.role }}
         </span>
         }
       </hlm-td>
     </brn-column-def>
     <brn-column-def name="actions" class="flex-1">
-      <hlm-th *brnHeaderDef></hlm-th>
+      <hlm-th *brnHeaderDef>Acciones</hlm-th>
       <hlm-td *brnCellDef="let element">
-        <button hlmBtn variant="ghost" class="h-6 w-6 p-0.5 hover:bg-gray-100" align="end" [brnMenuTriggerFor]="menu">
-          <hlm-icon class="w-4 h-4" name="lucideMoreHorizontal" />
+        <button hlmBtn variant="warning" class="text-white" (click)="onClickEdit(element)">
+          Editar
         </button>
-
-        <ng-template #menu>
-          <hlm-menu class="bg-white">
-            <hlm-menu-label>
-              Actions
-
-            </hlm-menu-label>
-            <hlm-menu-separator />
-            <hlm-menu-group>
-              <button hlmMenuItem (click)="onClickEdit(element)" class="hover:bg-gray-100">
-                Editar
-              </button>
-            </hlm-menu-group>
-            <hlm-menu-separator />
-            <hlm-menu-group>
-              <button hlmMenuItem (click)="onDeletedUser(element)" class="hover:bg-gray-100">
-                Eliminar
-              </button>
-            </hlm-menu-group>
-          </hlm-menu>
-        </ng-template>
+        &nbsp;
+        <hlm-alert-dialog>
+          <button id="edit-profile" variant="destructive" class="text-white" brnAlertDialogTrigger hlmBtn>Eliminar</button>
+          <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
+            <hlm-alert-dialog-header>
+              <h3 hlmAlertDialogTitle>Confirmar eliminaci&oacute;n</h3>
+              <p hlmAlertDialogDescription>
+                Al confirmar esta acci&oacute;n, el usuario ser&aacute; eliminado de forma permanente.
+              </p>
+            </hlm-alert-dialog-header>
+            <hlm-alert-dialog-footer>
+              <button hlmAlertDialogCancel (click)="ctx.close()">Cancelar</button>
+              <button hlmAlertDialogAction class="text-white" (click)="onDeletedUser(element)">Eliminar</button>
+            </hlm-alert-dialog-footer>
+          </hlm-alert-dialog-content>
+        </hlm-alert-dialog>
       </hlm-td>
 
     </brn-column-def>
@@ -222,7 +217,7 @@
 
   <div class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center"
     *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange">
-    <span class="text-sm text-muted-foreground">{{ _selected().length }} de {{ _totalElements() }} usuarios</span>
+    <span class="text-sm text-muted-foreground">{{ _totalElements() }} usuarios</span>
     <div class="flex mt-2 sm:mt-0">
       <brn-select class="inline-block text-white" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
         <hlm-select-trigger class="inline-flex mr-1 w-15 h-9" variant="warning">
@@ -231,7 +226,7 @@
         <hlm-select-content class="bg-white text-black">
           @for (size of _availablePageSizes; track size) {
           <hlm-option [value]="size" class="hover:bg-navhover">
-            {{ size === 10000 ? 'All' : size }}
+            {{ size === 10000 ? 'Todo' : size }}
           </hlm-option>
           }
         </hlm-select-content>

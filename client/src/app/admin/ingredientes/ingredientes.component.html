@@ -53,7 +53,7 @@
 
           </div>
           <hlm-dialog-footer>
-            <button hlmBtn type="submit">Guardar</button>
+            <button hlmBtn type="submit" variant="warning" class="text-white">Registrar</button>
           </hlm-dialog-footer>
         </form>
       </hlm-dialog-content>
@@ -108,7 +108,7 @@
 
           </div>
           <hlm-dialog-footer>
-            <button hlmBtn type="submit">Actualizar</button>
+            <button hlmBtn type="submit" variant="warning" class="text-white">Actualizar</button>
           </hlm-dialog-footer>
         </form>
       </hlm-dialog-content>
@@ -118,7 +118,7 @@
   <div class="flex flex-col justify-between gap-4 sm:flex-row">
     <input hlmInput class="w-full md:w-80" placeholder="Buscar por ID del Producto"
       (input)="applyFilterFromEvent($event)" />
-    <button hlmBtn variant="warning" class="text-white" align="end" [brnMenuTriggerFor]="menu">
+    <button hlmBtn variant="warning" class="text-white me-3" align="end" [brnMenuTriggerFor]="menu">
       Ver columnas
       <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
     </button>
@@ -175,56 +175,54 @@
     <brn-column-def name="actions" class="flex-1">
       <hlm-th *brnHeaderDef>Acciones</hlm-th>
       <hlm-td *brnCellDef="let element" class="font-medium tabular-nums">
-        <button hlmBtn variant="ghost" class="h-6 w-6 p-0.5 hover:bg-gray-100" align="end" [brnMenuTriggerFor]="menu">
-          <hlm-icon class="w-4 h-4" name="lucideMoreHorizontal" />
+        <button hlmBtn variant="warning" class="text-white" align="end" (click)="onEdit(element)">
+          Editar
         </button>
-
-        <ng-template #menu>
-          <hlm-menu class="bg-white">
-            <hlm-menu-label>Acciones</hlm-menu-label>
-            <hlm-menu-separator />
-            <hlm-menu-group>
-              <button hlmMenuItem (click)="onEdit(element)" class="hover:bg-gray-100">Editar</button>
-            </hlm-menu-group>
-            <hlm-menu-separator />
-            <hlm-menu-group>
-              <button hlmMenuItem (click)="onDelete(element.id)" class="hover:bg-gray-100">Eliminar</button>
-            </hlm-menu-group>
-          </hlm-menu>
-        </ng-template>
+        &nbsp;
+        <hlm-alert-dialog>
+          <button id="edit-profile" variant="destructive" class="text-white" align="end"  brnAlertDialogTrigger hlmBtn>Eliminar</button>
+          <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
+            <hlm-alert-dialog-header>
+              <h3 hlmAlertDialogTitle>Confirmar eliminaci&oacute;n</h3>
+              <p hlmAlertDialogDescription>
+                Al confirmar esta acci&oacute;n, el ingrediente ser&aacute; eliminado de la base de datos.
+              </p>
+            </hlm-alert-dialog-header>
+            <hlm-alert-dialog-footer>
+              <button hlmAlertDialogCancel (click)="ctx.close()">Cancelar</button>
+              <button class="text-white" hlmAlertDialogAction (click)="onDelete(element.id)">Eliminar</button>
+            </hlm-alert-dialog-footer>
+          </hlm-alert-dialog-content>
+        </hlm-alert-dialog>
       </hlm-td>
     </brn-column-def>
-    <div class="flex items-center justify-center p-20 text-muted-foreground" brnNoDataRow>No hay datos de ingredientes</div>
+    <div class="flex items-center justify-center p-20 text-muted-foreground" brnNoDataRow>No hay datos de ingredientes
+    </div>
   </brn-table>
-</div>
 
+  <div class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center px-5"
+    *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange">
+    <span class="text-sm text-muted-foreground">{{ _totalElements() }} Ingredientes</span>
+    <div class="flex mt-2 sm:mt-0">
+      <brn-select class="inline-block text-white" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
+        <hlm-select-trigger class="inline-flex mr-1 w-15 h-9" variant="warning">
+          <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content class="bg-white text-black">
+          <hlm-option *ngFor="let size of _availablePageSizes" [value]="size" class="hover:bg-navhover">
+            {{ size === 10000 ? 'Todo' : size }}
+          </hlm-option>
+        </hlm-select-content>
+      </brn-select>
 
-<div class="overflow-x-auto p-3">
-</div>
-
-
-<div class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center px-5"
-  *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange">
-  <span class="text-sm text-muted-foreground">{{ _totalElements() }} Ingredientes</span>
-  <div class="flex mt-2 sm:mt-0">
-    <brn-select class="inline-block text-white" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
-      <hlm-select-trigger class="inline-flex mr-1 w-15 h-9" variant="warning">
-        <hlm-select-value />
-      </hlm-select-trigger>
-      <hlm-select-content class="bg-white text-black">
-        <hlm-option *ngFor="let size of _availablePageSizes" [value]="size" class="hover:bg-navhover">
-          {{ size === 10000 ? 'All' : size }}
-        </hlm-option>
-      </hlm-select-content>
-    </brn-select>
-
-    <div class="flex space-x-1">
-      <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.decrementable()" (click)="ctx.decrement()">
-        Anterior
-      </button>
-      <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.incrementable()" (click)="ctx.increment()">
-        Siguiente
-      </button>
+      <div class="flex space-x-1">
+        <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.decrementable()" (click)="ctx.decrement()">
+          Anterior
+        </button>
+        <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.incrementable()" (click)="ctx.increment()">
+          Siguiente
+        </button>
+      </div>
     </div>
   </div>
 </div>

@@ -19,6 +19,10 @@ import { HlmSelectContentDirective, HlmSelectOptionComponent, HlmSelectTriggerCo
 import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
 import { MateriasPrimasService } from '../materias-primas/service/materias-primas.service';
 import { MateriaPrima } from '../materias-primas/interface/materias-primas';
+import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
+import { HlmAlertDialogActionButtonDirective, HlmAlertDialogCancelButtonDirective, HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogOverlayDirective, HlmAlertDialogTitleDirective } from '~/components/ui-alertdialog-helm/src';
+import { LucideAngularModule } from 'lucide-angular';
+import { toast } from 'ngx-sonner';
 
 export interface InventarioMPExtended extends InventarioMP {
   material?: string;
@@ -52,6 +56,18 @@ export interface InventarioMPExtended extends InventarioMP {
     HlmTableModule,
     BrnMenuTriggerDirective,
     HlmMenuModule,
+    BrnAlertDialogTriggerDirective,
+    BrnAlertDialogContentDirective,
+    HlmAlertDialogComponent,
+    HlmAlertDialogOverlayDirective,
+    HlmAlertDialogHeaderComponent,
+    HlmAlertDialogFooterComponent,
+    HlmAlertDialogTitleDirective,
+    HlmAlertDialogDescriptionDirective,
+    HlmAlertDialogCancelButtonDirective,
+    HlmAlertDialogActionButtonDirective,
+    HlmAlertDialogContentComponent,
+    LucideAngularModule
   ],
   templateUrl: './inventario-mp.component.html',
   styleUrls: ['./inventario-mp.component.css'],
@@ -172,23 +188,68 @@ export class InventarioMPComponent {
     if (form.valid) {
       this.inventarioMP.estatus = 1;
       this.inventarioMP.createdAt = new Date().toISOString();
-      this.inventarioService.registrarInventarioMP(this.inventarioMP).subscribe((response) => {
-        console.log('Inventario registrado:', response);
-        form.resetForm();
-        this.inventarioMP = {}; // Reiniciar el objeto inventario
-        this.refreshInventarioMP();
+      // this.inventarioService.registrarInventarioMP(this.inventarioMP).subscribe((response) => {
+      //   console.log('Inventario registrado:', response);
+      //   form.resetForm();
+      //   this.inventarioMP = {}; // Reiniciar el objeto inventario
+      //   this.refreshInventarioMP();
+      // });
+      this.inventarioService.registrarInventarioMP(this.inventarioMP).subscribe({
+        next: (response) => {
+          console.log('Inventario registrado:', response);
+          form.resetForm();
+          this.inventarioMP = {}; // Reiniciar el objeto inventario
+          toast.success('Inventario registrado exitosamente', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        },
+        error: (error) => {
+          console.error('Error al registrar el inventario:', error);
+          toast.error('Error al registrar el inventario',{
+            duration: 1200,
+            onAutoClose: ((toast) => {
+              location.reload();
+            })
+          });
+        }
       });
     }
   }
 
   onSubmitEdit(form: NgForm) {
     if (form.valid) {
-      this.inventarioService.editarInventarioMP(this.inventarioMP.id!, this.inventarioMP).subscribe((response) => {
-        console.log('Inventario actualizado:', response);
-        form.resetForm();
-        this.inventarioMP = {}; // Reiniciar el objeto inventario
-        this.editMode = false;
-        this.refreshInventarioMP();
+      // this.inventarioService.editarInventarioMP(this.inventarioMP.id!, this.inventarioMP).subscribe((response) => {
+      //   console.log('Inventario actualizado:', response);
+      //   form.resetForm();
+      //   this.inventarioMP = {}; // Reiniciar el objeto inventario
+      //   this.editMode = false;
+      //   this.refreshInventarioMP();
+      // });
+      this.inventarioService.editarInventarioMP(this.inventarioMP.id!, this.inventarioMP).subscribe({
+        next: (response) => {
+          console.log('Inventario actualizado:', response);
+          form.resetForm();
+          this.inventarioMP = {}; // Reiniciar el objeto inventario
+          this.editMode = false;
+          toast.success('Inventario actualizado exitosamente', {
+            duration: 1200,
+            onAutoClose: ((toast) => {
+              location.reload();
+            })
+          });
+        },
+        error: (error) => {
+          console.error('Error al actualizar el inventario:', error);
+          toast.error('Error al actualizar el inventario',{
+            duration: 1200,
+            onAutoClose: ((toast) => {
+              location.reload();
+            })
+          });
+        }
       });
     }
   }
@@ -207,13 +268,29 @@ export class InventarioMPComponent {
   }
 
   onDelete(id: number) {
-    this.inventarioService.eliminarInventarioMP(id).subscribe(() => {
-      console.log('Inventario eliminado');
-      this.refreshInventarioMP();
+    // this.inventarioService.eliminarInventarioMP(id).subscribe(() => {
+    //   console.log('Inventario eliminado');
+    //   this.refreshInventarioMP();
+    // });
+    this.inventarioService.eliminarInventarioMP(id).subscribe({
+      next: () => {
+        console.log('Inventario eliminado');
+        toast.success('Inventario eliminado exitosamente', {
+          duration: 1200,
+          onAutoClose: ((toast) => {
+            location.reload();
+          })
+        });
+      },
+      error: (error) => {
+        console.error('Error al eliminar el inventario:', error);
+        toast.error('Error al eliminar el inventario',{
+          duration: 1200,
+          onAutoClose: ((toast) => {
+            location.reload();
+          })
+        });
+      }
     });
-  }
-
-  refreshInventarioMP() {
-    location.reload();
   }
 }
