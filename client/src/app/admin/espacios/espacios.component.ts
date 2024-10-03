@@ -28,6 +28,8 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { debounceTime, map } from 'rxjs';
 import { toast } from 'ngx-sonner';
 import { RightSeccionComponent } from '~/app/login/right-seccion/right-seccion.component';
+import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
+import { HlmAlertDialogActionButtonDirective, HlmAlertDialogCancelButtonDirective, HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogOverlayDirective, HlmAlertDialogTitleDirective } from '~/components/ui-alertdialog-helm/src';
 
 @Component({
   selector: 'app-espacios',
@@ -39,16 +41,26 @@ import { RightSeccionComponent } from '~/app/login/right-seccion/right-seccion.c
   SignalInputDirective, BrnSelectImports, HlmSelectImports, FormsModule, BrnCommandImports, HlmCommandImports, HlmIconComponent,
   HlmButtonDirective, BrnPopoverComponent, BrnPopoverTriggerDirective, BrnPopoverTriggerDirective, BrnPopoverContentDirective,
   NgForOf, BrnMenuTriggerDirective, HlmMenuModule, BrnTableModule, HlmTableModule,HlmButtonModule, DecimalPipe, TitleCasePipe, HlmIconComponent,
-  HlmInputDirective, HlmCheckboxCheckIconComponent, HlmCheckboxComponent, BrnSelectModule, HlmSelectModule, CommonModule
+  HlmInputDirective, HlmCheckboxCheckIconComponent, HlmCheckboxComponent, BrnSelectModule, HlmSelectModule, CommonModule,
+  BrnAlertDialogTriggerDirective,
+    BrnAlertDialogContentDirective,HlmAlertDialogComponent,
+    HlmAlertDialogOverlayDirective,
+    HlmAlertDialogHeaderComponent,
+    HlmAlertDialogFooterComponent,
+    HlmAlertDialogTitleDirective,
+    HlmAlertDialogDescriptionDirective,
+    HlmAlertDialogCancelButtonDirective,
+    HlmAlertDialogActionButtonDirective,
+    HlmAlertDialogContentComponent,
 ],
   templateUrl: './espacios.component.html',
   styleUrl: './espacios.component.css'
 })
 export class EspaciosComponent {
 
-  
+
   isLoading = signal(false);
-  
+
 
   public state = signal<'closed' | 'open'>('closed');
   public states = signal<'closed' | 'open'>('closed');
@@ -56,7 +68,7 @@ export class EspaciosComponent {
   imagen: File | null = null;
   selectedId: number | null = null;
 
-  
+
 
   protected formModel = createFormGroup({
     name: createFormField('', {
@@ -91,7 +103,7 @@ export class EspaciosComponent {
         }
       ]
     }),
-    
+
     id: createFormField(0,{
       hidden: () => true
     }),
@@ -112,7 +124,7 @@ export class EspaciosComponent {
       }
     });
   }
-  
+
 
   getImagenUrl(id: number): string {
     return 'http://localhost:5000/static/places/${id}.webp';
@@ -122,16 +134,16 @@ export class EspaciosComponent {
     this.imagen = event.target.files[0];
   }
 
- 
 
-  
+
+
   private filterSpaces(searchTerm: string): EspacioDTO[] {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     return this._spaces().filter(space =>
       space.nombre.toLowerCase().includes(lowerCaseSearchTerm)
     );
   }
-  
+
 
   onAddUser(newEspacio: EspacioDTO) {
     const formData = new FormData();
@@ -140,14 +152,14 @@ export class EspaciosComponent {
     formData.append('precio', newEspacio.precio.toString());
     formData.append('descripcion', newEspacio.descripcion);
     formData.append('estatus', newEspacio.estatus);
-  
+
     // Asegúrate de que la imagen se maneje si está presente
     if (newEspacio.imagen) {
       formData.append('imagen', newEspacio.imagen);
     }
-  
+
     this.isLoading.set(true);
-  
+
     this.espacioService.addPlace(formData).subscribe({
       next: (space) => {
         console.log('Espacio creado correctamente', space);
@@ -163,13 +175,13 @@ export class EspaciosComponent {
       }
     });
   }
-  
+
 
 
   onSubmit() {
     if (this.formModel.valid()) {
-      
-      
+
+
       const name = this.formModel.controls.name.value();
       const canPersonas = this.formModel.controls.canPersonas.value();
       const precio = this.formModel.controls.precio.value();
@@ -181,7 +193,7 @@ export class EspaciosComponent {
         return;
       }
 
-    
+
 
       if (this.isEditing() && this.selectedId !== null) {
         const espacio: Espacio = {
@@ -241,9 +253,9 @@ export class EspaciosComponent {
       }
     }
   }
-  
-  
-  
+
+
+
 
   protected readonly _rawFilterInput = signal('');
   protected readonly _nameFilter = signal('');
@@ -284,9 +296,9 @@ export class EspaciosComponent {
     }
     return this.filterSpaces(nameFilter);
   });
-  
-  
-  
+
+
+
 
   private readonly _nameSort = signal<'ASC' | 'DESC' | null>(null);
 
@@ -295,19 +307,19 @@ export class EspaciosComponent {
     const start = this._displayedIndices().start;
     const end = this._displayedIndices().end + 1;
     const spaces = this._filteredUsers();
-    
+
     console.log('Filtered Spaces:', spaces); // Verifica los datos antes de ordenar y paginar
-    
+
     // Ordenar
     if (sort) {
       spaces.sort((a, b) => (sort === 'ASC' ? 1 : -1) * a.nombre.localeCompare(b.nombre));
     }
-  
+
     // Paginación
     return spaces.slice(start, end);
   });
-  
-  
+
+
 
   protected readonly _filteredSortedPaginatedPayments = computed(() => {
     const sort = this._nameSort();
@@ -376,14 +388,14 @@ export class EspaciosComponent {
   isEditing = signal(false);
 
   onClickEdit(espacio: Espacio) {
-    
+
     this.isEditing.set(true);
     this.selectedId = (espacio.idEspacio ?? 0);
     this.formModel.controls.name.value.set(espacio.nombre);
     this.formModel.controls.canPersonas.value.set(espacio.canPersonas);
     this.formModel.controls.precio.value.set(espacio.precio);
     this.formModel.controls.descrip.value.set(espacio.descripcion);
-    
+
     this.states.set('open');
   }
   onCancel() {
@@ -434,6 +446,6 @@ export class EspaciosComponent {
     }
   }
 
- 
+
 
 }

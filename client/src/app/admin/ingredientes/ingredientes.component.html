@@ -1,204 +1,216 @@
-<div class="flex-1 flex justify-center" style="width: calc(100vw - 18rem);">
-  <h1 class="text-5xl font-bold pt-5 mt-5 text-secondary">Ingredientes</h1>
-</div>
+<div class="container mx-auto max-h-screen overflow-y-auto w-full p-4">
+  <div class="flex-1 flex justify-center">
+    <h1 class="text-5xl font-bold mt-1 mb-2 text-secondary">Ingredientes</h1>
+  </div>
 
-<div class="flex justify-end my-5 me-5 pr-5">
-  <hlm-dialog>
-      <button id="add-ingrediente-trigger" brnDialogTrigger hlmBtn (click)="onAdd()" variant="warning" class=" text-white me-0">Agregar ingrediente</button>
+  <div class="flex space-x-3 justify-end mb-4">
+    <hlm-dialog class="bg-white">
+      <button id="add-ingrediente-trigger" (click)="onAdd()" brnDialogTrigger hlmBtn variant="warning"
+        class="text-white">Agregar ingrediente</button>
       <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
-          <hlm-dialog-header>
-              <h3 hlmDialogTitle>Agregar ingrediente</h3>
-              <p hlmDialogDescription>Ingresa los detalles del nuevo ingrediente. Haz clic en guardar cuando termines.</p>
-          </hlm-dialog-header>
-          <form (ngSubmit)="onSubmitAdd(ingredienteFormAdd)" #ingredienteFormAdd="ngForm">
-              <div class="py-4 grid gap-4">
-                  <!-- Campos del formulario -->
-                  <div class="items-center grid grid-cols-4 gap-4">
-                      <label hlmLabel for="idProducto-add" class="text-right">Producto</label>
-                      <select hlmInput id="idProducto-add" name="idProducto" [(ngModel)]="ingrediente.idProducto" class="col-span-3" required>
-                        <option *ngFor="let producto of (productos$ | async)" [value]="producto.id">{{ producto.nombre }}</option>
-                      </select>
-                  </div>
-                  <div class="items-center grid grid-cols-4 gap-4">
-                      <label hlmLabel for="idMateriaPrima-add" class="text-right">Materia Prima</label>
-                      <select hlmInput id="idMateriaPrima-add" name="idMateriaPrima" [(ngModel)]="ingrediente.idMateriaPrima" class="col-span-3" required>
-                        <option *ngFor="let materiaPrima of (materiasPrimas$ | async)" [value]="materiaPrima.id">{{ materiaPrima.material }}</option>
-                      </select>
-                  </div>
-                  <div class="items-center grid grid-cols-4 gap-4">
-                      <label hlmLabel for="cantidad-add" class="text-right">Cantidad</label>
-                      <input hlmInput id="cantidad-add" name="cantidad" [(ngModel)]="ingrediente.cantidad" placeholder="Cantidad" class="col-span-3" required />
-                  </div>
-                  <div class="items-center grid grid-cols-4 gap-4">
-                    <label hlmLabel for="unidadMedida-add" class="text-right">Unidad de Medida</label>
-                    <select hlmInput id="unidadMedida-add" name="unidadMedida" [(ngModel)]="ingrediente.unidadMedida" class="col-span-3" required>
-                      <option value="taza">Taza</option>
-                      <option value="cucharadita">Cucharadita</option>
-                      <option value="cucharada">Cucharada</option>
-                      <option value="unidad">Unidad</option>
-                      <option value="shot">Shot</option>
-                      <option value="Gr">Gr</option>
-                      <option value="Kg">Kg</option>
-                      <option value="Lt">Lt</option>
-                      <option value="Ml">Ml</option>
-                    </select>
-                  </div>
-                  
-              </div>
-              <hlm-dialog-footer>
-                  <button hlmBtn type="submit">Guardar</button>
-              </hlm-dialog-footer>
-          </form>
-      </hlm-dialog-content>
-  </hlm-dialog>
-
-  <hlm-dialog>
-    <button id="edit-ingrediente-trigger" brnDialogTrigger hlmBtn class="hidden">Editar ingrediente</button>
-    <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
         <hlm-dialog-header>
-            <h3 hlmDialogTitle>Editar ingrediente</h3>
-            <p hlmDialogDescription>Actualiza los detalles del ingrediente. Haz clic en actualizar cuando termines.</p>
+          <h3 hlmDialogTitle>Agregar ingrediente</h3>
+        </hlm-dialog-header>
+        <form (ngSubmit)="onSubmitAdd(ingredienteFormAdd)" #ingredienteFormAdd="ngForm">
+          <div class="py-4 grid gap-4">
+            <!-- Campos del formulario -->
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="idProducto-add" class="text-right">Producto</label>
+              <select hlmInput id="idProducto-add" name="idProducto" [(ngModel)]="ingrediente.idProducto"
+                class="col-span-3" required>
+                <option *ngFor="let producto of (productos$ | async)" [value]="producto.id">{{ producto.nombre }}
+                </option>
+              </select>
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="idMateriaPrima-add" class="text-right">Materia Prima</label>
+              <select hlmInput id="idMateriaPrima-add" name="idMateriaPrima" [(ngModel)]="ingrediente.idMateriaPrima"
+                class="col-span-3" required>
+                <option *ngFor="let materiaPrima of (materiasPrimas$ | async)" [value]="materiaPrima.id">{{
+                  materiaPrima.material }}</option>
+              </select>
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="cantidad-add" class="text-right">Cantidad</label>
+              <input hlmInput id="cantidad-add" name="cantidad" [(ngModel)]="ingrediente.cantidad"
+                placeholder="Cantidad" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="unidadMedida-add" class="text-right">Unidad de Medida</label>
+              <select hlmInput id="unidadMedida-add" name="unidadMedida" [(ngModel)]="ingrediente.unidadMedida"
+                class="col-span-3" required>
+                <option value="taza">Taza</option>
+                <option value="cucharadita">Cucharadita</option>
+                <option value="cucharada">Cucharada</option>
+                <option value="unidad">Unidad</option>
+                <option value="shot">Shot</option>
+                <option value="Gr">Gr</option>
+                <option value="Kg">Kg</option>
+                <option value="Lt">Lt</option>
+                <option value="Ml">Ml</option>
+              </select>
+            </div>
+
+          </div>
+          <hlm-dialog-footer>
+            <button hlmBtn type="submit" variant="warning" class="text-white">Registrar</button>
+          </hlm-dialog-footer>
+        </form>
+      </hlm-dialog-content>
+    </hlm-dialog>
+
+    <hlm-dialog>
+      <button id="edit-ingrediente-trigger" brnDialogTrigger hlmBtn class="hidden">Editar ingrediente</button>
+      <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+        <hlm-dialog-header>
+          <h3 hlmDialogTitle>Editar ingrediente</h3>
+          <p hlmDialogDescription>Actualiza los detalles del ingrediente. Haz clic en actualizar cuando termines.</p>
         </hlm-dialog-header>
         <form (ngSubmit)="onSubmitEdit(ingredienteFormEdit)" #ingredienteFormEdit="ngForm">
-            <div class="py-4 grid gap-4">
-                <!-- Campos del formulario -->
-                <div class="items-center grid grid-cols-4 gap-4">
-                    <label hlmLabel for="idProducto-edit" class="text-right">Producto</label>
-                    <select hlmInput id="idProducto-edit" name="idProducto" [(ngModel)]="ingrediente.idProducto" class="col-span-3" required>
-                      <option *ngFor="let producto of (productos$ | async)" [value]="producto.id">{{ producto.nombre }}</option>
-                    </select>
-                </div>
-                <div class="items-center grid grid-cols-4 gap-4">
-                    <label hlmLabel for="idMateriaPrima-edit" class="text-right">Materia Prima</label>
-                    <select hlmInput id="idMateriaPrima-edit" name="idMateriaPrima" [(ngModel)]="ingrediente.idMateriaPrima" class="col-span-3" required>
-                      <option *ngFor="let materiaPrima of (materiasPrimas$ | async)" [value]="materiaPrima.id">{{ materiaPrima.material }}</option>
-                    </select>
-                </div>
-                <div class="items-center grid grid-cols-4 gap-4">
-                    <label hlmLabel for="cantidad-edit" class="text-right">Cantidad</label>
-                    <input hlmInput id="cantidad-edit" name="cantidad" [(ngModel)]="ingrediente.cantidad" placeholder="Cantidad" class="col-span-3" required />
-                </div>
-                <div class="items-center grid grid-cols-4 gap-4">
-                  <label hlmLabel for="unidadMedida-add" class="text-right">Unidad de Medida</label>
-                  <select hlmInput id="unidadMedida-add" name="unidadMedida" [(ngModel)]="ingrediente.unidadMedida" class="col-span-3" required>
-                    <option value="taza">Taza</option>
-                    <option value="cucharadita">Cucharadita</option>
-                    <option value="cucharada">Cucharada</option>
-                    <option value="unidad">Unidad</option>
-                    <option value="shot">Shot</option>
-                    <option value="Gr">Gr</option>
-                    <option value="Kg">Kg</option>
-                    <option value="Lt">Lt</option>
-                    <option value="Ml">Ml</option>
-                  </select>
-                </div>
-                
+          <div class="py-4 grid gap-4">
+            <!-- Campos del formulario -->
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="idProducto-edit" class="text-right">Producto</label>
+              <select hlmInput id="idProducto-edit" name="idProducto" [(ngModel)]="ingrediente.idProducto"
+                class="col-span-3" required>
+                <option *ngFor="let producto of (productos$ | async)" [value]="producto.id">{{ producto.nombre }}
+                </option>
+              </select>
             </div>
-            <hlm-dialog-footer>
-                <button hlmBtn type="submit">Actualizar</button>
-            </hlm-dialog-footer>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="idMateriaPrima-edit" class="text-right">Materia Prima</label>
+              <select hlmInput id="idMateriaPrima-edit" name="idMateriaPrima" [(ngModel)]="ingrediente.idMateriaPrima"
+                class="col-span-3" required>
+                <option *ngFor="let materiaPrima of (materiasPrimas$ | async)" [value]="materiaPrima.id">{{
+                  materiaPrima.material }}</option>
+              </select>
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="cantidad-edit" class="text-right">Cantidad</label>
+              <input hlmInput id="cantidad-edit" name="cantidad" [(ngModel)]="ingrediente.cantidad"
+                placeholder="Cantidad" class="col-span-3" required />
+            </div>
+            <div class="items-center grid grid-cols-4 gap-4">
+              <label hlmLabel for="unidadMedida-add" class="text-right">Unidad de Medida</label>
+              <select hlmInput id="unidadMedida-add" name="unidadMedida" [(ngModel)]="ingrediente.unidadMedida"
+                class="col-span-3" required>
+                <option value="taza">Taza</option>
+                <option value="cucharadita">Cucharadita</option>
+                <option value="cucharada">Cucharada</option>
+                <option value="unidad">Unidad</option>
+                <option value="shot">Shot</option>
+                <option value="Gr">Gr</option>
+                <option value="Kg">Kg</option>
+                <option value="Lt">Lt</option>
+                <option value="Ml">Ml</option>
+              </select>
+            </div>
+
+          </div>
+          <hlm-dialog-footer>
+            <button hlmBtn type="submit" variant="warning" class="text-white">Actualizar</button>
+          </hlm-dialog-footer>
         </form>
-    </hlm-dialog-content>
-</hlm-dialog>
-</div>
+      </hlm-dialog-content>
+    </hlm-dialog>
+  </div>
 
-<div class="flex justify-between my-5 px-5">
-  <input hlmInput class="w-full md:w-80" placeholder="Buscar por ID Producto" (input)="applyFilterFromEvent($event)" />
-  <button hlmBtn class="bg-white border border-gray-300 text-gray-600 hover:bg-gray-100 me-5" align="end" [brnMenuTriggerFor]="menu">
-    Ver columnas
-    <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
-  </button>
-  <ng-template #menu>
-    <hlm-menu class="w-32 bg-white">
-      <button
-        *ngFor="let column of _brnColumnManager.allColumns; trackBy: trackByColumnName"
-        hlmMenuItemCheckbox
-        class="bg-white hover:bg-gray-100 border border-gray-300 text-gray-600"
-        [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
-        [checked]="_brnColumnManager.isColumnVisible(column.name)"
-        (triggered)="_brnColumnManager.toggleVisibility(column.name)"
-      >
-        <hlm-menu-item-check class="bg-white" />
-        <span>{{ column.label }}</span>
-      </button>
-    </hlm-menu>
-  </ng-template>
-</div>
+  <div class="flex flex-col justify-between gap-4 sm:flex-row">
+    <input hlmInput class="w-full md:w-80" placeholder="Buscar por ID del Producto"
+      (input)="applyFilterFromEvent($event)" />
+    <button hlmBtn variant="warning" class="text-white me-3" align="end" [brnMenuTriggerFor]="menu">
+      Ver columnas
+      <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
+    </button>
+    <ng-template #menu>
+      <hlm-menu class="w-32 bg-white">
+        <button *ngFor="let column of _brnColumnManager.allColumns; trackBy: trackByColumnName" hlmMenuItemCheckbox
+          [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
+          [checked]="_brnColumnManager.isColumnVisible(column.name)"
+          (triggered)="_brnColumnManager.toggleVisibility(column.name)">
+          <hlm-menu-item-check />
+          <span>{{ column.label }}</span>
+        </button>
+      </hlm-menu>
+    </ng-template>
+  </div>
 
-<div class="overflow-x-auto p-3">
-  <brn-table
-      hlm
-      stickyHeader
-      class="border-border block h-[335px] overflow-auto rounded-md border bg-white"
-      [dataSource]="(ingredientes$ | async) || []"
-      [displayedColumns]="displayedColumns()"
-      [trackBy]="trackByIngredienteId"
-  >
 
-    <brn-column-def name="ID" class="w-1/6 bg-white">
-        <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">ID</hlm-th>
-        <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.id }}</hlm-td>
+  <brn-table hlm stickyHeader class="border-border mt-4 block h-[335px] overflow-auto rounded-md border"
+    [dataSource]="(ingredientes$ | async) || []" [displayedColumns]="displayedColumns()"
+    [trackBy]="trackByIngredienteId">
+    <brn-column-def name="ID" class="w-12">
+      <hlm-th *brnHeaderDef>
+        <!-- <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()" /> -->
+      </hlm-th>
+      <hlm-td *brnCellDef="let element">
+        <!-- <hlm-checkbox [checked]="_isCompraSelected(element)" (changed)="togglePayment(element)" /> -->
+      </hlm-td>
     </brn-column-def>
 
-    <brn-column-def name="nombreProducto" class="w-1/6 bg-white">
-        <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">Producto</hlm-th>
-        <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.nombreProducto }}</hlm-td>
+    <brn-column-def name="nombreProducto" class="flex-1">
+      <hlm-th *brnHeaderDef truncate>Producto</hlm-th>
+      <hlm-td *brnCellDef="let element">{{
+        element.nombreProducto }}</hlm-td>
     </brn-column-def>
 
-    <brn-column-def name="material" class="w-1/6 bg-white">
-        <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">Materia Prima</hlm-th>
-        <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.material }}</hlm-td>
+    <brn-column-def name="material" class="flex-1">
+      <hlm-th *brnHeaderDef>Materia Prima</hlm-th>
+      <hlm-td *brnCellDef="let element">{{
+        element.material }}</hlm-td>
     </brn-column-def>
 
-    <brn-column-def name="cantidad" class="w-1/6 bg-white">
-        <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">Cantidad</hlm-th>
-        <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.cantidad }}</hlm-td>
+    <brn-column-def name="cantidad" class="flex-1">
+      <hlm-th *brnHeaderDef>Cantidad</hlm-th>
+      <hlm-td *brnCellDef="let element">{{
+        element.cantidad }}</hlm-td>
     </brn-column-def>
 
-    <brn-column-def name="unidadMedida" class="w-1/6 bg-white">
-        <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center">Unidad de Medida</hlm-th>
-        <hlm-td *brnCellDef="let element" class="bg-white text-center flex justify-center items-center">{{ element.unidadMedida }}</hlm-td>
+    <brn-column-def name="unidadMedida" class="flex-1">
+      <hlm-th *brnHeaderDef>Unidad de Medida</hlm-th>
+      <hlm-td *brnCellDef="let element">{{
+        element.unidadMedida }}</hlm-td>
     </brn-column-def>
 
-    <brn-column-def name="actions" class="w-1/6 bg-white">
-        <hlm-th *brnHeaderDef class="bg-white text-center flex justify-center items-center"></hlm-th>
-        <hlm-td *brnCellDef="let element" class="bg-white flex justify-center items-center">
-            <button hlmBtn variant="ghost" class="h-6 w-6 p-0.5 hover:bg-gray-100" align="end" [brnMenuTriggerFor]="menu">
-                <hlm-icon class="w-4 h-4" name="lucideMoreHorizontal" />
-            </button>
+    <brn-column-def name="actions" class="flex-1">
+      <hlm-th *brnHeaderDef>Acciones</hlm-th>
+      <hlm-td *brnCellDef="let element" class="font-medium tabular-nums">
+        <button hlmBtn variant="warning" class="text-white" align="end" (click)="onEdit(element)">
+          Editar
+        </button>
+        &nbsp;
+        <hlm-alert-dialog>
+          <button id="edit-profile" variant="destructive" class="text-white" align="end"  brnAlertDialogTrigger hlmBtn>Eliminar</button>
+          <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
+            <hlm-alert-dialog-header>
+              <h3 hlmAlertDialogTitle>Confirmar eliminaci&oacute;n</h3>
+              <p hlmAlertDialogDescription>
+                Al confirmar esta acci&oacute;n, el ingrediente ser&aacute; eliminado de la base de datos.
+              </p>
+            </hlm-alert-dialog-header>
+            <hlm-alert-dialog-footer>
+              <button hlmAlertDialogCancel (click)="ctx.close()">Cancelar</button>
+              <button class="text-white" hlmAlertDialogAction (click)="onDelete(element.id)">Eliminar</button>
+            </hlm-alert-dialog-footer>
+          </hlm-alert-dialog-content>
+        </hlm-alert-dialog>
+      </hlm-td>
+    </brn-column-def>
+    <div class="flex items-center justify-center p-20 text-muted-foreground" brnNoDataRow>No hay datos de ingredientes
+    </div>
+  </brn-table>
 
-            <ng-template #menu>
-                <hlm-menu class="bg-white">
-                    <hlm-menu-label>Acciones</hlm-menu-label>
-                    <hlm-menu-separator />
-                    <hlm-menu-group>
-                        <button hlmMenuItem (click)="onEdit(element)" class="hover:bg-gray-100">Editar</button>
-                    </hlm-menu-group>
-                    <hlm-menu-separator />
-                    <hlm-menu-group>
-                        <button hlmMenuItem (click)="onDelete(element.id)" class="hover:bg-gray-100">Eliminar</button>
-                      </hlm-menu-group>
-                    </hlm-menu>
-                </ng-template>
-            </hlm-td>
-        </brn-column-def>
-    </brn-table>
-</div>
-
-  
-  <div
-    class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center px-5"
-    *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange"
-  >
+  <div class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center px-5"
+    *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange">
     <span class="text-sm text-muted-foreground">{{ _totalElements() }} Ingredientes</span>
     <div class="flex mt-2 sm:mt-0">
-      <brn-select class="inline-block" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
-        <hlm-select-trigger class="inline-flex mr-1 w-15 h-9 bg-white">
+      <brn-select class="inline-block text-white" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
+        <hlm-select-trigger class="inline-flex mr-1 w-15 h-9" variant="warning">
           <hlm-select-value />
         </hlm-select-trigger>
-        <hlm-select-content>
-          <hlm-option *ngFor="let size of _availablePageSizes" [value]="size">
-            {{ size === 10000 ? 'All' : size }}
+        <hlm-select-content class="bg-white text-black">
+          <hlm-option *ngFor="let size of _availablePageSizes" [value]="size" class="hover:bg-navhover">
+            {{ size === 10000 ? 'Todo' : size }}
           </hlm-option>
         </hlm-select-content>
       </brn-select>
@@ -213,4 +225,4 @@
       </div>
     </div>
   </div>
-  
+</div>

@@ -15,9 +15,9 @@ export class HlmAlertDialogCancelButtonDirective {
 	private readonly _hlmBtn = inject(HlmButtonDirective, { host: true });
 
 	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-	protected readonly _computedClass = computed(() => hlm('mt-2 sm:mt-0', this.userClass()));
+	protected readonly _computedClass = computed(() => hlm('mt-2 sm:mt-0 text-white', this.userClass()));
 
 	constructor() {
-		this._hlmBtn.variant = 'outline';
+		this._hlmBtn.variant = 'warning';
 	}
 }

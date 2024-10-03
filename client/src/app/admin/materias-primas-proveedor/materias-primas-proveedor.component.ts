@@ -21,6 +21,10 @@ import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-n
 import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
 import { provideIcons } from '@ng-icons/core';
 import { lucideMoreHorizontal } from '@ng-icons/lucide';
+import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
+import { HlmAlertDialogActionButtonDirective, HlmAlertDialogCancelButtonDirective, HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogOverlayDirective, HlmAlertDialogTitleDirective } from '~/components/ui-alertdialog-helm/src';
+import { LucideAngularModule } from 'lucide-angular';
+import { toast } from 'ngx-sonner';
 
 interface MateriaPrimaProveedorExtendido extends MateriaPrimaProveedor {
   material?: string;
@@ -54,6 +58,18 @@ interface MateriaPrimaProveedorExtendido extends MateriaPrimaProveedor {
     HlmTableModule,
     BrnMenuTriggerDirective,
     HlmMenuModule,
+    BrnAlertDialogTriggerDirective,
+    BrnAlertDialogContentDirective,
+    HlmAlertDialogComponent,
+    HlmAlertDialogOverlayDirective,
+    HlmAlertDialogHeaderComponent,
+    HlmAlertDialogFooterComponent,
+    HlmAlertDialogTitleDirective,
+    HlmAlertDialogDescriptionDirective,
+    HlmAlertDialogCancelButtonDirective,
+    HlmAlertDialogActionButtonDirective,
+    HlmAlertDialogContentComponent,
+    LucideAngularModule
   ],
   templateUrl: './materias-primas-proveedor.component.html',
   styleUrls: ['./materias-primas-proveedor.component.css'],
@@ -178,23 +194,68 @@ export class MateriasPrimasProveedorComponent {
   onSubmitAdd(form: NgForm) {
     if (form.valid) {
       this.materiaPrimaProveedor.estatus = 1;
-      this.materiaPrimaProveedorService.registrarMateriaPrimaProveedor(this.materiaPrimaProveedor).subscribe((response) => {
-        console.log('Materia Prima Proveedor registrada:', response);
-        form.resetForm();
-        this.materiaPrimaProveedor = {}; // Reiniciar el objeto
-        this.refreshMateriaPrimaProveedor();
+      // this.materiaPrimaProveedorService.registrarMateriaPrimaProveedor(this.materiaPrimaProveedor).subscribe((response) => {
+      //   console.log('Materia Prima Proveedor registrada:', response);
+      //   form.resetForm();
+      //   this.materiaPrimaProveedor = {}; // Reiniciar el objeto
+      //   this.refreshMateriaPrimaProveedor();
+      // });
+      this.materiaPrimaProveedorService.registrarMateriaPrimaProveedor(this.materiaPrimaProveedor).subscribe({
+        next: (response) => {
+          console.log('Materia Prima Proveedor registrada:', response);
+          form.resetForm();
+          this.materiaPrimaProveedor = {}; // Reiniciar el objeto
+          toast.success('Materia Prima Proveedor registrada correctamente', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        },
+        error: (error) => {
+          console.error('Error al registrar la Materia Prima Proveedor:', error);
+          toast.error('Error al registrar la Materia Prima Proveedor', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        }
       });
     }
   }
 
   onSubmitEdit(form: NgForm) {
     if (form.valid) {
-      this.materiaPrimaProveedorService.editarMateriaPrimaProveedor(this.materiaPrimaProveedor.id!, this.materiaPrimaProveedor).subscribe((response) => {
-        console.log('Materia Prima Proveedor actualizada:', response);
-        form.resetForm();
-        this.materiaPrimaProveedor = {}; // Reiniciar el objeto
-        this.editMode = false;
-        this.refreshMateriaPrimaProveedor();
+      // this.materiaPrimaProveedorService.editarMateriaPrimaProveedor(this.materiaPrimaProveedor.id!, this.materiaPrimaProveedor).subscribe((response) => {
+      //   console.log('Materia Prima Proveedor actualizada:', response);
+      //   form.resetForm();
+      //   this.materiaPrimaProveedor = {}; // Reiniciar el objeto
+      //   this.editMode = false;
+      //   this.refreshMateriaPrimaProveedor();
+      // });
+      this.materiaPrimaProveedorService.editarMateriaPrimaProveedor(this.materiaPrimaProveedor.id!, this.materiaPrimaProveedor).subscribe({
+        next: (response) => {
+          console.log('Materia Prima Proveedor actualizada:', response);
+          form.resetForm();
+          this.materiaPrimaProveedor = {}; // Reiniciar el objeto
+          this.editMode = false;
+          toast.success('Materia Prima Proveedor actualizada correctamente', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        },
+        error: (error) => {
+          console.error('Error al actualizar la Materia Prima Proveedor:', error);
+          toast.error('Error al actualizar la Materia Prima Proveedor', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        }
       });
     }
   }
@@ -213,13 +274,29 @@ export class MateriasPrimasProveedorComponent {
   }
 
   onDelete(id: number) {
-    this.materiaPrimaProveedorService.eliminarMateriaPrimaProveedor(id).subscribe(() => {
-      console.log('Materia Prima Proveedor eliminada');
-      this.refreshMateriaPrimaProveedor();
+    // this.materiaPrimaProveedorService.eliminarMateriaPrimaProveedor(id).subscribe(() => {
+    //   console.log('Materia Prima Proveedor eliminada');
+    //   this.refreshMateriaPrimaProveedor();
+    // });
+    this.materiaPrimaProveedorService.eliminarMateriaPrimaProveedor(id).subscribe({
+      next: () => {
+        console.log('Materia Prima Proveedor eliminada');
+        toast.success('Materia Prima Proveedor eliminada correctamente', {
+          duration: 1200,
+          onAutoClose: ((toast => {
+            location.reload();
+          }))
+        });
+      },
+      error: (error) => {
+        console.error('Error al eliminar la Materia Prima Proveedor:', error);
+        toast.error('Error al eliminar la Materia Prima Proveedor', {
+          duration: 1200,
+          onAutoClose: ((toast => {
+            location.reload();
+          }))
+        });
+      }
     });
-  }
-
-  refreshMateriaPrimaProveedor() {
-    location.reload();
   }
 }
