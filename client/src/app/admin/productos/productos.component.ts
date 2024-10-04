@@ -15,6 +15,10 @@ import { Producto } from './interface/producto';
 import { ProductoService } from './service/producto.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { EspacioDTO } from '~/lib/types';
+import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
+import { HlmAlertDialogActionButtonDirective, HlmAlertDialogCancelButtonDirective, HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogOverlayDirective, HlmAlertDialogTitleDirective } from '~/components/ui-alertdialog-helm/src';
+import { LucideAngularModule } from 'lucide-angular';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-productos',
@@ -33,7 +37,19 @@ import { EspacioDTO } from '~/lib/types';
     HlmInputDirective,
     CommonModule,
     AsyncPipe,
-    FormsModule
+    FormsModule,
+    BrnAlertDialogTriggerDirective,
+    BrnAlertDialogContentDirective,
+    HlmAlertDialogComponent,
+    HlmAlertDialogOverlayDirective,
+    HlmAlertDialogHeaderComponent,
+    HlmAlertDialogFooterComponent,
+    HlmAlertDialogTitleDirective,
+    HlmAlertDialogDescriptionDirective,
+    HlmAlertDialogCancelButtonDirective,
+    HlmAlertDialogActionButtonDirective,
+    HlmAlertDialogContentComponent,
+    LucideAngularModule
   ],
   templateUrl: './productos.component.html',
   styleUrls: ['./productos.component.css']
@@ -55,7 +71,7 @@ export class ProductosComponent {
     this.productos$ = this.productoService.getProductos().pipe(
       map(productos => productos.filter(producto => producto.estatus === 1))
     );
-  
+
     this.filteredProductos$ = combineLatest([
       this.productos$,
       this.filter$
@@ -67,7 +83,7 @@ export class ProductosComponent {
       )
     );
   }
-  
+
 
   trackByProductId(index: number, product: any): number {
     return product.id;
@@ -76,12 +92,12 @@ export class ProductosComponent {
   applyFilter(filterValue: string) {
     this.filterSubject.next(filterValue);
   }
-  
+
   applyFilterFromEvent(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     this.applyFilter(inputElement.value);
   }
-  
+
 
   getImagenUrl(id: number): string {
     return `http://localhost:5000/static/productos/${id}.webp`;
@@ -100,12 +116,29 @@ export class ProductosComponent {
     if (form.valid) {
       this.producto.estatus = 1;
       this.producto.createdAt = new Date().toISOString();
-      this.productoService.registrarProductos(this.producto, this.imagen!).subscribe(response => {
-        console.log('Producto registrado:', response);
-        form.resetForm();
-        this.imagen = null; // Reiniciar la imagen seleccionada
-        this.producto = {}; // Reiniciar el objeto producto
-        this.refreshProductos();
+      // this.productoService.registrarProductos(this.producto, this.imagen!).subscribe(response => {
+      //   console.log('Producto registrado:', response);
+      //   this.refreshProductos();
+      // });
+      this.productoService.registrarProductos(this.producto, this.imagen!).subscribe({
+        next: response => {
+          console.log('Producto registrado:', response);
+          toast.success('Producto registrado', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        },
+        error: error => {
+          console.error('Error al registrar producto:', error);
+          toast.error('Error al registrar producto', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        }
       });
     }
   }
@@ -113,13 +146,29 @@ export class ProductosComponent {
   onSubmitEdit(form: NgForm) {
     if (form.valid) {
       // Si no hay una imagen seleccionada, pasamos undefined
-      this.productoService.editarProducto(this.producto.id!, this.producto, this.imagen || undefined).subscribe(response => {
-        console.log('Producto actualizado:', response);
-        form.resetForm();
-        this.imagen = null; // Reiniciar la imagen seleccionada
-        this.producto = {}; // Reiniciar el objeto producto
-        this.editMode = false;
-        this.refreshProductos();
+      // this.productoService.editarProducto(this.producto.id!, this.producto, this.imagen || undefined).subscribe(response => {
+      //   console.log('Producto actualizado:', response);
+      //   this.refreshProductos();
+      // });
+      this.productoService.editarProducto(this.producto.id!, this.producto, this.imagen || undefined).subscribe({
+        next: response => {
+          console.log('Producto actualizado:', response);
+          toast.success('Producto actualizado', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        },
+        error: error => {
+          console.error('Error al actualizar producto:', error);
+          toast.error('Error al actualizar producto', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        }
       });
     }
   }
@@ -131,7 +180,7 @@ export class ProductosComponent {
     addButton?.click();
   }
 
-  
+
 
   onEdit(product: Producto) {
     this.producto = { ...product };
@@ -142,15 +191,29 @@ export class ProductosComponent {
   }
 
   onDelete(id: number) {
-    this.productoService.eliminarProducto(id).subscribe(() => {
-      console.log('Producto eliminado');
-      this.refreshProductos();
+    // this.productoService.eliminarProducto(id).subscribe(() => {
+    //   console.log('Producto eliminado');
+    //   this.refreshProductos();
+    // });
+    this.productoService.eliminarProducto(id).subscribe({
+      next: () => {
+        console.log('Producto eliminado');
+        toast.success('Producto eliminado', {
+          duration: 1200,
+          onAutoClose: ((toast => {
+            location.reload();
+          }))
+        });
+      },
+      error: error => {
+        console.error('Error al eliminar producto:', error);
+        toast.error('Error al eliminar producto', {
+          duration: 1200,
+          onAutoClose: ((toast => {
+            location.reload();
+          }))
+        });
+      }
     });
-  }
-
-  refreshProductos() {
-    this.productos$ = this.productoService.getProductos().pipe(
-      map(productos => productos.filter(producto => producto.estatus === 1))
-    );
   }
 }

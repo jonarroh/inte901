@@ -30,12 +30,15 @@ import { PedidosUserComponent } from './pedidos/pedidos-user/pedidos-user.compon
 import { ProcessStateComponent } from './pedidos/pedido-state/process-state/process-state.component';
 import { AdminGuard } from './auth/admin.guard';
 import { UsersComponent } from './admin/users/users.component';
+import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 import { InventarioMPComponent } from './admin/inventario-mp/inventario-mp.component';
 import { InventarioPostresComponent } from './admin/inventario-postres/inventario-postres.component';
 import { CheckoutReComponent } from './reserves/checkout/checkout.component';
-import { EspaciosComponent } from './admin/espacios/espacios.component';
-import { ClienteComponent } from './reserves/cliente/cliente.component';
 import { MateriasPrimasProveedorComponent } from './admin/materias-primas-proveedor/materias-primas-proveedor.component';
+import { EspaciosComponent } from './admin/espacios/espacios.component';
+import { EstatusComponent } from './admin/reservas/estatus/estatus.component';
+import { ClienteComponent } from './reserves/cliente/cliente.component';
+import { CanPayGuard } from './auth/canPay.guard';
 
 
 
@@ -56,7 +59,8 @@ export const routes: Routes = [
   },
   {
     path: 'products',
-    component: HomeComponent
+    component: HomeComponent,
+    data: { breadcrumb: 'Products' }
   },
   {
     path: 'register',
@@ -65,7 +69,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
-    // canActivate: [AdminGuard],
+    canActivate: [AdminGuard],
     children: [
       {
         path: 'ventas',
@@ -108,22 +112,48 @@ export const routes: Routes = [
         component: UsersComponent
       },
       {
+        path: 'reserves',
+        component: ReservesComponent
+      },
+      {
+        path: 'places',
+        component: PlaceComponent
+      },{
+        path: 'dashboard',
+        component: DashboardComponent,
+      },
+      {
         path: 'espacios',
         component: EspaciosComponent
+      },
+      {
+        path: 'reservas',
+        component: EstatusComponent
       }
+
     ]
   },
   {
     path: 'orders',
     canActivate: [AuthenticatedGuard],
     component: PedidosUserComponent,
-    
+    data: { breadcrumb: [
+      {
+        label:'Productos',
+        route:'/products'
+      },
+      {
+        label:'Pedidos',
+        route:'/orders'
+      }
+    ]}
+
   },
   {
     path: 'estatus/:id',
     canActivate: [AuthenticatedGuard],
     component: PedidoStateComponent,
-    
+
   },
   {
     path: 'estatus',
@@ -132,7 +162,19 @@ export const routes: Routes = [
   },
   {
     path: 'products/:id',
-    component: ProductDetailComponent
+    component: ProductDetailComponent,
+    data: {
+      breadcrumb: [
+        {
+          label: 'Products',
+          route: '/products'
+        },
+        {
+          label: 'Product Details',
+          route: '/products/:id'
+        }
+      ]
+    }
   },
   {
     path: 'places',
@@ -174,35 +216,115 @@ export const routes: Routes = [
 
     path:'checkout',
     component: CheckoutComponent,
-    canActivate: [AuthenticatedGuard],
+    canActivate: [AuthenticatedGuard,CanPayGuard],
     children:[
       {
         path:'address',
         component: DireccionComponent,
+        data: { breadcrumb: [
+          {
+            label: 'Productos',
+            route: '/products'
+          },
+          {
+            label: 'Dirección',
+            route: '/checkout/address'
+          }
+        ] }
       },
       {
         path:'payment',
-        component: TarjetaComponent
+        component: TarjetaComponent,
+        data: { breadcrumb: [
+          {
+            label: 'Productos',
+            route: '/products'
+          },
+          {
+            label: 'Dirección',
+            route: '/checkout/address'
+          },
+          {
+            label: 'Pago',
+            route: '/checkout/payment'
+          }
+        ] }
       },
       {
         'path': 'details',
-        'component': DetailsComponent
+        'component': DetailsComponent,
+        data: { breadcrumb: [
+          {
+            label: 'Productos',
+            route: '/products'
+          },
+          {
+            label: 'Dirección',
+            route: '/checkout/address'
+          },
+          {
+            label: 'Pago',
+            route: '/checkout/payment'
+          },
+          {
+            label: 'Detalles',
+            route: '/checkout/details'
+          }
+        ] }
       }
     ]
   },
   {
     path: 'profile',
     component: EditUserComponent,
-    canActivate: [AuthenticatedGuard]
+    canActivate: [AuthenticatedGuard],
+    data: { breadcrumb: [
+      {
+        label:'Productos',
+        route:'/products'
+      },
+      {
+        label:'Perfil',
+        route:'/profile'
+      }
+    ]}
   },
   {
     path:'edit/address',
     canActivate: [AuthenticatedGuard],
     component: AddDireccionComponent,
+    data: { breadcrumb: [
+      {
+        label:'Productos',
+        route:'/products'
+      },
+      {
+        label:'Perfil',
+        route:'/profile'
+      },
+      {
+        label:'Dirección',
+        route:'/edit/address'
+      }
+    ]}
   },
   {
     path:'edit/payment',
     canActivate: [AuthenticatedGuard],
-    component: AddCardComponent
+    component: AddCardComponent,
+    data: { breadcrumb: [
+      {
+        label:'Productos',
+        route:'/products'
+      },
+      {
+        label:'Perfil',
+        route:'/profile'
+      },
+      {
+        label:'Tarjeta',
+        route:'/edit/payment'
+      }
+    ]}
   }
 ];

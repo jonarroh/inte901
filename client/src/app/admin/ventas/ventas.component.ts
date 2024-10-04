@@ -41,6 +41,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import { HlmMenuModule } from '~/components/ui-menu-helm/src';
 import { HlmBadgeDirective } from '~/components/ui-badge-helm/src';
+import { LucideAngularModule } from 'lucide-angular';
 
 type Framework = { label: string; value: string };
 type Status = { label: string; value: string };
@@ -76,7 +77,7 @@ type Status = { label: string; value: string };
     HlmSheetTitleDirective,
     HlmSheetDescriptionDirective,
     HlmToasterComponent,
-    BrnCommandImports,
+    
     HlmCommandImports,
     BrnPopoverComponent,
     BrnPopoverTriggerDirective,
@@ -98,6 +99,7 @@ type Status = { label: string; value: string };
     BrnMenuTriggerDirective,
     HlmMenuModule,
     HlmBadgeDirective,
+    LucideAngularModule
   ],
   templateUrl: './ventas.component.html',
   styleUrl: './ventas.component.css'
@@ -404,7 +406,7 @@ export class VentasComponent {
       (order) => {
         console.log('Orden enviada: ', order);
         toast.success(
-          'Se realizo la orden', {
+          'Se realizó la orden', {
           action: {
             label: 'X',
             onClick: () => toast.dismiss(),
@@ -434,7 +436,7 @@ export class VentasComponent {
       (order) => {
         console.log('Orden actualizada: ', order);
         toast.success(
-          'Se actualizo el estatus de la orden', {
+          'Se actualizó el estatus de la orden', {
           action: {
             label: 'X',
             onClick: () => toast.dismiss(),
@@ -508,7 +510,7 @@ export class VentasComponent {
       (order) => {
         console.log('Producto actualizado: ', order);
         toast.success(
-          'Se actualizo el estatus del producto', {
+          'Se actualizó el estatus del producto', {
           action: {
             label: 'X',
             onClick: () => toast.dismiss(),

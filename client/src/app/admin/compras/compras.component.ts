@@ -46,6 +46,7 @@ import { toast } from 'ngx-sonner';
 import { fr } from 'date-fns/locale';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { SelectionModel } from '@angular/cdk/collections';
+import { LucideAngularModule } from 'lucide-angular';
 
 type Framework = { label: string; value: string };
 type Presentations = { label: string; value: string };
@@ -83,7 +84,6 @@ type Status = { label: string; value: string };
     HlmAccordionModule,
     BrnAccordionModule,
     HlmToasterComponent,
-    BrnCommandImports,
     HlmCommandImports,
     BrnPopoverComponent,
     BrnPopoverTriggerDirective,
@@ -110,6 +110,7 @@ type Status = { label: string; value: string };
     HlmAlertDialogCancelButtonDirective,
     HlmAlertDialogActionButtonDirective,
     HlmAlertDialogContentComponent,
+    LucideAngularModule
   ],
   templateUrl: './compras.component.html',
   styleUrl: './compras.component.css',
@@ -137,11 +138,11 @@ export class ComprasComponent {
   public presentations: Presentations[] = [
     { label: 'Costal 50kg', value: 'Costal 50kg' },
     { label: 'Caja 350gr', value: 'Caja 350gr' },
-    { label: 'Carton 1lt', value: 'Carton 1lt' },
+    { label: 'Cartón 1lt', value: 'Carton 1lt' },
     { label: 'Botella 1lt', value: 'Botella 1lt' },
     { label: 'Docena 70gr', value: 'Docena 70gr' },
     { label: 'Bolsa 1kg', value: 'Bolsa 1kg' },
-    { label: 'Galon 20lt', value: 'Galon 20lt' },
+    { label: 'Galón 20lt', value: 'Galon 20lt' },
     { label: 'Pieza', value: 'Pieza' },
     { label: 'Empacado 400gr', value: 'Empacado 400gr' },
     { label: 'Empacado 1kg', value: 'Empacado 1kg' },
@@ -150,12 +151,12 @@ export class ComprasComponent {
     { label: 'Frasco 400gr', value: 'Frasco 400gr' },
     { label: 'Barra 100gr', value: 'Barra 100gr' },
     { label: 'Costal 25kg', value: 'Costal 25kg' },
-    { label: 'Galon 10lt', value: 'Galon 10lt' },
+    { label: 'Galón 10lt', value: 'Galon 10lt' },
     { label: 'Botella 500ml', value: 'Botella 500ml' },
     { label: 'Caja 2kg', value: 'Caja 2kg' },
     { label: 'Lata 250gr', value: 'Lata 250gr' },
     { label: 'Bolsa 500gr', value: 'Bolsa 500gr' },
-    { label: 'Carton 500ml', value: 'Carton 500ml' },
+    { label: 'Cartón 500ml', value: 'Carton 500ml' },
     { label: 'Sobre 50gr', value: 'Sobre 50gr' },
     { label: 'Lata 1kg', value: 'Lata 1kg' },
     { label: 'Botella 750ml', value: 'Botella 750ml' },

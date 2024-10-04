@@ -1,9 +1,45 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Producto } from '~/lib/types';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class DashboardService {
+export class ReportService {
+  private apiUrl = 'http://127.0.0.1:5000/';
+  private apiServer = 'http://localhost:5275/api/';
 
-  constructor() { }
+  private productos: Producto[] = [];
+
+  constructor(private http: HttpClient) {}
+
+  getUsersReport(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}reportes/users`, {});
+  }
+
+  getInventarioMp(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}reportes/InventarioMPs`, {});
+  }
+
+  getVentas(date: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}reportes/ventas`, { date });
+  }
+
+  getProductos(): Observable<Producto> {
+    return this.http.get<Producto>(`${this.apiServer}Productos`, {});
+  }
+
+  getPredict(data: any[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}predict`, { data });
+  }
+
+  getPredictRege(data: any[]): Observable<any> {
+    const headers = { 'content-type': 'application/json' };
+    return this.http.post<any>(
+      `${this.apiUrl}predictRege`,
+      { data },
+      { headers: headers }
+    );
+  }
 }

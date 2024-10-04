@@ -4,19 +4,15 @@ import { Observable } from 'rxjs';
 import { Order } from '~/lib/types';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PedidosUserServiceService {
+  private apiUrl = 'http://localhost:5275/api/Orders';
 
-  private apiUrl = 'https://localhost:7268/api/Orders';
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getOrdersByUser(userId: number): Observable<any> {
     // Ajustar el endpoint según lo que indica Swagger
     return this.http.get<any>(`${this.apiUrl}/ordersByUser/${userId}`);
   }
-
- 
-  
 }

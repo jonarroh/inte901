@@ -5,13 +5,17 @@ import { CartService } from '~/app/cart/cart.service';
 import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
 import { Router, RouterModule } from '@angular/router';
+import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.component';
+import { MoneyComponent } from '~/components/money/money.component';
 
 @Component({
   selector: 'app-details',
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    BreadcrumbComponent,
+    MoneyComponent
   ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
@@ -19,7 +23,8 @@ import { Router, RouterModule } from '@angular/router';
 export class DetailsComponent {
 
     constructor(private checkoutService: CheckoutService,private cartService: CartService, private router : Router) {
-      
+      console.log(this.order());
+      console.log("llego al constructor");
     }
     order = signal<Order>({} as Order);
     isOrderToStore = signal<boolean>(JSON.parse(localStorage.getItem('isOrderToStore') || 'false'));
@@ -27,7 +32,8 @@ export class DetailsComponent {
     selectedCard = signal<CreditCardWithCvv>(JSON.parse(localStorage.getItem('selectedCard') || `{}`));
     selectedAddress = signal<Address>(JSON.parse(localStorage.getItem('selectedAddress') || '{}'));
     products = this.cartService.cartSignal;
-    ordes = this.checkoutService.orderSignal;
+    total = this.cartService.total;
+  
 
     getSubtotal() {
       return this.products().reduce((acc, product) => acc + product.precio, 0);
@@ -84,7 +90,7 @@ export class DetailsComponent {
         },
         next: (res) => {
           console.log(res);
-          toast.success('Orden realizada con exito');
+          toast.success('Orden realizada con éxito');
           this.cartService.clearCart();
           this.checkoutService.isOrderToStore.set(false);
           this.checkoutService.isPaidWithCard.set(false);

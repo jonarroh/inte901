@@ -1,4 +1,4 @@
-<div class="container mx-auto max-h-screen overflow-y-hidden w-full p-4">
+<div class="container mx-auto max-h-screen overflow-y-auto w-full p-4">
   <div class="flex-1 flex justify-center">
     <h1 class="text-5xl font-bold mt-1 mb-2 text-secondary">Compras</h1>
   </div>
@@ -47,7 +47,7 @@
 
     <hlm-dialog class="bg-white">
       <button id="addcompra" brnDialogTrigger hlmBtn variant="warning" class="text-white">
-        Agregar conpra
+        Agregar compra
       </button>
       <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
         <hlm-dialog-header>
@@ -68,7 +68,7 @@
                     <hlm-icon name="lucideSearch" />
                     <input placeholder="Buscar proveedor" brnCmdInput hlm />
                   </hlm-cmd-input-wrapper>
-                  <div *brnCmdEmpty hlmCmdEmpty>No results found.</div>
+                  <div *brnCmdEmpty hlmCmdEmpty>No se encontraron resultados</div>
                   <brn-cmd-list hlm>
                     <brn-cmd-group hlm>
                       <button *ngFor="let framework of frameworks" brnCmdItem [value]="framework.value"
@@ -84,7 +84,7 @@
             </div>
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="username" class="text-right">Materia
-                Prim.</label>
+                Prima.</label>
               <brn-popover [state]="stateMateria()" (stateChanged)="stateChangedMateria($event)" sideOffset="5"
                 closeDelay="100">
                 <button class="w-[200px] justify-between" variant="outline" brnPopoverTrigger hlmBtn>
@@ -97,7 +97,7 @@
                     <hlm-icon name="lucideSearch" />
                     <input placeholder="Buscar insumo" brnCmdInput hlm />
                   </hlm-cmd-input-wrapper>
-                  <div *brnCmdEmpty hlmCmdEmpty>No results found.</div>
+                  <div *brnCmdEmpty hlmCmdEmpty>No se encontraron resultados.</div>
                   <brn-cmd-list hlm>
                     <brn-cmd-group hlm>
                       <button *ngFor="let framework of mppF" brnCmdItem [value]="framework.material || ''"
@@ -125,7 +125,7 @@
                     <hlm-icon name="lucideSearch" />
                     <input placeholder="Buscar presentación" brnCmdInput hlm />
                   </hlm-cmd-input-wrapper>
-                  <div *brnCmdEmpty hlmCmdEmpty>No results found.</div>
+                  <div *brnCmdEmpty hlmCmdEmpty>No se encontraron resultados.</div>
                   <brn-cmd-list hlm>
                     <brn-cmd-group hlm>
                       <button *ngFor="let framework of getFilterPresent()" brnCmdItem [value]="framework.value"
@@ -150,7 +150,7 @@
           </div>
         </form>
         <hlm-dialog-footer>
-          <button hlmBtn type="submit" (click)="onSubmit()" variant="neutral">Solicitar</button>
+          <button hlmBtn type="submit" (click)="onSubmit()" class="text-white" variant="warning">Solicitar</button>
         </hlm-dialog-footer>
       </hlm-dialog-content>
     </hlm-dialog>
@@ -160,12 +160,12 @@
     <input hlmInput class="w-full md:w-80" placeholder="Filtrar fechas" [ngModel]="_emailFilter()"
       (ngModelChange)="_rawFilterInput.set($event)" />
 
-    <button hlmBtn variant="outline" align="end" [brnMenuTriggerFor]="menu">
+    <button hlmBtn variant="warning" class="text-white" align="end" [brnMenuTriggerFor]="menu">
       Ver Columnas
       <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
     </button>
     <ng-template #menu>
-      <hlm-menu class="w-32">
+      <hlm-menu class="w-32 bg-white">
         @for (column of _brnColumnManager.allColumns; track column.name) {
         <button hlmMenuItemCheckbox [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
           [checked]="_brnColumnManager.isColumnVisible(column.name)"
@@ -182,10 +182,10 @@
     [dataSource]="_filteredSortedPaginatedPayments()" [displayedColumns]="_allDisplayedColumns()" [trackBy]="_trackBy">
     <brn-column-def name="select" class="w-12">
       <hlm-th *brnHeaderDef>
-        <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()" />
+        <!-- <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()" /> -->
       </hlm-th>
       <hlm-td *brnCellDef="let element">
-        <hlm-checkbox [checked]="_isCompraSelected(element)" (changed)="togglePayment(element)" />
+        <!-- <hlm-checkbox [checked]="_isCompraSelected(element)" (changed)="togglePayment(element)" /> -->
       </hlm-td>
     </brn-column-def>
     <brn-column-def name="CreatedAt" class="flex-1">
@@ -202,7 +202,7 @@
     </brn-column-def>
     <brn-column-def name="Detalles" class="flex-1">
       <hlm-th *brnHeaderDef>
-        Materias Prim.
+        Materias Primas.
       </hlm-th>
       <hlm-td class="font-medium tabular-nums" *brnCellDef="let element">
         <button hlmBtn variant="warning" class="text-white" (click)="getDetails(element || 0)">
@@ -212,7 +212,7 @@
     </brn-column-def>
     <brn-column-def name="Status" class="w-60 lg:flex-1">
       <hlm-th *brnHeaderDef>
-        <button hlmBtn size="sm" variant="ghost" (click)="handleEmailSortChange()">
+        <button hlmBtn class="hover:bg-slate-400" size="sm" variant="ghost" (click)="handleEmailSortChange()">
           Status
           <hlm-icon class="ml-3" size="sm" name="lucideArrowUpDown" />
         </button>
@@ -236,7 +236,7 @@
         @if(element.status === 'Pendiente'){
         <brn-popover [state]="popoverStates[element.id||0] || 'closed'"
           (stateChanged)="stateChangedStatus($event, element.id||0)" sideOffset="5" closeDelay="100">
-          <button class="flex-1 justify-between" id="{{element.id}}" variant="success" brnPopoverTrigger hlmBtn>
+          <button class="flex-1 justify-between text-white" id="{{element.id}}" variant="warning" brnPopoverTrigger hlmBtn>
             {{ currentStatusCompras(element.id||0) ?
             currentStatusCompras(element.id||0)?.label : 'Seleccionar' }}
           </button>
@@ -291,19 +291,19 @@
     <div class="flex items-center justify-center p-20 text-muted-foreground" brnNoDataRow>No hay datos de compras
       realizadas</div>
   </brn-table>
+
   <div class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center"
     *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange">
-    <span class="text-sm text-muted-foreground">{{ _selected().length }} of {{ _totalElements() }} compras
-    </span>
+    <span class="text-sm text-muted-foreground">{{_totalElements()}} compras totales</span>
     <div class="flex mt-2 sm:mt-0">
       <brn-select class="inline-block text-white" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
-        <hlm-select-trigger class="inline-flex mr-1 w-15 h-9">
-          <hlm-select-value />
+        <hlm-select-trigger class="inline-flex mr-1 w-15 h-9" variant="warning">
+          <hlm-select-value class="" />
         </hlm-select-trigger>
         <hlm-select-content class="bg-white text-black">
           @for (size of _availablePageSizes; track size) {
           <hlm-option [value]="size" class="hover:bg-navhover">
-            {{ size === 10000 ? 'All' : size }}
+            {{ size === 10000 ? 'Todo' : size }}
           </hlm-option>
           }
         </hlm-select-content>
@@ -387,12 +387,12 @@
   </div> -->
 </div>
 
-<hlm-alert-dialog class="bg-white">
-  <button id="statuscompra" variant="outline" brnAlertDialogTrigger hlmBtn></button>
-  <hlm-alert-dialog-content *brnAlertDialogContent="let ctx" class="bg-white">
+<hlm-alert-dialog class="bg-admin">
+  <button class="hidden" id="statuscompra" variant="admin" brnAlertDialogTrigger hlmBtn></button>
+  <hlm-alert-dialog-content *brnAlertDialogContent="let ctx" class="">
     <hlm-alert-dialog-header>
-      <h3 hlmAlertDialogTitle>Actualizar estatus de la compra</h3>
-      <p hlmAlertDialogDescription>
+      <h3 hlmAlertDialogTitle class="text-white">Actualizar estatus de la compra</h3>
+      <p hlmAlertDialogDescription class="text-white">
         Al cambiar el status de la compra, no se podrá revertir.
         ¿Estás seguro de cambiar el status de la orden?
       </p>

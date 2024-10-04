@@ -39,6 +39,7 @@ import { Address, CreditCard, CreditCardWithCvv } from '~/lib/types';
 import { NavComponent } from '~/app/admin/componentes/nav/nav.component';
 import { NavbarComponent } from "../../home/navbar/navbar.component";
 import { FormsModule } from '@angular/forms';
+import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.component';
 
 
 
@@ -55,7 +56,7 @@ import { FormsModule } from '@angular/forms';
     HlmInputDirective,
     SignalInputDirective,
     FormsModule,
-    BrnCommandImports,
+    
     HlmCommandImports,
     HlmIconComponent,
     BrnPopoverComponent,
@@ -74,6 +75,7 @@ import { FormsModule } from '@angular/forms';
     HlmAlertDialogHeaderComponent,
     HlmAlertDialogOverlayDirective,
     HlmAlertDialogTitleDirective,
+    BreadcrumbComponent
   ],
   templateUrl: './add-card.component.html',
   styleUrl: './add-card.component.css'

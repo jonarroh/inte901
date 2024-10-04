@@ -12,19 +12,20 @@ const defaultUser: User = {
   password: '',
   role: '',
   token: '',
-  estatus: 'Activo'
+  estatus: 'Activo',
 };
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-
   private storageKey = 'userData';
 
   userId = localStorage.getItem('userId') ?? null;
 
-  imgUrl = signal<string | null>(`http://localhost:5000/static/users/${this.userId}.webp`);
+  imgUrl = signal<string | null>(
+    `http://localhost:5000/static/users/${this.userId}.webp`
+  );
 
   userData = signal(this.loadUserDataFromLocalStorage() || defaultUser);
 
@@ -32,11 +33,13 @@ export class UserService {
     window.addEventListener('storage', this.syncUserDataAcrossTabs.bind(this));
   }
 
-  endpoint = 'https://localhost:7268/api/Users';
+  endpoint = 'http://localhost:5275/api/Users';
 
   private syncUserDataAcrossTabs(event: StorageEvent): void {
     if (event.key === this.storageKey) {
-      const newUserData = event.newValue ? JSON.parse(event.newValue) : defaultUser;
+      const newUserData = event.newValue
+        ? JSON.parse(event.newValue)
+        : defaultUser;
       this.userData.set(newUserData);
     }
   }
@@ -45,7 +48,6 @@ export class UserService {
     const savedUserData = localStorage.getItem(this.storageKey);
     return savedUserData ? JSON.parse(savedUserData) : null;
   }
-
 
   syncUserData() {
     const userId = localStorage.getItem('userId');
@@ -57,7 +59,7 @@ export class UserService {
         },
         error: (error) => {
           console.error('Error al cargar el usuario', error);
-        }
+        },
       });
     }
   }
@@ -72,6 +74,9 @@ export class UserService {
     this.userData.set(userData);
     localStorage.setItem(this.storageKey, JSON.stringify(userData));
     localStorage.setItem('userId', userData.id.toString());
+    return new Promise<void>((resolve) => {
+      resolve();
+    });
   }
 
   clearUserData() {
@@ -84,7 +89,6 @@ export class UserService {
     return this.http.delete<User>(`${this.endpoint}/${id}`);
   }
 
-
   editTempImage(image: File) {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -92,7 +96,6 @@ export class UserService {
     };
     reader.readAsDataURL(image);
   }
-
 
   updateUser(userData: UserEditDTO) {
     console.log(userData.Image);
@@ -118,14 +121,11 @@ export class UserService {
     return this.http.put<User>(`${this.endpoint}/${userData.id}`, formData);
   }
 
-
   createUser(userData: User) {
-      return this.http.post<User>(`${this.endpoint}`, userData);
+    return this.http.post<User>(`${this.endpoint}`, userData);
   }
 
   getAllUsers() {
     return this.http.get<User[]>(`${this.endpoint}`);
   }
-
-  
 }

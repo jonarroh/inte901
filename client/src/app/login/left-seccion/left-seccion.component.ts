@@ -22,6 +22,7 @@ interface ResponseLogin{
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import { UserService } from '~/app/home/services/user.service';
 import { toast } from 'ngx-sonner';
+import { Usuario } from '~/app/admin/compras/interface/usuario';
 @Component({
   selector: 'left-seccion',
   standalone: true,
@@ -93,17 +94,21 @@ export class LeftSeccionComponent {
           this.userService.getUser(response.id).subscribe({
             next: (user) => {
               console.log('Usuario cargado correctamente', user);
-              this.userService.saveUserData(user);
-              if(user.role === 'Admin'){
-                this.router.navigate(['/admin/productos']);
-              }
-              else{
-                this.router.navigate(['/products']);
-              }
-    
+              this.userService.saveUserData(user).then(()=>{
+                console.log('Usuario guardado');
+                console.log('role:', user.role);
+
+                if(user.role === 'Admin'){
+                  this.router.navigate(['/admin/productos']);
+                }
+                else{
+                  this.router.navigate(['/products']);
+                }
+              });
             },
             complete: () => {
               console.log('Usuario cargado correctamente', this.userService.userData()?.id);
+             
               
             },
             error: (error) => {

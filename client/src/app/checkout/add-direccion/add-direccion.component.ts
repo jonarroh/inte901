@@ -41,6 +41,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { toast } from 'ngx-sonner';
 import {AutoAnimateModule,AutoAnimateDirective} from '@formkit/auto-animate/angular'
+import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.component';
  
 type Estados = { label: string; value: string }
 
@@ -55,7 +56,7 @@ type Estados = { label: string; value: string }
     HlmInputDirective,
     SignalInputDirective,
     FormsModule,
-    BrnCommandImports,
+    
     HlmCommandImports,
     HlmIconComponent,
     BrnPopoverComponent,
@@ -75,7 +76,7 @@ type Estados = { label: string; value: string }
     HlmAlertDialogOverlayDirective,
     HlmAlertDialogTitleDirective,
     RouterModule,
-    
+    BreadcrumbComponent
     
 ],
   templateUrl: './add-direccion.component.html',

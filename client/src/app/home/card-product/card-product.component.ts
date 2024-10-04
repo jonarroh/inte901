@@ -3,6 +3,7 @@ import { Component,input, computed, Signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
 import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
+import { MoneyComponent } from '~/components/money/money.component';
 
 type FilterProduct = 'All' | 'Postre' | 'Bebida';
 
@@ -12,7 +13,8 @@ type FilterProduct = 'All' | 'Postre' | 'Bebida';
   imports: [
     NgClass,
     HlmBadgeDirective,
-    RouterModule
+    RouterModule,
+    MoneyComponent
   ],
   providers: [Router],
   templateUrl: './card-product.component.html'

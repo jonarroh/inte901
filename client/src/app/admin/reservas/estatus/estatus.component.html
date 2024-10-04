@@ -1,287 +1,61 @@
 <div class="container mx-auto max-h-screen overflow-y-auto w-full p-4">
   <div class="flex-1 flex justify-center">
-    <h1 class="text-5xl font-bold mt-1 mb-2 text-black">Reservas</h1>
+    <h1 class="text-5xl font-bold mt-1 mb-6 text-secondary">Reservas</h1>
   </div>
-  <!-- <div class="flex justify-end my-5 me-5 pr-5">
-    <div>
-      <hlm-dialog [state]="states()">
-        <button id="edit-profile" brnDialogTrigger hlmBtn>Agregar Reserva</button>
-       <form (submit)="onSubmit()">
+  <!-- Mostrar errores -->
+  <div *ngIf="error" class="text-red-500">{{ error }}</div>
 
-          <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
-            <hlm-dialog-header>
-              <h3 hlmDialogTitle>Nueva Reserva</h3>
-              <p hlmDialogDescription></p>
-            </hlm-dialog-header>
-            <div class="py-4 grid gap-4">
-              <div>
-                <label class="text-start">
-                  Fecha de la reserva
-                  <input
-                    class="w-80"
-                    hlmInput
-                    type="text"
-                    placeholder="Fecha de la reserva"
-                    name="fecha"
-                    ngModel
-                    [formField]="formModel.controls.fecha"
-                    required
-                    maxlength="50"
-                  />
-                </label>
-                @if (formModel.controls.fecha.touched()) {
-                  @if (formModel.controls.fecha.hasError('required')) {
-                    <div class="text-red-500 text-sm">El nombre es requerido</div>
-                  }
-                }
-              </div>
-              <div>
-                <label class="text-start">
-                  Hora de inicio
-                  <input
-                    class="w-80"
-                    hlmInput
-                    type="number"
-                    placeholder="Hota Inicio"
-                    name="horaInicio"
-                    ngModel
-                    [formField]="formModel.controls.horaInicio"
-                    required
-                    min="1"
-                  />
-                </label>
-                
-                @if (formModel.controls.horaInicio.touched()) {
-                  @if (formModel.controls.horaInicio.hasError('required')) {
-                    <div class="text-red-500 text-sm">La capacidad de personas es requerida</div>
-                  }
-                  @if (formModel.controls.canPersonas.hasError('min')) {
-                    <div class="text-red-500 text-sm">La capacidad de personas debe ser al menos 1</div>
-                  }
-                }
-              </div>
-              <div>
-                <label class="text-start">
-                  Hora de fin
-                  <input
-                    class="w-80"
-                    hlmInput
-                    type="number"
-                    placeholder="Hora Fin"
-                    name="horaFin"
-                    ngModel
-                    [formField]="formModel.controls.horaFin"
-                    required
-                    min="0"
-                    step="0.01"
-                  />
-                </label>
-                 @if (formModel.controls.horaFin.touched()) {
-                  @if (formModel.controls.horaFin.hasError('required')) {
-                    <div class="text-red-500 text-sm">El precio es requerido</div>
-                  }
-                  @if (formModel.controls.horaFin.hasError('min')) {
-                    <div class="text-red-500 text-sm">El precio debe ser al menos 0</div>
-                  }
-                 }
-              </div>
-              <div>
-                <label class="text-start">
-                  Hora de fin
-                  <input
-                    class="w-80"
-                    hlmInput
-                    type="number"
-                    placeholder="Hora Fin"
-                    name="horaFin"
-                    ngModel
-                    [formField]="formModel.controls.horaFin"
-                    required
-                    min="0"
-                    step="0.01"
-                  />
-                </label>
-                 @if (formModel.controls.horaFin.touched()) {
-                  @if (formModel.controls.horaFin.hasError('required')) {
-                    <div class="text-red-500 text-sm">El precio es requerido</div>
-                  }
-                  @if (formModel.controls.horaFin.hasError('min')) {
-                    <div class="text-red-500 text-sm">El precio debe ser al menos 0</div>
-                  }
-                 }
-              </div>
-            
-            </div>
-            <hlm-dialog-footer>
-              @if(isEditing()) {
-                <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
-                <button hlmBtn type="submit"
-                (click)="onEditReserva()"
-                >Guardar</button>
-              } @else {
-                <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
-                <button hlmBtn
-                (click)="onSubmit()"
-                >Crear</button>
-              }
-            </hlm-dialog-footer>
-          </hlm-dialog-content>
-        </form>
-      </hlm-dialog>
-    </div>
-  </div> -->
-  <div class="flex flex-row justify-between gap-4 px-20 py-5">
-    <input
-      hlmInput
-      class="w-full md:w-80"
-      placeholder="Buscar por nombre"
-      [ngModel]="_nameFilter()"
-      (ngModelChange)="_rawFilterInput.set($event)"
-    />
-    <button hlmBtn variant="outline" align="end" [brnMenuTriggerFor]="menu">
-      Ver columnas
-      <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
-    </button>
-    <ng-template #menu>
-      <hlm-menu class="w-32 bg-white">
+  <!-- Lista de reservas -->
+  <div class="space-x-3 mb-4">
+    <div *ngIf="orders.length > 0" class="space-y-6">
+      <div *ngFor="let order of filteredOrders()"
+        class="bg-white border border-gray-200 rounded-lg shadow-md p-6 flex items-start">
+        <!-- Contenedor de imagen y datos -->
+        <div class="flex-1 flex space-x-6">
+          <!-- Imagen del espacio -->
+          <img [src]="'http://localhost:5000/static/places/' + order.detailReserva.idEspacio + '.webp'"
+            alt="Espacio Imagen" class="w-32 h-32 object-cover rounded-lg" />
 
-        @for (column of _brnColumnManager.allColumns; track column.name) {
-          <button
-            hlmMenuItemCheckbox
-            class="bg-white hover:bg-gray-100"
-            [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
-            [checked]="_brnColumnManager.isColumnVisible(column.name)"
-            (triggered)="_brnColumnManager.toggleVisibility(column.name)"
-          >
-            <hlm-menu-item-check  class="bg-white"/>
-            <span>{{ column.label }}</span>
-          </button>
-        }
-      </hlm-menu>
-    </ng-template>
-  </div>
+          <!-- Datos de la reserva -->
+          <div class="flex-1">
+            <h5 class="mb-2 text-2xl font-bold text-gray-900">
+              Reserva: {{ order.detailReserva.idEspacio }}
+            </h5>
+            <p class="text-gray-500">Fecha: {{ order.detailReserva.fecha | date: 'shortDate' }}</p>
+            <p class="text-gray-500">Inicio: {{ order.detailReserva.horaInicio }}</p>
+            <p class="text-gray-500">Fin: {{ order.detailReserva.horaFin }}</p>
+          </div>
+        </div>
+
+        <!-- Contenedor para el semáforo y el select -->
+        <div class="flex flex-col items-center ml-auto">
+          <!-- Semáforo -->
+          <div class="flex space-x-2 mb-1">
+            <button [ngStyle]="{'background-color': getStatusColor(order.estatus, 1)}"
+              class="w-3 h-3 rounded-full"></button>
+            <button [ngStyle]="{'background-color': getStatusColor(order.estatus, 2)}"
+              class="w-3 h-3 rounded-full"></button>
+            <button [ngStyle]="{'background-color': getStatusColor(order.estatus, 3)}"
+              class="w-3 h-3 rounded-full"></button>
+          </div>
+          <!-- Leyenda del estatus -->
+          <p class="text-gray-700">{{ order.estatus }}</p>
 
 
-  <brn-table
-    hlm
-    stickyHeader
-    class="border-border block h-[335px] overflow-auto rounded-md border px-20 bg-white"
-    [dataSource]="_filteredSortedPaginatedSpaces()"
-    [displayedColumns]="_allDisplayedColumns()"
-    [trackBy]="_trackBy"
-  >
-    <brn-column-def name="select" class="w-12 bg-white">
-      <hlm-th *brnHeaderDef class="bg-white">
-        <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()" class="bg-white" />
-      </hlm-th>
-      <hlm-td *brnCellDef="let element" class="bg-white">
-        <hlm-checkbox [checked]="_isSpaceSelected(element)" (changed)="toggleSpace(element)" class="bg-white" />
-      </hlm-td>
-    </brn-column-def>
-    <brn-column-def name="idEspacio" class="w-32 sm:w-40 bg-white">
-      <hlm-th truncate *brnHeaderDef>ID Reserva</hlm-th>
-      <hlm-td truncate *brnCellDef="let element">
-        {{ element.idEspacio }}
-      </hlm-td>
-    </brn-column-def>
-    <brn-column-def name="Nombre" class="w-32 sm:w-40 bg-white">
-      <hlm-th truncate *brnHeaderDef>Nombre</hlm-th>
-      <hlm-td truncate *brnCellDef="let element">
-        {{ element.nombre }}
-      </hlm-td>
-    </brn-column-def>
-    <brn-column-def name="canPersonas" class="w-60 lg:flex-1 bg-white">
-      <hlm-th *brnHeaderDef>
-        <button hlmBtn size="sm" variant="ghost">
-          Capacidad de Personas
-        </button>
-      </hlm-th>
-      <hlm-td truncate *brnCellDef="let element">
-        {{ element['canPersonas'] }}
-      </hlm-td>
-    </brn-column-def>
-    <brn-column-def name="precio" class="w-32 sm:w-40 bg-white">
-      <hlm-th truncate *brnHeaderDef>Precio</hlm-th>
-      <hlm-td truncate *brnCellDef="let element">
-        {{ element.precio | currency }}
-      </hlm-td>
-    </brn-column-def>
-    <brn-column-def name="estatus" class="w-32 sm:w-40 bg-white">
-      <hlm-th truncate *brnHeaderDef>Estatus</hlm-th>
-      <hlm-td truncate *brnCellDef="let element">
-        {{ element.estatus }}
-      </hlm-td>
-    </brn-column-def>
-    <brn-column-def name="descripcion" class="w-32 sm:w-40 bg-white">
-      <hlm-th truncate *brnHeaderDef>Descripción</hlm-th>
-      <hlm-td truncate *brnCellDef="let element">
-        {{ element.descripcion }}
-      </hlm-td>
-    </brn-column-def>
-
-    <brn-column-def name="actions" class="w-16 bg-white">
-      <hlm-th *brnHeaderDef></hlm-th>
-      <hlm-td *brnCellDef="let element">
-        <button hlmBtn variant="ghost" class="h-6 w-6 p-0.5 hover:bg-gray-100" align="end" [brnMenuTriggerFor]="menu">
-          <hlm-icon class="w-4 h-4" name="lucideMoreHorizontal" />
-        </button>
-
-        <ng-template #menu>
-          <hlm-menu class="bg-white">
-            <hlm-menu-label>
-              Actions
-
-            </hlm-menu-label>
-            <hlm-menu-separator />
-            <hlm-menu-group>
-              <button hlmMenuItem (click)="onClickEdit(element)"
-              class="hover:bg-gray-100"
-              >
-                Editar
-              </button>
-            </hlm-menu-group>
-            <hlm-menu-separator />
-            <hlm-menu-group>
-              <button hlmMenuItem  (click)="onDeletePlace(element)"
-              class="hover:bg-gray-100"
-              >
-                              Eliminar
-              </button>
-            </hlm-menu-group>
-          </hlm-menu>
-        </ng-template>
-      </hlm-td>
-      
-    </brn-column-def>
-    <div class="flex items-center justify-center p-20 text-muted-foreground" brnNoDataRow>No data</div>
-  </brn-table>
-  <div
-    class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center px-20"
-    *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange"
-  >
-    <span class="text-sm text-muted-foreground">{{ _selected().length }} de {{ _totalElements() }} usuarios</span>
-    <div class="flex mt-2 sm:mt-0">
-      <brn-select class="inline-block" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
-        <hlm-select-trigger class="inline-flex mr-1 w-15 h-9 bg-white">
-          <hlm-select-value />
-        </hlm-select-trigger>
-        <hlm-select-content>
-          @for (size of _availablePageSizes; track size) {
-            <hlm-option [value]="size">
-              {{ size === 10000 ? 'All' : size }}
-            </hlm-option>
-          }
-        </hlm-select-content>
-      </brn-select>
-
-      <div class="flex space-x-1">
-        <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.decrementable()" (click)="ctx.decrement()">
-          Anterior
-        </button>
-        <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.incrementable()" (click)="ctx.increment()">
-          Siguiente
-        </button>
+          @if (order.estatus == "Pagado") {
+          <select (change)="updateStatus(order.detailReserva.idDetailReser, $event)" class="mt-2 p-1 border rounded"
+            variant="warning">
+            <option value="">Cambiar estatus</option>
+            <option value="Cancelada">Cancelar</option>
+            <option value="Finalizada">Finalizar</option>
+          </select>}
+        </div>
       </div>
     </div>
+  </div>
+
+  <!-- Mensaje si no hay reservas -->
+  <div *ngIf="orders.length === 0" class="text-center text-gray-500">
+    No tienes reservas aún.
   </div>
 </div>

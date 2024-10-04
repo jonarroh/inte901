@@ -75,10 +75,17 @@
         </div>
 
         <div class="flex justify-end pt-2">
-          <button class="bg-blue-500 text-white px-4 py-2 rounded mr-2" (click)="saveEvent()">Guardar</button>
-          <button class="bg-gray-500 text-white px-4 py-2 rounded" (click)="closeModal()">Cancelar</button>
+          <button class="bg-blue-500 text-white px-4 py-2 rounded mr-2" 
+          (click)="saveEvent()"
+          [disabled]="isProcessing">Guardar</button>
+          <button class="bg-gray-500 text-white px-4 py-2 rounded" 
+          (click)="closeModal()"
+          [disabled]="isProcessing">Cancelar</button>
+        </div>
+        <div *ngIf="isProcessing" class="processing-message text-center text-orange-600 font-bold mt-4"></div>
+          Tu reserva está siendo procesada...
         </div>
       </div>
     </div>
   </div>
-</div>
+

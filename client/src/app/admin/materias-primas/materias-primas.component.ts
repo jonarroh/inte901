@@ -17,6 +17,10 @@ import { lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmIconComponent } from '~/components/ui-icon-helm/src';
 import { HlmSelectContentDirective, HlmSelectOptionComponent, HlmSelectTriggerComponent, HlmSelectValueDirective } from '~/components/ui-select-helm/src';
 import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
+import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
+import { HlmAlertDialogActionButtonDirective, HlmAlertDialogCancelButtonDirective, HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogOverlayDirective, HlmAlertDialogTitleDirective } from '~/components/ui-alertdialog-helm/src';
+import { LucideAngularModule } from 'lucide-angular';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-materias-primas',
@@ -46,6 +50,18 @@ import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
     HlmTableModule,
     BrnMenuTriggerDirective,
     HlmMenuModule,
+    BrnAlertDialogTriggerDirective,
+    BrnAlertDialogContentDirective,
+    HlmAlertDialogComponent,
+    HlmAlertDialogOverlayDirective,
+    HlmAlertDialogHeaderComponent,
+    HlmAlertDialogFooterComponent,
+    HlmAlertDialogTitleDirective,
+    HlmAlertDialogDescriptionDirective,
+    HlmAlertDialogCancelButtonDirective,
+    HlmAlertDialogActionButtonDirective,
+    HlmAlertDialogContentComponent,
+    LucideAngularModule
   ],
   templateUrl: './materias-primas.component.html',
   styleUrls: ['./materias-primas.component.css'],
@@ -66,8 +82,9 @@ export class MateriasPrimasComponent {
 
   // Column manager
   protected readonly _brnColumnManager = useBrnColumnManager({
-    ID: {visible: true, label: 'ID', sortable: true},
-    Nombre: {visible: true, label: 'Nombre', sortable: true},
+    ID: { visible: true, label: 'ID', sortable: true },
+    Nombre: { visible: true, label: 'Nombre', sortable: true },
+    Estatus: { visible: true, label: 'Estatus', sortable: true },
   });
 
   // Columnas visibles
@@ -91,8 +108,8 @@ export class MateriasPrimasComponent {
       this.materiasPrimasSource$,
       this.filter$
     ]).pipe(
-      map(([materiasPrimas, filterValue]) => 
-        materiasPrimas.filter(materiaPrima => 
+      map(([materiasPrimas, filterValue]) =>
+        materiasPrimas.filter(materiaPrima =>
           materiaPrima.material?.toLowerCase().includes(filterValue.toLowerCase()) ?? false
         )
       ),
@@ -113,14 +130,14 @@ export class MateriasPrimasComponent {
         const filteredMateriasPrimas = materiasPrimas.filter(materiaPrima =>
           materiaPrima.material?.toLowerCase().includes(filterValue.toLowerCase()) ?? false
         );
-  
+
         // Obtener los índices de paginación
         const start = this._displayedIndices().start;
         const end = this._displayedIndices().end + 1;
-  
+
         // Actualizar la cantidad total de elementos
         this._totalElements.set(filteredMateriasPrimas.length);
-  
+
         // Retornar el subconjunto de datos basado en la paginación
         return filteredMateriasPrimas.slice(start, end);
       })
@@ -128,7 +145,7 @@ export class MateriasPrimasComponent {
       this.materiasPrimas$ = of(paginatedMateriasPrimas);
     });
   }
-  
+
 
   protected readonly _onStateChange = ({ startIndex, endIndex }: PaginatorState) => {
     this._displayedIndices.set({ start: startIndex, end: endIndex });
@@ -144,32 +161,54 @@ export class MateriasPrimasComponent {
   }
 
   // Nueva propiedad computada para obtener el número de registros filtrados
-protected readonly _filteredMateriasPrimas = computed(() => {
-  let count = 0;
-  this.materiasPrimas$.subscribe(materiasPrimas => count = materiasPrimas.length);
-  return count;
-});
+  protected readonly _filteredMateriasPrimas = computed(() => {
+    let count = 0;
+    this.materiasPrimas$.subscribe(materiasPrimas => count = materiasPrimas.length);
+    return count;
+  });
 
 
-applyFilter(filterValue: string) {
-  this.filterSubject.next(filterValue);
-}
+  applyFilter(filterValue: string) {
+    this.filterSubject.next(filterValue);
+  }
 
-applyFilterFromEvent(event: Event) {
-  const inputElement = event.target as HTMLInputElement;
-  this.applyFilter(inputElement.value);
-}
+  applyFilterFromEvent(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.applyFilter(inputElement.value);
+  }
 
   onSubmitAdd(form: NgForm) {
     if (form.valid) {
       this.materiaPrima.estatus = 1;
       this.materiaPrima.createdAt = new Date().toISOString();
       this.materiaPrima.updatedAt = new Date().toISOString();
-      this.materiaService.registrarMateriaPrima(this.materiaPrima).subscribe((response) => {
-        console.log('Materia prima registrada:', response);
-        form.resetForm();
-        this.materiaPrima = {}; // Reiniciar el objeto materia prima
-        this.refreshMateriaPrima();
+      // this.materiaService.registrarMateriaPrima(this.materiaPrima).subscribe((response) => {
+      //   console.log('Materia prima registrada:', response);
+      //   form.resetForm();
+      //   this.materiaPrima = {}; // Reiniciar el objeto materia prima
+      //   this.refreshMateriaPrima();
+      // });
+      this.materiaService.registrarMateriaPrima(this.materiaPrima).subscribe({
+        next: (response) => {
+          console.log('Materia prima registrada:', response);
+          form.resetForm();
+          this.materiaPrima = {}; // Reiniciar el objeto materia prima
+          toast.success('Materia prima registrada', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        },
+        error: (error) => {
+          console.error('Error al registrar la materia prima:', error);
+          toast.error('Error al registrar la materia prima', {
+            duration: 1200,
+            onAutoClose: ((toast) => {
+              location.reload();
+            })
+          });
+        }
       });
     }
   }
@@ -177,12 +216,35 @@ applyFilterFromEvent(event: Event) {
   onSubmitEdit(form: NgForm) {
     if (form.valid) {
       this.materiaPrima.updatedAt = new Date().toISOString();
-      this.materiaService.editarMateriaPrima(this.materiaPrima.id!, this.materiaPrima).subscribe((response) => {
-        console.log('Materia prima actualizada:', response);
-        form.resetForm();
-        this.materiaPrima = {}; // Reiniciar el objeto materia prima
-        this.editMode = false;
-        this.refreshMateriaPrima();
+      // this.materiaService.editarMateriaPrima(this.materiaPrima.id!, this.materiaPrima).subscribe((response) => {
+      //   console.log('Materia prima actualizada:', response);
+      //   form.resetForm();
+      //   this.materiaPrima = {}; // Reiniciar el objeto materia prima
+      //   this.editMode = false;
+      //   this.refreshMateriaPrima();
+      // });
+      this.materiaService.editarMateriaPrima(this.materiaPrima.id!, this.materiaPrima).subscribe({
+        next: (response) => {
+          console.log('Materia prima actualizada:', response);
+          form.resetForm();
+          this.materiaPrima = {}; // Reiniciar el objeto materia prima
+          this.editMode = false;
+          toast.success('Materia prima actualizada', {
+            duration: 1200,
+            onAutoClose: ((toast) => {
+              location.reload();
+            })
+          });
+        },
+        error: (error) => {
+          console.error('Error al actualizar la materia prima:', error);
+          toast.error('Error al actualizar la materia prima', {
+            duration: 1200,
+            onAutoClose: ((toast) => {
+              location.reload();
+            })
+          });
+        }
       });
     }
   }
@@ -201,17 +263,29 @@ applyFilterFromEvent(event: Event) {
   }
 
   onDelete(id: number) {
-    this.materiaService.eliminarMateriaPrima(id).subscribe(() => {
-      console.log('Materia prima eliminada');
-      this.refreshMateriaPrima();
+    // this.materiaService.eliminarMateriaPrima(id).subscribe(() => {
+    //   console.log('Materia prima eliminada');
+    //   this.refreshMateriaPrima();
+    // });
+    this.materiaService.eliminarMateriaPrima(id).subscribe({
+      next: () => {
+        console.log('Materia prima eliminada');
+        toast.success('Materia prima eliminada', {
+          duration: 1200,
+          onAutoClose: ((toast) => {
+            location.reload();
+          })
+        });
+      },
+      error: (error) => {
+        console.error('Error al eliminar la materia prima:', error);
+        toast.error('Error al eliminar la materia prima', {
+          duration: 1200,
+          onAutoClose: ((toast) => {
+            location.reload();
+          })
+        });
+      }
     });
-  }
-
-  refreshMateriaPrima() {
-    this.materiasPrimas$ = this.materiaService.getMateriaPrima().pipe(
-      map((materiasPrimas) =>
-        materiasPrimas.filter((materiaPrima) => materiaPrima.estatus === 1)
-      )
-    );
   }
 }

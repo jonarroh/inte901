@@ -7,6 +7,8 @@ import { Order, Producto } from '~/lib/types';
 import { toast } from 'ngx-sonner';
 import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
 import { CheckoutService } from '~/app/checkout/checkout.service';
+import { CommonModule } from '@angular/common';
+import { MoneyComponent } from '~/components/money/money.component';
 
 @Component({
   selector: 'product-contador',
@@ -15,7 +17,8 @@ import { CheckoutService } from '~/app/checkout/checkout.service';
 HlmButtonDirective,
 LucideAngularModule,
 HlmToasterComponent,
-
+CommonModule,
+MoneyComponent
   ],
   templateUrl: './contador.component.html',
   styleUrl: './contador.component.css'

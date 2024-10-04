@@ -8,7 +8,7 @@ import { CreditCard, ReservaDTO } from '~/lib/types';
 import { NavbarComponent } from '~/app/home/navbar/navbar.component';
 import { UserService } from '~/app/home/services/user.service';
 import { toast } from 'ngx-sonner';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 
 @Component({
@@ -35,6 +35,8 @@ export class FormComponent implements OnInit {
   selectedDate: Date | null = null;
   reservations: ReservaDTO[] = [];
   idCliente : number | null = null;
+  isProcessing : boolean = false;
+  
 
 
   creditCards = signal<CreditCard[]>([]);
@@ -147,44 +149,56 @@ export class FormComponent implements OnInit {
   }
 
   saveEvent() {
+    console.log('save');
+    
+    this.isProcessing = true; // Activa el procesamiento
+    toast.info('Tu reserva está siendo procesada');
+  
     if (this.selectedCreditCard().id === undefined) {
       toast.error('Selecciona una tarjeta de crédito');
+      this.isProcessing = false;
       return; 
     }
-
+  
     if (this.eventStartTime >= this.eventEndTime) {
       toast.error('La hora de inicio no puede ser mayor o igual a la hora de fin');
+      this.isProcessing = false;
       return;
     }
-
+  
     if (this.eventStartTime === this.eventEndTime) {
       toast.error('La hora de inicio no puede ser igual a la hora de fin');
+      this.isProcessing = false;
       return;
     }
-
+  
     if (this.eventDate < this.formatDate(new Date())) {
       toast.error('La fecha no puede ser anterior a la actual');
+      this.isProcessing = false;
       return;
     }
-
+  
     if (this.eventDate === this.formatDate(new Date())) {
       if (this.eventStartTime <= format(new Date(), 'HH:mm')) {
         toast.error('La hora de inicio no puede ser menor o igual a la hora actual');
+        this.isProcessing = false;
         return;
       }
     }
-
+  
     if (this.eventStartTime >= '22:00' || this.eventStartTime <= '06:00') {
       toast.error('La hora de inicio no puede ser mayor a las 22:00 o menor a las 6:00');
+      this.isProcessing = false;
       return;
     }
-
+  
     this.checkConflict(this.eventDate, this.eventStartTime, this.eventEndTime).subscribe(conflict => {
       if (conflict) {
         toast.error('Ya existe una reserva en ese horario');
+        this.isProcessing = false;
         return;
       }
-
+  
       const reserva: ReservaDTO = {
         idUsuario: 1,
         idCliente: this.idCliente ?? 0,
@@ -206,18 +220,26 @@ export class FormComponent implements OnInit {
           estatus: 'Activo'
         }
       };
-
+  
       this.eventService.addEvent(reserva).subscribe(
         () => {
           this.closeModal();
           // Actualizar el calendario o realizar alguna otra acción
+          this.loadReservations();
+          this.isProcessing = false;
+  
+          // Aquí se agrega la alerta de éxito
+          toast.success('Tu reserva ha sido guardada con éxito');
+          console.log('hecho');
         },
         (error) => {
           console.error('Error al agregar la reserva:', error);
+          this.isProcessing = false;
         }
       );
     });
   }
+  
 
   onSelectChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
@@ -237,7 +259,7 @@ export class FormComponent implements OnInit {
             const reservationStartTime = reservation.detailReserva.horaInicio;
             const reservationEndTime = reservation.detailReserva.horaFin;
   
-            console.log("Existing reservationss:", { reservationStartTime, reservationEndTime });
+            console.log("Existing reservations:", { reservationStartTime, reservationEndTime });
   
             // Verificar solapamiento o igualdad de hora de inicio y fin
             return (
@@ -248,6 +270,15 @@ export class FormComponent implements OnInit {
           }
           return false;
         });
+      }),
+      catchError((error: any) => {
+        if (error.status === 404) {
+          console.log("No reservations found, returning true.");
+          return of(false);
+        } else {
+          console.error("Error fetching reservations:", error);
+          return throwError(error);
+        }
       })
     );
   }

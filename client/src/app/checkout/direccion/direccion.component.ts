@@ -14,6 +14,7 @@ import { LucideAngularModule } from 'lucide-angular';
 import { UserService } from '~/app/home/services/user.service';
 import { Address, CreditCard } from '~/lib/types';
 import { CheckoutService } from '../checkout.service';
+import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.component';
 
 
 
@@ -29,7 +30,8 @@ import { CheckoutService } from '../checkout.service';
     BrnAccordionContentComponent,
     HlmIconComponent,
     RouterModule,
-    LucideAngularModule
+    LucideAngularModule,
+    BreadcrumbComponent
   ],
   templateUrl: './direccion.component.html',
   styleUrl: './direccion.component.css'

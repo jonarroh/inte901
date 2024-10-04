@@ -3,17 +3,14 @@ import { Injectable } from '@angular/core';
 import { User } from './interfaces/type';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RegisterService {
+  baseURL = 'http://localhost:5275/api/Users';
 
-  baseURL = "https://localhost:7268/api/Users";
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  registerUser(usuario:User){
-
-    return this.http.post<User>(this.baseURL,usuario);
-
+  registerUser(usuario: User) {
+    return this.http.post<User>(this.baseURL, usuario);
   }
 }

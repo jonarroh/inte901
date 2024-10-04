@@ -2,7 +2,7 @@
   <div class="flex-1 flex justify-center">
     <h1 class="text-5xl font-bold mt-1 mb-2 text-secondary">Ordenes</h1>
   </div>
-  @if(rol === 'Admin' || rol === 'Caja'){
+  <!-- @if(rol === 'Admin' || rol === 'Caja'){ -->
   <div class="flex space-x-3 justify-end mb-4">
     <hlm-sheet side="right" class="">
       <button id="carrito" variant="warning" class="text-white" brnSheetTrigger hlmBtn>
@@ -61,7 +61,7 @@
                 <div hlmCardFooter class="justify-between flex items-center mx-2">
                   <input type="number" hlmInput class="w-28" placeholder="Cantidad" min="0" step="1"
                     [(ngModel)]="cantidades[producto.id||0]" [ngModelOptions]="{standalone: true}">
-                  <button hlmBtn variant="neutral" class="sm" (click)="addToCart(producto)">Agregar</button>
+                  <button hlmBtn variant="warning" class="sm" (click)="addToCart(producto)">Agregar</button>
                 </div>
               </section>
             </div>
@@ -71,7 +71,7 @@
       </hlm-dialog-content>
     </hlm-dialog>
   </div>
-  }
+  <!-- } -->
 
   <div class="flex flex-col justify-between gap-4 sm:flex-row">
     <input hlmInput class="w-full md:w-80" placeholder="Filtrar fechas" [ngModel]="_emailFilter()"
@@ -97,12 +97,12 @@
 
   <brn-table hlm stickyHeader class="border-border mt-4 block h-[335px] overflow-auto rounded-md border"
     [dataSource]="_filteredSortedPaginatedPayments()" [displayedColumns]="_allDisplayedColumns()" [trackBy]="_trackBy">
-    <brn-column-def name="select" class="w-12">
+    <brn-column-def name="select" class="">
       <hlm-th *brnHeaderDef>
-        <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()" />
+        <!-- <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()" /> -->
       </hlm-th>
       <hlm-td *brnCellDef="let element">
-        <hlm-checkbox [checked]="_isOrderSelected(element)" (changed)="togglePayment(element)" />
+        <!-- <hlm-checkbox [checked]="_isOrderSelected(element)" (changed)="togglePayment(element)" /> -->
       </hlm-td>
     </brn-column-def>
     <brn-column-def name="OrderDate" class="flex-1">
@@ -130,7 +130,7 @@
     <brn-column-def name="Status" class="w-60 lg:flex-1">
       <hlm-th *brnHeaderDef>
         <button hlmBtn size="sm" variant="ghost" (click)="handleEmailSortChange()">
-          Status
+          Estatus
           <hlm-icon class="ml-3" size="sm" name="lucideArrowUpDown" />
         </button>
       </hlm-th>
@@ -167,7 +167,7 @@
         @if (element.status === 'Ordenado') {
         <brn-popover [state]="popoverStates[element.id||0] || 'closed'"
           (stateChanged)="stateChanged($event, element.id||0)" sideOffset="5" closeDelay="100">
-          <button class="flex-1 justify-between" id="{{element.id}}" variant="neutral" brnPopoverTrigger hlmBtn>
+          <button class="flex-1 justify-between" id="{{element.id}}" variant="warning" brnPopoverTrigger hlmBtn>
             {{ currentFramework(element.id||0) ?
             currentFramework(element.id||0)?.label : 'Seleccionar' }}
           </button>
@@ -204,7 +204,7 @@
 
   <div class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center"
     *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange">
-    <span class="text-sm text-muted-foreground">{{ _selected().length }} de {{
+    <span class="text-sm text-muted-foreground">{{
       _totalElements() }} Ordenes
     </span>
     <div class="flex mt-2 sm:mt-0">
@@ -215,7 +215,7 @@
         <hlm-select-content class="bg-white text-black">
           @for (size of _availablePageSizes; track size) {
           <hlm-option [value]="size" class="hover:bg-navhover">
-            {{ size === 10000 ? 'All' : size }}
+            {{ size === 10000 ? 'Todo' : size }}
           </hlm-option>
           }
         </hlm-select-content>
@@ -283,13 +283,13 @@
 </hlm-dialog>
 
 <hlm-alert-dialog class="bg-white" (closed)="resetCombo()">
-  <button id="edit-status" class="hidden" variant="success" brnAlertDialogTrigger hlmBtn>Cambiar status</button>
+  <button id="edit-status" class="hidden" variant="admin" brnAlertDialogTrigger hlmBtn>Cambiar status</button>
   <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
     <hlm-alert-dialog-header>
-      <h3 class="text-white" hlmAlertDialogTitle>Actualizar status de la orden</h3>
+      <h3 class="text-white" hlmAlertDialogTitle>Actualizar Estatus de la orden</h3>
       <p class="text-white" hlmAlertDialogDescription>
-        Al cambiar el status de la orden, no se podrá revertir.
-        ¿Estás seguro de cambiar el status de la orden?
+        Al cambiar el estatus de la orden, no se podrá revertir.
+        ¿Estás seguro de cambiar el estatus de la orden?
       </p>
     </hlm-alert-dialog-header>
     <hlm-alert-dialog-footer>
@@ -301,16 +301,16 @@
 
 <hlm-alert-dialog class="bg-white">
   <button id="edit-status-producto" class="hidden" variant="success" brnAlertDialogTrigger hlmBtn>
-    Cambiar status
+    Cambiar estatus
   </button>
   <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
     <hlm-alert-dialog-header>
       <h3 hlmAlertDialogTitle>
-        Actualizar status del producto
+        Actualizar estatus del producto
       </h3>
       <p hlmAlertDialogDescription>
-        Al cambiar el status del producto, no se podrá revertir.
-        ¿Estás seguro de cambiar el status del producto?
+        Al cambiar el estatus del producto, no se podrá revertir.
+        ¿Estás seguro de cambiar el estatus del producto?
       </p>
     </hlm-alert-dialog-header>
     <hlm-alert-dialog-footer>

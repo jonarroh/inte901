@@ -4,20 +4,21 @@ import { Observable, catchError, of, throwError } from 'rxjs';
 import { Reserva, DetailReserva, ReservaDTO } from '~/lib/types';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReserveServiceService {
-
-  private apiUrl = 'https://localhost:7268/api/Reserves'; // URL base de la API
+  private apiUrl = 'http://localhost:5275/api/Reserves'; // URL base de la API
 
   constructor(private http: HttpClient) {}
 
   // Obtener reservas por ID de espacio
   getReservasByEspacio(idEspacio: number): Observable<ReservaDTO[]> {
     const url = `${this.apiUrl}/bySpace/${idEspacio}`;
-    return this.http.get<ReservaDTO[]>(url).pipe(
-      catchError(this.handleError<ReservaDTO[]>('getReservasByEspacio', []))
-    );
+    return this.http
+      .get<ReservaDTO[]>(url)
+      .pipe(
+        catchError(this.handleError<ReservaDTO[]>('getReservasByEspacio', []))
+      );
   }
 
   getReservationsBySpaceId(idEspacio: number): Observable<ReservaDTO[]> {
@@ -39,56 +40,64 @@ export class ReserveServiceService {
 
   // Método adicional si es necesario para otras operaciones
   getAllReservas(): Observable<Reserva[]> {
-    return this.http.get<Reserva[]>(this.apiUrl).pipe(
-      catchError(this.handleError<Reserva[]>('getAllReservas', []))
-    );
+    return this.http
+      .get<Reserva[]>(this.apiUrl)
+      .pipe(catchError(this.handleError<Reserva[]>('getAllReservas', [])));
   }
 
   getReservaById(id: number): Observable<ReservaDTO> {
     const url = `${this.apiUrl}/${id}`;
-    return this.http.get<ReservaDTO>(url).pipe(
-      catchError(this.handleError<ReservaDTO>(`getReservaById id=${id}`))
-    );
+    return this.http
+      .get<ReservaDTO>(url)
+      .pipe(
+        catchError(this.handleError<ReservaDTO>(`getReservaById id=${id}`))
+      );
   }
 
   addReserva(reserva: ReservaDTO): Observable<Reserva> {
-    return this.http.post<Reserva>(this.apiUrl, reserva).pipe(
-      catchError(this.handleError<Reserva>('addReserva'))
-    );
+    return this.http
+      .post<Reserva>(this.apiUrl, reserva)
+      .pipe(catchError(this.handleError<Reserva>('addReserva')));
   }
 
   updateReserva(id: number, reserva: ReservaDTO): Observable<Reserva> {
     const url = `${this.apiUrl}/${id}`;
-    return this.http.put<Reserva>(url, reserva).pipe(
-      catchError(this.handleError<Reserva>('updateReserva'))
-    );
+    return this.http
+      .put<Reserva>(url, reserva)
+      .pipe(catchError(this.handleError<Reserva>('updateReserva')));
   }
 
   deleteReserva(id: number): Observable<Reserva> {
     const url = `${this.apiUrl}/${id}`;
-    return this.http.delete<Reserva>(url).pipe(
-      catchError(this.handleError<Reserva>('deleteReserva'))
-    );
+    return this.http
+      .delete<Reserva>(url)
+      .pipe(catchError(this.handleError<Reserva>('deleteReserva')));
   }
 
-  private events: { [key: string]: { name: string; startTime: string; endTime: string }[] } = {
+  private events: {
+    [key: string]: { name: string; startTime: string; endTime: string }[];
+  } = {
     '2024-07-11': [
       { name: 'Reunión', startTime: '10:00', endTime: '11:00' },
       { name: 'Almuerzo', startTime: '13:00', endTime: '14:00' },
     ],
-    '2024-07-12': [{ name: 'Cita médica', startTime: '09:00', endTime: '10:00' }],
+    '2024-07-12': [
+      { name: 'Cita médica', startTime: '09:00', endTime: '10:00' },
+    ],
   };
 
-  getEvents(date: string): { name: string; startTime: string; endTime: string }[] {
+  getEvents(
+    date: string
+  ): { name: string; startTime: string; endTime: string }[] {
     return this.events[date] || [];
   }
 
   getReservasByCliente(idCliente: number): Observable<ReservaDTO[]> {
     const url = `${this.apiUrl}/byClient/${idCliente}`;
-    return this.http.get<ReservaDTO[]>(url).pipe(
-      catchError(this.handleError<ReservaDTO[]>('getReservasByCliente', []))
-    );
+    return this.http
+      .get<ReservaDTO[]>(url)
+      .pipe(
+        catchError(this.handleError<ReservaDTO[]>('getReservasByCliente', []))
+      );
   }
-
-  
 }

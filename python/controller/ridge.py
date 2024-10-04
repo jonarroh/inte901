@@ -1,4 +1,5 @@
 from flask import Flask, Blueprint, request, Response
+from flask_cors import CORS
 import pandas as pd
 import joblib
 import holidays
@@ -6,6 +7,7 @@ import json
 import os
 import math as Math
 rid = Blueprint('rege', __name__)
+CORS(rid)
 
 models_path = os.path.join(os.getcwd(), 'models')
 
@@ -21,7 +23,17 @@ with open(f"{models_path}/X_columns.pkl", 'rb') as x_columns_file:
 
 @rid.route('/predictRege', methods=['POST'])
 def predict():
-    data = request.get_json()
+    received_data = request.get_json()
+    print(f"Data received: {received_data}")  # Depuración
+
+    # Verificar si los datos están directamente en la raíz o dentro de 'data'
+    if isinstance(received_data, dict) and 'data' in received_data:
+        data = received_data['data']
+    else:
+        data = received_data
+
+    if not data:
+        return json.dumps({"error": "No data provided"}), 400
 
     def generate_predictions(data):
         df = pd.DataFrame(data)
@@ -66,11 +78,9 @@ def predict():
         
         # Crear una respuesta con las predicciones
         results = [{'date': data[i]['date'], 'item': data[i]['item'], 'prediction': Math.trunc(predictions[i])}
-                   for i in range(len(predictions))]
+                for i in range(len(predictions))]
 
         yield json.dumps(results) + '\n'
 
     # Generar respuestas incrementales
     return Response(generate_predictions(data), content_type='application/json; charset=utf-8')
-
-

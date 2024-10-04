@@ -2,227 +2,167 @@
   <div class="flex-1 flex justify-center">
     <h1 class="text-5xl font-bold mt-1 mb-2 text-secondary">Usuarios</h1>
   </div>
-  <div class="flex justify-end my-5 me-5 pr-5">
-    <div>
-      <hlm-dialog
-      [state]="states()"
-      >
-        <button id="edit-profile" brnDialogTrigger hlmBtn>Agregar Usuario</button>
-       <form
-       (submit)="onSubmit()"
-       >
-       <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx" >
-        <hlm-dialog-header>
-          <h3 hlmDialogTitle>Nuevo Usuario</h3>
-          <p hlmDialogDescription></p>
-        </hlm-dialog-header>
-        <div class="py-4 grid gap-4">
-          <div>
-            <label class="text-start">
-              Nombre
-              <input
-                class="w-80"
-                hlmInput
-                type="text"
-                placeholder="Nombre"
-                ngModel
-                [formField]="formModel.controls.name"
-                [ngModelOptions]="{standalone: true}"
-              />
-            </label>
-            @if (formModel.controls.name.touched()) {
+
+  <div class="flex space-x-3 justify-end mb-4">
+    <hlm-dialog [state]="states()">
+      <button id="edit-profile" brnDialogTrigger hlmBtn variant="warning" class="text-white">Agregar Usuario</button>
+      <form (submit)="onSubmit()">
+        <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
+          <hlm-dialog-header>
+            <h3 hlmDialogTitle>Nuevo Usuario</h3>
+          </hlm-dialog-header>
+          <div class="py-4 grid gap-4">
+            <div>
+              <label class="text-start">
+                Nombre
+                <input class="w-80" hlmInput type="text" placeholder="Nombre" ngModel
+                  [formField]="formModel.controls.name" [ngModelOptions]="{standalone: true}" />
+              </label>
+              @if (formModel.controls.name.touched()) {
               @if (formModel.controls.name.hasError('required')) {
-                <div class="text-red-500 text-sm">El nombre es requerido</div>
+              <div class="text-red-500 text-sm">El nombre es requerido</div>
               } @else if (formModel.controls.name.hasError('maxLength')) {
-                <div class="text-red-500 text-sm">
-                  El nombre debe tener menos de 50 caracteres
-                </div>
+              <div class="text-red-500 text-sm">
+                El nombre debe tener menos de 50 caracteres
+              </div>
               }
-            }
-          </div>
-          <div>
-            <label class="text-start">
-              Apellido
-              <input
-                class="w-80"
-                hlmInput
-                type="text"
-                placeholder="Apellido"
-                ngModel
-                [formField]="formModel.controls.lastName"
-                [ngModelOptions]="{standalone: true}"
-              />
-            </label>
-            @if (formModel.controls.lastName.touched()) {
+              }
+            </div>
+            <div>
+              <label class="text-start">
+                Apellido
+                <input class="w-80" hlmInput type="text" placeholder="Apellido" ngModel
+                  [formField]="formModel.controls.lastName" [ngModelOptions]="{standalone: true}" />
+              </label>
+              @if (formModel.controls.lastName.touched()) {
               @if (formModel.controls.lastName.hasError('required')) {
-                <div class="text-red-500 text-sm">El apellido es requerido</div>
+              <div class="text-red-500 text-sm">El apellido es requerido</div>
               } @else if (formModel.controls.lastName.hasError('maxLength')) {
-                <div class="text-red-500 text-sm">
-                  El apellido debe tener menos de 50 caracteres
-                </div>
+              <div class="text-red-500 text-sm">
+                El apellido debe tener menos de 50 caracteres
+              </div>
               }
-            }
-          </div>
-          <div>
-            <label class="text-start">
-              Correo electrónico
-              <input
-                class="w-80"
-                hlmInput
-                type="email"
-                placeholder="Email"
-                ngModel
-                [formField]="formModel.controls.email"
-                [ngModelOptions]="{standalone: true}"
-              />
-            </label>
-            @if (formModel.controls.email.touched()) {
+              }
+            </div>
+            <div>
+              <label class="text-start">
+                Correo electrónico
+                <input class="w-80" hlmInput type="email" placeholder="Email" ngModel
+                  [formField]="formModel.controls.email" [ngModelOptions]="{standalone: true}" />
+              </label>
+              @if (formModel.controls.email.touched()) {
               @if (formModel.controls.email.hasError('required')) {
-                <div class="text-red-500 text-sm">El correo electrónico es requerido</div>
+              <div class="text-red-500 text-sm">El correo electrónico es requerido</div>
               } @else if (formModel.controls.email.hasError('maxLength')) {
-                <div class="text-red-500 text-sm">
-                  El correo electrónico debe tener menos de 50 caracteres
-                </div>
+              <div class="text-red-500 text-sm">
+                El correo electrónico debe tener menos de 50 caracteres
+              </div>
               } @else if (formModel.controls.email.hasError('pattern')) {
-                <div class="text-red-500 text-sm">El correo electrónico no es válido</div>
+              <div class="text-red-500 text-sm">El correo electrónico no es válido</div>
               }
-            }
-          </div>
-          <div>
-            <label class="text-start">
-              Contraseña
-              <input
-                class="w-80"
-                hlmInput
-                type="password"
-                placeholder="Contraseña"
-                ngModel
-                [formField]="formModel.controls.password"
-                [ngModelOptions]="{standalone: true}"
-              />
-            </label>
-            @if (formModel.controls.password.touched()) {
-               @if (formModel.controls.password.hasError('maxLength')) {
-                <div class="text-red-500 text-sm">
-                  El correo electrónico debe tener menos de 50 caracteres
-                </div>
+              }
+            </div>
+            <div>
+              <label class="text-start">
+                Contraseña
+                <input class="w-80" hlmInput type="password" placeholder="Contraseña" ngModel
+                  [formField]="formModel.controls.password" [ngModelOptions]="{standalone: true}" />
+              </label>
+              @if (formModel.controls.password.touched()) {
+              @if (formModel.controls.password.hasError('maxLength')) {
+              <div class="text-red-500 text-sm">
+                El correo electrónico debe tener menos de 50 caracteres
+              </div>
               } @else if (formModel.controls.email.hasError('pattern')) {
-                <div class="text-red-500 text-sm">El correo electrónico no es válido</div>
+              <div class="text-red-500 text-sm">El correo electrónico no es válido</div>
               }
+              }
+            </div>
+            <div>
+              <brn-popover [state]="state()" (stateChanged)="stateChanged($event)" sideOffset="5" closeDelay="100">
+                <button class="w-[200px] justify-between" id="edit-profile" variant="outline" brnPopoverTrigger hlmBtn>
+                  {{ currentRole() ? currentRole()?.label : 'Seleccionar Rol' }}
+                  <hlm-icon size="sm" name="lucideChevronsUpDown" />
+                </button>
+                <brn-cmd *brnPopoverContent="let ctx" hlmPopoverContent hlm class="p-0 w-[200px]">
+                  <hlm-cmd-input-wrapper class="bg-white">
+                    <hlm-icon name="lucideSearch" />
+                    <input placeholder="Buscar rol..." brnCmdInput hlm class="z-10" />
+                  </hlm-cmd-input-wrapper>
+                  <div *brnCmdEmpty hlmCmdEmpty>No se encontraron roles</div>
+                  <brn-cmd-list hlm class="bg-white">
+                    <brn-cmd-group hlm>
+                      <button *ngFor="let rol of roles" brnCmdItem [value]="rol.value" (selected)="commandSelected(rol)"
+                        hlm>
+                        <hlm-icon [class.opacity-0]="currentRole()?.value !== rol.value" name="lucideCheck"
+                          hlmCmdIcon />
+                        {{ rol.label }}
+                      </button>
+                    </brn-cmd-group>
+                  </brn-cmd-list>
+                </brn-cmd>
+              </brn-popover>
+            </div>
+          </div>
+          <hlm-dialog-footer>
+            @if(isEditing()) {
+            <button hlmBtn variant="destructive" (click)="onCancel()" class="text-white">Cancelar</button>
+            <button hlmBtn type="submit" (click)="onEditUser()" variant="warning" class="text-white">Actualizar</button>
+            } @else {
+            <button hlmBtn variant="destructive" (click)="onCancel()" class="text-white">Cancelar</button>
+            <button hlmBtn (click)="onSubmit()" variant="warning" class="text-white">Crear</button>
             }
-          </div>
-          <div>
-            <brn-popover [state]="state()" (stateChanged)="stateChanged($event)" sideOffset="5" closeDelay="100">
-              <button class="w-[200px] justify-between" id="edit-profile" variant="outline" brnPopoverTrigger hlmBtn>
-                {{ currentRole() ? currentRole()?.label : 'Seleccionar Rol' }}
-                <hlm-icon size="sm" name="lucideChevronsUpDown" />
-              </button>
-              <brn-cmd *brnPopoverContent="let ctx" hlmPopoverContent hlm class="p-0 w-[200px]">
-                <hlm-cmd-input-wrapper class="bg-white">
-                  <hlm-icon name="lucideSearch" />
-                  <input placeholder="Buscar rol..." brnCmdInput hlm  class="z-10"/>
-                </hlm-cmd-input-wrapper>
-                <div *brnCmdEmpty hlmCmdEmpty>No se encontraron roles</div>
-                <brn-cmd-list hlm class="bg-white">
-                  <brn-cmd-group hlm>
-                    <button
-                      *ngFor="let rol of roles"
-                      brnCmdItem
-                      [value]="rol.value"
-                      (selected)="commandSelected(rol)"
-                      hlm
-                    >
-                      <hlm-icon
-                        [class.opacity-0]="currentRole()?.value !== rol.value"
-                        name="lucideCheck"
-                        hlmCmdIcon
-                      />
-                      {{ rol.label }}
-                    </button>
-                  </brn-cmd-group>
-                </brn-cmd-list>
-              </brn-cmd>
-            </brn-popover>
-          </div>
-        </div>
-        <hlm-dialog-footer>
-          @if(isEditing()) {
-            <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
-            <button hlmBtn type="submit"
-            (click)="onEditUser()"
-            >Guardar</button>
-          } @else {
-            <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
-            <button hlmBtn
-            (click)="onSubmit()"
-            >Crear</button>
-          }
-        </hlm-dialog-footer>
-      </hlm-dialog-content>
+          </hlm-dialog-footer>
+        </hlm-dialog-content>
       </form>
-      </hlm-dialog>
-    </div>
-
+    </hlm-dialog>
   </div>
-  <div class="flex flex-row justify-between gap-4 px-20 py-5">
-    <input
-      hlmInput
-      class="w-full md:w-80"
-      placeholder="buscar por email"
-      [ngModel]="_emailFilter()"
-      (ngModelChange)="_rawFilterInput.set($event)"
-    />
 
-    <button hlmBtn variant="outline" align="end" [brnMenuTriggerFor]="menu">
+  <div class="flex flex-col justify-between gap-4 sm:flex-row">
+    <input hlmInput class="w-full md:w-80" placeholder="buscar por email" [ngModel]="_emailFilter()"
+      (ngModelChange)="_rawFilterInput.set($event)" />
+
+    <button hlmBtn variant="warning" class="text-white" align="end" [brnMenuTriggerFor]="menu">
       Ver columnas
       <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
     </button>
     <ng-template #menu>
       <hlm-menu class="w-32 bg-white">
         @for (column of _brnColumnManager.allColumns; track column.name) {
-          <button
-            hlmMenuItemCheckbox
-            class="bg-white hover:bg-gray-100"
-            [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
-            [checked]="_brnColumnManager.isColumnVisible(column.name)"
-            (triggered)="_brnColumnManager.toggleVisibility(column.name)"
-          >
-            <hlm-menu-item-check  class="bg-white"/>
-            <span>{{ column.label }}</span>
-          </button>
+        <button hlmMenuItemCheckbox class="bg-white hover:bg-gray-100"
+          [disabled]="_brnColumnManager.isColumnDisabled(column.name)"
+          [checked]="_brnColumnManager.isColumnVisible(column.name)"
+          (triggered)="_brnColumnManager.toggleVisibility(column.name)">
+          <hlm-menu-item-check />
+          <span>{{ column.label }}</span>
+        </button>
         }
       </hlm-menu>
     </ng-template>
   </div>
 
-  <brn-table
-    hlm
-    stickyHeader
-    class="border-border  block h-[335px] overflow-auto rounded-md border px-20 bg-white"
-    [dataSource]="_filteredSortedPaginatedPayments()"
-    [displayedColumns]="_allDisplayedColumns()"
-    [trackBy]="_trackBy"
-  >
-    <brn-column-def name="select" class="w-12 bg-white">
-      <hlm-th *brnHeaderDef class="bg-white">
-        <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()"
+  <brn-table hlm stickyHeader class="border-border mt-4 block h-[335px] overflow-auto rounded-md border"
+    [dataSource]="_filteredSortedPaginatedPayments()" [displayedColumns]="_allDisplayedColumns()" [trackBy]="_trackBy">
+    <brn-column-def name="select" class="">
+      <hlm-th *brnHeaderDef class="">
+        <!-- <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()"
 
-        class="bg-white"/>
+        class="bg-white"/> -->
       </hlm-th>
-      <hlm-td *brnCellDef="let element" class="bg-white">
-        <hlm-checkbox [checked]="_isUserSelected(element)" (changed)="toggleUser(element)"
+      <hlm-td *brnCellDef="let element" class="">
+        <!-- <hlm-checkbox [checked]="_isUserSelected(element)" (changed)="toggleUser(element)"
         class="bg-white"
-        />
+        /> -->
       </hlm-td>
     </brn-column-def>
-    <brn-column-def name="Name" class="w-32 sm:w-40 bg-white">
+    <brn-column-def name="Name" class="flex-1">
       <hlm-th truncate *brnHeaderDef>Nombre</hlm-th>
       <hlm-td truncate *brnCellDef="let element">
         {{ element.name }} {{ element.lastName }}
       </hlm-td>
     </brn-column-def>
 
-    <brn-column-def name="Email" class="w-60 lg:flex-1 bg-white">
+    <brn-column-def name="Email" class="flex-1">
       <hlm-th *brnHeaderDef>
         <button hlmBtn size="sm" variant="ghost" (click)="handleEmailSortChange()">
           Email
@@ -233,71 +173,61 @@
         {{ element.email }}
       </hlm-td>
     </brn-column-def>
-    <brn-column-def name="Role" class="justify-end w-20 bg-white">
+    <brn-column-def name="Role" class="flex-1">
       <hlm-th *brnHeaderDef>Rol</hlm-th>
       <hlm-td class="font-medium tabular-nums" *brnCellDef="let element">
         @if (element.role === 'Admin') {
-          <span class="bg-green-300 text-white rounded-full px-2 py-1">
-            {{ element.role }}
-          </span>
+        <span class="bg-warning text-white rounded-full px-2 py-1">
+          {{ element.role }}
+        </span>
         }@else if (element.role === "Cliente") {
-          <span class="bg-secondary text-white rounded-full px-2 py-1">
-            {{ element.role }}
-          </span>
+        <span class="bg-navhover text-white rounded-full px-2 py-1">
+          {{ element.role }}
+        </span>
         }
       </hlm-td>
     </brn-column-def>
-    <brn-column-def name="actions" class="w-16 bg-white">
-      <hlm-th *brnHeaderDef></hlm-th>
+    <brn-column-def name="actions" class="flex-1">
+      <hlm-th *brnHeaderDef>Acciones</hlm-th>
       <hlm-td *brnCellDef="let element">
-        <button hlmBtn variant="ghost" class="h-6 w-6 p-0.5 hover:bg-gray-100" align="end" [brnMenuTriggerFor]="menu">
-          <hlm-icon class="w-4 h-4" name="lucideMoreHorizontal" />
+        <button hlmBtn variant="warning" class="text-white" (click)="onClickEdit(element)">
+          Editar
         </button>
-
-        <ng-template #menu>
-          <hlm-menu class="bg-white">
-            <hlm-menu-label>
-              Actions
-
-            </hlm-menu-label>
-            <hlm-menu-separator />
-            <hlm-menu-group>
-              <button hlmMenuItem (click)="onClickEdit(element)"
-              class="hover:bg-gray-100"
-              >
-                Editar
-              </button>
-            </hlm-menu-group>
-            <hlm-menu-separator />
-            <hlm-menu-group>
-              <button hlmMenuItem  (click)="onDeletedUser(element)"
-              class="hover:bg-gray-100"
-              >
-                              Eliminar
-              </button>
-            </hlm-menu-group>
-          </hlm-menu>
-        </ng-template>
+        &nbsp;
+        <hlm-alert-dialog>
+          <button id="edit-profile" variant="destructive" class="text-white" brnAlertDialogTrigger hlmBtn>Eliminar</button>
+          <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
+            <hlm-alert-dialog-header>
+              <h3 hlmAlertDialogTitle>Confirmar eliminaci&oacute;n</h3>
+              <p hlmAlertDialogDescription>
+                Al confirmar esta acci&oacute;n, el usuario ser&aacute; eliminado de forma permanente.
+              </p>
+            </hlm-alert-dialog-header>
+            <hlm-alert-dialog-footer>
+              <button hlmAlertDialogCancel (click)="ctx.close()">Cancelar</button>
+              <button hlmAlertDialogAction class="text-white" (click)="onDeletedUser(element)">Eliminar</button>
+            </hlm-alert-dialog-footer>
+          </hlm-alert-dialog-content>
+        </hlm-alert-dialog>
       </hlm-td>
-      
+
     </brn-column-def>
-    <div class="flex items-center justify-center p-20 text-muted-foreground" brnNoDataRow>No data</div>
+    <div class="flex items-center justify-center p-20 text-muted-foreground" brnNoDataRow>No hay datos</div>
   </brn-table>
-  <div
-    class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center px-20"
-    *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange"
-  >
-    <span class="text-sm text-muted-foreground">{{ _selected().length }} de {{ _totalElements() }} usuarios</span>
+
+  <div class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center"
+    *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange">
+    <span class="text-sm text-muted-foreground">{{ _totalElements() }} usuarios</span>
     <div class="flex mt-2 sm:mt-0">
-      <brn-select class="inline-block" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
-        <hlm-select-trigger class="inline-flex mr-1 w-15 h-9 bg-white">
+      <brn-select class="inline-block text-white" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
+        <hlm-select-trigger class="inline-flex mr-1 w-15 h-9" variant="warning">
           <hlm-select-value />
         </hlm-select-trigger>
-        <hlm-select-content>
+        <hlm-select-content class="bg-white text-black">
           @for (size of _availablePageSizes; track size) {
-            <hlm-option [value]="size">
-              {{ size === 10000 ? 'All' : size }}
-            </hlm-option>
+          <hlm-option [value]="size" class="hover:bg-navhover">
+            {{ size === 10000 ? 'Todo' : size }}
+          </hlm-option>
           }
         </hlm-select-content>
       </brn-select>

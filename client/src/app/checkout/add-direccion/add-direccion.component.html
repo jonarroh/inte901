@@ -1,14 +1,17 @@
 <home-navbar></home-navbar>
+<div class="ms-4">
+  <app-breadcrumb [separator]="'>'"></app-breadcrumb>
+</div>
 <section class="flex flex-col items-center justify-between p-4 h-[calc(100vh-3rem)] w-screen">
   <div class="grid grid-cols-12 w-full h-full p-8">
-    <div class="col-span-4 only-border-right h-full">
+    <div class="col-span-12 md:col-span-4 lg:only-border-right h-full">
       <div>
         <h2
-        class="text-2xl font-bold mb-8"
+        class="text-2xl font-bold mb-8 text-center"
         >Tus direcciones</h2>
         @for (dir of address().direcciones; track $index) {
           <div class="flex justify-between items-center borde rounded-lg px-4 py-2 my-2 shadow-lg  w-full border border-gray-50/30 bg-slate-50">
-            <div class="flex items-center w-full">
+            <div class="flex items-center w-3/6">
               <lucide-icon name="house"></lucide-icon>
               <span class="mx-2 truncate w-full">
                 {{dir.calle}}, {{dir.colonia}}
@@ -22,9 +25,9 @@
                 </button>
                 <hlm-alert-dialog-content *brnAlertDialogContent='let ctx'>
                   <hlm-alert-dialog-header>
-                    <h3 hlmAlertDialogTitle>¿Estás seguro de que deseas esta dirección?</h3>
+                    <h3 hlmAlertDialogTitle>¿Estás seguro que deseas eliminar esta dirección?</h3>
                     <p hlmAlertDialogDescription>
-                      Esta acción no se puede deshacer. Esta eliminará la dirección de tu cuenta.
+                      Esta acción no se puede deshacer. Esto eliminará la dirección de tu cuenta.
                     </p>
                   </hlm-alert-dialog-header>
                   <hlm-alert-dialog-footer>
@@ -42,9 +45,9 @@
       </div>
     </div>
     
-    <div class="col-span-8 px-4">
+    <div class="col-span-12 md:col-span-8 px-4">
       <h2
-      class="text-2xl font-bold"
+      class="text-2xl font-bold text-center"
       >Agregar dirección</h2>
       <div>
         <form class="grid grid-cols-2 gap-4">
@@ -102,15 +105,15 @@
             />
             @if (formModel.controls.ciudad.touched()) {
               @if (formModel.controls.ciudad.hasError('required')) {
-                <div class="text-red-500 text-sm">El código postal es requerido</div>
+                <div class="text-red-500 text-sm">La ciudad es requerida</div>
               } @else if (formModel.controls.ciudad.hasError('maxLength')) {
-                <div class="text-red-500 text-sm">El código postal debe tener menos de 10 caracteres</div>
+                <div class="text-red-500 text-sm">La ciudad debe tener menos de 50 caracteres</div>
               }
             }
           </div>
           <div>
             <label>
-              Numero exterior
+              Número exterior
             </label>
             <input
               type="text"
