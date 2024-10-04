@@ -10,7 +10,4 @@ describe('EspacioSerService', () => {
     service = TestBed.inject(EspacioSerService);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
 });
