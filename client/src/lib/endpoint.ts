@@ -1,4 +1,4 @@
-const API_URL = 'https://localhost:7268';
+const API_URL = 'http://localhost:5275';
 
 export const ENDPOINTS = {
   login: `${API_URL}/Account/login`,

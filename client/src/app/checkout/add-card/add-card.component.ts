@@ -56,7 +56,7 @@ import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.componen
     HlmInputDirective,
     SignalInputDirective,
     FormsModule,
-    BrnCommandImports,
+    
     HlmCommandImports,
     HlmIconComponent,
     BrnPopoverComponent,

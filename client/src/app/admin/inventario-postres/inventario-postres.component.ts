@@ -19,6 +19,10 @@ import { HlmSelectContentDirective, HlmSelectOptionComponent, HlmSelectTriggerCo
 import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
 import { Producto } from '../productos/interface/producto';
 import { ProductoService } from '../productos/service/producto.service';
+import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
+import { HlmAlertDialogActionButtonDirective, HlmAlertDialogCancelButtonDirective, HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogOverlayDirective, HlmAlertDialogTitleDirective } from '~/components/ui-alertdialog-helm/src';
+import { LucideAngularModule } from 'lucide-angular';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-inventario-postres',
@@ -48,6 +52,18 @@ import { ProductoService } from '../productos/service/producto.service';
     HlmTableModule,
     BrnMenuTriggerDirective,
     HlmMenuModule,
+    BrnAlertDialogTriggerDirective,
+    BrnAlertDialogContentDirective,
+    HlmAlertDialogComponent,
+    HlmAlertDialogOverlayDirective,
+    HlmAlertDialogHeaderComponent,
+    HlmAlertDialogFooterComponent,
+    HlmAlertDialogTitleDirective,
+    HlmAlertDialogDescriptionDirective,
+    HlmAlertDialogCancelButtonDirective,
+    HlmAlertDialogActionButtonDirective,
+    HlmAlertDialogContentComponent,
+    LucideAngularModule
   ],
   templateUrl: './inventario-postres.component.html',
   styleUrls: ['./inventario-postres.component.css'],
@@ -69,9 +85,9 @@ export class InventarioPostresComponent {
 
   // Column manager
   protected readonly _brnColumnManager = useBrnColumnManager({
-    ID: {visible: true, label: 'ID', sortable: true},
-    Producto: {visible: true, label: 'Producto', sortable: true},
-    Cantidad: {visible: true, label: 'Cantidad', sortable: true},
+    ID: { visible: true, label: 'ID', sortable: true },
+    Producto: { visible: true, label: 'Producto', sortable: true },
+    Cantidad: { visible: true, label: 'Cantidad', sortable: true },
   });
 
   // Columnas visibles
@@ -90,17 +106,17 @@ export class InventarioPostresComponent {
     this.productoService.getProductos().subscribe((productos) => {
       this.productos = productos;
     });
-  
+
     this.inventarioPostresSource$ = this.inventarioPostresService.getInventarioPostre().pipe(
       map((inventarioPostres) => inventarioPostres.filter((inventarioPostre) => inventarioPostre.estatus === 1))
     );
-  
+
     this.inventarioPostres$ = combineLatest([
       this.inventarioPostresSource$,
       this.filter$
     ]).pipe(
-      map(([inventarioPostres, filterValue]) => 
-        inventarioPostres.filter(inventarioPostre => 
+      map(([inventarioPostres, filterValue]) =>
+        inventarioPostres.filter(inventarioPostre =>
           inventarioPostre.idProducto?.toString().includes(filterValue.toLowerCase()) ?? false
         )
       ),
@@ -112,7 +128,7 @@ export class InventarioPostresComponent {
       })
     );
   }
-  
+
 
   private _updatePaginatedData() {
     this.inventarioPostresSource$.pipe(
@@ -122,14 +138,14 @@ export class InventarioPostresComponent {
         const filteredInventarioPostres = inventarioPostres.filter(inventarioPostre =>
           inventarioPostre.idProducto?.toString().includes(filterValue.toLowerCase()) ?? false
         );
-  
+
         // Obtener los índices de paginación
         const start = this._displayedIndices().start;
         const end = this._displayedIndices().end + 1;
-  
+
         // Actualizar la cantidad total de elementos
         this._totalElements.set(filteredInventarioPostres.length);
-  
+
         // Retornar el subconjunto de datos basado en la paginación
         return filteredInventarioPostres.slice(start, end);
       })
@@ -164,29 +180,74 @@ export class InventarioPostresComponent {
     const producto = this.productos.find(prod => prod.id === idProducto);
     return producto ? (producto.nombre || 'Nombre no disponible') : 'Producto no encontrado';
   }
-  
-  
+
+
   onSubmitAdd(form: NgForm) {
     if (form.valid) {
       this.inventarioPostre.estatus = 1;
       this.inventarioPostre.createdAt = new Date().toISOString();
-      this.inventarioPostresService.registrarInventarioPostre(this.inventarioPostre).subscribe((response) => {
-        console.log('Inventario de postre registrado:', response);
-        form.resetForm();
-        this.inventarioPostre = {}; // Reiniciar el objeto inventario de postre
-        this.refreshInventarioPostres();
+      // this.inventarioPostresService.registrarInventarioPostre(this.inventarioPostre).subscribe((response) => {
+      //   console.log('Inventario de postre registrado:', response);
+      //   form.resetForm();
+      //   this.inventarioPostre = {}; // Reiniciar el objeto inventario de postre
+      //   this.refreshInventarioPostres();
+      // });
+      this.inventarioPostresService.registrarInventarioPostre(this.inventarioPostre).subscribe({
+        next: (response) => {
+          console.log('Inventario de postre registrado:', response);
+          form.resetForm();
+          this.inventarioPostre = {}; // Reiniciar el objeto inventario de postre
+          toast.success('Inventario de postre registrado', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        },
+        error: (error) => {
+          console.error('Error al registrar el inventario de postre:', error);
+          toast.error('Error al registrar el inventario de postre', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        }
       });
     }
   }
 
   onSubmitEdit(form: NgForm) {
     if (form.valid) {
-      this.inventarioPostresService.editarInventarioPostre(this.inventarioPostre.idPostre!, this.inventarioPostre).subscribe((response) => {
-        console.log('Inventario de postre actualizado:', response);
-        form.resetForm();
-        this.inventarioPostre = {}; // Reiniciar el objeto inventario de postre
-        this.editMode = false;
-        this.refreshInventarioPostres();
+      // this.inventarioPostresService.editarInventarioPostre(this.inventarioPostre.idPostre!, this.inventarioPostre).subscribe((response) => {
+      //   console.log('Inventario de postre actualizado:', response);
+      //   form.resetForm();
+      //   this.inventarioPostre = {}; // Reiniciar el objeto inventario de postre
+      //   this.editMode = false;
+      //   this.refreshInventarioPostres();
+      // });
+      this.inventarioPostresService.editarInventarioPostre(this.inventarioPostre.idPostre!, this.inventarioPostre).subscribe({
+        next: (response) => {
+          console.log('Inventario de postre actualizado:', response);
+          form.resetForm();
+          this.inventarioPostre = {}; // Reiniciar el objeto inventario de postre
+          this.editMode = false;
+          toast.success('Inventario de postre actualizado', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        },
+        error: (error) => {
+          console.error('Error al actualizar el inventario de postre:', error);
+          toast.error('Error al actualizar el inventario de postre', {
+            duration: 1200,
+            onAutoClose: ((toast => {
+              location.reload();
+            }))
+          });
+        }
       });
     }
   }
@@ -205,13 +266,29 @@ export class InventarioPostresComponent {
   }
 
   onDelete(id: number) {
-    this.inventarioPostresService.eliminarInventarioPostre(id).subscribe(() => {
-      console.log('Inventario de postre eliminado');
-      this.refreshInventarioPostres();
+    // this.inventarioPostresService.eliminarInventarioPostre(id).subscribe(() => {
+    //   console.log('Inventario de postre eliminado');
+    //   this.refreshInventarioPostres();
+    // });
+    this.inventarioPostresService.eliminarInventarioPostre(id).subscribe({
+      next: () => {
+        console.log('Inventario de postre eliminado');
+        toast.success('Inventario de postre eliminado', {
+          duration: 1200,
+          onAutoClose: ((toast => {
+            location.reload();
+          }))
+        });
+      },
+      error: (error) => {
+        console.error('Error al eliminar el inventario de postre:', error);
+        toast.error('Error al eliminar el inventario de postre', {
+          duration: 1200,
+          onAutoClose: ((toast => {
+            location.reload();
+          }))
+        });
+      }
     });
-  }
-
-  refreshInventarioPostres() {
-    location.reload();
   }
 }

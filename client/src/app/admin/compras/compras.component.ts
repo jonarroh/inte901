@@ -46,6 +46,7 @@ import { toast } from 'ngx-sonner';
 import { fr } from 'date-fns/locale';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { SelectionModel } from '@angular/cdk/collections';
+import { LucideAngularModule } from 'lucide-angular';
 
 type Framework = { label: string; value: string };
 type Presentations = { label: string; value: string };
@@ -83,7 +84,6 @@ type Status = { label: string; value: string };
     HlmAccordionModule,
     BrnAccordionModule,
     HlmToasterComponent,
-    BrnCommandImports,
     HlmCommandImports,
     BrnPopoverComponent,
     BrnPopoverTriggerDirective,
@@ -110,6 +110,7 @@ type Status = { label: string; value: string };
     HlmAlertDialogCancelButtonDirective,
     HlmAlertDialogActionButtonDirective,
     HlmAlertDialogContentComponent,
+    LucideAngularModule
   ],
   templateUrl: './compras.component.html',
   styleUrl: './compras.component.css',

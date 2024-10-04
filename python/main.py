@@ -129,34 +129,41 @@ def upload_file():
         return jsonify({'message': 'Image has been uploaded and optimized.'},)
     else:
         return jsonify({'message': 'Error uploading image'})
-    
+
 @app.route('/places/upload', methods=['POST'])
 def upload_place():
-    if 'file' not in request.files:
-        return jsonify({'message': 'No file part'})
-    
-    file = request.files['file']
+    if 'imagen' not in request.files:
+        return jsonify({'message': 'No file part'}), 400
+
+    file = request.files['imagen']
     if file.filename == '':
-        return jsonify({'message': 'No selected file'})
-    
+        return jsonify({'message': 'No selected file'}), 400
+
     if 'id' not in request.form:
-        return jsonify({'message': 'No id part'})
-    
+        return jsonify({'message': 'No id part'}), 400
+
     id = request.form['id']
-    #hacer la optimizacion de la imagen a webp y guardarla en la carpeta static/users
+    print(f"Received id: {id}")
 
     if file:
-        img = Image.open(file)
-        # Guardar la imagen en formato webp
-        webp_filename = id + '.webp'
-        webp_filepath = os.path.join(STATIC_FOLDER, 'users', webp_filename)
+        try:
+            img = Image.open(file)
+            webp_filename = f"{id}.webp"
+            webp_filepath = os.path.join(STATIC_FOLDER, "places", webp_filename)
 
-        img.save(webp_filepath, 'webp', quality=90)
-        return jsonify({'message': 'Image has been uploaded and optimized.'})
+            # Asegúrate de que la carpeta existe
+            os.makedirs(os.path.dirname(webp_filepath), exist_ok=True)
+
+            img.save(webp_filepath, 'webp', quality=90)
+            print(f"Image saved to {webp_filepath}")
+            return jsonify({'message': 'Image has been uploaded and optimized.'})
+        except Exception as e:
+            print(f"Error saving image: {e}")
+            return jsonify({'message': 'Error uploading image'}), 500
     else:
-        return jsonify({'message': 'Error uploading image'})
-    
-        
+        return jsonify({'message': 'Error uploading image'}), 400
+
+
 @app.route('/productos/upload', methods=['POST'])
 def upload_products():
     if 'file' not in request.files:

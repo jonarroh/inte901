@@ -41,6 +41,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import { HlmMenuModule } from '~/components/ui-menu-helm/src';
 import { HlmBadgeDirective } from '~/components/ui-badge-helm/src';
+import { LucideAngularModule } from 'lucide-angular';
 
 type Framework = { label: string; value: string };
 type Status = { label: string; value: string };
@@ -76,7 +77,7 @@ type Status = { label: string; value: string };
     HlmSheetTitleDirective,
     HlmSheetDescriptionDirective,
     HlmToasterComponent,
-    BrnCommandImports,
+    
     HlmCommandImports,
     BrnPopoverComponent,
     BrnPopoverTriggerDirective,
@@ -98,6 +99,7 @@ type Status = { label: string; value: string };
     BrnMenuTriggerDirective,
     HlmMenuModule,
     HlmBadgeDirective,
+    LucideAngularModule
   ],
   templateUrl: './ventas.component.html',
   styleUrl: './ventas.component.css'
