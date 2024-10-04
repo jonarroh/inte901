@@ -36,8 +36,8 @@ import { HlmAlertDialogComponent } from '~/components/ui-alertdialog-helm/src';
   imports: [
     NavbarComponent, HlmDialogComponent, HlmDialogContentComponent, HlmDialogFooterComponent,
     LucideAngularModule, BrnDialogContentDirective, BrnDialogTriggerDirective, HlmDialogHeaderComponent,
-    HlmDialogTitleDirective, HlmDialogDescriptionDirective, HlmLabelDirective, HlmInputDirective, HlmButtonDirective,
-    SignalInputDirective, BrnSelectImports, HlmSelectImports, FormsModule, BrnCommandImports, HlmCommandImports, HlmIconComponent,
+    HlmDialogTitleDirective,HlmDialogDescriptionDirective, HlmLabelDirective, HlmInputDirective, HlmButtonDirective,
+    SignalInputDirective, BrnSelectImports, HlmSelectImports, FormsModule, HlmCommandImports, HlmIconComponent,
     HlmButtonDirective, BrnPopoverComponent, BrnPopoverTriggerDirective, BrnPopoverTriggerDirective, BrnPopoverContentDirective,
     NgForOf, BrnMenuTriggerDirective, HlmMenuModule, BrnTableModule, HlmTableModule, HlmButtonModule, DecimalPipe, TitleCasePipe, HlmIconComponent,
     HlmInputDirective, HlmCheckboxCheckIconComponent, HlmCheckboxComponent, BrnSelectModule, HlmSelectModule, CommonModule

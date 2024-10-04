@@ -3,7 +3,7 @@ import { Injectable, signal, effect } from '@angular/core';
 import { Address, CreditCard, Order } from '~/lib/types';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CheckoutService {
   private storageKey = 'Checkout-Order';
@@ -17,32 +17,52 @@ export class CheckoutService {
 
     // Initialize signals with localStorage values
     this.orderSignal = signal<Order>(this.loadOrderFromLocalStorage());
-    this.selectedCard = signal<CreditCard>(this.loadFromLocalStorage(this.selectedCardKey, {} as CreditCard));
-    this.selectedAddress = signal<Address>(this.loadFromLocalStorage(this.selectedAddressKey, {} as Address));
-    this.isOrderToStore = signal<boolean>(this.loadFromLocalStorage(this.isOrderToStoreKey, false));
-    this.isPaidWithCard = signal<boolean>(this.loadFromLocalStorage(this.isPaidWithCardKey, false));
+    this.selectedCard = signal<CreditCard>(
+      this.loadFromLocalStorage(this.selectedCardKey, {} as CreditCard)
+    );
+    this.selectedAddress = signal<Address>(
+      this.loadFromLocalStorage(this.selectedAddressKey, {} as Address)
+    );
+    this.isOrderToStore = signal<boolean>(
+      this.loadFromLocalStorage(this.isOrderToStoreKey, false)
+    );
+    this.isPaidWithCard = signal<boolean>(
+      this.loadFromLocalStorage(this.isPaidWithCardKey, false)
+    );
 
     // Effects to update localStorage when signals change
     effect(() => {
-      localStorage.setItem(this.selectedCardKey, JSON.stringify(this.selectedCard()));
+      localStorage.setItem(
+        this.selectedCardKey,
+        JSON.stringify(this.selectedCard())
+      );
     });
 
     effect(() => {
-      localStorage.setItem(this.selectedAddressKey, JSON.stringify(this.selectedAddress()));
+      localStorage.setItem(
+        this.selectedAddressKey,
+        JSON.stringify(this.selectedAddress())
+      );
     });
 
     effect(() => {
-      localStorage.setItem(this.isOrderToStoreKey, JSON.stringify(this.isOrderToStore()));
+      localStorage.setItem(
+        this.isOrderToStoreKey,
+        JSON.stringify(this.isOrderToStore())
+      );
     });
 
     effect(() => {
-      localStorage.setItem(this.isPaidWithCardKey, JSON.stringify(this.isPaidWithCard()));
+      localStorage.setItem(
+        this.isPaidWithCardKey,
+        JSON.stringify(this.isPaidWithCard())
+      );
     });
   }
 
-  url = 'https://localhost:7268/api/Orders';
-  urlAddress = 'https://localhost:7268/api/Direcciones';
-  urlCard = 'https://localhost:7268/api/CreditCards';
+  url = 'http://localhost:5275/api/Orders';
+  urlAddress = 'http://localhost:5275/api/Direcciones';
+  urlCard = 'http://localhost:5275/api/CreditCards';
 
   orderSignal = signal<Order>(this.loadOrderFromLocalStorage());
   isOrderToStore = signal<boolean>(false);
