@@ -74,6 +74,9 @@ export class UserService {
     this.userData.set(userData);
     localStorage.setItem(this.storageKey, JSON.stringify(userData));
     localStorage.setItem('userId', userData.id.toString());
+    return new Promise<void>((resolve) => {
+      resolve();
+    });
   }
 
   clearUserData() {

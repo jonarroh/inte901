@@ -14,6 +14,8 @@ export class AuthGuard implements CanActivate {
       // Si el usuario está autenticado, redirigir a una página específica (por ejemplo, 'test')
       const user = this.userService.userData();
       if(user.role === 'Admin'){
+        console.log('es admin');
+        console.log(user.role);
         this.router.navigate(['/admin/productos']);
       }else{
         this.router.navigate(['/products']);

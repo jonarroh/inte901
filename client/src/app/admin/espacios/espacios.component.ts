@@ -477,26 +477,3 @@ export class EspaciosComponent {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

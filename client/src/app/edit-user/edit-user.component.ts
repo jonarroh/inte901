@@ -28,6 +28,7 @@ import {
 } from '@spartan-ng/ui-alertdialog-helm';
 import { toast } from 'ngx-sonner';
 import { RouterModule } from '@angular/router';
+import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-edit-user',
@@ -53,7 +54,8 @@ import { RouterModule } from '@angular/router';
     HlmAlertDialogCancelButtonDirective,
     BrnAlertDialogTriggerDirective,
     BrnAlertDialogContentDirective,
-    RouterModule
+    RouterModule,
+    BreadcrumbComponent
   ],
   providers: [
     UserService
@@ -90,9 +92,24 @@ export class EditUserComponent {
         }
       ],
     }),
-    actualPassword: createFormField('', {
-    }),
-    newPassword: createFormField('', {
+    password: createFormGroup(()=>{
+      const actualPassword = createFormField('', {
+      });
+      const newPassword = createFormField('', {
+        
+      });
+      const confirmPassword = createFormField('', {
+        validators: [
+          {
+            validator: V.equalsTo(newPassword.value),
+          }
+        ],
+      });
+      return {
+        actualPassword,
+        newPassword,
+        confirmPassword
+      }
     }),
     email: createFormField(this.userService.userData()?.email || '', {
       validators: [
@@ -128,27 +145,32 @@ export class EditUserComponent {
 
   onSaveData() {
     const UserEditDTO: UserEditDTO = {
-      actualPassword: this.formModel.controls.actualPassword.value(),
+      actualPassword: this.formModel.controls.password.controls.actualPassword.value(),
       email: this.formModel.controls.email.value(),
       id: this.userService.userData()!.id,
       lastName: this.formModel.controls.lastName.value(),
       name: this.formModel.controls.name.value(),
-      newPassword: this.formModel.controls.newPassword.value(),
+      newPassword: this.formModel.controls.password.controls.newPassword.value(),
       creditCards: this.userService.userData()!.creditCards,
       direcciones: this.userService.userData()!.direcciones,
       Image: this.ImageFile(),
     };
-    this.userService.updateUser(UserEditDTO).subscribe({
-      next: (user) => {
-        this.userService.saveUserData(user);
-        this.isUpdatedImage.set(false);
-        toast('Usuario actualizado correctamente', {  });
-        
-      },
-      error: (error) => {
-        console.error('Error al actualizar el usuario', error);
-      }
-    });
+    if(this.formModel.valid()){
+      this.userService.updateUser(UserEditDTO).subscribe({
+        next: (user) => {
+          this.userService.saveUserData(user);
+          this.isUpdatedImage.set(false);
+          toast('Usuario actualizado correctamente', {  });
+          this.formModel.reset();
+          
+        },
+        error: (error) => {
+          console.error('Arregla los errores para continuar', error);
+        }
+      });
+    }else{
+      toast.error('Error al actualizar el usuario', {  });
+    }
   }
 
   

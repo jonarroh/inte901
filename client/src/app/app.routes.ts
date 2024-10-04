@@ -38,6 +38,7 @@ import { MateriasPrimasProveedorComponent } from './admin/materias-primas-provee
 import { EspaciosComponent } from './admin/espacios/espacios.component';
 import { EstatusComponent } from './admin/reservas/estatus/estatus.component';
 import { ClienteComponent } from './reserves/cliente/cliente.component';
+import { CanPayGuard } from './auth/canPay.guard';
 
 
 
@@ -136,6 +137,16 @@ export const routes: Routes = [
     path: 'orders',
     canActivate: [AuthenticatedGuard],
     component: PedidosUserComponent,
+    data: { breadcrumb: [
+      {
+        label:'Productos',
+        route:'/products'
+      },
+      {
+        label:'Pedidos',
+        route:'/orders'
+      }
+    ]}
 
   },
   {
@@ -205,35 +216,115 @@ export const routes: Routes = [
 
     path:'checkout',
     component: CheckoutComponent,
-    canActivate: [AuthenticatedGuard],
+    canActivate: [AuthenticatedGuard,CanPayGuard],
     children:[
       {
         path:'address',
         component: DireccionComponent,
+        data: { breadcrumb: [
+          {
+            label: 'Productos',
+            route: '/products'
+          },
+          {
+            label: 'Dirección',
+            route: '/checkout/address'
+          }
+        ] }
       },
       {
         path:'payment',
-        component: TarjetaComponent
+        component: TarjetaComponent,
+        data: { breadcrumb: [
+          {
+            label: 'Productos',
+            route: '/products'
+          },
+          {
+            label: 'Dirección',
+            route: '/checkout/address'
+          },
+          {
+            label: 'Pago',
+            route: '/checkout/payment'
+          }
+        ] }
       },
       {
         'path': 'details',
-        'component': DetailsComponent
+        'component': DetailsComponent,
+        data: { breadcrumb: [
+          {
+            label: 'Productos',
+            route: '/products'
+          },
+          {
+            label: 'Dirección',
+            route: '/checkout/address'
+          },
+          {
+            label: 'Pago',
+            route: '/checkout/payment'
+          },
+          {
+            label: 'Detalles',
+            route: '/checkout/details'
+          }
+        ] }
       }
     ]
   },
   {
     path: 'profile',
     component: EditUserComponent,
-    canActivate: [AuthenticatedGuard]
+    canActivate: [AuthenticatedGuard],
+    data: { breadcrumb: [
+      {
+        label:'Productos',
+        route:'/products'
+      },
+      {
+        label:'Perfil',
+        route:'/profile'
+      }
+    ]}
   },
   {
     path:'edit/address',
     canActivate: [AuthenticatedGuard],
     component: AddDireccionComponent,
+    data: { breadcrumb: [
+      {
+        label:'Productos',
+        route:'/products'
+      },
+      {
+        label:'Perfil',
+        route:'/profile'
+      },
+      {
+        label:'Dirección',
+        route:'/edit/address'
+      }
+    ]}
   },
   {
     path:'edit/payment',
     canActivate: [AuthenticatedGuard],
-    component: AddCardComponent
+    component: AddCardComponent,
+    data: { breadcrumb: [
+      {
+        label:'Productos',
+        route:'/products'
+      },
+      {
+        label:'Perfil',
+        route:'/profile'
+      },
+      {
+        label:'Tarjeta',
+        route:'/edit/payment'
+      }
+    ]}
   }
 ];

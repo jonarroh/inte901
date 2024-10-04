@@ -1,5 +1,8 @@
 <home-navbar></home-navbar>
-<section class="px-8 py-12 flex justify-evenly items-center flex-row space-x-8">
+<div class="ms-4">
+  <app-breadcrumb [separator]="'>'"></app-breadcrumb>
+</div>
+<section class="px-8 py-12 flex justify-evenly items-center flex-col md:flex-row space-x-8">
   <div class="flex flex-col items-center space-y-4">
     <hlm-avatar variant="profile">
       <img
@@ -102,6 +105,9 @@
               @if(formModel.controls.email.hasError('required')) {
             <div class="text-red-500 text-sm">El correo electrónico es requerida</div>
             }
+            @if (formModel.controls.email.hasError('pattern')) {
+            <div class="text-red-500 text-sm">El correo electrónico no es válido</div>
+            }
              @else if (formModel.controls.email.hasError('maxLength')) {
             <div class="text-red-500 text-sm">
               El correo electrónico e debe tener menos de 50 caracteres
@@ -119,7 +125,7 @@
                 name="ActualPassword"
                 hlmInput
                 ngModel
-                [formField]="formModel.controls.actualPassword"
+                [formField]="formModel.controls.password.controls.actualPassword"
                 class="block w-full mt-1"
               />
             </label>
@@ -134,19 +140,40 @@
                 name="newPassword"
                 hlmInput
                 ngModel
-                [formField]="formModel.controls.newPassword"
+                [formField]="formModel.controls.password.controls.newPassword"
                 class="block w-full mt-1"
               />
             </label>
-            <div class="flex flex-row items-center justify-between  mt-4 w-full gap-x-4">
+            <div>
+              <label for="ConfirmPassword" class="block mb-2">
+                Contraseña actual
+                <input
+                  type="password"
+                  id="ConfirmPassword"
+                  name="ConfirmPassword"
+                  hlmInput
+                  ngModel
+                  [formField]="formModel.controls.password.controls.confirmPassword"
+                  class="block w-full mt-1"
+                />
+              </label>
+
+              @if(formModel.controls.password.controls.confirmPassword.touched()) {
+                @if(formModel.controls.password.controls.confirmPassword.hasError('equalsTo')) {
+                  <div class="text-red-500 text-sm">La confirmación de la contraseña es requerida</div>
+                }
+              }
+
+            </div>
+            <div class="flex flex-col md:flex-row items-center justify-between  mt-4 w-full gap-x-4">
               <a routerLink="/edit/address"
               hlmBtn
-              class="text-sm  hover:underline bg-admin"
+              class="text-sm  hover:underline bg-white border border-gray-300"
               >
                 Editar dirección
               </a>
               <a routerLink="/edit/payment"
-              class="text-sm hover:underline bg-admin"
+              class="text-sm hover:underline bg-white border border-gray-300"
               hlmBtn
               >
                 Editar método de pago
@@ -155,7 +182,7 @@
 
               <button
               hlmBtn
-                class="bg-secondary text-white rounded-md  flex justify-center items-center hover:bg-secondary-dark transition-colors duration-300"
+                class="bg-secondary text-white rounded-md  flex justify-center items-center hover:bg-yellow-700 transition-colors duration-300"
                 [disabled]="disabled()"
                 (click)="onSaveData()"
               >
@@ -164,7 +191,7 @@
 
     <hlm-alert-dialog>
       <button id='edit-profile' variant='outline' brnAlertDialogTrigger hlmBtn
-      class=" bg-error text-white rounded-md flex justify-center items-center hover:bg-error/90 transition-colors duration-300"
+      class=" bg-error text-white rounded-md flex justify-center items-center hover:bg-red-800 transition-colors duration-300 hover:text-white"
       >Eliminar cuenta</button>
       <hlm-alert-dialog-content *brnAlertDialogContent='let ctx'>
         <hlm-alert-dialog-header>

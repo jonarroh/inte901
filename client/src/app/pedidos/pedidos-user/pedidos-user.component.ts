@@ -9,11 +9,12 @@ import { PedidoStateService } from '../pedido-state/pedido-state.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { SignalRService } from '~/app/orden/signal-rorder.service';
+import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-pedidos-user',
   standalone: true,
-  imports: [NavbarComponent, NgFor, CurrencyPipe, NgIf, FormsModule, CommonModule],
+  imports: [NavbarComponent, NgFor, CurrencyPipe, NgIf, FormsModule, CommonModule,BreadcrumbComponent],
   providers: [PedidosUserServiceService, ProductoService, PedidoStateService, SignalRService],
   templateUrl: './pedidos-user.component.html',
   styleUrls: ['./pedidos-user.component.css']

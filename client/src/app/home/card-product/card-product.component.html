@@ -1,7 +1,7 @@
 
 
 <div class="p-1 flex flex-wrap items-center justify-center" >
-  <div class="flex-shrink-0 m-6 relative overflow-hidden rounded-lg max-w-[20rem] shadow-xl group bg-transparent border border-[#aeadad]">
+  <div class="flex-shrink-0 m-3 relative overflow-hidden rounded-lg max-w-[18rem] shadow-xl group bg-transparent border border-[#aeadad]">
       <button (click)="redirectoToDetail(id)" class="w-full">
       <svg class="absolute bottom-0 left-0 mb-8 scale-150 group-hover:scale-[1.65] transition-transform"
            viewBox="0 0 375 283" fill="none" style="opacity: 0.1;">
@@ -18,14 +18,14 @@
         (error)="onImageError($event)" 
         >
       </div>
-      <div class="relative text-black px-6 pb-6 mt-6 ">
+      <div class="relative text-black px-6 pb-6 mt-3">
         <span class=" opacity-75 -mb-1 text-wrap bg-white rounded-md px-2 py-1"
         >{{ category() }}</span>
         <div class="flex justify-between items-center">
           <span hlmBadge class="text-dark" variant="outline"
           >{{ title() }}</span>
           <span class=" text-white rounded-full bg-[#dcaa8c] text-xs font-bold px-3 py-2 leading-none flex items-center text-wrap"  >
-            $ {{  price() }}
+           <app-money [amount]="price()" [baseClass]="'text-white'"></app-money>
           </span>
         </div>
       </div>

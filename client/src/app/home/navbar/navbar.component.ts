@@ -12,6 +12,8 @@ import { CartComponent } from '~/app/cart/cart.component';
 import { Router, RouterModule } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { PlaceServiceService } from '~/app/place/place-service.service';
+import { ReserveComponent } from '../reserve/reserve.component';
+import { SearchComponent } from '../search/search.component';
 
 export interface SearchItem {
   id: string;
@@ -32,7 +34,9 @@ export interface SearchItem {
     NgFor,
     FormsModule,
     CartComponent,
-    RouterModule
+    RouterModule,
+    ReserveComponent,
+    SearchComponent
   ],
   providers: [ProductosService, PlaceServiceService,Router],
   templateUrl: './navbar.component.html',

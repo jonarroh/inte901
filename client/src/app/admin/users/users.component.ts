@@ -31,7 +31,7 @@ import { HlmPopoverContentDirective } from '@spartan-ng/ui-popover-helm';
 import { NgForOf } from '@angular/common';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DecimalPipe, TitleCasePipe } from '@angular/common';
-import {  TrackByFunction, computed, effect, signal } from '@angular/core';
+import { TrackByFunction, computed, effect, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { lucideArrowUpDown, lucideChevronDown, lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmButtonModule } from '@spartan-ng/ui-button-helm';
@@ -63,6 +63,8 @@ import { lucideChevronsUpDown, lucideCheck, lucideSearch } from '@ng-icons/lucid
 import { HlmDialogDescriptionDirective, HlmDialogHeaderComponent, HlmDialogTitleDirective } from "~/components/ui-dialog-helm/src";
 import { HlmIconComponent } from "~/components/ui-icon-helm/src";
 import { User, UserEditDTO } from "~/lib/types";
+import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
+import { HlmAlertDialogActionButtonDirective, HlmAlertDialogCancelButtonDirective, HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogOverlayDirective, HlmAlertDialogTitleDirective } from '~/components/ui-alertdialog-helm/src';
 
 
 @Component({
@@ -111,17 +113,28 @@ import { User, UserEditDTO } from "~/lib/types";
     HlmCheckboxComponent,
 
     BrnSelectModule,
-      HlmSelectModule,
-],
+    HlmSelectModule,
+    BrnAlertDialogTriggerDirective,
+    BrnAlertDialogContentDirective,
+    HlmAlertDialogComponent,
+    HlmAlertDialogOverlayDirective,
+    HlmAlertDialogHeaderComponent,
+    HlmAlertDialogFooterComponent,
+    HlmAlertDialogTitleDirective,
+    HlmAlertDialogDescriptionDirective,
+    HlmAlertDialogCancelButtonDirective,
+    HlmAlertDialogActionButtonDirective,
+    HlmAlertDialogContentComponent,
+  ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
   standalone: true,
-  providers:[provideIcons({ lucideChevronsUpDown, lucideSearch, lucideCheck, lucideChevronDown, lucideMoreHorizontal, lucideArrowUpDown })],
-  
+  providers: [provideIcons({ lucideChevronsUpDown, lucideSearch, lucideCheck, lucideChevronDown, lucideMoreHorizontal, lucideArrowUpDown })],
+
 })
 export class UsersComponent {
 
-  
+
   isLoading = signal(false);
   role = '';
 
@@ -187,12 +200,12 @@ export class UsersComponent {
         }
       ]
     }),
-    id: createFormField(0,{
+    id: createFormField(0, {
       hidden: () => true
     }),
   });
 
-  constructor(private userService:UserService) {
+  constructor(private userService: UserService) {
     effect(() => this._emailFilter.set(this._debouncedFilter() ?? ''), { allowSignalWrites: true });
     this.userService.getAllUsers().subscribe({
       next: (users) => {
@@ -209,13 +222,23 @@ export class UsersComponent {
     this.userService.createUser(newUser).subscribe({
       next: (user) => {
         console.log('Usuario creado correctamente', user);
-        toast.success('Usuario creado correctamente');
+        toast.success('Usuario creado correctamente', {
+          duration: 1200,
+          onAutoClose: ((toast) => {
+            location.reload();
+          })
+        });
         this.formModel.reset();
         this.currentRole.set(undefined);
       },
       error: (error) => {
         console.error('Error al crear el usuario', error);
-        toast.error('Error al crear el usuario');
+        toast.error('Error al crear el usuario', {
+          duration: 1200,
+          onAutoClose: ((toast) => {
+            location.reload();
+          })
+        });
       },
       complete: () => {
         this.isLoading.set(false);
@@ -224,8 +247,8 @@ export class UsersComponent {
   }
 
   onSubmit() {
-    if(this.formModel.valid()) {
-      const newUser:User = {
+    if (this.formModel.valid()) {
+      const newUser: User = {
         creditCards: [],
         direcciones: [],
         email: this.formModel.controls.email.value(),
@@ -237,13 +260,18 @@ export class UsersComponent {
         role: this.currentRole()?.value || 'Admin',
         token: ''
       } as User;
-  
+
       this.isLoading.set(true);
       this.onAddUser(newUser);
     }
     else {
       this.formModel.markAllAsTouched();
-      toast.error('Por favor, llena todos los campos');
+      toast.error('Por favor, llena todos los campos', {
+        duration: 1200,
+        onAutoClose: ((toast) => {
+          location.reload();
+        })
+      });
     }
   }
 
@@ -258,15 +286,15 @@ export class UsersComponent {
   private readonly _selectionModel = new SelectionModel<User>(true);
   protected readonly _isUserSelected = (user: User) => this._selectionModel.isSelected(user);
   protected readonly _selected = toSignal(
-    this._selectionModel.changed.pipe(map(() => this._selectionModel.selected)),{
-      initialValue: []
-    }
+    this._selectionModel.changed.pipe(map(() => this._selectionModel.selected)), {
+    initialValue: []
+  }
   );
-  
+
   protected readonly _brnColumnManager = useBrnColumnManager({
-    Name: {visible: true, label: 'Nombre', sortable: true},
-    Email: {visible: true, label: 'Email', sortable: true},
-    Role: {visible: true, label: 'Rol', sortable: true},
+    Name: { visible: true, label: 'Nombre', sortable: true },
+    Email: { visible: true, label: 'Email', sortable: true },
+    Role: { visible: true, label: 'Rol', sortable: true },
   })
 
   protected readonly _allDisplayedColumns = computed(() => [
@@ -342,15 +370,25 @@ export class UsersComponent {
     this.userService.deleteUser(user.id).subscribe({
       next: () => {
         console.log('Usuario eliminado correctamente');
-        toast.success('Usuario eliminado correctamente');
+        toast.success('Usuario eliminado correctamente', {
+          duration: 1200,
+          onAutoClose: ((toast) => {
+            location.reload();
+          })
+        });
 
         this._users.set(this._users().filter((u) => u.id !== user.id));
       },
       error: (error) => {
         console.error('Error al eliminar el usuario', error);
-        toast.error('Error al eliminar el usuario');
-  }
-  });
+        toast.error('Error al eliminar el usuario', {
+          duration: 1200,
+          onAutoClose: ((toast) => {
+            location.reload();
+          })
+        });
+      }
+    });
   }
 
   isEditing = signal(false);
@@ -374,22 +412,27 @@ export class UsersComponent {
 
   onEditUser() {
 
-  
-   const  user2: UserEditDTO ={
-    actualPassword: this.formModel.controls.password.value() || '',
-    creditCards: [],
-    direcciones: [],
-    email: this.formModel.controls.email.value(),
-    id: this.formModel.controls.id.value(),
-    Image: undefined,
-    lastName: this.formModel.controls.lastName.value(),
-    name: this.formModel.controls.name.value(),
-    newPassword: this.formModel.controls.password.value() || '',
-   }
+
+    const user2: UserEditDTO = {
+      actualPassword: this.formModel.controls.password.value() || '',
+      creditCards: [],
+      direcciones: [],
+      email: this.formModel.controls.email.value(),
+      id: this.formModel.controls.id.value(),
+      Image: undefined,
+      lastName: this.formModel.controls.lastName.value(),
+      name: this.formModel.controls.name.value(),
+      newPassword: this.formModel.controls.password.value() || '',
+    }
     this.userService.updateUser(user2).subscribe({
       next: () => {
         console.log('Usuario actualizado correctamente');
-        toast.success('Usuario actualizado correctamente');
+        toast.success('Usuario actualizado correctamente', {
+          duration: 1200,
+          onAutoClose: ((toast) => {
+            location.reload();
+          })
+        });
         this.isEditing.set(false);
         this.states.set('closed');
         this.userService.getAllUsers().subscribe({
@@ -400,11 +443,16 @@ export class UsersComponent {
             console.error('Error al cargar los usuarios', error);
           }
         });
-        
+
       },
       error: (error) => {
         console.error('Error al actualizar el usuario', error);
-        toast.error('Error al actualizar el usuario');
+        toast.error('Error al actualizar el usuario', {
+          duration: 1200,
+          onAutoClose: ((toast) => {
+            location.reload();
+          })
+        });
       }
     });
   }

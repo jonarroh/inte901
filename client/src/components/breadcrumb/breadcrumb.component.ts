@@ -66,23 +66,24 @@ export class BreadcrumbComponent {
   private buildBreadcrumb(route: any, segments: { label: string, url: string }[], currentUrl: string): void {
     if (route.routeConfig && route.routeConfig.data && Array.isArray(route.routeConfig.data['breadcrumb'])) {
       const breadcrumbsArray = route.routeConfig.data['breadcrumb'];
-
+  
       breadcrumbsArray.forEach((breadcrumb: { label: string, route: string }) => {
         let routeUrl = breadcrumb.route;
         Object.keys(route.params).forEach(param => {
           routeUrl = routeUrl.replace(`:${param}`, route.params[param]);
         });
-
-        currentUrl += `/${routeUrl}`;
+  
+        // En lugar de concatenar currentUrl, usamos directamente routeUrl
         segments.push({
           label: breadcrumb.label,
-          url: currentUrl
+          url: routeUrl // Aquí tomamos el URL directamente del breadcrumb
         });
       });
     }
-
+  
     if (route.firstChild) {
       this.buildBreadcrumb(route.firstChild, segments, currentUrl);
     }
   }
+  
 }

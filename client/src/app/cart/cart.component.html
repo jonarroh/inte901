@@ -1,6 +1,10 @@
 <hlm-sheet>
-  <button brnSheetTrigger side="right" class="text-white mt-1">
-    <lucide-icon name="shopping-cart"></lucide-icon>
+  <button brnSheetTrigger side="right" class="text-white mt-1 flex flex-row items-center space-x-2">
+    <lucide-icon name="shopping-cart"></lucide-icon> <span
+    class="hidden md:block"
+    >
+      Mi carrito
+    </span>
   </button>
   <hlm-sheet-content *brnSheetContent='let ctx' class="bg-white p-4 w-[1000px] h-screen flex flex-col justify-between">
     <hlm-sheet-header class="flex flex-col items-center bg-white/75 w-full">
@@ -19,9 +23,11 @@
             <img [src]="'http://localhost:5000/static/productos/' + item.id + '.webp'" alt="imagen" class="w-16 h-16 object-cover rounded-sm">
           </div>
           <span>{{item.quantity}}</span>
-          <span>{{item.precio * item.quantity}}</span>
+          <span>
+            <app-money [amount]="item.precio * item.quantity"></app-money>
+          </span>
           
-          <hlm-dialog>
+          <hlm-dialog [state]="'open'">
             <button class="text-black px-4 py-2 rounded hover:bg-gray-200" brnDialogTrigger hlmBtn>
               <lucide-icon name="ellipsis"></lucide-icon>
             </button>
@@ -65,13 +71,17 @@
     <div class="w-full p-2 border-t border-gray-200 mt-auto">
       <div class="flex justify-between">
         <span>Total</span>
-        <span>{{total}}</span>
+        <span>
+          <app-money [amount]="total"></app-money>
+        </span>
       </div>
       <div class="mt-2 flex justify-between">
         <a
+        
         routerLink="/checkout/address"
         (click)="ctx.close()"
-        class="bg-[#785131] text-white px-4 py-2 rounded" hlmBtn>Pagar</a>
+        class="bg-[#785131] text-white px-4 py-2 rounded
+        hover:bg-[#6a472c] transition-colors text-center" hlmBtn>Pagar</a>
         <button class="bg-red-500 text-white px-4 py-2 rounded" hlmBtn (click)="deleteAll()">Vaciar</button>
       </div>
     </div>

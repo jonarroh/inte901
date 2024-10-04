@@ -4,10 +4,11 @@
   </div>
 
 
-  <div class="flex justify-end my-5 me-5 pr-5">
+  <div class="flex space-x-3 justify-end mb-4">
     <!-- Botón para agregar producto -->
-    <hlm-dialog>
-      <button id="add-product-trigger" brnDialogTrigger hlmBtn (click)="onAdd()" variant="warning" class="text-white">Agregar
+    <hlm-dialog class="bg-white">
+      <button id="add-product-trigger" brnDialogTrigger hlmBtn (click)="onAdd()" variant="warning"
+        class="text-white">Agregar
         producto</button>
       <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
         <hlm-dialog-header>
@@ -61,7 +62,7 @@
             </div>
           </div>
           <hlm-dialog-footer>
-            <button hlmBtn type="submit">Guardar</button>
+            <button hlmBtn type="submit" variant="warning" class="text-white">Registrar</button>
           </hlm-dialog-footer>
         </form>
       </hlm-dialog-content>
@@ -122,17 +123,17 @@
             </div>
           </div>
           <hlm-dialog-footer>
-            <button hlmBtn type="submit">Actualizar</button>
+            <button hlmBtn type="submit" variant="warning" class="text-white">Actualizar</button>
           </hlm-dialog-footer>
         </form>
       </hlm-dialog-content>
     </hlm-dialog>
   </div>
 
-  <div class="flex justify-start my-5 ms-5 pr-5">
+  <div class="flex flex-col justify-between gap-4 sm:flex-row">
     <input hlmInput class="w-full md:w-80" placeholder="Buscar por producto" (input)="applyFilterFromEvent($event)" />
   </div>
-  
+
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-5">
     <div *ngFor="let product of (filteredProductos$ | async); trackBy: trackByProductId"
       class="bg-white shadow-md rounded-lg p-4 flex flex-col justify-between">
@@ -145,11 +146,25 @@
         </div>
       </div>
       <div class="flex justify-end space-x-2 pe-3">
-        <button (click)="onEdit(product)"
-          class="bg-white text-secondary px-4 py-2 rounded border border-secondary">Editar</button>
-        <button (click)="onDelete(product.id!)" class="bg-secondary text-white px-4 py-2 rounded">Eliminar</button>
+        <button hlmBtn variant="warning" (click)="onEdit(product)" class=" text-white px-4 py-2 rounded">Editar</button>
+        <hlm-alert-dialog>
+          <button id="edit-profile" variant="destructive" class="text-white" brnAlertDialogTrigger
+            hlmBtn>Eliminar</button>
+          <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
+            <hlm-alert-dialog-header>
+              <h3 hlmAlertDialogTitle>Confirmar eliminaci&oacute;n</h3>
+              <p hlmAlertDialogDescription>
+                Al confirmar esta acci&oacute;n, el producto ser&aacute; eliminado de la base de datos.
+              </p>
+            </hlm-alert-dialog-header>
+            <hlm-alert-dialog-footer>
+              <button hlmAlertDialogCancel (click)="ctx.close()">Cancelar</button>
+              <button hlmAlertDialogAction class="text-white" (click)="onDelete(product.id!)">Eliminar</button>
+            </hlm-alert-dialog-footer>
+          </hlm-alert-dialog-content>
+        </hlm-alert-dialog>
       </div>
     </div>
   </div>
-  
+
 </div>

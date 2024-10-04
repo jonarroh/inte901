@@ -1,0 +1,89 @@
+@if (isHiddenInMobile) {
+  <div class="hidden md:flex items-center justify-center">
+  
+    <div class="flex relative w-full">
+    <button id="dropdown-button" (click)="toggleDropdown()" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-10" type="button">
+      {{ currentFilter }} 
+      <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+      </svg>
+    </button>
+    <div id="dropdown" [class.hidden]="!dropdownOpen" class="absolute top-full left-0 z-30 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 mt-2">
+      <ul class="py-2 text-sm text-black dark:text-gray-200" aria-labelledby="dropdown-button">
+        <li>
+          <button type="button" class="inline-flex w-full px-4 py-2 hover:bg-gray-100 text-black" (click)="setFilter('Todo')">Todo</button>
+        </li>
+        <li>
+          <button type="button" class="inline-flex w-full px-4 py-2 hover:bg-gray-100 text-black" (click)="setFilter('Bebidas')">Bebidas</button>
+        </li>
+        <li>
+          <button type="button" class="inline-flex w-full px-4 py-2 hover:bg-gray-100 text-black" (click)="setFilter('Postres')">Postres</button>
+        </li>
+        <li>
+          <button type="button" class="inline-flex w-full px-4 py-2 hover:bg-gray-100 text-black" (click)="setFilter('Comidas')">Comidas</button>
+        </li>
+        <li>
+          <button type="button" class="inline-flex w-full px-4 py-2 hover:bg-gray-100 text-black" (click)="setFilter('Reservacion')">Reservaciones</button>
+        </li>
+      </ul>
+    </div>
+    <div class="relative w-full">
+      <input type="search" id="search-dropdown" class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Busca bebidas, postres reservaciones." required (input)="filterItems()" [(ngModel)]="searchTerm"/>
+    </div>
+    <div class="z-10 absolute w-full mt-10 bg-white border border-gray-300 rounded-lg shadow-lg" *ngIf="searchTerm && filteredItems.length">
+      <ul class="py-2">
+        <li *ngFor="let item of filteredItems">
+          <button (click)="navigateTo(item)" class="flex items-center px-4 py-2 hover:bg-gray-100 w-full">
+            <img [src]="'http://localhost:5000/static/' + (item.tipo === 'Reservacion' ? 'places/' : 'productos/') + item.id + '.webp'" alt="{{item.descripcion}}" class="w-10 h-10 object-cover mr-2">
+            <span>{{item.nombre}}</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  </div>
+}@else {
+  <div class="flex md:hidden items-center justify-center">
+  
+    <div class="flex relative w-full px-4">
+    <button id="dropdown-button" (click)="toggleDropdown()" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-10" type="button">
+      {{ currentFilter }} 
+      <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+      </svg>
+    </button>
+    <div id="dropdown" [class.hidden]="!dropdownOpen" class="absolute top-full left-0 z-30 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 mt-2">
+      <ul class="py-2 text-sm text-black dark:text-gray-200" aria-labelledby="dropdown-button">
+        <li>
+          <button type="button" class="inline-flex w-full px-4 py-2 hover:bg-gray-100 text-black" (click)="setFilter('Todo')">Todo</button>
+        </li>
+        <li>
+          <button type="button" class="inline-flex w-full px-4 py-2 hover:bg-gray-100 text-black" (click)="setFilter('Bebidas')">Bebidas</button>
+        </li>
+        <li>
+          <button type="button" class="inline-flex w-full px-4 py-2 hover:bg-gray-100 text-black" (click)="setFilter('Postres')">Postres</button>
+        </li>
+        <li>
+          <button type="button" class="inline-flex w-full px-4 py-2 hover:bg-gray-100 text-black" (click)="setFilter('Comidas')">Comidas</button>
+        </li>
+        <li>
+          <button type="button" class="inline-flex w-full px-4 py-2 hover:bg-gray-100 text-black" (click)="setFilter('Reservacion')">Reservaciones</button>
+        </li>
+      </ul>
+    </div>
+    <div class="relative w-full">
+      <input type="search" id="search-dropdown" class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Busca bebidas, postres reservaciones." required (input)="filterItems()" [(ngModel)]="searchTerm"/>
+    </div>
+    <div class="z-10 absolute w-full mt-10 bg-white border border-gray-300 rounded-lg shadow-lg" *ngIf="searchTerm && filteredItems.length">
+      <ul class="py-2">
+        <li *ngFor="let item of filteredItems">
+          <button (click)="navigateTo(item)" class="flex items-center px-4 py-2 hover:bg-gray-100 w-full">
+            <img [src]="'http://localhost:5000/static/' + (item.tipo === 'Reservacion' ? 'places/' : 'productos/') + item.id + '.webp'" alt="{{item.descripcion}}" class="w-10 h-10 object-cover mr-2">
+            <span>{{item.nombre}}</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  </div>
+}
