@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
-import { HlmInputDirective } from '~/components/ui-input-helm/src';
+import { HlmInputDirective, HlmInputModule } from '~/components/ui-input-helm/src';
 import { IconComponent } from '../icon/icon.component';
 import { BrnCommandImports } from '@spartan-ng/ui-command-brain';
 import { HlmCommandImports } from '@spartan-ng/ui-command-helm';
@@ -27,7 +27,6 @@ export interface SearchItem {
     HlmInputDirective,
     LucideAngularModule,
     IconComponent,
-    BrnCommandImports,
     HlmCommandImports,
     NgIf,
     NgFor,

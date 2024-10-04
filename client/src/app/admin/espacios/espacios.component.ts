@@ -12,12 +12,12 @@ import { HlmButtonDirective, HlmButtonModule } from '@spartan-ng/ui-button-helm'
 import { createFormField, createFormGroup, SignalInputDirective, V } from 'ng-signal-forms';
 import { BrnSelectImports, BrnSelectModule } from '@spartan-ng/ui-select-brain';
 import { HlmSelectImports, HlmSelectModule } from '@spartan-ng/ui-select-helm';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { BrnCommandImports } from '@spartan-ng/ui-command-brain';
 import { HlmCommandImports } from '~/components/ui-command-helm/src';
 import { HlmIconComponent } from '~/components/ui-icon-helm/src';
 import { BrnPopoverComponent, BrnPopoverContentDirective, BrnPopoverTriggerDirective } from '@spartan-ng/ui-popover-brain';
-import { CommonModule, DecimalPipe, NgForOf, TitleCasePipe } from '@angular/common';
+import { CommonModule, DecimalPipe, NgFor, NgForOf, TitleCasePipe } from '@angular/common';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import { HlmMenuModule } from '~/components/ui-menu-helm/src';
 import { BrnTableModule, PaginatorState, useBrnColumnManager } from '@spartan-ng/ui-table-brain';
@@ -25,18 +25,19 @@ import { HlmTableModule } from '~/components/ui-table-helm/src';
 import { HlmCheckboxCheckIconComponent, HlmCheckboxComponent } from '~/components/ui-checkbox-helm/src';
 import { SelectionModel } from '@angular/cdk/collections';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { debounceTime, map } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, map, Observable } from 'rxjs';
 import { toast } from 'ngx-sonner';
 import { RightSeccionComponent } from '~/app/login/right-seccion/right-seccion.component';
+import { id } from 'date-fns/locale';
 
 @Component({
   selector: 'app-espacios',
   standalone: true,
   imports: [
-    NavbarComponent, HlmDialogComponent, HlmDialogContentComponent, HlmDialogFooterComponent,
+  NavbarComponent, HlmDialogComponent, HlmDialogContentComponent, HlmDialogFooterComponent,
   LucideAngularModule, BrnDialogContentDirective, BrnDialogTriggerDirective, HlmDialogHeaderComponent,
   HlmDialogTitleDirective,HlmDialogDescriptionDirective, HlmLabelDirective, HlmInputDirective, HlmButtonDirective,
-  SignalInputDirective, BrnSelectImports, HlmSelectImports, FormsModule, BrnCommandImports, HlmCommandImports, HlmIconComponent,
+  SignalInputDirective, BrnSelectImports, HlmSelectImports, FormsModule,  HlmCommandImports, HlmIconComponent,
   HlmButtonDirective, BrnPopoverComponent, BrnPopoverTriggerDirective, BrnPopoverTriggerDirective, BrnPopoverContentDirective,
   NgForOf, BrnMenuTriggerDirective, HlmMenuModule, BrnTableModule, HlmTableModule,HlmButtonModule, DecimalPipe, TitleCasePipe, HlmIconComponent,
   HlmInputDirective, HlmCheckboxCheckIconComponent, HlmCheckboxComponent, BrnSelectModule, HlmSelectModule, CommonModule
@@ -46,15 +47,20 @@ import { RightSeccionComponent } from '~/app/login/right-seccion/right-seccion.c
 })
 export class EspaciosComponent {
 
+
+  espacio!: EspacioDTO | null;
   
   isLoading = signal(false);
-  
-
   public state = signal<'closed' | 'open'>('closed');
   public states = signal<'closed' | 'open'>('closed');
+  private espacioId: number | null = null;
   espacios : EspacioDTO[] = [];
-  imagen: File | null = null;
-  selectedId: number | null = null;
+  selectedFile: File | null = null;
+  private filterSubject = new BehaviorSubject<string>('');
+  filter$ = this.filterSubject.asObservable();
+  filteredEspacio$: Observable<EspacioDTO[]>;
+  editMode: boolean = false;
+  imagen: any = null;
 
   
 
@@ -96,35 +102,79 @@ export class EspaciosComponent {
       hidden: () => true
     }),
   });
-
-
+  
   constructor(private espacioService: EspacioSerService) {
-    effect(() => this._nameFilter.set(this._debouncedFilter() ?? '' ),
-     { allowSignalWrites: true });
+    // Fetch spaces from the service
     this.espacioService.getPlaces().subscribe({
       next: (spaces) => {
-        console.log('Espacios recibidos:', spaces); // Verifica los datos aquí
-        this._spaces.set(spaces);
-      }
-      ,
+        console.log('Espacios recibidos:', spaces); // Verify the received data here
+        this.espacios = spaces;
+      },
       error: (error) => {
         console.error('Error al obtener los espacios', error);
       }
     });
+  
+    // Create an observable for filtered spaces
+    this.filteredEspacio$ = combineLatest([
+      this.espacioService.getPlaces(),
+      this.filter$
+    ]).pipe(
+      map(([spaces, filterValue]) =>
+        spaces.filter(space =>
+          space.nombre?.toLowerCase().includes(filterValue.toLowerCase())
+        )
+      )
+    );
   }
+
+  loadEspacioForEdit(espacio: EspacioDTO | null) {
+    if (!espacio) {
+      console.warn('No se puede editar, el espacio es nulo.');
+      return;
+    }
+    this.formModel.controls.name.value();
+    this.formModel.controls.canPersonas.value();
+    this.formModel.controls.precio.value();
+    this.formModel.controls.descrip.value();
+    this.selectedFile = null; // Resetea la imagen si es necesario
+    this.editMode = true; // Activa el modo de edición
+    this.state.set('open'); // Abre el diálogo
+    
+  }
+  
+
+
+  
+
+  applyFilter(filterValue: string) {
+    this.filterSubject.next(filterValue);
+  }
+
+  applyFilterFromEvent(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.applyFilter(inputElement.value);
+  }
+
   
 
   getImagenUrl(id: number): string {
-    return 'http://localhost:5000/static/places/${id}.webp';
+      return `http://localhost:5000/static/places/${id}.webp`;
   }
-
-  onFileChange(event: any) {
-    this.imagen = event.target.files[0];
-  }
-
- 
-
   
+  onFileSelected(event: Event): void {
+    const fileInput = event.target as HTMLInputElement;
+    if (fileInput.files && fileInput.files.length > 0) {
+      this.selectedFile = fileInput.files[0];
+    }
+  }
+
+  onImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    //img.src = this.fallbackUrl;
+  }
+  
+
   private filterSpaces(searchTerm: string): EspacioDTO[] {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     return this._spaces().filter(space =>
@@ -132,6 +182,11 @@ export class EspaciosComponent {
     );
   }
   
+  onAdd(){
+    this.editMode = false;
+    //this.refreshEspacios();
+    this.state.set('open');
+  }
 
   onAddUser(newEspacio: EspacioDTO) {
     const formData = new FormData();
@@ -140,10 +195,11 @@ export class EspaciosComponent {
     formData.append('precio', newEspacio.precio.toString());
     formData.append('descripcion', newEspacio.descripcion);
     formData.append('estatus', newEspacio.estatus);
+    
   
     // Asegúrate de que la imagen se maneje si está presente
-    if (newEspacio.imagen) {
-      formData.append('imagen', newEspacio.imagen);
+  if (this.selectedFile) {
+      formData.append('imagen', this.selectedFile);
     }
   
     this.isLoading.set(true);
@@ -153,6 +209,7 @@ export class EspaciosComponent {
         console.log('Espacio creado correctamente', space);
         toast.success('Espacio creado correctamente');
         this.formModel.reset();
+        this.selectedFile = null;
       },
       error: (error) => {
         console.error('Error al crear el espacio', error);
@@ -163,48 +220,51 @@ export class EspaciosComponent {
       }
     });
   }
-  
-
 
   onSubmit() {
-    if (this.formModel.valid()) {
-      
-      
+    if (this.formModel.valid()) {  
       const name = this.formModel.controls.name.value();
       const canPersonas = this.formModel.controls.canPersonas.value();
       const precio = this.formModel.controls.precio.value();
       const descripcion = this.formModel.controls.descrip.value();
-
-      if (typeof this.selectedId !== 'number' || isNaN(this.selectedId)) {
-        console.error('ID inválido');
-        toast.error('ID inválido');
+      const id = this.editMode ? this.espacioId : this.formModel.controls.id.value(); 
+  
+      if (id === null) {
+        console.error('ID del espacio no válido');
         return;
       }
-
-    
-
-      if (this.isEditing() && this.selectedId !== null) {
-        const espacio: Espacio = {
-          idEspacio: this.selectedId,
-          nombre: name,
-          canPersonas: canPersonas,
-          precio: precio,
-          descripcion: descripcion,
-          estatus: 'Activo'
-        };
-
-
-        this.isLoading.set(true);
-        this.espacioService.updatePlace(this.selectedId, espacio).subscribe({
+  
+      console.log("descripcion " + this.formModel.controls.descrip.value());
+      console.log("id " + id); // Verifica que el ID se está obteniendo correctamente
+  
+      const formData = new FormData();
+      formData.append('nombre', name);
+      formData.append('canPersonas', canPersonas.toString());
+      formData.append('precio', precio.toString());
+      formData.append('descripcion', descripcion);
+      formData.append('estatus', 'Activo');
+      formData.append('id', id.toString()); // Convertir el id a cadena
+  
+      if (this.selectedFile) {
+        formData.append('image', this.selectedFile);
+      }
+  
+      this.isLoading.set(true);
+  
+      if (this.editMode) {
+        // Actualizar el espacio existente
+        this.espacioService.updatePlace(id, formData).subscribe({
+          
+          
           next: (space) => {
             console.log('Espacio actualizado correctamente', space);
             toast.success('Espacio actualizado correctamente');
-            this.formModel.reset();
-            this.isEditing.set(false);
-            this.states.set('closed');
+            this.refreshEspacios();
+            this.state.set('closed');
           },
           error: (error) => {
             console.error('Error al actualizar el espacio', error);
+            console.log("id"+id)
             toast.error('Error al actualizar el espacio');
           },
           complete: () => {
@@ -212,38 +272,33 @@ export class EspaciosComponent {
           }
         });
       } else {
-        const formData = new FormData();
-      formData.append('nombre', name);
-      formData.append('canPersonas', canPersonas.toString());
-      formData.append('precio', precio.toString());
-      formData.append('descripcion', descripcion);
-      formData.append('estatus', 'Activo');
-
-      if (this.imagen) {
-        formData.append('imagen', this.imagen);
-      }
-
-      this.isLoading.set(true);
-      this.espacioService.addPlace(formData).subscribe({
-        next: (space) => {
-          console.log('Espacio creado correctamente', space);
-          toast.success('Espacio creado correctamente');
-          this.formModel.reset();
-        },
-        error: (error) => {
-          console.error('Error al crear el espacio', error);
-          toast.error('Error al crear el espacio');
-        },
-        complete: () => {
-          this.isLoading.set(false);
-        }
-      });
+        this.espacioService.addPlace(formData).subscribe({
+          next: (space) => {
+            console.log('Espacio creado correctamente', space);
+            toast.success('Espacio creado correctamente');
+            this.formModel.reset();
+            this.selectedFile = null;
+            this.state.set('closed');
+          },
+          error: (error) => {
+            console.error('Error al crear el espacio', error);
+            toast.error('Error al crear el espacio');
+            this.state.set('closed');
+          },
+          complete: () => {
+            this.isLoading.set(false);
+          }
+        });
       }
     }
   }
   
   
   
+  
+  trackByProductId(index: number, space: any): number {
+    return space.idEspacio;
+  }
 
   protected readonly _rawFilterInput = signal('');
   protected readonly _nameFilter = signal('');
@@ -373,67 +428,75 @@ export class EspaciosComponent {
   });
   }
 
+  onDelete(id: number) {
+    this.espacioService.deletePlace(id).subscribe(() => {
+      console.log('Espacio desactivado');
+      toast.success('Espacio desactivado correctamente');
+      
+    });
+  }
+  onActivar(id: number) {
+    this.espacioService.activarPlace(id).subscribe(() => {
+      console.log('Espacio activado');
+      toast.success('Espacio activado correctamente');
+      
+    });
+  }
   isEditing = signal(false);
-
-  onClickEdit(espacio: Espacio) {
-    
-    this.isEditing.set(true);
-    this.selectedId = (espacio.idEspacio ?? 0);
-    this.formModel.controls.name.value.set(espacio.nombre);
-    this.formModel.controls.canPersonas.value.set(espacio.canPersonas);
-    this.formModel.controls.precio.value.set(espacio.precio);
-    this.formModel.controls.descrip.value.set(espacio.descripcion);
-    
-    this.states.set('open');
-  }
-  onCancel() {
-    this.isEditing.set(false);
-    this.states.set('closed');
-    this.formModel.reset();
-  }
-
-  onEditEspacio() {
-    if (this.selectedId === null) { // Ensure selectedId is not null
-      console.error('ID no seleccionado');
-      toast.error('ID no seleccionado');
-      return;
+    onCancel(): void {
+      this.refreshEspacios();
+      this.selectedFile = null; // Limpiar la imagen seleccionada
+      this.state.set('closed');
     }
+    onEdit(space: EspacioDTO) {
+      this.editMode = true; // Cambia a modo de edición
+      
+      this.espacioId = space.idEspacio ?? null; // Guarda el ID del espacio
+      this.state.set('open'); // Abre el diálogo
+    }
+    
 
-    if (this.formModel.valid()) {
-      const name = this.formModel.controls.name.value();
-      const canPersonas = this.formModel.controls.canPersonas.value();
-      const precio = this.formModel.controls.precio.value();
-      const descripcion = this.formModel.controls.descrip.value();
-
-      const espacio: Espacio = {
-        idEspacio: this.selectedId, // Use selectedId here
-        nombre: name,
-        canPersonas: canPersonas,
-        precio: precio,
-        descripcion: descripcion,
-        estatus: 'Activo'
-      };
-
-      this.isLoading.set(true);
-      this.espacioService.updatePlace(this.selectedId, espacio).subscribe({
-        next: (space) => {
-          console.log('Espacio actualizado correctamente', space);
-          toast.success('Espacio actualizado correctamente');
-          this.formModel.reset();
-          this.isEditing.set(false);
-          this.states.set('closed');
+    refreshEspacios() {
+      this.espacioService.getPlaces().subscribe({
+        next: (spaces) => {
+          this.espacios = spaces;
         },
         error: (error) => {
-          console.error('Error al actualizar el espacio', error);
-          toast.error('Error al actualizar el espacio');
-        },
-        complete: () => {
-          this.isLoading.set(false);
+          console.error('Error al obtener los espacios', error);
         }
       });
     }
-  }
 
+   
+   
+   
+   
+    
+    
  
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

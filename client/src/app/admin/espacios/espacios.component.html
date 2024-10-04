@@ -5,12 +5,11 @@
   <div class="flex justify-end my-5 me-5 pr-5">
     <div>
       <hlm-dialog [state]="states()">
-        <button id="edit-profile" brnDialogTrigger hlmBtn>Agregar Espacio</button>
-       <form (submit)="onSubmit()">
-
+        <button id="add-space" brnDialogTrigger hlmBtn (click)="onAdd()">Agregar Espacio</button>
+       <form  (submit)="onSubmit()">
           <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
             <hlm-dialog-header>
-              <h3 hlmDialogTitle>Nuevo Espacio</h3>
+              <h3 hlmDialogTitle>{{ editMode ? 'Editar Espacio' : 'Nuevo Espacio' }}</h3>
               <p hlmDialogDescription></p>
             </hlm-dialog-header>
             <div class="py-4 grid gap-4">
@@ -24,7 +23,7 @@
                     placeholder="Nombre"
                     name="name"
                     ngModel
-                    [formField]="formModel.controls.name"
+                    [(ngModel)]="formModel.controls.name.value"
                     required
                     maxlength="50"
                   />
@@ -45,7 +44,7 @@
                     placeholder="Capacidad de Personas"
                     name="canPersonas"
                     ngModel
-                    [formField]="formModel.controls.canPersonas"
+                    [(ngModel)]="formModel.controls.canPersonas.value"
                     required
                     min="1"
                   />
@@ -70,7 +69,7 @@
                     placeholder="Precio"
                     name="precio"
                     ngModel
-                    [formField]="formModel.controls.precio"
+                    [(ngModel)]="formModel.controls.precio.value"
                     required
                     min="0"
                     step="0.01"
@@ -95,7 +94,7 @@
                     placeholder="Descripción"
                     name="descrip"
                     ngModel
-                    [formField]="formModel.controls.descrip"
+                    [(ngModel)]="formModel.controls.descrip.value"
                     required
                     maxlength="200"
                   ></textarea>
@@ -111,25 +110,48 @@
               <div class="items-center grid grid-cols-4 gap-4">
                 <label hlmLabel for="imagen-add" class="text-right">Imagen</label>
                 <input hlmInput type="file" id="imagen-add" name="imagen" class="col-span-3"
-                  (change)="onFileChange($event)" />
+                  (change)="onFileSelected($event)" />
               </div>
             }
             </div>
             <hlm-dialog-footer>
               @if(isEditing()) {
-                <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
+                <button hlmBtn variant="outline" (click)="onCancel()">dddddddddd</button>
                 <button hlmBtn type="submit"
-                (click)="onEditEspacio()"
+                (click)="onSubmit()"
                 >Guardar</button>
               } @else {
-                <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
+                <button hlmBtn variant="outline">Cancelar</button>
                 <button hlmBtn
-                (click)="onSubmit()"
+                (click)="onCancel()"
                 >Crear</button>
               }
             </hlm-dialog-footer>
           </hlm-dialog-content>
         </form>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-5">
+          <div *ngFor="let space of (filteredEspacio$ | async); trackBy: trackByProductId"
+               class="bg-white shadow-md rounded-lg p-4 flex flex-col justify-between">
+            <div>
+              <img [src]="getImagenUrl(space.idEspacio!)" alt="{{ space.nombre }}" class="w-full h-48 object-cover rounded-t-lg"
+                   (error)="onImageError($event)">
+              <div class="p-4">
+                <h2 class="text-xl font-bold">{{ space.nombre}}</h2>
+                <p class="text-gray-600" style="text-align: justify;">{{ space.descripcion }}</p>
+              </div>
+            </div>
+            <div class="flex justify-end space-x-2 pe-3">
+              <button id="add-space" brnDialogTrigger hlmBtn (click)="onEdit(space)" class="bg-white text-secondary px-4 py-2 rounded border border-secondary">
+                Editar
+              </button>
+              
+              <button *ngIf="space.estatus === 'Activo'" (click)="onDelete(space.idEspacio!)" class="bg-secondary text-white px-4 py-2 rounded">Desactivar</button>
+              <button *ngIf="space.estatus === 'Inactivo'" (click)="onActivar(space.idEspacio!)" class="bg-secondary text-white px-4 py-2 rounded">Activar</button>
+
+            </div>
+          </div>
+        </div>
       </hlm-dialog>
     </div>
   </div>
@@ -141,10 +163,6 @@
       [ngModel]="_nameFilter()"
       (ngModelChange)="_rawFilterInput.set($event)"
     />
-    <button hlmBtn variant="outline" align="end" [brnMenuTriggerFor]="menu">
-      Ver columnas
-      <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
-    </button>
     <ng-template #menu>
       <hlm-menu class="w-32 bg-white">
 
@@ -163,128 +181,5 @@
       </hlm-menu>
     </ng-template>
   </div>
-
-
-  <brn-table
-    hlm
-    stickyHeader
-    class="border-border block h-[335px] overflow-auto rounded-md border px-20 bg-white"
-    [dataSource]="_filteredSortedPaginatedSpaces()"
-    [displayedColumns]="_allDisplayedColumns()"
-    [trackBy]="_trackBy"
-  >
-    <brn-column-def name="select" class="w-12 bg-white">
-      <hlm-th *brnHeaderDef class="bg-white">
-        <hlm-checkbox [checked]="_checkboxState()" (changed)="handleHeaderCheckboxChange()" class="bg-white" />
-      </hlm-th>
-      <hlm-td *brnCellDef="let element" class="bg-white">
-        <hlm-checkbox [checked]="_isSpaceSelected(element)" (changed)="toggleSpace(element)" class="bg-white" />
-      </hlm-td>
-    </brn-column-def>
-    <brn-column-def name="idEspacio" class="w-32 sm:w-40 bg-white">
-      <hlm-th truncate *brnHeaderDef>ID Espacio</hlm-th>
-      <hlm-td truncate *brnCellDef="let element">
-        {{ element.idEspacio }}
-      </hlm-td>
-    </brn-column-def>
-    <brn-column-def name="Nombre" class="w-32 sm:w-40 bg-white">
-      <hlm-th truncate *brnHeaderDef>Nombre</hlm-th>
-      <hlm-td truncate *brnCellDef="let element">
-        {{ element.nombre }}
-      </hlm-td>
-    </brn-column-def>
-    <brn-column-def name="canPersonas" class="w-60 lg:flex-1 bg-white">
-      <hlm-th *brnHeaderDef>
-        <button hlmBtn size="sm" variant="ghost">
-          Capacidad de Personas
-        </button>
-      </hlm-th>
-      <hlm-td truncate *brnCellDef="let element">
-        {{ element['canPersonas'] }}
-      </hlm-td>
-    </brn-column-def>
-    <brn-column-def name="precio" class="w-32 sm:w-40 bg-white">
-      <hlm-th truncate *brnHeaderDef>Precio</hlm-th>
-      <hlm-td truncate *brnCellDef="let element">
-        {{ element.precio | currency }}
-      </hlm-td>
-    </brn-column-def>
-    <brn-column-def name="estatus" class="w-32 sm:w-40 bg-white">
-      <hlm-th truncate *brnHeaderDef>Estatus</hlm-th>
-      <hlm-td truncate *brnCellDef="let element">
-        {{ element.estatus }}
-      </hlm-td>
-    </brn-column-def>
-    <brn-column-def name="descripcion" class="w-32 sm:w-40 bg-white">
-      <hlm-th truncate *brnHeaderDef>Descripción</hlm-th>
-      <hlm-td truncate *brnCellDef="let element">
-        {{ element.descripcion }}
-      </hlm-td>
-    </brn-column-def>
-
-    <brn-column-def name="actions" class="w-16 bg-white">
-      <hlm-th *brnHeaderDef></hlm-th>
-      <hlm-td *brnCellDef="let element">
-        <button hlmBtn variant="ghost" class="h-6 w-6 p-0.5 hover:bg-gray-100" align="end" [brnMenuTriggerFor]="menu">
-          <hlm-icon class="w-4 h-4" name="lucideMoreHorizontal" />
-        </button>
-
-        <ng-template #menu>
-          <hlm-menu class="bg-white">
-            <hlm-menu-label>
-              Actions
-
-            </hlm-menu-label>
-            <hlm-menu-separator />
-            <hlm-menu-group>
-              <button hlmMenuItem (click)="onClickEdit(element)"
-              class="hover:bg-gray-100"
-              >
-                Editar
-              </button>
-            </hlm-menu-group>
-            <hlm-menu-separator />
-            <hlm-menu-group>
-              <button hlmMenuItem  (click)="onDeletePlace(element)"
-              class="hover:bg-gray-100"
-              >
-                              Eliminar
-              </button>
-            </hlm-menu-group>
-          </hlm-menu>
-        </ng-template>
-      </hlm-td>
-      
-    </brn-column-def>
-    <div class="flex items-center justify-center p-20 text-muted-foreground" brnNoDataRow>No data</div>
-  </brn-table>
-  <div
-    class="flex flex-col justify-between mt-4 sm:flex-row sm:items-center px-20"
-    *brnPaginator="let ctx; totalElements: _totalElements(); pageSize: _pageSize(); onStateChange: _onStateChange"
-  >
-    <span class="text-sm text-muted-foreground">{{ _selected().length }} de {{ _totalElements() }} usuarios</span>
-    <div class="flex mt-2 sm:mt-0">
-      <brn-select class="inline-block" placeholder="{{ _availablePageSizes[0] }}" [(ngModel)]="_pageSize">
-        <hlm-select-trigger class="inline-flex mr-1 w-15 h-9 bg-white">
-          <hlm-select-value />
-        </hlm-select-trigger>
-        <hlm-select-content>
-          @for (size of _availablePageSizes; track size) {
-            <hlm-option [value]="size">
-              {{ size === 10000 ? 'All' : size }}
-            </hlm-option>
-          }
-        </hlm-select-content>
-      </brn-select>
-
-      <div class="flex space-x-1">
-        <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.decrementable()" (click)="ctx.decrement()">
-          Anterior
-        </button>
-        <button size="sm" variant="outline" hlmBtn [disabled]="!ctx.incrementable()" (click)="ctx.increment()">
-          Siguiente
-        </button>
-      </div>
-    </div>
-  </div>
+  
 </div>

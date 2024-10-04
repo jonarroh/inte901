@@ -83,7 +83,6 @@ type Status = { label: string; value: string };
     HlmAccordionModule,
     BrnAccordionModule,
     HlmToasterComponent,
-    BrnCommandImports,
     HlmCommandImports,
     BrnPopoverComponent,
     BrnPopoverTriggerDirective,

@@ -19,5 +19,7 @@
 
         
         public string descripcion { get; set; }
+
+        public IFormFile? image { get; set; }
     }
 }

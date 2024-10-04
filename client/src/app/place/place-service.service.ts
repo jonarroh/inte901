@@ -3,13 +3,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PlaceServiceService {
+  private apiUrl = 'http://localhost:5275/api/Espacios';
 
-  private apiUrl = 'https://localhost:7268/api/Espacios';
-
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient) {}
 
   getPlaces(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);

@@ -55,7 +55,7 @@ import { FormsModule } from '@angular/forms';
     HlmInputDirective,
     SignalInputDirective,
     FormsModule,
-    BrnCommandImports,
+    
     HlmCommandImports,
     HlmIconComponent,
     BrnPopoverComponent,
