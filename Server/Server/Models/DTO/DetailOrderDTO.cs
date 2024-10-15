@@ -10,5 +10,6 @@
         public DateTime DateOrder { get; set; }
         public string Ingredients { get; set; }
         public string Status { get; set; }
+        //public int HeavenCoins { get; set; } // HeavenCoins del producto
     }
 }

@@ -24,9 +24,6 @@
         public string Status { get; set; } // Aceptado, Cancelado, Recibido, Ordenado
         public long? Ticket { get; set; }
         public bool IsDeliver { get; set; }
-
-        // Falta campo para el QR...creo
-
         public ICollection<DetailOrder>? DetailOrders { get; set; }
         [NotMapped]
         public User? User { get; set; }
@@ -34,6 +31,8 @@
         {
             DetailOrders = new List<DetailOrder>();
         }
-
+        //public int PromCode { get; set; } // Id de la promocion, default 0
+        //public float PromDesc { get; set; } // Descuento de la promocion, default 0
+        //public int TotalHeavenCoins { get; set; } // HeavenCoins generados por la compra, default 0
     }
 }
