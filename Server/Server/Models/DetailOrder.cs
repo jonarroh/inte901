@@ -38,6 +38,7 @@
         public Order Order { get; set; }
         [NotMapped]
         public Producto Product { get; set; }
+        //public int HeavenCoins { get; set; } // HeavenCoins del producto
     }
 
 
