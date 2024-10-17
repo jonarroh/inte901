@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-//using Server.Models.DTO.PromocionesDTO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Server;
+using Server.Models;
+using Server.Models.DTO;
 
 namespace Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PromocionesController : Controller
+    public class PromocionesController : ControllerBase
     {
         private readonly Context _context;
         public PromocionesController(Context context)
@@ -13,130 +17,149 @@ namespace Server.Controllers
             _context = context;
         }
 
-        //[HttpGet]
-        //[Route("allPromociones")]
-        //public IActionResult GetPromociones()
-        //{
-        //    try
-        //    {
-        //        var promociones = _context.Promociones.ToList();
-        //        if (promociones == null || promociones.Count == 0)
-        //        {
-        //            return BadRequest("No hay promociones encontradas");
-        //        }
-        //        return Ok(promociones);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //        return NotFound("Se produjo un error en el servidor, contacte a soporte");
-        //    }
-        //}
+        [HttpGet]
+        [Route("allPromociones")]
+        public async Task<IActionResult> GetAllPromociones()
+        {
+            try
+            {
+                var promos = await _context.Promociones.ToListAsync();
 
-        //[HttpPost]
-        //[Route("addPromocion")]
-        //public async Task<IActionResult> AddPromocion(PromocionesDTO data)
-        //{
-        //    try
-        //    {
-        //        if (data == null)
-        //        {
-        //            return BadRequest("No se recibieron datos");
-        //        }
+                if (promos == null || promos.Count == 0)
+                {
+                    return BadRequest("No hay promos registradas");
+                }
 
-        //        var promocion = new Promociones
-        //        {
-        //            Nombre = data.Nombre,
-        //            Descripcion = data.Descripcion,
-        //            FechaInicio = data.FechaInicio,
-        //            FechaFin = data.FechaFin,
-        //            Productos = data.Productos,
-        //            Descuento = data.Descuento,
-        //            Estado = data.Estado,
-        //            BadgePromoId = data.BadgePromoId,
-        //            LimiteCanje = data.LimiteCanje,
-        //            CreatedAt = DateTime.Now.ToString()
-        //        };
+                return Ok(promos);
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return NotFound("vale kk");
+            }
+        }
 
-        //        await _context.Promociones.AddAsync(promocion);
+        [HttpPost]
+        [Route("addPromocion")]
+        public async Task<IActionResult> AddPromocion(PromocionesDTO data)
+        {
+            try
+            {
+                if (data == null)
+                {
+                    return BadRequest("No se recibieron datos");
+                }
 
-        //        await _context.SaveChangesAsync();
+                var promocion = new Promociones
+                {
+                    Nombre = data.Nombre,
+                    Descripcion = data.Descripcion,
+                    FechaInicio = data.FechaInicio,
+                    FechaFin = data.FechaFin,
+                    Productos = data.Productos,
+                    Descuento = data.Descuento,
+                    Estado = data.Estado,
+                    BadgePromoId = data.BadgePromoId,
+                    LimiteCanje = data.LimiteCanje,
+                    CreatedAt = DateTime.Now.ToString(),
+                    UpdatedAt = DateTime.Now.ToString(),
+                    DeletedAt = ""
+                };
 
-        //        return Ok("Promocion agregada correctamente");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //        return NotFound("Se produjo un error en el servidor, contacte a soporte");
-        //    }
-        //}
+                await _context.Promociones.AddAsync(promocion);
 
-        //[HttpPut]
-        //[Route("updatePromocion/{id}")]
-        //public async Task<IActionResult> UpdatePromocion(int id)
-        //{
-        //    try
-        //    {
-        //        var data = await _context.Promociones.FindAsync(id);
-        //        if (data == null)
-        //        {
-        //            return BadRequest("No se recibieron datos");
-        //        }
+                await _context.SaveChangesAsync();
 
-        //        var promocion = await _context.Promociones.FindAsync(data.Id);
+                return Ok("Se registró correctamente la promoción");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
 
-        //        if (promocion == null)
-        //        {
-        //            return BadRequest("No se encontro la promocion");
-        //        }
+        [HttpPut]
+        [Route("updatePromocion/{id}")]
+        public async Task<IActionResult> UpdatePromocion(int id, [FromBody] PromocionesDTO data)
+        {
+            try
+            {
+                var promocion = await _context.Promociones.FindAsync(id);
 
-        //        promocion.Nombre = data.Nombre;
-        //        promocion.Descripcion = data.Descripcion;
-        //        promocion.FechaInicio = data.FechaInicio;
-        //        promocion.FechaFin = data.FechaFin;
-        //        promocion.Productos = data.Productos;
-        //        promocion.Descuento = data.Descuento;
-        //        promocion.Estado = data.Estado;
-        //        promocion.BadgePromoId = data.BadgePromoId;
-        //        promocion.LimiteCanje = data.LimiteCanje;
-        //        promocion.UpdatedAt = DateTime.Now.ToString();
+                if (promocion == null)
+                {
+                    return BadRequest("No se encontro la promocion");
+                }
 
-        //        _context.Promociones.Update(promocion);
+                promocion.Nombre = data.Nombre;
+                promocion.Descripcion = data.Descripcion;
+                promocion.FechaInicio = data.FechaInicio;
+                promocion.FechaFin = data.FechaFin;
+                promocion.Productos = data.Productos;
+                promocion.Descuento = data.Descuento;
+                promocion.Estado = data.Estado;
+                promocion.BadgePromoId = data.BadgePromoId;
+                promocion.LimiteCanje = data.LimiteCanje;
+                promocion.UpdatedAt = DateTime.Now.ToString();
 
-        //        return Ok("Promoción actualizada");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //        return NotFound("Se produjo un error en el servidor, contacte a soporte");
-        //    }
-        //}
+                _context.Promociones.Update(promocion);
 
-        //[HttpPut]
-        //[Route("deletePromocion/{id}")]
-        //public async Task<IActionResult> DeletePromocion(int id)
-        //{
-        //    try
-        //    {
-        //        var promocion = await _context.Promociones.FindAsync(id);
+                return Ok("Se actualizo correctamente la promoción");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
 
-        //        if (promocion == null)
-        //        {
-        //            return BadRequest("No se encontro la promocion");
-        //        }
+        [HttpPut]
+        [Route("deletePromocion/{id}")]
+        public async Task<IActionResult> DeletePromocion(int id)
+        {
+            try
+            {
+                var promocion = await _context.Promociones.FindAsync(id);
 
-        //        promocion.DeletedAt = DateTime.Now.ToString();
-        //        promocion.Estado = 0;
+                if (promocion == null)
+                {
+                    return BadRequest("No se encontro la promocion");
+                }
 
-        //        _context.Promociones.Update(promocion);
+                promocion.DeletedAt = DateTime.Now.ToString();
+                promocion.Estado = 0;
 
-        //        return Ok("Promoción eliminada");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //        return NotFound("Se produjo un error en el servidor, contacte a soporte");
-        //    }
-        //}
+                _context.Promociones.Update(promocion);
+
+                return Ok("Se eliminó correctamente la promoción");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+        [HttpGet]
+        [Route("getPromocion/{id}")]
+        public async Task<IActionResult> GetPromocion(int id)
+        {
+            try
+            {
+                var promocion = await _context.Promociones.FindAsync(id);
+
+                if (promocion == null)
+                {
+                    return BadRequest("No se encontro la promocion");
+                }
+
+                return Ok(promocion);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
     }
 }

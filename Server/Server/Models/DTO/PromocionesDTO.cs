@@ -9,7 +9,7 @@
         public string FechaFin { get; set; }
         public int Descuento { get; set; }
         public int Estado { get; set; }
-        public ICollection<Producto> Productos { get; set; }
+        public int Productos { get; set; }
         public int BadgePromoId { get; set; }
         public int LimiteCanje { get; set; }
         public string CreatedAt { get; set; }

@@ -5,6 +5,8 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Diagnostics.CodeAnalysis;
+
     public class Promociones
     {
         [Key]
@@ -16,11 +18,12 @@
         public string FechaFin { get; set; }
         public int Descuento { get; set; }
         public int Estado { get; set; }
-        public ICollection<Producto> Productos { get; set; }
+        public int Productos { get; set; }
         public int BadgePromoId { get; set; }
         public int LimiteCanje { get; set; }
         public string CreatedAt { get; set; }
         public string UpdatedAt { get; set; }
-        public string DeletedAt { get; set; }
+        [AllowNull]
+        public string DeletedAt { get; set; } = null;
     }
 }
