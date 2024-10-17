@@ -1,0 +1,89 @@
+<style>
+  .tab-button {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 50px;
+    border: 1px solid #ccc;
+    border-radius: 30px 0 0 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    cursor: pointer;
+  }
+
+  .icon {
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  .promo-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    padding: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 4px solid #4CAF50; /* Indica visualmente un color distintivo para promociones */
+  }
+
+  .promo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .promo-card-header h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .promo-card-body {
+    margin-top: 10px;
+  }
+
+  .promo-card-body p {
+    margin: 5px 0;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  .promo-card-body strong {
+    color: #000;
+  }
+
+  .promo-card-body p:last-child {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #4CAF50; /* Color del descuento */
+  }
+
+</style>
+<hlm-sheet side="right" class="bg-white">
+  <button id="edit-profile" variant="warning" brnSheetTrigger hlmBtn class="tab-button">
+    <span class="icon">&lt;</span>
+  </button>
+  <hlm-sheet-content *brnSheetContent="let ctx">
+    <hlm-sheet-header>
+      <h3 hlmSheetTitle>Promociones disponibles</h3>
+    </hlm-sheet-header>
+    <div *ngFor="let promo of promociones" class="promo-card">
+      <div class="promo-card-header">
+        <h4>{{ promo.nombre }}</h4>
+      </div>
+      <div class="promo-card-body">
+        <p>{{ promo.descripcion }}</p>
+        <p>{{ promo.productos }}</p>
+        <p><strong>Descuento:</strong> ${{ promo.descuento }}.00 MXN</p>
+      </div>
+    </div>
+  </hlm-sheet-content>
+</hlm-sheet>
+

@@ -1,3 +1,4 @@
+import { id } from 'date-fns/locale';
 export interface Proveedor {
   id: number;
   nombreEmpresa: string;
@@ -127,7 +128,7 @@ export interface Espacio {
   precio: number;
   estatus: string;
   descripcion: string;
-  
+
 }
 
 export interface Espacio2 {
@@ -137,7 +138,7 @@ export interface Espacio2 {
   precio: number;
   descripcion: string;
   imagen : File;
-  
+
 }
 
 export interface EspacioDTO {
@@ -233,4 +234,17 @@ export class OrderListComponent {
   searchTerm: string = '';
   selectedFilter: string = '';
   error: string = '';
+}
+
+export interface PromocionesDTO {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  fechaInicio: string;
+  fechaFin: string;
+  descuento: number;
+  estatus: number;
+  productos: string;
+  badgePromoId: number;
+  limiteCanje: number;
 }

@@ -8,6 +8,7 @@ import { HlmSkeletonComponent } from '@spartan-ng/ui-skeleton-helm';
 import { SearchComponent } from './search/search.component';
 import { RouterModule } from '@angular/router';
 import { ChatbotComponent } from '~/components/chatbot/chatbot.component';
+import { PromocionesComponent } from '../promociones/promociones.component';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +20,7 @@ import { ChatbotComponent } from '~/components/chatbot/chatbot.component';
     SearchComponent,
     RouterModule,
     ChatbotComponent,
+    PromocionesComponent,
   ],
   providers: [ProductosService],
   templateUrl: './home.component.html',
