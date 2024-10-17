@@ -330,7 +330,7 @@ namespace Server.Controllers
             foreach (var ingredient in product.Ingredientes)
             {
                 var ingredientInventory = await _context.InventarioMPs.FirstOrDefaultAsync(i => i.Id == ingredient.Id);
-                if (ingredientInventory == null || (decimal)ingredientInventory.Cantidad < ingredient.Cantidad * quantity)
+                if (ingredientInventory == null || (float?)ingredientInventory.Cantidad < ingredient.Cantidad * quantity)
                 {
                     return $"No hay suficiente inventario para el producto {product.Nombre}";
                 }
@@ -459,6 +459,9 @@ namespace Server.Controllers
                     Status = "Ordenado",
                     Ticket = ticket,
                     IsDeliver = ordertdo.IsDeliver
+                    //PromCode = ordertdo.PromCode,
+                    //PromDesc = ordertdo.PromDesc,
+                    //TotalHeavenCoins = ordertdo.TotalHeavenCoins
                 };
 
                 if (ordertdo.CreditCard != null)
@@ -541,6 +544,7 @@ namespace Server.Controllers
                         DateOrder = DateTime.Now,
                         Ingredients = d.Ingredients,
                         Status = "Ordenado"
+                        //HeavenCoins = d.HeavenCoins
                     };
 
                     orden.DetailOrders?.Add(detail);

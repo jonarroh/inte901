@@ -210,6 +210,19 @@ export class EspaciosComponent {
         toast.success('Espacio creado correctamente');
         this.formModel.reset();
         this.selectedFile = null;
+        this.state.set('closed');
+        //limpiar el formulario
+        this.formModel.reset();
+        //actualizar la lista de espacios
+        this.espacioService.getPlaces().subscribe({
+          next: (spaces) => {
+            console.log('Espacios recibidos:', spaces); // Verify the received data here
+            this.espacios = spaces;
+          },
+          error: (error) => {
+            console.error('Error al obtener los espacios', error);
+          }
+        });
       },
       error: (error) => {
         console.error('Error al crear el espacio', error);
@@ -222,6 +235,7 @@ export class EspaciosComponent {
   }
 
   onSubmit() {
+    console.log('Formulario enviado');
     if (this.formModel.valid()) {  
       const name = this.formModel.controls.name.value();
       const canPersonas = this.formModel.controls.canPersonas.value();
@@ -420,6 +434,7 @@ export class EspaciosComponent {
         toast.success('Espacio eliminado correctamente');
 
         this._spaces.set(this._spaces().filter((u) => u.idEspacio!== space.idEspacio));
+        this.refreshEspacios();
       },
       error: (error) => {
         console.error('Error al eliminar el espacio', error);
@@ -432,6 +447,7 @@ export class EspaciosComponent {
     this.espacioService.deletePlace(id).subscribe(() => {
       console.log('Espacio desactivado');
       toast.success('Espacio desactivado correctamente');
+      this.refreshEspacios();
       
     });
   }
@@ -439,20 +455,24 @@ export class EspaciosComponent {
     this.espacioService.activarPlace(id).subscribe(() => {
       console.log('Espacio activado');
       toast.success('Espacio activado correctamente');
+      this.refreshEspacios();
       
     });
   }
   isEditing = signal(false);
     onCancel(): void {
       this.refreshEspacios();
-      this.selectedFile = null; // Limpiar la imagen seleccionada
+      this.selectedFile = null;
       this.state.set('closed');
     }
     onEdit(space: EspacioDTO) {
-      this.editMode = true; // Cambia a modo de edición
-      
-      this.espacioId = space.idEspacio ?? null; // Guarda el ID del espacio
-      this.state.set('open'); // Abre el diálogo
+      this.editMode = true; 
+      this.formModel.controls.name.value.set(space.nombre);
+      this.formModel.controls.canPersonas.value.set(space.canPersonas);
+      this.formModel.controls.precio.value.set(space.precio);
+      this.formModel.controls.descrip.value.set(space.descripcion);
+      this.espacioId = space.idEspacio ?? null; 
+      this.state.set('open'); 
     }
     
 

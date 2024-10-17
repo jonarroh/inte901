@@ -8,6 +8,7 @@ import { Order } from '~/lib/types';
 import { PedidosUserServiceService } from './pedidos/pedidos-user/pedidos-user-service.service';
 import { toast } from 'ngx-sonner';
 import { HttpClientModule } from '@angular/common/http';
+import { GeolocationService } from './services/geolocation.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -19,6 +20,31 @@ import { HttpClientModule } from '@angular/common/http';
 export class AppComponent {
   title = 'client';
 
-  constructor(private signalRService: SignalRService,private orderderService: PedidosUserServiceService) {    
+  constructor(private signalRService: SignalRService,private orderderService: PedidosUserServiceService,private geolocationService: GeolocationService) {
+
+    this.geolocationService.getCurrentPosition().then((position) => {
+      console.log('Posición actual:', position);
+      if(position){
+        if(this.geolocationService.isLogged()){
+          this.geolocationService.sendLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            isLogged: 1,
+            token: localStorage.getItem('token') || ''
+          });
+        }
+        else{
+          const anonymousToken = this.geolocationService.createAnonymousToken();
+          console.log('Token anónimo:', anonymousToken);
+          this.geolocationService.sendLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            isLogged: 0,
+            token: anonymousToken
+          });
+        }
+      }
+
+    })
   }
 }
