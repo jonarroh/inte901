@@ -17,6 +17,9 @@ import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { User } from '~/lib/types';
+import { GeolocationService } from '~/app/services/geolocation.service';
+import { from } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'nav-icon',
@@ -40,7 +43,7 @@ import { User } from '~/lib/types';
     HlmButtonDirective,
     RouterModule
   ],
-  providers: [UserService],
+  providers: [UserService, GeolocationService],
   templateUrl: './icon.component.html'
 })
 export class IconComponent implements OnInit {
@@ -53,7 +56,7 @@ export class IconComponent implements OnInit {
   imgUrl  = this.userService.imgUrl;
   initials = computed(() => this.userData()?.name?.split(' ').map((name) => name[0]).join('') || '');
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private geoService: GeolocationService, private http: HttpClient) { }
 
   ngOnInit() {
    if(this.isLog()) {
@@ -77,8 +80,19 @@ isLog() {
   return !!localStorage.getItem('token');
 }
 
-  logout() {
-    localStorage.removeItem('token');
-    window.location.href = '/';
-  }
+private apiUrl = 'http://localhost:3000/location';
+logout(){
+  let token = localStorage.getItem('token') ?? '';
+  from(this.http.delete(`${this.apiUrl}/${token}`)).subscribe({
+    next: () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      this.geoService.location = null;
+    },
+    error: (error: any) => {
+      console.error('Error al cerrar sesión', error);
+    }
+  });
+
+}
 }

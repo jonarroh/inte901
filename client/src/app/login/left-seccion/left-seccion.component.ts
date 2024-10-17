@@ -23,6 +23,8 @@ import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import { UserService } from '~/app/home/services/user.service';
 import { toast } from 'ngx-sonner';
 import { Usuario } from '~/app/admin/compras/interface/usuario';
+import { GeolocationService } from '~/app/services/geolocation.service';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'left-seccion',
   standalone: true,
@@ -33,14 +35,15 @@ import { Usuario } from '~/app/admin/compras/interface/usuario';
     HlmButtonDirective,
     FormsModule,
     SignalInputDirective,
-    RouterModule
+    RouterModule,
+    
   ],
-  providers: [AuthService, Router, UserService],
+  providers: [AuthService, Router, UserService, GeolocationService],
   templateUrl: './left-seccion.component.html'
 })
 export class LeftSeccionComponent {
   
-  constructor(private authService: AuthService, private router: Router,private userService: UserService) {}
+  constructor(private authService: AuthService, private router: Router,private userService: UserService, private geoService: GeolocationService,private http: HttpClient) {}
 
   disabled = signal(false);
   res = signal<ResponseLogin | null>(null);
@@ -86,6 +89,12 @@ export class LeftSeccionComponent {
       
       this.authService.login(this.formModel.value()).subscribe({
         next: (response) => {
+
+
+          //eliminar la ubicación actual
+          this.geoService.deleteLocation(this.geoService.getAnonymousToken());
+          localStorage.removeItem('anonymousToken');
+
           localStorage.setItem('token', response.jwtToken);
           localStorage.setItem('userId', response.id);
           
@@ -96,7 +105,28 @@ export class LeftSeccionComponent {
               console.log('Usuario cargado correctamente', user);
               this.userService.saveUserData(user).then(()=>{
                 console.log('Usuario guardado');
+
+
                 console.log('role:', user.role);
+
+                this.geoService.getCurrentPosition().then((position) => {
+                  console.log('Posición actual:', position);
+                  console.log('token:', localStorage.getItem('token'));
+                  if(position){
+                    const deviceInfo = this.geoService.getDeviceName();
+                    if(this.geoService.isLogged()){
+                      this.geoService.sendLocation({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        isLogged: 1,
+                        token: localStorage.getItem('token') || '',
+                        browser: deviceInfo.browser,
+                        deviceType: deviceInfo.deviceType
+                      });
+                    }      
+                  }
+                }
+                );
 
                 if(user.role === 'Admin'){
                   this.router.navigate(['/admin/productos']);

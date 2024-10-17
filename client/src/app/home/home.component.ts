@@ -9,6 +9,7 @@ import { SearchComponent } from './search/search.component';
 import { RouterModule } from '@angular/router';
 import { ChatbotComponent } from '~/components/chatbot/chatbot.component';
 import { PromocionesComponent } from '../promociones/promociones.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -29,7 +30,7 @@ export class HomeComponent implements OnInit {
   protected productos: Producto[] = [];
   isLoading = signal(true);
 
-  constructor(private productService: ProductosService) {}
+  constructor(private productService: ProductosService,private http: HttpClient) {}
 
   ngOnInit() {
     this.productService.getProductos().subscribe({

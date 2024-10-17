@@ -21,26 +21,31 @@ export class AppComponent {
   title = 'client';
 
   constructor(private signalRService: SignalRService,private orderderService: PedidosUserServiceService,private geolocationService: GeolocationService) {
+// to do: reimplemetar signalR
 
     this.geolocationService.getCurrentPosition().then((position) => {
       console.log('Posición actual:', position);
+      console.log('token:', localStorage.getItem('token'));
       if(position){
+        const deviceInfo = this.geolocationService.getDeviceName();
         if(this.geolocationService.isLogged()){
           this.geolocationService.sendLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
             isLogged: 1,
-            token: localStorage.getItem('token') || ''
+            token: localStorage.getItem('token') || '',
+            browser: deviceInfo.browser,
+            deviceType: deviceInfo.deviceType
           });
         }
         else{
-          const anonymousToken = this.geolocationService.createAnonymousToken();
-          console.log('Token anónimo:', anonymousToken);
           this.geolocationService.sendLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
             isLogged: 0,
-            token: anonymousToken
+            token: this.geolocationService.createAnonymousToken(),
+            browser: deviceInfo.browser,
+            deviceType: deviceInfo.deviceType
           });
         }
       }

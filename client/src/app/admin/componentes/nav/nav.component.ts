@@ -1,8 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { UserService } from '~/app/home/services/user.service';
 import { User } from '~/lib/types';
 import { RouterModule } from '@angular/router';
+import { GeolocationService } from '~/app/services/geolocation.service';
+import { HttpClient } from '@microsoft/signalr';
 
 @Component({
   selector: 'admin-nav',
@@ -19,7 +21,7 @@ export class NavComponent {
   usuariosServe = inject(UserService);
   usuario$: Observable<User>;
 
-  constructor() {
+  constructor(private geoService: GeolocationService,private http: HttpClient) {
     this.userId = this.getUser();
     this.usuario$ = this.usuariosServe.getUser(this.userId);
 
@@ -33,9 +35,19 @@ export class NavComponent {
     return parseInt(userId);
   }
 
-
+  private apiUrl = 'http://localhost:3000/location';
   logout(){
-    localStorage.clear();
-    window.location.href = '/';
+    let token = localStorage.getItem('token') ?? '';
+    from(this.http.delete(`${this.apiUrl}/${token}`)).subscribe({
+      next: () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        this.geoService.location = null;
+      },
+      error: (error: any) => {
+        console.error('Error al cerrar sesión', error);
+      }
+    });
+
   }
 }
