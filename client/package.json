@@ -19,6 +19,7 @@
     "@angular/platform-browser": "18.0.4",
     "@angular/platform-browser-dynamic": "18.0.4",
     "@angular/router": "18.0.4",
+    "@angular/service-worker": "18.0.4",
     "@formkit/auto-animate": "^0.8.2",
     "@microsoft/signalr": "^8.0.7",
     "@ng-icons/core": "^25.1.0",
