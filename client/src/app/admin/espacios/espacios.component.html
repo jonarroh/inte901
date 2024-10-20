@@ -1,10 +1,14 @@
+
+
+
+
 <div class="container mx-auto max-h-screen overflow-y-auto w-full p-4">
   <div class="flex-1 flex justify-center">
     <h1 class="text-5xl font-bold mt-1 mb-2 text-black">Espacios</h1>
   </div>
   <div class="flex justify-end my-5 me-5 pr-5">
     <div>
-      <hlm-dialog [state]="states()">
+      <hlm-dialog [state]="state()">
         <button id="add-space" brnDialogTrigger hlmBtn (click)="onAdd()">Agregar Espacio</button>
        <form  (submit)="onSubmit()">
           <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
@@ -121,7 +125,7 @@
                 (click)="onSubmit()"
                 >Guardar</button>
               } @else {
-                <button hlmBtn variant="outline">Cancelar</button>
+                <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
                 <button hlmBtn
                 (click)="onSubmit()"
                 >Crear</button>
