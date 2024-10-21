@@ -116,6 +116,10 @@ namespace Server.Controllers
 
             _context.Entry(creditCard).State = EntityState.Modified;
 
+            if (!IsValidCreditCardNumber(creditCard.CardNumber)) { 
+            return BadRequest("El número de tarjeta no es válido");
+            }
+
             if (IsExpired(creditCard.ExpiryDate))
             {
                 return BadRequest("La tarjeta está vencida");
@@ -151,6 +155,11 @@ namespace Server.Controllers
         [HttpPost]
         public async Task<ActionResult<CreditCardDTO>> PostCreditCard(CreditCard creditCard)
         {
+            if(!IsValidCreditCardNumber(creditCard.CardNumber))
+            {
+                return BadRequest("El número de tarjeta no es válido");
+            }
+
             if (IsExpired(creditCard.ExpiryDate))
             {
                 return BadRequest("La tarjeta está vencida");
@@ -178,6 +187,10 @@ namespace Server.Controllers
             var creditCardsDTO = new List<CreditCardDTO>();
             foreach (var creditCard in creditCards)
             {
+                if (!IsValidCreditCardNumber(creditCard.CardNumber))
+                {
+                    return BadRequest("El número de tarjeta no es válido");
+                }
                 if (IsExpired(creditCard.ExpiryDate))
                 {
                     return BadRequest("La tarjeta está vencida");
@@ -224,6 +237,42 @@ namespace Server.Controllers
         private bool CreditCardExists(int id)
         {
             return _context.CreditCard.Any(e => e.Id == id);
+        }
+
+        private bool IsValidCreditCardNumber(string cardNumber)
+        {
+            // Eliminamos todos los espacios o caracteres que no sean dígitos
+            cardNumber = cardNumber.Replace(" ", "");
+
+            // Verificamos si el string contiene solo dígitos
+            if (!long.TryParse(cardNumber, out _))
+            {
+                return false;
+            }
+
+            int sum = 0;
+            bool alternate = false;
+
+            // Recorremos el número de la tarjeta de derecha a izquierda
+            for (int i = cardNumber.Length - 1; i >= 0; i--)
+            {
+                int n = int.Parse(cardNumber[i].ToString());
+
+                if (alternate)
+                {
+                    n *= 2;
+                    if (n > 9)
+                    {
+                        n -= 9;
+                    }
+                }
+
+                sum += n;
+                alternate = !alternate;
+            }
+
+            // Si la suma es múltiplo de 10, el número es válido
+            return (sum % 10 == 0);
         }
     }
 }
