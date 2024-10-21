@@ -9,6 +9,7 @@ import { PedidosUserServiceService } from './pedidos/pedidos-user/pedidos-user-s
 import { toast } from 'ngx-sonner';
 import { HttpClientModule } from '@angular/common/http';
 import { GeolocationService } from './services/geolocation.service';
+import { PushService } from './push/push.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -20,8 +21,10 @@ import { GeolocationService } from './services/geolocation.service';
 export class AppComponent {
   title = 'client';
 
-  constructor(private signalRService: SignalRService,private orderderService: PedidosUserServiceService,private geolocationService: GeolocationService) {
+  constructor(private signalRService: SignalRService,private orderderService: PedidosUserServiceService,private geolocationService: GeolocationService,
+    private pushService: PushService) {
 // to do: reimplemetar signalR
+
 
     this.geolocationService.getCurrentPosition().then((position) => {
       console.log('Posición actual:', position);
