@@ -62,7 +62,10 @@ export class PedidosUserComponent implements OnInit {
       'ReceiveOrderUpdate',
       (message: string) => {
         const changeId = message.split(':')[0];
-        const status = message.split(':')[1];
+        const statusAndUserID = message.split(':')[1];
+        let [status, userId] = statusAndUserID.split(',');
+
+
         if (this.orders) {
           const order = this.orders.find((o) => o.id === Number(changeId));
           if (order) {
