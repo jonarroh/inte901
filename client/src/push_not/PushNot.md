@@ -1,3 +1,7 @@
+# Dependencies
+
+bun i web-push hono
+
 # Web Push
 
 Para generar llaves para el uso de web-push corres el comando:
