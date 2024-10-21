@@ -4,7 +4,7 @@ import { UserService } from '~/app/home/services/user.service';
 import { User } from '~/lib/types';
 import { RouterModule } from '@angular/router';
 import { GeolocationService } from '~/app/services/geolocation.service';
-import { HttpClient } from '@microsoft/signalr';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'admin-nav',
