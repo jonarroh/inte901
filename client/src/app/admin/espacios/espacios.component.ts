@@ -185,6 +185,7 @@ export class EspaciosComponent {
   onAdd(){
     this.editMode = false;
     this.refreshSubject.next();
+    this.formModel.reset();
     this.state.set('open');
   }
 
