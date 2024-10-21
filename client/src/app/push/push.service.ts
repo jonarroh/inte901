@@ -11,7 +11,6 @@ export class PushService {
   constructor() {
     console.log("Service Push");
     this.subscription()
-    this.pushMessage({title: "Hola", message: "Mundo", url: "https://www.google.com"})
    }
 
 

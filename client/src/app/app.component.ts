@@ -25,6 +25,7 @@ export class AppComponent {
     private pushService: PushService) {
 // to do: reimplemetar signalR
 
+
     this.geolocationService.getCurrentPosition().then((position) => {
       console.log('Posición actual:', position);
       console.log('token:', localStorage.getItem('token'));
