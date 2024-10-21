@@ -16,7 +16,7 @@
       class="w-full md:w-80"
       placeholder="Buscar por nombre"
       [ngModel]="_nameFilter()"
-      (ngModelChange)="_rawFilterInput.set($event)"
+      (ngModelChange)="updateFilter($event)"
     />
         </div>
        <form  (submit)="onSubmit()">

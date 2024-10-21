@@ -305,6 +305,10 @@ export class EspaciosComponent {
   
   
   
+  updateFilter(filterValue: string) {
+    this.filterSubject.next(filterValue); // Actualiza el filtro cuando cambia el valor
+  }
+
   trackByProductId(index: number, space: any): number {
     return space.idEspacio;
   }
