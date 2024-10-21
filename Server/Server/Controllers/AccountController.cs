@@ -18,7 +18,7 @@
             _context = context;
         }
 
- 
+
 
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest loginRequest)
@@ -39,11 +39,35 @@
                 return NotFound(new { message = "No se encontró el usuario" });
             }
 
+            // Verificar si la cuenta está bloqueada
+            if (user.IsBlockedUntil != null && DateTime.UtcNow < user.IsBlockedUntil)
+            {
+                var timeRemaining = (user.IsBlockedUntil.Value - DateTime.UtcNow).TotalMinutes;
+                return Unauthorized(new { message = $"La cuenta está bloqueada. Inténtelo de nuevo en {timeRemaining:F1} minutos." });
+            }
+
             // Verificar la contraseña
             if (user.Password != StringToSha256(password))
             {
+                // Actualizar el conteo de intentos fallidos
+                user.AttemptsToBlock--;
+                user.LastFailedLoginAttempt = DateTime.UtcNow;
+
+                // Bloquear la cuenta si los intentos fallidos son 0
+                if (user.AttemptsToBlock <= 0)
+                {
+                    user.IsBlockedUntil = DateTime.UtcNow.AddMinutes(5); // Bloquear por 5 minutos
+                    user.AttemptsToBlock = 3; // Reiniciar el conteo de intentos
+                }
+
+                _context.SaveChanges();
                 return Unauthorized(new { message = "Usuario o contraseña incorrectos" });
             }
+
+            // Restablecer los intentos fallidos si el inicio de sesión es exitoso
+            user.AttemptsToBlock = 3;
+            user.LastFailedLoginAttempt = null;
+            user.IsBlockedUntil = null;
 
             // Crear el token
             string token = _tokenService.CreateToken(email, user.Role, user.Id);
@@ -51,8 +75,9 @@
             // Almacenar el token en las cookies
             Response.Cookies.Append("token", token, new CookieOptions { HttpOnly = true, Secure = true });
 
+            _context.SaveChanges();
 
-            return Ok(new { jwtToken = token , id = user.Id });
+            return Ok(new { jwtToken = token, id = user.Id });
         }
 
         public static string StringToSha256(string str)
