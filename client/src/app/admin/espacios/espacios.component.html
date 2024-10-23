@@ -10,6 +10,15 @@
     <div>
       <hlm-dialog [state]="state()">
         <button id="add-space" brnDialogTrigger hlmBtn (click)="onAdd()">Agregar Espacio</button>
+        <div>
+          <input
+      hlmInput
+      class="w-full md:w-80"
+      placeholder="Buscar por nombre"
+      [ngModel]="_nameFilter()"
+      (ngModelChange)="updateFilter($event)"
+    />
+        </div>
        <form  (submit)="onSubmit()">
           <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
             <hlm-dialog-header>
@@ -160,13 +169,7 @@
     </div>
   </div>
   <div class="flex flex-row justify-between gap-4 px-20 py-5">
-    <input
-      hlmInput
-      class="w-full md:w-80"
-      placeholder="Buscar por nombre"
-      [ngModel]="_nameFilter()"
-      (ngModelChange)="_rawFilterInput.set($event)"
-    />
+    
     <ng-template #menu>
       <hlm-menu class="w-32 bg-white">
 

@@ -44,6 +44,9 @@ import { toast } from 'ngx-sonner';
 export class EspaciosComponent {
 
 
+ 
+
+
   espacio = signal<EspacioDTO | null>(null);
   
   isLoading = signal(false);
@@ -103,6 +106,7 @@ export class EspaciosComponent {
   });
   
   constructor(private espacioService: EspacioSerService) {
+
     this.refresh$.subscribe(() => this.refreshEspacios());
     this.espacioService.getPlaces().subscribe({
       next: (spaces) => {
@@ -114,9 +118,8 @@ export class EspaciosComponent {
       }
     });
   
-    // Create an observable for filtered spaces
     this.filteredEspacio$ = combineLatest([
-      this.espacioService.getPlaces(),
+      toObservable(this.espacios), // Convertimos la signal espacios a un observable
       this.filter$
     ]).pipe(
       map(([spaces, filterValue]) =>
@@ -182,6 +185,7 @@ export class EspaciosComponent {
   onAdd(){
     this.editMode = false;
     this.refreshSubject.next();
+    this.formModel.reset();
     this.state.set('open');
   }
 
@@ -301,6 +305,10 @@ export class EspaciosComponent {
   
   
   
+  updateFilter(filterValue: string) {
+    this.filterSubject.next(filterValue); // Actualiza el filtro cuando cambia el valor
+  }
+
   trackByProductId(index: number, space: any): number {
     return space.idEspacio;
   }
@@ -431,7 +439,7 @@ export class EspaciosComponent {
     this.espacioService.deletePlace(id).subscribe(() => {
       console.log('Espacio desactivado');
       toast.success('Espacio desactivado correctamente');
-      
+      this.refreshEspacios();
       
     });
   }
@@ -439,8 +447,7 @@ export class EspaciosComponent {
     this.espacioService.activarPlace(id).subscribe(() => {
       console.log('Espacio activado');
       toast.success('Espacio activado correctamente');
-      
-      
+      this.refreshEspacios();
     });
   }
   isEditing = signal(false);
@@ -451,6 +458,17 @@ export class EspaciosComponent {
     }
     onEdit(space: EspacioDTO) {
       this.editMode = true; // Cambia a modo de edición
+      this.isEditing.set(true);
+    
+      if (space.idEspacio !== undefined) {
+        this.formModel.controls.id.value.set(space.idEspacio);
+        this.formModel.controls.name.value.set(space.nombre);
+        this.formModel.controls.canPersonas.value.set(space.canPersonas);
+        this.formModel.controls.precio.value.set(space.precio);
+        this.formModel.controls.descrip.value.set(space.descripcion);
+
+      }
+
       
       this.espacioId = space.idEspacio ?? null; // Guarda el ID del espacio
       this.state.set('open'); // Abre el diálogo
