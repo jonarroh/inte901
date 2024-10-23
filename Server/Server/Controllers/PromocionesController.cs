@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Server;
 using Server.Models;
 using Server.Models.DTO;
+using Newtonsoft.Json;
 
 namespace Server.Controllers
 {
@@ -23,7 +24,7 @@ namespace Server.Controllers
         {
             try
             {
-                var promos = await _context.Promociones.ToListAsync();
+                var promos = await _context.Promociones.Where(p => p.Estado == 1).ToListAsync();
 
                 if (promos == null || promos.Count == 0)
                 {
@@ -31,7 +32,8 @@ namespace Server.Controllers
                 }
 
                 return Ok(promos);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return NotFound("vale kk");
@@ -40,7 +42,7 @@ namespace Server.Controllers
 
         [HttpPost]
         [Route("addPromocion")]
-        public async Task<IActionResult> AddPromocion(PromocionesDTO data)
+        public async Task<IActionResult> AddPromocion([FromBody] PromocionesDTO data)
         {
             try
             {
@@ -69,7 +71,7 @@ namespace Server.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return Ok("Se registró correctamente la promoción");
+                return Ok(200);
             }
             catch (Exception ex)
             {
@@ -93,18 +95,21 @@ namespace Server.Controllers
 
                 promocion.Nombre = data.Nombre;
                 promocion.Descripcion = data.Descripcion;
+                promocion.Descuento = data.Descuento;
+                promocion.Estado = data.Estado;
+                promocion.LimiteCanje = data.LimiteCanje;
+                promocion.UpdatedAt = DateTime.Now.ToString();
                 promocion.FechaInicio = data.FechaInicio;
                 promocion.FechaFin = data.FechaFin;
                 promocion.Productos = data.Productos;
-                promocion.Descuento = data.Descuento;
-                promocion.Estado = data.Estado;
-                promocion.BadgePromoId = data.BadgePromoId;
-                promocion.LimiteCanje = data.LimiteCanje;
-                promocion.UpdatedAt = DateTime.Now.ToString();
+                if (data.BadgePromoId != 0)
+                {
+                    promocion.BadgePromoId = data.BadgePromoId;
+                }
 
-                _context.Promociones.Update(promocion);
+                await _context.SaveChangesAsync();
 
-                return Ok("Se actualizo correctamente la promoción");
+                return Ok(200);
             }
             catch (Exception ex)
             {
@@ -129,9 +134,9 @@ namespace Server.Controllers
                 promocion.DeletedAt = DateTime.Now.ToString();
                 promocion.Estado = 0;
 
-                _context.Promociones.Update(promocion);
+                await _context.SaveChangesAsync();
 
-                return Ok("Se eliminó correctamente la promoción");
+                return Ok(200);
             }
             catch (Exception ex)
             {
@@ -151,6 +156,10 @@ namespace Server.Controllers
                 if (promocion == null)
                 {
                     return BadRequest("No se encontro la promocion");
+                }
+                else if (promocion.Estado == 0)
+                {
+                    return BadRequest("La promoción fué eliminada");
                 }
 
                 return Ok(promocion);
