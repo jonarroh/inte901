@@ -4,7 +4,7 @@
     (click)="toggleChatbox()"
     class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 flex items-center"
   >
-    Chat with Admin Bot
+    Chat de ayuda
   </button>
 </div>
 
@@ -17,7 +17,7 @@
     <div
       class="p-4 border-b bg-blue-500 text-white rounded-t-lg flex justify-between items-center"
     >
-      <p class="text-lg font-semibold">Admin Bot</p>
+      <p class="text-lg font-semibold">Chat de ayuda</p>
       <button
         (click)="toggleChatbox()"
         class="text-gray-300 hover:text-gray-400 focus:outline-none focus:text-gray-400"
@@ -40,7 +40,7 @@
     </div>
 
     <div id="chatbox" class="p-4 h-80 overflow-y-auto">
-      <div *ngFor="let message of messages">
+      <div *ngFor="let message of messages$ | async">
         <div *ngIf="message.isUser" class="mb-2 text-right">
           <p class="bg-blue-500 text-white rounded-lg py-2 px-4 inline-block">
             {{ message.text }}
