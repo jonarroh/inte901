@@ -88,7 +88,7 @@ builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins",
-        builder => builder.WithOrigins("http://localhost:5000", "http://localhost:4200") // Lista de orígenes permitidos
+        builder => builder.WithOrigins("http://localhost:5000", "http://localhost:4200", "http://localhost:5173", "http://localhost:3000") // Lista de orígenes permitidos
                           .AllowAnyHeader()
                           .AllowAnyMethod()
                           .AllowCredentials()); // Permite el uso de credenciales
