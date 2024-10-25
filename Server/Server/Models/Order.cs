@@ -25,14 +25,14 @@
         public long? Ticket { get; set; }
         public bool IsDeliver { get; set; }
         public ICollection<DetailOrder>? DetailOrders { get; set; }
+        public int PromCode { get; set; } // Id de la promocion, default 0
+        public float PromDesc { get; set; } // Descuento de la promocion, default 0
+        public int TotalHeavenCoins { get; set; } // HeavenCoins generados por la compra, default 0
         [NotMapped]
         public User? User { get; set; }
         public Order()
         {
             DetailOrders = new List<DetailOrder>();
         }
-        //public int PromCode { get; set; } // Id de la promocion, default 0
-        //public float PromDesc { get; set; } // Descuento de la promocion, default 0
-        //public int TotalHeavenCoins { get; set; } // HeavenCoins generados por la compra, default 0
     }
 }

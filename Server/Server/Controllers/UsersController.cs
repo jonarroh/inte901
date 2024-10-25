@@ -30,6 +30,52 @@ namespace Server.Controllers
             _cdnService = cdnService;
         }
 
+        public class ChangePasswordRequest
+        {
+            public string NewPassword { get; set; }
+            public int UserId { get; set; }
+        }
+
+        [HttpPost("forceChangePassword")]
+        public async Task<ActionResult<UserDTO>> ForceChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            var user = await _context.Users.FindAsync(request.UserId);
+            if (user == null || user.Estatus != "Activo")
+            {
+                return NotFound();
+            }
+
+            user.Password = StringToSha256(request.NewPassword);
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            var userDTO = new UserDTO
+            {
+                Id = user.Id,
+                Name = user.Name,
+                LastName = user.LastName,
+                Email = user.Email,
+                Role = user.Role,
+                Direcciones = await _context.Direcciones
+                                            .Where(d => d.UserId == user.Id && d.Estatus == "Activo")
+                                            .ToListAsync(),
+                CreditCards = await _context.CreditCard
+                                                .Where(c => c.UserId == user.Id && c.Estatus == "Activo")
+                                                .Select(c => new CreditCard
+                                                {
+                                                    Id = c.Id,
+                                                    CardHolderName = c.CardHolderName,
+                                                    CardNumber = c.CardNumber,
+                                                    ExpiryDate = c.ExpiryDate,
+                                                    UserId = c.UserId,
+                                                    Estatus = c.Estatus,
+                                                    CVV = c.CVV
+                                                }).ToListAsync()
+            };
+
+            return Ok(userDTO);
+        }
+
         // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()

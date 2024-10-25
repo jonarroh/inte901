@@ -9,6 +9,7 @@ import { PedidosUserServiceService } from './pedidos/pedidos-user/pedidos-user-s
 import { toast } from 'ngx-sonner';
 import { HttpClientModule } from '@angular/common/http';
 import { GeolocationService } from './services/geolocation.service';
+import { LoggerService as Logger } from '~/logging/logging.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -20,12 +21,21 @@ import { GeolocationService } from './services/geolocation.service';
 export class AppComponent {
   title = 'client';
 
-  constructor(private signalRService: SignalRService,private orderderService: PedidosUserServiceService,private geolocationService: GeolocationService) {
+  name = 'Logger';
+
+  ngOnInit() {
+    Logger.debug('logger DEBUG message', { message: 'message' });
+    Logger.log('logger INFO message', { message: 'message' });
+    Logger.warn('logger WARN message', { message: 'message' });
+    Logger.error('logger ERROR message', { message: 'message' });
+  }
+
+  constructor(private signalRService: SignalRService, private orderderService: PedidosUserServiceService, private geolocationService: GeolocationService) {
 
     this.geolocationService.getCurrentPosition().then((position) => {
       console.log('Posición actual:', position);
-      if(position){
-        if(this.geolocationService.isLogged()){
+      if (position) {
+        if (this.geolocationService.isLogged()) {
           this.geolocationService.sendLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
@@ -33,7 +43,7 @@ export class AppComponent {
             token: localStorage.getItem('token') || ''
           });
         }
-        else{
+        else {
           const anonymousToken = this.geolocationService.createAnonymousToken();
           console.log('Token anónimo:', anonymousToken);
           this.geolocationService.sendLocation({

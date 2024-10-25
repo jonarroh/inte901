@@ -51,7 +51,7 @@ namespace Server.Controllers
                 return Ok(orders);
             } catch (Exception ex)
             {
-				Console.WriteLine(ex.Message);
+				//Console.WriteLine(ex.Message);
 
 				return NotFound("Se produjo un error en el servidor, contacte a soporte");
 			}
@@ -90,7 +90,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
 
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
@@ -114,7 +114,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
 
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
@@ -160,7 +160,7 @@ namespace Server.Controllers
 			}
 			catch (Exception ex)
             {
-				Console.WriteLine(ex.Message);
+				//Console.WriteLine(ex.Message);
 
 				return NotFound("Se produjo un error en el servidor, contacte a soporte");
 			}
@@ -203,7 +203,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
                 return StatusCode(500, "Se produjo un error en el servidor, contacte a soporte");
             }
         }
@@ -261,7 +261,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
                 return StatusCode(500, "Se produjo un error en el servidor, contacte a soporte");
             }
         }
@@ -284,7 +284,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
 
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
@@ -363,7 +363,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
 
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
@@ -413,7 +413,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
 
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
@@ -431,18 +431,12 @@ namespace Server.Controllers
                     return BadRequest("Campos incompletos, es necesario completar todos los datos.");
                 }
 
-                Console.WriteLine(JsonConvert.SerializeObject(ordertdo));
-
-                if (ordertdo == null)
-                {
-                    return BadRequest("Campos incompletos, es necesario completar todos los datos.");
-                }
+                //Console.WriteLine(JsonConvert.SerializeObject(ordertdo));
 
                 Random rnd = new Random();
                 int ticket;
                 bool ticketExists;
                 string responseStatus;
-
 
                 do
                 {
@@ -458,16 +452,16 @@ namespace Server.Controllers
                     OrderDate = DateTime.Now,
                     Status = "Ordenado",
                     Ticket = ticket,
-                    IsDeliver = ordertdo.IsDeliver
-                    //PromCode = ordertdo.PromCode,
-                    //PromDesc = ordertdo.PromDesc,
-                    //TotalHeavenCoins = ordertdo.TotalHeavenCoins
+                    IsDeliver = ordertdo.IsDeliver,
+                    PromCode = ordertdo.PromCode,
+                    PromDesc = ordertdo.PromDesc,
+                    TotalHeavenCoins = ordertdo.TotalHeavenCoins
                 };
 
                 if (ordertdo.CreditCard != null)
                 {
                     var result = _creditCardService.canPay(ordertdo.CreditCard, (decimal)orden.Total);
-                    Console.WriteLine(result);
+                    //Console.WriteLine(result);
                     if (result != "La tarjeta es válida")
                     {
                         return BadRequest(result);
@@ -535,6 +529,12 @@ namespace Server.Controllers
                         return BadRequest(inventoryStatus);
                     }
 
+                    // Verificar si cada d tiene los campos necesarios para crear un DetailOrder y si no, saltar a la siguiente iteración
+                    if (d.IdProduct == 0 || d.Quantity == 0 || d.PriceSingle == 0)
+                    {
+                        continue;
+                    }
+
                     var detail = new DetailOrder
                     {
                         IdOrder = orden.Id,
@@ -543,8 +543,8 @@ namespace Server.Controllers
                         PriceSingle = d.PriceSingle,
                         DateOrder = DateTime.Now,
                         Ingredients = d.Ingredients,
-                        Status = "Ordenado"
-                        //HeavenCoins = d.HeavenCoins
+                        Status = "Ordenado",
+                        HeavenCoins = d.HeavenCoins
                     };
 
                     orden.DetailOrders?.Add(detail);
@@ -585,7 +585,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
         }
@@ -619,7 +619,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
 
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
@@ -654,7 +654,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
 
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
@@ -688,7 +688,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
 
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
@@ -716,13 +716,13 @@ namespace Server.Controllers
 
                 await _context.DetailOrders.AddAsync(product);
 
-                Console.WriteLine($"Se guaradaron los cambios, {product.Id}, {product.IdProduct}, {product.Order}");
+                //Console.WriteLine($"Se guaradaron los cambios, {product.Id}, {product.IdProduct}, {product.Order}");
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
 
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
@@ -749,7 +749,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
         }
@@ -800,7 +800,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
 
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
@@ -829,7 +829,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
 
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
