@@ -11,8 +11,8 @@
         public List<DetailOrderDTO> DetailOrders { get; set; } = new List<DetailOrderDTO>();
         public CreditCard? CreditCard { get; set; }
         public Direcciones? Direcciones { get; set;}
-        //public int PromCode { get; set; } // Id de la promocion, default 0
-        //public float PromDesc { get; set; } // Descuento de la promocion, default 0
-        //public int TotalHeavenCoins { get; set; } // HeavenCoins generados por la compra, default 0
+        public int PromCode { get; set; } // Id de la promocion, default 0
+        public float PromDesc { get; set; } // Descuento de la promocion, default 0
+        public int TotalHeavenCoins { get; set; } // HeavenCoins generados por la compra, default 0
     }
 }
