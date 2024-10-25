@@ -186,8 +186,14 @@ export class FormComponent implements OnInit {
       }
     }
   
-    if (this.eventStartTime >= '22:00' || this.eventStartTime <= '06:00') {
+    if (this.eventStartTime > '22:00' || this.eventStartTime < '06:00') {
       toast.error('La hora de inicio no puede ser mayor a las 22:00 o menor a las 6:00');
+      this.isProcessing = false;
+      return;
+    }
+
+    if (this.eventEndTime > '22:00' || this.eventEndTime < '06:00') {
+      toast.error('La hora de fin no puede ser mayor a las 22:00 o menor a las 6:00');
       this.isProcessing = false;
       return;
     }

@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 
 import { RightSeccionComponent } from './right-seccion/right-seccion.component';
 import { LeftSeccionComponent } from './left-seccion/left-seccion.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'LoginComponent',
@@ -14,5 +15,8 @@ import { LeftSeccionComponent } from './left-seccion/left-seccion.component';
   templateUrl: './login.component.html'
 })
 export class LoginComponent {
+  
+  constructor(private http: HttpClient) {}
+    
   
 }

@@ -10,6 +10,7 @@ import { toast } from 'ngx-sonner';
 import { HttpClientModule } from '@angular/common/http';
 import { GeolocationService } from './services/geolocation.service';
 import { LoggerService as Logger } from '~/logging/logging.service';
+import { PushService } from './push/push.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -30,27 +31,34 @@ export class AppComponent {
     Logger.error('logger ERROR message', { message: 'message' });
   }
 
-  constructor(private signalRService: SignalRService, private orderderService: PedidosUserServiceService, private geolocationService: GeolocationService) {
+  constructor(private signalRService: SignalRService, private orderderService: PedidosUserServiceService, private geolocationService: GeolocationService,
+    private pushService: PushService) {
+    // to do: reimplemetar signalR
+
 
     this.geolocationService.getCurrentPosition().then((position) => {
       console.log('Posición actual:', position);
+      console.log('token:', localStorage.getItem('token'));
       if (position) {
+        const deviceInfo = this.geolocationService.getDeviceName();
         if (this.geolocationService.isLogged()) {
           this.geolocationService.sendLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
             isLogged: 1,
-            token: localStorage.getItem('token') || ''
+            token: localStorage.getItem('token') || '',
+            browser: deviceInfo.browser,
+            deviceType: deviceInfo.deviceType
           });
         }
         else {
-          const anonymousToken = this.geolocationService.createAnonymousToken();
-          console.log('Token anónimo:', anonymousToken);
           this.geolocationService.sendLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
             isLogged: 0,
-            token: anonymousToken
+            token: this.geolocationService.createAnonymousToken(),
+            browser: deviceInfo.browser,
+            deviceType: deviceInfo.deviceType
           });
         }
       }

@@ -1,8 +1,7 @@
 import { Component, computed, effect, OnInit, Signal, signal, TrackByFunction } from '@angular/core';
 import { NavbarComponent } from '~/app/home/navbar/navbar.component';
-import { Espacio, Espacio2, EspacioDTO } from '~/lib/types';
+import { EspacioDTO } from '~/lib/types';
 import { EspacioSerService } from './espacio-ser.service';
-import { HttpClient, HttpEventType } from '@angular/common/http';
 import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogDescriptionDirective, HlmDialogFooterComponent, HlmDialogHeaderComponent, HlmDialogTitleDirective } from '~/components/ui-dialog-helm/src';
 import { LucideAngularModule } from 'lucide-angular';
 import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
@@ -12,8 +11,7 @@ import { HlmButtonDirective, HlmButtonModule } from '@spartan-ng/ui-button-helm'
 import { createFormField, createFormGroup, SignalInputDirective, V } from 'ng-signal-forms';
 import { BrnSelectImports, BrnSelectModule } from '@spartan-ng/ui-select-brain';
 import { HlmSelectImports, HlmSelectModule } from '@spartan-ng/ui-select-helm';
-import { FormsModule, NgForm } from '@angular/forms';
-import { BrnCommandImports } from '@spartan-ng/ui-command-brain';
+import { FormsModule,  } from '@angular/forms';
 import { HlmCommandImports } from '~/components/ui-command-helm/src';
 import { HlmIconComponent } from '~/components/ui-icon-helm/src';
 import { BrnPopoverComponent, BrnPopoverContentDirective, BrnPopoverTriggerDirective } from '@spartan-ng/ui-popover-brain';
@@ -27,8 +25,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, combineLatest, debounceTime, map, Observable } from 'rxjs';
 import { toast } from 'ngx-sonner';
-import { RightSeccionComponent } from '~/app/login/right-seccion/right-seccion.component';
-import { id } from 'date-fns/locale';
 
 @Component({
   selector: 'app-espacios',
@@ -48,19 +44,25 @@ import { id } from 'date-fns/locale';
 export class EspaciosComponent {
 
 
-  espacio!: EspacioDTO | null;
+ 
+
+
+  espacio = signal<EspacioDTO | null>(null);
   
   isLoading = signal(false);
   public state = signal<'closed' | 'open'>('closed');
   public states = signal<'closed' | 'open'>('closed');
   private espacioId: number | null = null;
-  espacios : EspacioDTO[] = [];
+  espacios = signal<EspacioDTO[]>([]);
   selectedFile: File | null = null;
   private filterSubject = new BehaviorSubject<string>('');
   filter$ = this.filterSubject.asObservable();
   filteredEspacio$: Observable<EspacioDTO[]>;
   editMode: boolean = false;
   imagen: any = null;
+  private refreshSubject = new BehaviorSubject<void>(undefined);
+  refresh$ = this.refreshSubject.asObservable();
+  
 
   
 
@@ -104,20 +106,20 @@ export class EspaciosComponent {
   });
   
   constructor(private espacioService: EspacioSerService) {
-    // Fetch spaces from the service
+
+    this.refresh$.subscribe(() => this.refreshEspacios());
     this.espacioService.getPlaces().subscribe({
       next: (spaces) => {
         console.log('Espacios recibidos:', spaces); // Verify the received data here
-        this.espacios = spaces;
+        this.espacios.set(spaces);
       },
       error: (error) => {
         console.error('Error al obtener los espacios', error);
       }
     });
   
-    // Create an observable for filtered spaces
     this.filteredEspacio$ = combineLatest([
-      this.espacioService.getPlaces(),
+      toObservable(this.espacios), // Convertimos la signal espacios a un observable
       this.filter$
     ]).pipe(
       map(([spaces, filterValue]) =>
@@ -128,24 +130,22 @@ export class EspaciosComponent {
     );
   }
 
-  loadEspacioForEdit(espacio: EspacioDTO | null) {
-    if (!espacio) {
-      console.warn('No se puede editar, el espacio es nulo.');
-      return;
-    }
-    this.formModel.controls.name.value();
-    this.formModel.controls.canPersonas.value();
-    this.formModel.controls.precio.value();
-    this.formModel.controls.descrip.value();
-    this.selectedFile = null; // Resetea la imagen si es necesario
-    this.editMode = true; // Activa el modo de edición
-    this.state.set('open'); // Abre el diálogo
-    
+
+  ngOnInit() {
+    this.refreshEspacios(); // Fetch initial data
   }
-  
 
-
-  
+  refreshEspacios() {
+    this.espacioService.getPlaces().subscribe({
+      next: (spaces) => {
+        this.espacios.set(spaces);
+        console.log('Espacios actualizados:', spaces);
+      },
+      error: (error) => {
+        console.error('Error al obtener los espacios', error);
+      }
+    });
+  }
 
   applyFilter(filterValue: string) {
     this.filterSubject.next(filterValue);
@@ -184,7 +184,8 @@ export class EspaciosComponent {
   
   onAdd(){
     this.editMode = false;
-    //this.refreshEspacios();
+    this.refreshSubject.next();
+    this.formModel.reset();
     this.state.set('open');
   }
 
@@ -210,19 +211,7 @@ export class EspaciosComponent {
         toast.success('Espacio creado correctamente');
         this.formModel.reset();
         this.selectedFile = null;
-        this.state.set('closed');
-        //limpiar el formulario
-        this.formModel.reset();
-        //actualizar la lista de espacios
-        this.espacioService.getPlaces().subscribe({
-          next: (spaces) => {
-            console.log('Espacios recibidos:', spaces); // Verify the received data here
-            this.espacios = spaces;
-          },
-          error: (error) => {
-            console.error('Error al obtener los espacios', error);
-          }
-        });
+        this.refreshSubject.next();
       },
       error: (error) => {
         console.error('Error al crear el espacio', error);
@@ -230,12 +219,13 @@ export class EspaciosComponent {
       },
       complete: () => {
         this.isLoading.set(false);
+        this.refreshSubject.next();
       }
     });
   }
 
-  onSubmit() {
-    console.log('Formulario enviado');
+  async onSubmit() {
+    this.isLoading.set(true);
     if (this.formModel.valid()) {  
       const name = this.formModel.controls.name.value();
       const canPersonas = this.formModel.controls.canPersonas.value();
@@ -273,8 +263,9 @@ export class EspaciosComponent {
           next: (space) => {
             console.log('Espacio actualizado correctamente', space);
             toast.success('Espacio actualizado correctamente');
-            this.refreshEspacios();
+            this.refreshSubject.next();
             this.state.set('closed');
+
           },
           error: (error) => {
             console.error('Error al actualizar el espacio', error);
@@ -283,6 +274,7 @@ export class EspaciosComponent {
           },
           complete: () => {
             this.isLoading.set(false);
+            this.refreshEspacios();
           }
         });
       } else {
@@ -293,14 +285,17 @@ export class EspaciosComponent {
             this.formModel.reset();
             this.selectedFile = null;
             this.state.set('closed');
+            this.resetForm();
           },
           error: (error) => {
             console.error('Error al crear el espacio', error);
             toast.error('Error al crear el espacio');
             this.state.set('closed');
+            this.resetForm();
           },
           complete: () => {
             this.isLoading.set(false);
+            this.resetForm();
           }
         });
       }
@@ -310,6 +305,10 @@ export class EspaciosComponent {
   
   
   
+  updateFilter(filterValue: string) {
+    this.filterSubject.next(filterValue); // Actualiza el filtro cuando cambia el valor
+  }
+
   trackByProductId(index: number, space: any): number {
     return space.idEspacio;
   }
@@ -421,12 +420,6 @@ export class EspaciosComponent {
     }
   }
 
-
-  getEspacios(): void{
-    this.espacioService.getPlaces()
-    .subscribe(espacios => this.espacios = espacios);
-  }
-
   onDeletePlace(space: EspacioDTO) {
     this.espacioService.deletePlace(space.idEspacio ?? 0).subscribe({
       next: () => {
@@ -434,7 +427,6 @@ export class EspaciosComponent {
         toast.success('Espacio eliminado correctamente');
 
         this._spaces.set(this._spaces().filter((u) => u.idEspacio!== space.idEspacio));
-        this.refreshEspacios();
       },
       error: (error) => {
         console.error('Error al eliminar el espacio', error);
@@ -456,44 +448,35 @@ export class EspaciosComponent {
       console.log('Espacio activado');
       toast.success('Espacio activado correctamente');
       this.refreshEspacios();
-      
     });
   }
   isEditing = signal(false);
     onCancel(): void {
       this.refreshEspacios();
-      this.selectedFile = null;
+      this.selectedFile = null; // Limpiar la imagen seleccionada
       this.state.set('closed');
     }
     onEdit(space: EspacioDTO) {
-      this.editMode = true; 
-      this.formModel.controls.name.value.set(space.nombre);
-      this.formModel.controls.canPersonas.value.set(space.canPersonas);
-      this.formModel.controls.precio.value.set(space.precio);
-      this.formModel.controls.descrip.value.set(space.descripcion);
-      this.espacioId = space.idEspacio ?? null; 
-      this.state.set('open'); 
+      this.editMode = true; // Cambia a modo de edición
+      this.isEditing.set(true);
+    
+      if (space.idEspacio !== undefined) {
+        this.formModel.controls.id.value.set(space.idEspacio);
+        this.formModel.controls.name.value.set(space.nombre);
+        this.formModel.controls.canPersonas.value.set(space.canPersonas);
+        this.formModel.controls.precio.value.set(space.precio);
+        this.formModel.controls.descrip.value.set(space.descripcion);
+
+      }
+
+      
+      this.espacioId = space.idEspacio ?? null; // Guarda el ID del espacio
+      this.state.set('open'); // Abre el diálogo
     }
     
-
-    refreshEspacios() {
-      this.espacioService.getPlaces().subscribe({
-        next: (spaces) => {
-          this.espacios = spaces;
-        },
-        error: (error) => {
-          console.error('Error al obtener los espacios', error);
-        }
-      });
+    private resetForm() {
+      this.espacio.set(null);
+      this.selectedFile = null;
+      this.state.set('closed');
     }
-
-   
-   
-   
-   
-    
-    
- 
-
 }
-

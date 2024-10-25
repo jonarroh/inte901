@@ -34,11 +34,19 @@
             [Required]
             [MaxLength(50)]
             public string Role { get; set; }
+            [Required]
+            public int AttemptsToBlock { get; set; } = 3;
 
             public DateTime CreatedAt { get; set; }
 
             [MaxLength(100)]
             public string? Token { get; set; }
+
+            // Propiedad para rastrear los intentos fallidos
+            public DateTime? LastFailedLoginAttempt { get; set; }
+
+            // Propiedad para saber si la cuenta está bloqueada
+            public DateTime? IsBlockedUntil { get; set; }
 
             // Navigation property for the related addresses
             public ICollection<Direcciones> Direcciones { get; set; }

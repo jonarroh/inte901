@@ -133,7 +133,7 @@ namespace Server.Controllers
             order.Status = newStatus;
             await _context.SaveChangesAsync();
 
-            var message = $"{order.Id}:{newStatus}";
+            var message = $"{order.Id}:{newStatus},{order.IdClient}";
             await _hubContext.Clients.All.SendAsync("ReceiveOrderUpdate", message);
 
             return Ok(order);
@@ -325,12 +325,14 @@ namespace Server.Controllers
             return "ok";
         }
 
-        private async Task<String> CheckIngredientsInventory(Producto product, int quantity)
+        private async Task<string> CheckIngredientsInventory(Producto product, int quantity)
         {
             foreach (var ingredient in product.Ingredientes)
             {
                 var ingredientInventory = await _context.InventarioMPs.FirstOrDefaultAsync(i => i.Id == ingredient.Id);
-                if (ingredientInventory == null || (float?)ingredientInventory.Cantidad < ingredient.Cantidad * quantity)
+
+                // Convertir float? a decimal para la comparación
+                if (ingredientInventory == null || (ingredientInventory.Cantidad.HasValue ? (decimal)ingredientInventory.Cantidad.Value : 0m) < (decimal)(ingredient.Cantidad * quantity))
                 {
                     return $"No hay suficiente inventario para el producto {product.Nombre}";
                 }
