@@ -57,15 +57,14 @@
           <div class="py-4 grid gap-4">
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="name" class="text-right">Proveedor</label>
-              <brn-popover [state]="state()" (stateChanged)="stateChanged($event)" sideOffset="5" closeDelay="100">
+              <brn-popover [state]="state()" aria-required="true" (stateChanged)="stateChanged($event)" sideOffset="5"
+                closeDelay="100">
                 <button class="w-[200px] justify-between" required variant="outline" brnPopoverTrigger hlmBtn>
                   {{ currentFramework() ? currentFramework()?.label :
                   'Seleccionar' }}
-                  <hlm-icon size="sm" name="lucideChevronsUpDown" />
                 </button>
                 <brn-cmd *brnPopoverContent="let ctx" hlmPopoverContent hlm class="p-0 w-[200px] bg-white">
                   <hlm-cmd-input-wrapper>
-                    <hlm-icon name="lucideSearch" />
                     <input placeholder="Buscar proveedor" brnCmdInput hlm />
                   </hlm-cmd-input-wrapper>
                   <div *brnCmdEmpty hlmCmdEmpty>No se encontraron resultados</div>
@@ -73,8 +72,6 @@
                     <brn-cmd-group hlm>
                       <button *ngFor="let framework of frameworks" brnCmdItem [value]="framework.value"
                         (selected)="commandSelected(framework)" hlm>
-                        <hlm-icon [class.opacity-0]="currentFramework()?.value !== framework.value" name="lucideCheck"
-                          hlmCmdIcon />
                         {{ framework.label }}
                       </button>
                     </brn-cmd-group>
@@ -85,16 +82,14 @@
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="username" class="text-right">Materia
                 Prima.</label>
-              <brn-popover [state]="stateMateria()" (stateChanged)="stateChangedMateria($event)" sideOffset="5"
-                closeDelay="100">
+              <brn-popover [state]="stateMateria()" aria-required="true" (stateChanged)="stateChangedMateria($event)"
+                sideOffset="5" closeDelay="100">
                 <button class="w-[200px] justify-between" variant="outline" brnPopoverTrigger hlmBtn>
                   {{ currentMateria() ? currentMateria()?.label :
                   'Seleccionar' }}
-                  <hlm-icon size="sm" name="lucideChevronsUpDown" />
                 </button>
                 <brn-cmd *brnPopoverContent="let ctx" hlmPopoverContent hlm class="p-0 w-[200px] bg-white">
                   <hlm-cmd-input-wrapper>
-                    <hlm-icon name="lucideSearch" />
                     <input placeholder="Buscar insumo" brnCmdInput hlm />
                   </hlm-cmd-input-wrapper>
                   <div *brnCmdEmpty hlmCmdEmpty>No se encontraron resultados.</div>
@@ -102,8 +97,6 @@
                     <brn-cmd-group hlm>
                       <button *ngFor="let framework of mppF" brnCmdItem [value]="framework.material || ''"
                         (selected)="commandMateriaSelected(framework)" hlm>
-                        <hlm-icon [class.opacity-0]="currentMateria()?.value !== framework.material" name="lucideCheck"
-                          hlmCmdIcon />
                         {{ framework.material }}
                       </button>
                     </brn-cmd-group>
@@ -113,16 +106,14 @@
             </div>
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="username" class="text-right">Presentaci&oacute;n</label>
-              <brn-popover [state]="statePresentation()" (stateChanged)="stateChangedPresentation($event)"
-                sideOffset="5" closeDelay="100">
+              <brn-popover [state]="statePresentation()" aria-required="true"
+                (stateChanged)="stateChangedPresentation($event)" sideOffset="5" closeDelay="100">
                 <button class="w-[200px] justify-between" variant="outline" brnPopoverTrigger hlmBtn>
                   {{ currentPresentation() ? currentPresentation()?.label :
                   'Seleccionar' }}
-                  <hlm-icon size="sm" name="lucideChevronsUpDown" />
                 </button>
                 <brn-cmd *brnPopoverContent="let ctx" hlmPopoverContent hlm class="p-0 w-[200px] bg-white">
                   <hlm-cmd-input-wrapper>
-                    <hlm-icon name="lucideSearch" />
                     <input placeholder="Buscar presentación" brnCmdInput hlm />
                   </hlm-cmd-input-wrapper>
                   <div *brnCmdEmpty hlmCmdEmpty>No se encontraron resultados.</div>
@@ -130,8 +121,6 @@
                     <brn-cmd-group hlm>
                       <button *ngFor="let framework of getFilterPresent()" brnCmdItem [value]="framework.value"
                         (selected)="commandPresentationSelected(framework)" hlm>
-                        <hlm-icon [class.opacity-0]="currentPresentation()?.value !== framework.value"
-                          name="lucideCheck" hlmCmdIcon />
                         {{ framework.label }}
                       </button>
                     </brn-cmd-group>
@@ -141,11 +130,13 @@
             </div>
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="username" class="text-right">Cantidad</label>
-              <input hlmInput type="number" [(ngModel)]="cantidad" name="cantidad" id="cantidad" min="0" step="1" />
+              <input hlmInput type="number" [(ngModel)]="cantidad" required="" name="cantidad" id="cantidad" min="0"
+                step="1" />
             </div>
             <div class="items-center grid grid-cols-4 gap-4">
               <label hlmLabel for="username" class="text-right">Precio</label>
-              <input hlmInput type="number" [(ngModel)]="precio" name="precio" id="precio" min="0" step="1" />
+              <input hlmInput type="number" [(ngModel)]="precio" required="" name="precio" id="precio" min="0"
+                step="1" />
             </div>
           </div>
         </form>
@@ -162,7 +153,6 @@
 
     <button hlmBtn variant="warning" class="text-white" align="end" [brnMenuTriggerFor]="menu">
       Ver Columnas
-      <hlm-icon name="lucideChevronDown" class="ml-2" size="sm" />
     </button>
     <ng-template #menu>
       <hlm-menu class="w-32 bg-white">
@@ -214,7 +204,6 @@
       <hlm-th *brnHeaderDef>
         <button hlmBtn class="hover:bg-slate-400" size="sm" variant="ghost" (click)="handleEmailSortChange()">
           Status
-          <hlm-icon class="ml-3" size="sm" name="lucideArrowUpDown" />
         </button>
       </hlm-th>
       <hlm-td truncate *brnCellDef="let element">
@@ -236,7 +225,8 @@
         @if(element.status === 'Pendiente'){
         <brn-popover [state]="popoverStates[element.id||0] || 'closed'"
           (stateChanged)="stateChangedStatus($event, element.id||0)" sideOffset="5" closeDelay="100">
-          <button class="flex-1 justify-between text-white" id="{{element.id}}" variant="warning" brnPopoverTrigger hlmBtn>
+          <button class="flex-1 justify-between text-white" id="{{element.id}}" variant="warning" brnPopoverTrigger
+            hlmBtn>
             {{ currentStatusCompras(element.id||0) ?
             currentStatusCompras(element.id||0)?.label : 'Seleccionar' }}
           </button>
@@ -248,8 +238,6 @@
               <brn-cmd-group hlm>
                 <button *ngFor="let framework of statusComp" brnCmdItem [value]="framework.value"
                   (selected)="commandStatusSelected(framework, element.id||0)" hlm>
-                  <hlm-icon [class.opacity-0]="currentStatusCompras(element.id||0)?.value !== framework.value"
-                    name="lucideCheck" hlmCmdIcon />
                   {{ framework.label }}
                   <span class="hidden" [(ngModel)]="idcomprastatus">{{
                     element.id
@@ -270,7 +258,7 @@
       <!-- <hlm-th *brnHeaderDef></hlm-th>
       <hlm-td *brnCellDef="let element"> -->
       <!-- <button hlmBtn variant="ghost" class="h-6 w-6 p-0.5" align="end" [brnMenuTriggerFor]="menu">
-          <hlm-icon class="w-4 h-4" name="lucideMoreHorizontal" />
+
         </button> -->
       <!-- <ng-template #menu>
           <hlm-menu>
@@ -319,72 +307,6 @@
       </div>
     </div>
   </div>
-  <!-- <div class="overflow-y-auto min-w-full">
-    <hlm-table class="w-full min-w-full">
-      <hlm-trow>
-        <hlm-th class="flex-1">Fecha compra</hlm-th>
-        <hlm-th class="flex-1">Costo total</hlm-th>
-        <hlm-th class="flex-1">Materias Prim.</hlm-th>
-        <hlm-th class="flex-1">Estatus compra</hlm-th>
-        <hlm-th class="flex-1">Acciones</hlm-th>
-      </hlm-trow>
-      <hlm-trow *ngIf="(compras$ | async)?.length === 0">
-        <hlm-td class="flex-1" colspan="5">No hay compras</hlm-td>
-      </hlm-trow>
-      <hlm-trow *ngFor="let compra of (compras$ | async); trackBy: trackByCompraId">
-        <hlm-td class="flex-1">{{ compra.createdAt }}</hlm-td>
-        <hlm-td class="flex-1">{{ compra.total }}</hlm-td>
-        <hlm-td class="flex-1">
-          <button hlmBtn variant="success" (click)="getDetails(compra || 0)">
-            Detalles
-          </button>
-        </hlm-td>
-        <hlm-td class="flex-1">
-          <ng-container [ngSwitch]="compra.status">
-            <span *ngSwitchCase="'Pendiente'" style="color: orange;">{{
-              compra.status }}</span>
-            <span *ngSwitchCase="'Cancelada'" style="color: red;">{{
-              compra.status }}</span>
-            <span *ngSwitchCase="'Entregada'" style="color: green;">{{
-              compra.status }}</span>
-          </ng-container>
-        </hlm-td>
-        <hlm-td class="flex-1">
-          @if(compra.status === 'Pendiente'){
-          <brn-popover [state]="popoverStates[compra.id||0] || 'closed'"
-            (stateChanged)="stateChangedStatus($event, compra.id||0)" sideOffset="5" closeDelay="100">
-            <button class="flex-1 justify-between" id="{{compra.id}}" variant="success" brnPopoverTrigger hlmBtn>
-              {{ currentStatusCompras(compra.id||0) ?
-              currentStatusCompras(compra.id||0)?.label : 'Seleccionar' }}
-            </button>
-
-            <brn-cmd id="{{compra.id}}" *brnPopoverContent="let ctx" hlmPopoverContent hlm
-              class="p-0 mx-2 flex-1 bg-white">
-              <div *brnCmdEmpty hlmCmdEmpty>Sin resultados.</div>
-              <brn-cmd-list id="{{compra.id}}" hlm>
-                <brn-cmd-group hlm>
-                  <button *ngFor="let framework of statusComp" brnCmdItem [value]="framework.value"
-                    (selected)="commandStatusSelected(framework, compra.id||0)" hlm>
-                    <hlm-icon [class.opacity-0]="currentStatusCompras(compra.id||0)?.value !== framework.value"
-                      name="lucideCheck" hlmCmdIcon />
-                    {{ framework.label }}
-                    <span class="hidden" [(ngModel)]="idcomprastatus">{{
-                      compra.id
-                      }}</span>
-                  </button>
-                </brn-cmd-group>
-              </brn-cmd-list>
-            </brn-cmd>
-          </brn-popover>
-          } @else {
-          <button disabled variant="success" hlmBtn>
-            Seleccionar
-          </button>
-          }
-        </hlm-td>
-      </hlm-trow>
-    </hlm-table>
-  </div> -->
 </div>
 
 <hlm-alert-dialog class="bg-admin">

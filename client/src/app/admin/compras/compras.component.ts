@@ -36,14 +36,12 @@ import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '
 import { BrnPopoverComponent, BrnPopoverContentDirective, BrnPopoverTriggerDirective } from '@spartan-ng/ui-popover-brain';
 import { HlmPopoverContentDirective } from '~/components/ui-popover-helm/src';
 import { HlmCommandImports } from '~/components/ui-command-helm/src';
-import { BrnCommandImports } from '@spartan-ng/ui-command-brain';
 import { HlmToasterComponent } from '~/components/ui-sonner-helm/src';
 import { HlmSheetComponent, HlmSheetContentComponent, HlmSheetDescriptionDirective, HlmSheetFooterComponent, HlmSheetHeaderComponent, HlmSheetTitleDirective } from '~/components/ui-sheet-helm/src';
 import { BrnSheetContentDirective, BrnSheetTriggerDirective } from '@spartan-ng/ui-sheet-brain';
 import { MateriaPrimaProveedor } from '~/lib/types';
 import { MppService } from './mpp.service';
 import { toast } from 'ngx-sonner';
-import { fr } from 'date-fns/locale';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { SelectionModel } from '@angular/cdk/collections';
 import { LucideAngularModule } from 'lucide-angular';
@@ -216,7 +214,7 @@ export class ComprasComponent {
         this._compras.set(compras);
       },
       error: (error) => {
-        console.error(error);
+        // console.error(error);
       },
     });
   }
@@ -304,7 +302,7 @@ export class ComprasComponent {
   }
 
   getFilterPresent() {
-    console.log(this.typePresentation);
+    // console.log(this.typePresentation);
     return this.presentations.filter(presentation =>
       presentation.value.toLowerCase().includes(this.typePresentation.toLowerCase())
     );
@@ -347,38 +345,45 @@ export class ComprasComponent {
   }
 
   onSubmit() {
-    console.log(this.proveedorId, this.materiaPrimaId, this.cantidad, this.precio, this.presentacion);
+    // console.log(this.proveedorId, this.materiaPrimaId, this.cantidad, this.precio, this.presentacion);
 
     const existingItem = this.carrito.find(item => item.idMP === this.materiaPrimaId);
     const cantidad = this.cantidades[this.materiaPrimaId] || 0;
 
-    if (existingItem) {
-      existingItem.quantity! += this.cantidad;
+    if (!this.proveedorId || !this.materiaPrimaId || !this.cantidad || !this.precio || !this.presentacion) {
+      toast.error('Todos los campos son obligatorios', {
+        duration: 2000,
+      });
+      return;
     } else {
-      this.carrito.push({
-        idMP: this.materiaPrimaId,
-        priceSingle: this.precio,
-        quantity: this.cantidad,
-        presentation: this.presentacion,
-        unitType: this.unitType,
-        idProveedor: this.proveedorId,
-        status: 'Pendiente',
-      });
+      if (existingItem) {
+        existingItem.quantity! += this.cantidad;
+      } else {
+        this.carrito.push({
+          idMP: this.materiaPrimaId,
+          priceSingle: this.precio,
+          quantity: this.cantidad,
+          presentation: this.presentacion,
+          unitType: this.unitType,
+          idProveedor: this.proveedorId,
+          status: 'Pendiente',
+        });
 
-      toast.success('Producto agregado al carrito', {
-        duration: 1200,
-        onAutoClose: ((toast => {
-          location.reload();
-        })),
-      });
+        toast.success('Producto agregado al carrito', {
+          duration: 1200,
+          onAutoClose: ((toast => {
+            location.reload();
+          })),
+        });
+      }
+
+      this.guardarCarrito();
+      this.calcularTotal();
+
+      this.cantidades[this.materiaPrimaId || 0] = null;
+      this.cantidad = 0;
+      this.resetCombo();
     }
-
-    this.guardarCarrito();
-    this.calcularTotal();
-
-    this.cantidades[this.materiaPrimaId || 0] = null;
-    this.cantidad = 0;
-    this.resetCombo();
   }
 
   quitarItem(detalle: DetailPurchase) {
@@ -460,7 +465,7 @@ export class ComprasComponent {
       this.total = 0;
       this.guardarCarrito();
     }, (error) => {
-      console.error(error);
+      // console.error(error);
       toast.error('Error al realizar la compra', {
         action: {
           label: 'X',
@@ -496,9 +501,9 @@ export class ComprasComponent {
   }
 
   updateStatus() {
-    console.log(this.idCompra, this.status);
+    // console.log(this.idCompra, this.status);
     this.compraServe.updateCompraStatus(this.idCompra, this.status).subscribe((compra) => {
-      console.log(compra);
+      // console.log(compra);
       toast.success('Estado actualizado con éxito', {
         action: {
           label: 'X',
@@ -594,9 +599,9 @@ export class ComprasComponent {
   private readonly _selectionModel = new SelectionModel<Compra>(true);
   protected readonly _isCompraSelected = (compr: Compra) => this._selectionModel.isSelected(compr);
   protected readonly _selected = toSignal(
-    this._selectionModel.changed.pipe(map(() => this._selectionModel.selected)),{
-      initialValue: []
-    }
+    this._selectionModel.changed.pipe(map(() => this._selectionModel.selected)), {
+    initialValue: []
+  }
   );
 
   protected readonly _brnColumnManager = useBrnColumnManager({
