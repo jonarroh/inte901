@@ -35,7 +35,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
                 return NotFound("vale kk");
             }
         }
@@ -49,6 +49,12 @@ namespace Server.Controllers
                 if (data == null)
                 {
                     return BadRequest("No se recibieron datos");
+                }
+
+                // Validar que data contenga todos los campos necesarios
+                if (data.Nombre == null || data.Descripcion == null || data.FechaInicio == null || data.FechaFin == null || data.Descuento == 0 || data.Estado == 0 || data.Productos == 0 || data.LimiteCanje == 0)
+                {
+                    return BadRequest("Faltan campos por llenar");
                 }
 
                 var promocion = new Promociones
@@ -75,7 +81,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
         }
@@ -113,7 +119,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
         }
@@ -140,7 +146,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
         }
@@ -166,7 +172,7 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
         }

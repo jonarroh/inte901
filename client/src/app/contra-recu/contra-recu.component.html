@@ -1,0 +1,85 @@
+<div>
+
+  <form>
+    <label>
+      Email
+      <input placeholder="email" type="email" 
+        ngModel
+        [formField]="formModel.controls.email"/>
+    </label>
+    @if (formModel.controls.email.touched()){
+      @if(formModel.controls.email.hasError('required')){
+        <div class="text-red-500 text-sm">El codigo es requerido</div>
+      } @else if (formModel.controls.email.hasError('maxLength')){
+        <div class="text-red-500 text-sm">
+          El codigo debe de ser de 8 caracteres
+        </div>
+      }
+    }  
+
+      
+    <input placeholder="id" type="number"
+      ngModel
+      [formField]="formModel.controls.id"/>
+      <button
+        hlmBtn
+          class="bg-secondary text-white rounded-md  flex justify-center items-center hover:bg-yellow-700 transition-colors duration-300"
+          [disabled]="disabled1()"
+          (click)="onSendCode()"
+      >
+      Enviar codigo
+    </button>
+</form>
+
+<form>
+
+  <label>
+    Codigo de verificación
+    <input placeholder="codigo"
+      ngModel
+      [formField]="formModel2.controls.codigoVer"/>
+  </label>
+  @if (formModel2.controls.codigoVer.touched()) {
+    @if(formModel2.controls.codigoVer.hasError('required')) {
+  <div class="text-red-500 text-sm">El codigo de verificacion es requerido</div>
+  }
+   @else if (formModel2.controls.codigoVer.hasError('maxLength')) {
+  <div class="text-red-500 text-sm">
+    El codigo de verificacion debe tener 8 caracteres
+  </div>}
+}
+  <label>
+    Contraseña nueva
+  <input placeholder="contraseña nueva"
+  ngModel
+  [formField]="formModel2.controls.password.controls.newPassword"/>
+  </label>
+  @if(formModel2.controls.password.controls.confirmPassword.touched()) {
+    @if(formModel2.controls.password.controls.confirmPassword.hasError('pattern')) {
+      <div class="text-red-500 text-sm">La nueva contraseña debe de incluir una letra en mayuscula, minusculas, numero(s) y un caracter especia(/ * - + #)</div>
+    }
+  }
+  
+
+  <label>
+  <input placeholder="confirmar contraseña"
+  ngModel
+  [formField]="formModel2.controls.password.controls.confirmPassword"/>
+
+  </label>
+  @if(formModel2.controls.password.controls.confirmPassword.touched()) {
+    @if(formModel2.controls.password.controls.confirmPassword.hasError('equalsTo')) {
+      <div class="text-red-500 text-sm">La confirmación de la contraseña es requerida</div>
+    }
+  }
+  <button
+  hlmBtn
+  class="bg-secondary text-white rounded-md  flex justify-center items-center hover:bg-yellow-700 transition-colors duration-300"
+  [disabled]="disabled()"
+  (click)="onSavePass()"
+
+  >Cambiar contraseña</button>
+
+</form>
+
+</div>

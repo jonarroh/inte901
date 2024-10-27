@@ -47,6 +47,12 @@ export interface MateriaPrima {
   ingredientes: string[];
 }
 
+export interface ContraseñaNueva {
+  userId: number;
+  newPassword: string;
+  code: string;
+}
+
 export interface Ingrediente {
   id: number;
   idProducto: number;

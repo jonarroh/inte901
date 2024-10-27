@@ -52,7 +52,7 @@ namespace Server.Controllers
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
+				//Console.WriteLine(ex.Message);
 
 				return NotFound("Se produjo un error en el servidor, contacte a soporte");
 			}
@@ -83,7 +83,13 @@ namespace Server.Controllers
 
 				foreach (var detalle in data.Details)
 				{
-					DetailPurchase detail = new DetailPurchase
+                    // Validar que el detalle tenga los datos necesarios y si no, que continue con el siguiente detalle.
+                    if (detalle.IdProveedor == null || detalle.IdMP == null || detalle.Quantity == null || detalle.PriceSingle == null || detalle.Presentation == null || detalle.UnitType == null)
+                    {
+                        continue;
+                    }
+
+                    DetailPurchase detail = new DetailPurchase
 					{
 						Quantity = detalle.Quantity,
 						PriceSingle = detalle.PriceSingle,
@@ -105,7 +111,7 @@ namespace Server.Controllers
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
+				//Console.WriteLine(ex.Message);
 
 				return NotFound("Se produjo un error en el servidor, contacte a soporte");
 			}
@@ -134,7 +140,7 @@ namespace Server.Controllers
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
+				//Console.WriteLine(ex.Message);
 
 				return NotFound("Se produjo un error en el servidor, contacte a soporte");
 			}
@@ -224,7 +230,7 @@ namespace Server.Controllers
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
+				//Console.WriteLine(ex.Message);
 
 				return NotFound("Se produjo un error en el servidor, contacte a soporte");
 			}
@@ -248,7 +254,7 @@ namespace Server.Controllers
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
+				//Console.WriteLine(ex.Message);
 
 				return NotFound("Se produjo un error en el servidor, contacte a soporte");
 			}

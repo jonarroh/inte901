@@ -12,8 +12,5 @@
         public int Productos { get; set; }
         public int BadgePromoId { get; set; }
         public int LimiteCanje { get; set; }
-        public string CreatedAt { get; set; }
-        public string UpdatedAt { get; set; }
-        public string DeletedAt { get; set; }
     }
 }

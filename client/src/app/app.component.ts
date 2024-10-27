@@ -9,6 +9,7 @@ import { PedidosUserServiceService } from './pedidos/pedidos-user/pedidos-user-s
 import { toast } from 'ngx-sonner';
 import { HttpClientModule } from '@angular/common/http';
 import { GeolocationService } from './services/geolocation.service';
+import { LoggerService as Logger } from '~/logging/logging.service';
 import { PushService } from './push/push.service';
 @Component({
   selector: 'app-root',
@@ -21,17 +22,26 @@ import { PushService } from './push/push.service';
 export class AppComponent {
   title = 'client';
 
-  constructor(private signalRService: SignalRService,private orderderService: PedidosUserServiceService,private geolocationService: GeolocationService,
+  name = 'Logger';
+
+  ngOnInit() {
+    Logger.debug('logger DEBUG message', { message: 'message' });
+    Logger.log('logger INFO message', { message: 'message' });
+    Logger.warn('logger WARN message', { message: 'message' });
+    Logger.error('logger ERROR message', { message: 'message' });
+  }
+
+  constructor(private signalRService: SignalRService, private orderderService: PedidosUserServiceService, private geolocationService: GeolocationService,
     private pushService: PushService) {
-// to do: reimplemetar signalR
+    // to do: reimplemetar signalR
 
 
     this.geolocationService.getCurrentPosition().then((position) => {
       console.log('Posición actual:', position);
       console.log('token:', localStorage.getItem('token'));
-      if(position){
+      if (position) {
         const deviceInfo = this.geolocationService.getDeviceName();
-        if(this.geolocationService.isLogged()){
+        if (this.geolocationService.isLogged()) {
           this.geolocationService.sendLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
@@ -41,7 +51,7 @@ export class AppComponent {
             deviceType: deviceInfo.deviceType
           });
         }
-        else{
+        else {
           this.geolocationService.sendLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,

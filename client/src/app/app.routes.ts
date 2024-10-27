@@ -39,6 +39,7 @@ import { EspaciosComponent } from './admin/espacios/espacios.component';
 import { EstatusComponent } from './admin/reservas/estatus/estatus.component';
 import { ClienteComponent } from './reserves/cliente/cliente.component';
 import { CanPayGuard } from './auth/canPay.guard';
+import { ContraRecuComponent } from './contra-recu/contra-recu.component';
 
 
 
@@ -65,6 +66,11 @@ export const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent
+  },
+  {
+    path: 'recover',
+    component: ContraRecuComponent
+
   },
   {
     path: 'admin',
