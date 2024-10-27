@@ -32,7 +32,7 @@ ollama pull llama3.2
 
 ## We create the modelfile coffee_chat.txt and after that write this commands
 
-ollama create coffee_chat -f .\inte901\client\src\app\services\coffee_chat.txt
+ollama create coffee_chat -f .\inte901\client\src\app\services\coffee_chat\modelfile\coffee_chat.txt
 
 ## Run model
 

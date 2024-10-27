@@ -14,12 +14,12 @@ namespace Server.Models
         [ForeignKey("UserId")]
         public User? User { get; set; }
         [Required]
-        public string? Menssaje { get; set; }
+        public string? Mensaje { get; set; }
         [Required]
         public string? Rol { get; set; }
         [Required]
         public DateTime? Fecha { get; set; }
         [Required]
-        public String? ConversacionId { get; set; } 
+        public string? ConversacionId { get; set; } 
     }
 }

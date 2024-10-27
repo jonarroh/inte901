@@ -7,9 +7,9 @@ namespace Server.Models.DTO
     {
         public int? Id { get; set; }
         public int? IdUsuario { get; set; }
-        public string? Menssaje { get; set; }
+        public string? Mensaje { get; set; }
         public string? Rol { get; set; }
         public DateTime? Fecha { get; set; }
-        public String? ConversacionId { get; set; }
+        public string? ConversacionId { get; set; }
     }
 }
