@@ -108,4 +108,14 @@ export class CartComponent {
   trackById(index: number, item: ProductoWithQuantity): number {
     return item.id;
   }
+
+  /*updateCart(newCart: ProductoWithQuantity[]): void {
+    const cartData = {
+        value: newCart,
+        timestamp: Date.now() // Guardamos el tiempo actual
+    };
+    localStorage.setItem('cart', JSON.stringify(cartData));
+    this.cartSignal.set(newCart); // Actualiza la señal de carrito en tu aplicación Angular
+}*/
+
 }
