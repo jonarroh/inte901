@@ -479,4 +479,6 @@ export class EspaciosComponent {
       this.selectedFile = null;
       this.state.set('closed');
     }
+
+    
 }

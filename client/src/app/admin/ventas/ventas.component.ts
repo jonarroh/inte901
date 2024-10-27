@@ -77,7 +77,7 @@ type Status = { label: string; value: string };
     HlmSheetTitleDirective,
     HlmSheetDescriptionDirective,
     HlmToasterComponent,
-    
+
     HlmCommandImports,
     BrnPopoverComponent,
     BrnPopoverTriggerDirective,
@@ -424,7 +424,7 @@ export class VentasComponent {
       },
       (error) => {
         toast.error('Se produjo un error al realizar la orden');
-        console.error('Error al enviar la orden: ', error);
+        // console.error('Error al enviar la orden: ', error);
       }
     );
   }
