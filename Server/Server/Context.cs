@@ -31,6 +31,7 @@ namespace Server
         public DbSet<Consumo> Consumo { get; set; } = default!;
         public DbSet<Promociones> Promociones { get; set; }
         public DbSet<DetailConsumo> DetailConsumo { get; set; } = default!;
+        public DbSet<Chat> Chats { get; set; }
 
     }
 }
