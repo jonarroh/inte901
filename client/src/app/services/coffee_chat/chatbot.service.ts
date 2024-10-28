@@ -15,7 +15,7 @@ export class ChatbotService {
     userMessage: string
   ): Observable<{ message: { content: string } }> {
     const payload = {
-      model: 'llama3.2', // Replace with actual model if needed
+      model: 'coffee_chat', // Replace with actual model if needed
       messages: [{ role: 'user', content: userMessage }],
       stream: false,
     };

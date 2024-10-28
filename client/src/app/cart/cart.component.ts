@@ -1,4 +1,4 @@
-import { Component, signal, Signal ,effect} from '@angular/core';
+import { Component, signal, Signal ,effect, ViewChild} from '@angular/core';
 import { CartService, ProductoWithQuantity } from './cart.service';
 import {
   BrnSheetContentDirective,
@@ -28,6 +28,10 @@ import {
 } from '@spartan-ng/ui-dialog-helm';
 import { RouterModule } from '@angular/router';
 import { MoneyComponent } from '~/components/money/money.component';
+import { CheckoutService } from '../checkout/checkout.service';
+import { th } from 'date-fns/locale';
+import { toast } from 'ngx-sonner';
+import { PushService } from '../push/push.service';
 
 
 @Component({
@@ -63,23 +67,51 @@ import { MoneyComponent } from '~/components/money/money.component';
 })
 export class CartComponent {
   items = this.cartService.cartSignal;
-  
+  isOpen = this.cartService.openCart;
+  isLoaded = signal(false);
 
   get total(): number {
     return this.items().reduce((acc, item) => acc + item.precio * item.quantity, 0);
   }
 
-  
-  constructor(private cartService: CartService) {}
+  constructor(private cartService: CartService, private pushService: PushService, private checkService: CheckoutService) {
+  }
+
 
 
   increment(id: number): void {
     const itemIndex = this.items().findIndex(item => item.id === id);
+
+    this.isLoaded.set(true);
     if (itemIndex !== -1) {
       const item = this.items()[itemIndex];
-      this.cartService.editItem(itemIndex, item.quantity + 1);
+
+      this.checkService.cheackInventory({
+        idProduct: item.id,
+        quantity: item.quantity
+      }).subscribe({
+        error: (err) => {
+         console.log(err.error.text);
+         if(err.error.text === 'Inventario disponible.'){
+          this.cartService.editItem(itemIndex, item.quantity + 1);
+         }else{
+          toast.error('No hay suficiente inventario');
+         }
+         this.isLoaded.set(false);
+        }
+
+      });
     }
   }
+
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    if (!allowedKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  
+  }
+  
 
   decrement(id: number): void {
     const itemIndex = this.items().findIndex(item => item.id === id);
@@ -108,4 +140,14 @@ export class CartComponent {
   trackById(index: number, item: ProductoWithQuantity): number {
     return item.id;
   }
+
+  /*updateCart(newCart: ProductoWithQuantity[]): void {
+    const cartData = {
+        value: newCart,
+        timestamp: Date.now() // Guardamos el tiempo actual
+    };
+    localStorage.setItem('cart', JSON.stringify(cartData));
+    this.cartSignal.set(newCart); // Actualiza la señal de carrito en tu aplicación Angular
+}*/
+
 }

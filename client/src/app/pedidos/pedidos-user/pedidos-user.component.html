@@ -41,9 +41,15 @@
           <h5 class="mb-2 text-2xl font-bold text-gray-900">
             Orden ID: {{ order.ticket }}
           </h5>
-          <p class="mb-3 text-gray-700">Total: ${{ order.total }}</p>
+          <p class="text-gray-700">
+            Fecha: {{ order.orderDate| date: "dd/MM/yyyy" }}
+          </p>
+          <p class="text-gray-700">
+            Total: <app-money [amount]="getTotalByFolio(order.ticket)"></app-money>
+          </p>
+        
         </div>
-        <div class="flex flex-col items-center mt-4">
+        <div class="flex flex-col items-center ">
           <!-- Semáforo -->
           <div class="flex space-x-2 mb-2">
             <button
@@ -118,7 +124,10 @@
               {{ productos[detail.idProduct].nombre || "Desconocido" }}
             </h4>
             <p class="text-gray-500">Cantidad: {{ detail.quantity }}</p>
-            <p class="mb-3 text-gray-700">Total: ${{ order.total }}</p>
+            <p class="text-gray-700">
+              Precio unitario: <app-money [amount]="detail.priceSingle"></app-money>
+            </p>
+            <p class="mb-3 text-gray-700">Total: <app-money [amount]=" detail.quantity * detail.priceSingle"></app-money></p>
           </div>
         </li>
       </ul>

@@ -17,6 +17,9 @@ export class CartService {
     return this.cartSignal().reduce((acc, item) => acc + item.precio * item.quantity, 0);
   });
 
+
+  openCart = signal(true);
+
   constructor() {
     window.addEventListener('storage', this.syncCartAcrossTabs.bind(this));
   }
@@ -33,6 +36,7 @@ export class CartService {
 
   private saveCartToLocalStorage(items: ProductoWithQuantity[]): void {
     localStorage.setItem(this.storageKey, JSON.stringify(items));
+    localStorage.setItem('cartlastupdate', Date.now().toString());
     this.cartSignal.set(items);
   }
 

@@ -5,16 +5,15 @@ import { MateriaPrima } from '../interface/materias-primas';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MateriasPrimasService {
-
   apiURL = ENDPOINTS.materia_prima;
 
-  constructor(private http:HttpClient) {}
+  constructor(private http: HttpClient) {}
 
   getMateriaPrima = (): Observable<MateriaPrima[]> =>
-    this.http.get<MateriaPrima[]>(`${this.apiURL}`)
+    this.http.get<MateriaPrima[]>(`${this.apiURL}`);
 
   registrarMateriaPrima(data: MateriaPrima): Observable<MateriaPrima> {
     return this.http.post<MateriaPrima>(this.apiURL, data);
@@ -26,7 +25,7 @@ export class MateriasPrimasService {
 
   eliminarMateriaPrima(id: number): Observable<void> {
     return this.http.get<MateriaPrima>(`${this.apiURL}/${id}`).pipe(
-      switchMap(materiaPrima => {
+      switchMap((materiaPrima) => {
         materiaPrima.estatus = 0;
         materiaPrima.deletedAt = new Date().toISOString();
         return this.http.put<void>(`${this.apiURL}/${id}`, materiaPrima);
