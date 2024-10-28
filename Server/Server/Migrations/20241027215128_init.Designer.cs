@@ -12,13 +12,8 @@ using Server;
 namespace Server.Migrations
 {
     [DbContext(typeof(Context))]
-<<<<<<<< HEAD:Server/Server/Migrations/20240807021901_initial-Migrations.Designer.cs
-    [Migration("20240807021901_initial-Migrations")]
-    partial class initialMigrations
-========
-    [Migration("20240816005815_asd")]
-    partial class asd
->>>>>>>> f4dc41c917a4d9af0ce9954b0ce028b44e1bdef4:Server/Server/Migrations/20240816005815_asd.Designer.cs
+    [Migration("20241027215128_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -146,6 +141,9 @@ namespace Server.Migrations
                     b.Property<DateTime?>("DateOrder")
                         .IsRequired()
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("HeavenCoins")
+                        .HasColumnType("int");
 
                     b.Property<int?>("IdOrder")
                         .IsRequired()
@@ -564,6 +562,12 @@ namespace Server.Migrations
                     b.Property<DateTime?>("OrderDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("PromCode")
+                        .HasColumnType("int");
+
+                    b.Property<float>("PromDesc")
+                        .HasColumnType("real");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -574,6 +578,9 @@ namespace Server.Migrations
                     b.Property<float?>("Total")
                         .IsRequired()
                         .HasColumnType("real");
+
+                    b.Property<int>("TotalHeavenCoins")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -623,6 +630,62 @@ namespace Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Productos");
+                });
+
+            modelBuilder.Entity("Server.Models.Promociones", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BadgePromoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeletedAt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Descuento")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Estado")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FechaFin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FechaInicio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LimiteCanje")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Productos")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedAt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Promociones");
                 });
 
             modelBuilder.Entity("Server.Models.Proveedor", b =>
@@ -743,6 +806,9 @@ namespace Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AttemptsToBlock")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -753,6 +819,12 @@ namespace Server.Migrations
                     b.Property<string>("Estatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("IsBlockedUntil")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastFailedLoginAttempt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("LastName")
                         .IsRequired()
