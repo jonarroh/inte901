@@ -10,6 +10,7 @@ import { UserService } from '~/app/home/services/user.service';
 import { toast } from 'ngx-sonner';
 import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
+import { parse, isBefore, isAfter, isEqual } from 'date-fns';
 
 @Component({
   selector: 'calendar-reserve',
@@ -255,39 +256,54 @@ export class FormComponent implements OnInit {
     }
   }
 
-  checkConflict(date: string, startTime: string, endTime: string): Observable<boolean> {
-    return this.eventService.getReservationsBySpaceId(this.idEspacio).pipe(
-      map((reservations: ReservaDTO[]) => {
-        console.log("Checking conflicts for:", { date, startTime, endTime });
-  
-        return reservations.some(reservation => {
-          if (reservation.detailReserva.fecha === date) {
-            const reservationStartTime = reservation.detailReserva.horaInicio;
-            const reservationEndTime = reservation.detailReserva.horaFin;
-  
-            console.log("Existing reservations:", { reservationStartTime, reservationEndTime });
-  
-            // Verificar solapamiento o igualdad de hora de inicio y fin
-            return (
-              (startTime < reservationEndTime && endTime > reservationStartTime) || // Solapamiento
-              (startTime === reservationStartTime) || // Igualdad de hora de inicio
-              (endTime === reservationEndTime) // Igualdad de hora de fin
-            );
-          }
-          return false;
-        });
-      }),
-      catchError((error: any) => {
-        if (error.status === 404) {
-          console.log("No reservations found, returning true.");
-          return of(false);
-        } else {
-          console.error("Error fetching reservations:", error);
-          return throwError(error);
+
+checkConflict(date: string, startTime: string, endTime: string): Observable<boolean> {
+  return this.eventService.getReservationsBySpaceId(this.idEspacio).pipe(
+    map((reservations: ReservaDTO[]) => {
+      console.log("Checking conflicts for:", { date, startTime, endTime });
+
+      // Convertir startTime y endTime a objetos de fecha
+      const newStartTime = parse(`${date} ${startTime}`, 'yyyy-MM-dd HH:mm', new Date());
+      const newEndTime = parse(`${date} ${endTime}`, 'yyyy-MM-dd HH:mm', new Date());
+
+      return reservations.some(reservation => {
+        if (reservation.detailReserva.fecha === date) {
+          // Convertir los horarios de las reservas existentes
+          const reservationStartTime = parse(
+            `${reservation.detailReserva.fecha} ${reservation.detailReserva.horaInicio}`,
+            'yyyy-MM-dd HH:mm',
+            new Date()
+          );
+          const reservationEndTime = parse(
+            `${reservation.detailReserva.fecha} ${reservation.detailReserva.horaFin}`,
+            'yyyy-MM-dd HH:mm',
+            new Date()
+          );
+
+          console.log("Existing reservations:", { reservationStartTime, reservationEndTime });
+
+          // Verificar solapamiento o igualdad de hora de inicio y fin
+          return (
+            (isBefore(newStartTime, reservationEndTime) && isAfter(newEndTime, reservationStartTime)) || // Solapamiento
+            isEqual(newStartTime, reservationStartTime) || // Igualdad de hora de inicio
+            isEqual(newEndTime, reservationEndTime) // Igualdad de hora de fin
+          );
         }
-      })
-    );
-  }
+        return false;
+      });
+    }),
+    catchError((error: any) => {
+      if (error.status === 404) {
+        console.log("No reservations found, returning true.");
+        return of(false);
+      } else {
+        console.error("Error fetching reservations:", error);
+        return throwError(error);
+      }
+    })
+  );
+}
+
   
   
   
