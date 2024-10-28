@@ -70,58 +70,13 @@ export class CartComponent {
   isOpen = this.cartService.openCart;
   isLoaded = signal(false);
 
-   @ViewChild(BrnSheetTriggerDirective) sheetTrigger!: BrnSheetTriggerDirective; 
-
-  
-    openSheet(): void {
-      this.sheetTrigger.open();
-    }
-
-
   get total(): number {
     return this.items().reduce((acc, item) => acc + item.precio * item.quantity, 0);
   }
 
-  
-
   constructor(private cartService: CartService, private pushService: PushService, private checkService: CheckoutService) {
-
-    effect(() => {
-      this.cartService.openCart();
-      if (this.isOpen()) {
-this.openSheet();
-      }
-})
   }
 
-  ngOnInit(): void {
-    const lastUpdate = localStorage.getItem('cartlastupdate');
-    if (lastUpdate) {
-      const lastUpdateDate = new Date(parseInt(lastUpdate, 10));
-      console.log('Última actualización del carrito:', lastUpdateDate);
-
-      // Calcular el tiempo para enviar la notificación
-      const oneMinute = 60 * 1000; // 1 minuto en milisegundos
-      const timeSinceLastUpdate = Date.now() - lastUpdateDate.getTime();
-
-      if (timeSinceLastUpdate >= oneMinute) {
-        this.sendPushNotification();
-      } else {
-        const remainingTime = oneMinute - timeSinceLastUpdate;
-        setTimeout(() => this.sendPushNotification(), remainingTime);
-      }
-    }
-  }
-
-  private sendPushNotification(): void {
-    console.log('Enviando notificación de recordatorio');
-    this.pushService.pushMessage({
-      title: 'Recordatorio',
-      message: '¡No olvides tu carrito!',
-      url: '/checkout/address' // URL actualizada
-    });
-
-  }
 
 
   increment(id: number): void {

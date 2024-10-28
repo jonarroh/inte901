@@ -16,6 +16,10 @@ export class AuthGuard implements CanActivate {
       if(user.role === 'Admin'){
         console.log('es admin');
         console.log(user.role);
+        //eliminar el carrito y lastUpdate del localstorage
+        localStorage.removeItem('shoppingCart');
+        localStorage.removeItem('cartLastUpdate');
+
         this.router.navigate(['/admin/productos']);
       }else{
         this.router.navigate(['/products']);
