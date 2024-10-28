@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HlmButtonDirective } from '../components/ui-button-helm/src/lib/hlm-button.directive';
 import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
@@ -19,10 +19,21 @@ import { PushService } from './push/push.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
+export class AppComponent  {
   title = 'client';
 
   name = 'Logger';
+
+  
+
+  private sendPushNotification(): void {
+    console.log('Enviando notificación de recordatorio');
+    this.pushService.pushMessage({
+      title: 'Recordatorio',
+      message: '¡No olvides tu carrito!',
+      url: 'http://localhost:4200/checkout/address' // URL actualizada
+    });
+  }
 
 
   constructor(
@@ -71,7 +82,27 @@ export class AppComponent {
           console.error('Error al obtener la posición:', error.message);
         }
       });
+
+      const lastUpdate = localStorage.getItem('cartlastupdate');
+    if (lastUpdate) {
+      const lastUpdateDate = new Date(parseInt(lastUpdate, 10));
+      console.log('Última actualización del carrito:', lastUpdateDate);
+
+      // Calcular el tiempo para enviar la notificación
+      const oneMinute = 60 * 1000; // 1 minuto en milisegundos
+      const timeSinceLastUpdate = Date.now() - lastUpdateDate.getTime();
+      console.info(timeSinceLastUpdate >= oneMinute ? 'Ya pasó un minuto' : 'Faltan minutos');
+
+      if (timeSinceLastUpdate >= oneMinute) {
+        setTimeout(() => this.sendPushNotification(), 5000);
+      } else {
+        const remainingTime = oneMinute - timeSinceLastUpdate;
+        setTimeout(() => this.sendPushNotification(), remainingTime);
+      }
+    }
   }
+
+  
   
 
 }
