@@ -22,6 +22,10 @@ import { RightSeccionComponent } from '../login/right-seccion/right-seccion.comp
   styleUrl: './contra-recu.component.css'
 })
 export class ContraRecuComponent {
+  
+  showFirstForm = true;
+  showSecondFrom = false;
+
 
   disabled = signal(false);
   disabled1 = signal(false);
@@ -32,20 +36,11 @@ export class ContraRecuComponent {
   protected formModel = createFormGroup({
     email: createFormField('',{
       validators: [
-        {
-          validator: V.required(),
-          message: 'El codigo de verificación es requerido',
-          
-        },
-        {
-          validator: V.maxLength(8),
-          message: 'El codigo debe de ser de 8 caracteres',
-
-        }
-      ]
-    }),
-    id: createFormField('',{
-      
+       {
+        validator: V.required(),
+        message: "El correo es requerido"
+       }
+      ],
     })
   });
 
@@ -56,10 +51,6 @@ export class ContraRecuComponent {
         {
           validator: V.required(),
           message: 'El codigo es requerido',
-        },
-        {
-          validator: V.maxLength(8),
-          message: 'El codigo debe de ser de 8 caracteres',
         }
       ]
     }),
@@ -85,17 +76,22 @@ export class ContraRecuComponent {
   })});
 
   onSendCode(){
+    const emailValue = this.formModel.controls.email.value();
+    console.log("correo"+emailValue);
+    console.log("si llego aqui");
     if(this.formModel.valid()){
+      console.log("paso el if");
       this.disabled1.set(true);
-      this.codeService.sendCode(this.formModel.controls.email.value(), Number(this.formModel.controls.id.value()))
+      this.codeService.sendCode(emailValue)
       .subscribe({
-        complete: ()=>{
+        next: ()=>{
           this.formModel.reset();
           this.disabled1.set(false);
           console.log("Muy bien");
         },
         error:(err)=>{
           toast.error(err)
+          toast.error('Error al enviar código: ' + err.message);
         },
 
     });
@@ -105,7 +101,7 @@ export class ContraRecuComponent {
   onSavePass(){
 
     const ContraseñaDTO: ContraseñaNueva ={
-      userId : Number(this.formModel.controls.id.value()),
+      userId : Number(this.formModel.controls.email.value()),
       newPassword : this.formModel2.controls.password.controls.confirmPassword.value(),
       code : this.formModel2.controls.codigoVer.value(),
     };

@@ -12,8 +12,8 @@ export class RecuServiceService {
   private api2Url = 'http://localhost:5275/api/Users/forceChangePassword';
   constructor(private http: HttpClient) { }
 
-  sendCode( email:string, id:number): Observable<any>{
-    const body = { email,id}
+  sendCode( email:string): Observable<any>{
+    const body = { email}
     return this.http.post(this.apiUrl, body);
   }
 

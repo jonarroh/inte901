@@ -18,11 +18,13 @@ import { SelectionModel } from '@angular/cdk/collections';
   styleUrls: ['./cliente.component.css']
 })
 export class ClienteComponent implements OnInit {
+  
   orders: ReservaDTO[] = [];
   error: string | null = null;
   searchTerm: string = '';
   selectedFilter: string = '';
   placeNames: Map<number, string> = new Map();
+  
 
   constructor(
     private reservaUsuario: ReserveServiceService,
@@ -120,6 +122,7 @@ export class ClienteComponent implements OnInit {
     }
     return null;
   }
+  
 
   private loadPlaceNames(): void {
     const spaceIds = new Set(this.orders.map(order => order.detailReserva.idEspacio));
