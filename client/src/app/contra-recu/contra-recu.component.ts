@@ -6,6 +6,7 @@ import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import { ContraseñaNueva } from '~/lib/types';
 import { RecuServiceService } from './recu-service.service';
 import { toast } from 'ngx-sonner';
+import { RightSeccionComponent } from '../login/right-seccion/right-seccion.component';
 
 @Component({
   selector: 'app-contra-recu',
@@ -14,7 +15,8 @@ import { toast } from 'ngx-sonner';
     FormsModule,
     SignalInputDirective,
     HlmButtonDirective,
-    HlmInputDirective
+    HlmInputDirective,
+    RightSeccionComponent
   ],
   templateUrl: './contra-recu.component.html',
   styleUrl: './contra-recu.component.css'
