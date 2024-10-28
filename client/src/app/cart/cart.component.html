@@ -1,13 +1,23 @@
-<hlm-sheet>
-  <button brnSheetTrigger side="right" class="text-white mt-1 flex flex-row items-center space-x-2">
+<hlm-sheet 
+>
+  <button brnSheetTrigger
+  (click)="openSheet()"
+  side="right" class="text-white mt-1 flex flex-row items-center space-x-2"
+  
+  >
+    
     <lucide-icon name="shopping-cart"></lucide-icon> <span
     class="hidden md:block"
     >
       Mi carrito
     </span>
   </button>
-  <hlm-sheet-content *brnSheetContent='let ctx' class="bg-white p-4 w-[1000px] h-screen flex flex-col justify-between">
-    <hlm-sheet-header class="flex flex-col items-center bg-white/75 w-full">
+  <hlm-sheet-content 
+  
+  *brnSheetContent='let ctx' class="bg-white p-4 w-[1000px] h-screen flex flex-col justify-between">
+    <hlm-sheet-header 
+    
+    class="flex flex-col items-center bg-white/75 w-full">
       <h3 hlmSheetTitle>Carrito de compra</h3>
       <div class="w-full p-2 border-b border-gray-200">
         <div class="flex justify-between">
@@ -27,7 +37,7 @@
             <app-money [amount]="item.precio * item.quantity"></app-money>
           </span>
           
-          <hlm-dialog [state]="'open'">
+          <hlm-dialog [state]="'closed'">
             <button class="text-black px-4 py-2 rounded hover:bg-gray-200" brnDialogTrigger hlmBtn>
               <lucide-icon name="ellipsis"></lucide-icon>
             </button>
@@ -40,23 +50,31 @@
                 <label>Cantidad:</label>
                 <div class="flex items-center border border-gray-300 rounded bg-white justify-between">
                   @if (item.quantity ==1) {
-                    <button (click)="removeItem(item.id)" aria-label="Decrementar" class="p-2 bg-gray-300">
+                    <button (click)="removeItem(item.id)" aria-label="Decrementar" class="p-2 bg-gray-300"
+                    [disabled]="isLoaded()"
+                    >
                       <lucide-icon name="trash"></lucide-icon>
                     </button>
                   }
                   @else {
-                    <button  (click)="decrement(item.id)" aria-label="Decrementar" class="p-2 bg-gray-300">
+                    <button  (click)="decrement(item.id)" aria-label="Decrementar" class="p-2 bg-gray-300"
+                    [disabled]="isLoaded()"
+                    >
                       <lucide-icon name="minus"></lucide-icon>
                     </button>
                   }
 
-                  <input type="text" [(ngModel)]="item.quantity" class="w-10 h-10 text-center border-none focus:outline-none border border-x-2">
-                  <button (click)="increment(item.id)" aria-label="Incrementar" class="p-2 bg-gray-300">
+                  <input type="text" [(ngModel)]="item.quantity" class="w-10 h-10 text-center border-none focus:outline-none border border-x-2"
+                  disabled
+                  >
+                  <button (click)="increment(item.id)" aria-label="Incrementar" class="p-2 bg-gray-300"
+                  [disabled]="isLoaded()"
+                  >
                     <lucide-icon name="plus"></lucide-icon>
                   </button>
                 </div>
               </div>
-              <hlm-dialog-footer class="mt-4">
+              <hlm-dialog-footer class="mt-4" >
                 <button hlmBtn class="bg-[#785131] text-white" (click)="ctx.close()">Guardar</button>
                 <button hlmBtn class="bg-red-500 text-white" (click)="removeItem(item.id)">Eliminar</button>
               </hlm-dialog-footer>

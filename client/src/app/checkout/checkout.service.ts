@@ -2,6 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, signal, effect } from '@angular/core';
 import { Address, CreditCard, Order } from '~/lib/types';
 
+
+
+export interface CheckInventoryResponse {
+  idProduct: number;
+  quantity: number;
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -98,6 +104,15 @@ export class CheckoutService {
     return this.http.get<Order[]>(`${this.url}/allOrders`);
   }
 
+  cheackInventory(data: CheckInventoryResponse) {
+    console.log(data);
+    console.log(`${this.url}/checkInventory`);
+    return this.http.post<string>(
+      `${this.url}/checkInventory`,
+      data
+    );
+  }
+
   postOrder(order: Order) {
     return this.http.post<Order>(`${this.url}/addOrder`, order);
   }
@@ -125,4 +140,8 @@ export class CheckoutService {
   editCard(card: CreditCard) {
     return this.http.put<CreditCard>(`${this.urlCard}/${card.id}`, card);
   }
+
+
+
+
 }

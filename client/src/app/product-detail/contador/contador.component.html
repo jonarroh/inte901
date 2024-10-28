@@ -7,7 +7,10 @@
       <lucide-icon name="trash"></lucide-icon>
     </button>
     <ng-template #decrementBtn>
-      <button (click)="decrement()" aria-label="Decrementar" class="p-2 bg-white">
+      <button (click)="decrement()" aria-label="Decrementar" class="p-2 bg-white"
+      
+      [disabled]="isLoaded()"
+      >
         <lucide-icon name="minus"></lucide-icon>
       </button>
     </ng-template>
@@ -20,7 +23,10 @@
            readonly>
 
     <!-- Botón para aumentar cantidad -->
-    <button (click)="increment()" aria-label="Incrementar" class="p-2 bg-white">
+    <button (click)="increment()" aria-label="Incrementar" class="p-2 bg-white"
+    
+    [disabled]="isLoaded()"
+    >
       <lucide-icon name="plus"></lucide-icon>
     </button>
   </div>
