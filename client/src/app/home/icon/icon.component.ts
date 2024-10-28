@@ -84,12 +84,17 @@ private apiUrl = 'http://localhost:3000/location';
 logout(){
   let token = localStorage.getItem('token') ?? '';
   from(this.http.delete(`${this.apiUrl}/${token}`)).subscribe({
-    next: () => {
+    complete: () => {
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
       this.geoService.location = null;
+      location.href = '/';
     },
     error: (error: any) => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      this.geoService.location = null
+      location.href = '/';
       console.error('Error al cerrar sesión', error);
     }
   });
