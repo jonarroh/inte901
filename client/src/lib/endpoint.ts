@@ -14,4 +14,5 @@ export const ENDPOINTS = {
   inventarioMP: `${API_URL}/api/InventarioMPs`,
   inventarioPostre: `${API_URL}/api/InventarioPostres`,
   promociones: `${API_URL}/api/Promociones`,
+  chat: `${API_URL}/api/Chats`,
 } as const;

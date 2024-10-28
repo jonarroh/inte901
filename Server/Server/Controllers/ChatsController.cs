@@ -62,7 +62,7 @@ namespace Server.Controllers
 
             // Map properties from ChatDTO to Chat entity
             chat.IdUsuario = chatDTO.IdUsuario;
-            chat.Menssaje = chatDTO.Menssaje;
+            chat.Mensaje = chatDTO.Mensaje;
             chat.Rol = chatDTO.Rol;
             chat.Fecha = chatDTO.Fecha;
             chat.ConversacionId = chatDTO.ConversacionId;
@@ -96,7 +96,7 @@ namespace Server.Controllers
             var chat = new Chat
             {
                 IdUsuario = chatDTO.IdUsuario,
-                Menssaje = chatDTO.Menssaje,
+                Mensaje = chatDTO.Mensaje,
                 Rol = chatDTO.Rol,
                 Fecha = chatDTO.Fecha,
                 ConversacionId = chatDTO.ConversacionId
