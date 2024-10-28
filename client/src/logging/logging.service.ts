@@ -38,43 +38,43 @@ export class LoggerService {
    * Write logs.
    */
   private static writeToLog(level: LogLevel, ...message: any) {
-    if (this.shouldLog(level)) {
-      if (level <= LogLevel.INFO) {
-        console.log(LoggerService.getLogDate(), ...message);
+    // if (this.shouldLog(level)) {
+    //   if (level <= LogLevel.INFO) {
+    //     console.log(LoggerService.getLogDate(), ...message);
 
-        // Manda el log a una API
-        fetch('http://127.0.0.1:3000/logging/writeinfo', {
-          method: 'POST',
-          body: JSON.stringify({
-            date: LoggerService.getLogDate(),
-            message: message
-          })
-        });
+    //     // Manda el log a una API
+    //     fetch('http://127.0.0.1:3000/logging/writeinfo', {
+    //       method: 'POST',
+    //       body: JSON.stringify({
+    //         date: LoggerService.getLogDate(),
+    //         message: message
+    //       })
+    //     });
 
-      } else if (level === LogLevel.ERROR) {
-        console.error(LoggerService.getLogDate(), ...message);
+    //   } else if (level === LogLevel.ERROR) {
+    //     console.error(LoggerService.getLogDate(), ...message);
 
-        // Manda el log a una API
-        fetch('http://127.0.0.1:3000/logging/writeerror', {
-          method: 'POST',
-          body: JSON.stringify({
-            date: LoggerService.getLogDate(),
-            message: message
-          })
-        });
-      } else if (level === LogLevel.WARN) {
-        console.warn(LoggerService.getLogDate(), ...message);
+    //     // Manda el log a una API
+    //     fetch('http://127.0.0.1:3000/logging/writeerror', {
+    //       method: 'POST',
+    //       body: JSON.stringify({
+    //         date: LoggerService.getLogDate(),
+    //         message: message
+    //       })
+    //     });
+    //   } else if (level === LogLevel.WARN) {
+    //     console.warn(LoggerService.getLogDate(), ...message);
 
-        // Manda el log a una API
-        fetch('http://127.0.0.1:3000/logging/writewarn', {
-          method: 'POST',
-          body: JSON.stringify({
-            date: LoggerService.getLogDate(),
-            message: message
-          })
-        });
-      }
-    }
+    //     // Manda el log a una API
+    //     fetch('http://127.0.0.1:3000/logging/writewarn', {
+    //       method: 'POST',
+    //       body: JSON.stringify({
+    //         date: LoggerService.getLogDate(),
+    //         message: message
+    //       })
+    //     });
+    //   }
+    // }
   }
 
   /**
