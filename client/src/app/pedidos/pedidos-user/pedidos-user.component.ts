@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, OnInit } from '@angular/core';
 import { Order, Producto } from '~/lib/types';
 import { PedidosUserServiceService } from './pedidos-user-service.service';
 import { NavbarComponent } from '../../home/navbar/navbar.component';
@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { SignalRService } from '~/app/orden/signal-rorder.service';
 import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.component';
 import { ChatbotComponent } from '~/components/chatbot/chatbot.component';
+import { MoneyComponent } from '~/components/money/money.component';
 
 @Component({
   selector: 'app-pedidos-user',
@@ -24,6 +25,7 @@ import { ChatbotComponent } from '~/components/chatbot/chatbot.component';
     CommonModule,
     BreadcrumbComponent,
     ChatbotComponent,
+    MoneyComponent
   ],
   providers: [
     PedidosUserServiceService,
@@ -40,6 +42,19 @@ export class PedidosUserComponent implements OnInit {
   error: string | null = null;
   searchTerm: string = '';
   selectedFilter: string = '';
+
+  
+  getTotalByFolio(folio: string): number {
+    const order = this.orders.find((o) => o.ticket === folio);
+    if (order) {
+    const detailOrders = order.detailOrders;
+    return detailOrders.reduce((acc, detail) => {
+      const product = this.productos[detail.idProduct];
+      return acc + (product ?  detail.quantity * detail.priceSingle : 0);
+    }, 0);
+    }
+    return 0;
+  }
 
   statusColorMap = {
     Ordenado: ['#f17d6f', 'gray', 'gray', 'gray', 'gray'],

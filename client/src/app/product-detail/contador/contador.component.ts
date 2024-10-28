@@ -29,22 +29,40 @@ export class ContadorComponent {
     
   }
 
+  
+
   contador = signal(1);
   product = input.required<Producto>();
+  isLoaded = signal(false);
 
   increment() {
-    this.contador.update(value => value + 1);
+    this.isLoaded.set(true);
+    this.checkoutService.cheackInventory({
+      idProduct: this.product().id,
+      quantity: this.contador() - 1
+    }).subscribe({
+      error: (err) => {
+        console.log(err.error.text);
+        if(err.error.text === 'Inventario disponible.'){
+         this.contador.update(value => value + 1);
+        }else{
+         toast.error('No hay suficiente inventario');
+        }
+        this.isLoaded.set(false);
+       }
+    })
   }
 
   returnToProducts() {
     this.router.navigate(['/products']);
   }
 
+
   decrement() {
+
     if (this.contador() <= 1) {
       return;
     }
-    this.contador.update(value => value - 1);
   }
 
   
@@ -85,6 +103,7 @@ export class ContadorComponent {
   }
   this.cartService.addItem(newProductWithQuantity);
   this.contador.update(() => 0);
+  this.router.navigate(['/products']);
   toast('Producto agregado al carrito',{
     
   });
