@@ -17,6 +17,9 @@ export class CartService {
     return this.cartSignal().reduce((acc, item) => acc + item.precio * item.quantity, 0);
   });
 
+
+  openCart = signal(true);
+
   constructor() {
     window.addEventListener('storage', this.syncCartAcrossTabs.bind(this));
   }
