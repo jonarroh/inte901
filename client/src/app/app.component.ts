@@ -24,45 +24,54 @@ export class AppComponent {
 
   name = 'Logger';
 
-  ngOnInit() {
-    Logger.debug('logger DEBUG message', { message: 'message' });
-    Logger.log('logger INFO message', { message: 'message' });
-    Logger.warn('logger WARN message', { message: 'message' });
-    Logger.error('logger ERROR message', { message: 'message' });
-  }
 
-  constructor(private signalRService: SignalRService, private orderderService: PedidosUserServiceService, private geolocationService: GeolocationService,
-    private pushService: PushService) {
-    // to do: reimplemetar signalR
-
-
-    this.geolocationService.getCurrentPosition().then((position) => {
-      console.log('Posición actual:', position);
-      console.log('token:', localStorage.getItem('token'));
-      if (position) {
-        const deviceInfo = this.geolocationService.getDeviceName();
-        if (this.geolocationService.isLogged()) {
-          this.geolocationService.sendLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            isLogged: 1,
-            token: localStorage.getItem('token') || '',
-            browser: deviceInfo.browser,
-            deviceType: deviceInfo.deviceType
-          });
+  constructor(
+    private signalRService: SignalRService,
+    private orderderService: PedidosUserServiceService,
+    private geolocationService: GeolocationService,
+    private pushService: PushService
+  ) {
+    this.geolocationService.getCurrentPosition()
+      .then((position) => {
+        console.log('Posición actual:', position);
+        console.log('token:', localStorage.getItem('token'));
+  
+        if (!this.geolocationService.isServiceAvailable()) {
+          console.warn('El servicio de geolocalización no está disponible. No se realizarán acciones.');
+          return;
         }
-        else {
-          this.geolocationService.sendLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            isLogged: 0,
-            token: this.geolocationService.createAnonymousToken(),
-            browser: deviceInfo.browser,
-            deviceType: deviceInfo.deviceType
-          });
+  
+        if (position) {
+          const deviceInfo = this.geolocationService.getDeviceName();
+          if (this.geolocationService.isLogged()) {
+            this.geolocationService.sendLocation({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              isLogged: 1,
+              token: localStorage.getItem('token') || '',
+              browser: deviceInfo.browser,
+              deviceType: deviceInfo.deviceType
+            });
+          } else {
+            this.geolocationService.sendLocation({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              isLogged: 0,
+              token: this.geolocationService.createAnonymousToken(),
+              browser: deviceInfo.browser,
+              deviceType: deviceInfo.deviceType
+            });
+          }
         }
-      }
-
-    })
+      })
+      .catch((error) => {
+        if (error.code === error.PERMISSION_DENIED) {
+          console.warn('Permiso de geolocalización denegado por el usuario. No se realizarán acciones.');
+        } else {
+          console.error('Error al obtener la posición:', error.message);
+        }
+      });
   }
+  
+
 }

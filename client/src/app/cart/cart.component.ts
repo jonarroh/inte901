@@ -83,14 +83,7 @@ export class CartComponent {
 
   
   constructor(private cartService: CartService, private checkService: CheckoutService) {
-    effect(() => {
-      this.cartService.openCart();
-
-      if (this.isOpen()) {
-        this.openSheet();
-      }
-
-  })
+   
   }
 
 
