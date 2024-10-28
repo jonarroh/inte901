@@ -17,7 +17,7 @@ namespace Server.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -138,6 +138,9 @@ namespace Server.Migrations
                     b.Property<DateTime?>("DateOrder")
                         .IsRequired()
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("HeavenCoins")
+                        .HasColumnType("int");
 
                     b.Property<int?>("IdOrder")
                         .IsRequired()
@@ -556,6 +559,12 @@ namespace Server.Migrations
                     b.Property<DateTime?>("OrderDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("PromCode")
+                        .HasColumnType("int");
+
+                    b.Property<float>("PromDesc")
+                        .HasColumnType("real");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -566,6 +575,9 @@ namespace Server.Migrations
                     b.Property<float?>("Total")
                         .IsRequired()
                         .HasColumnType("real");
+
+                    b.Property<int>("TotalHeavenCoins")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -615,6 +627,62 @@ namespace Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Productos");
+                });
+
+            modelBuilder.Entity("Server.Models.Promociones", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BadgePromoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeletedAt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Descuento")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Estado")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FechaFin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FechaInicio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LimiteCanje")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Productos")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedAt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Promociones");
                 });
 
             modelBuilder.Entity("Server.Models.Proveedor", b =>
@@ -735,6 +803,9 @@ namespace Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AttemptsToBlock")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -745,6 +816,12 @@ namespace Server.Migrations
                     b.Property<string>("Estatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("IsBlockedUntil")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastFailedLoginAttempt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("LastName")
                         .IsRequired()

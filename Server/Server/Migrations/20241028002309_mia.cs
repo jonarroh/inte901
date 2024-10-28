@@ -6,11 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Server.Migrations
 {
     /// <inheritdoc />
-<<<<<<<< HEAD:Server/Server/Migrations/20240807021901_initial-Migrations.cs
-    public partial class initialMigrations : Migration
-========
-    public partial class asd : Migration
->>>>>>>> f4dc41c917a4d9af0ce9954b0ce028b44e1bdef4:Server/Server/Migrations/20240816005815_asd.cs
+    public partial class mia : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -77,7 +73,10 @@ namespace Server.Migrations
                     Total = table.Column<float>(type: "real", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Ticket = table.Column<long>(type: "bigint", nullable: true),
-                    IsDeliver = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeliver = table.Column<bool>(type: "bit", nullable: false),
+                    PromCode = table.Column<int>(type: "int", nullable: false),
+                    PromDesc = table.Column<float>(type: "real", nullable: false),
+                    TotalHeavenCoins = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -102,6 +101,30 @@ namespace Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Productos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Promociones",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaInicio = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaFin = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descuento = table.Column<int>(type: "int", nullable: false),
+                    Estado = table.Column<int>(type: "int", nullable: false),
+                    Productos = table.Column<int>(type: "int", nullable: false),
+                    BadgePromoId = table.Column<int>(type: "int", nullable: false),
+                    LimiteCanje = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UpdatedAt = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DeletedAt = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Promociones", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -132,8 +155,11 @@ namespace Server.Migrations
                     Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Estatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    AttemptsToBlock = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Token = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    Token = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    LastFailedLoginAttempt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsBlockedUntil = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -153,6 +179,7 @@ namespace Server.Migrations
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IdOrder = table.Column<int>(type: "int", nullable: false),
                     IdProduct = table.Column<int>(type: "int", nullable: false),
+                    HeavenCoins = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -565,6 +592,9 @@ namespace Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "MateriaPrimaProveedores");
+
+            migrationBuilder.DropTable(
+                name: "Promociones");
 
             migrationBuilder.DropTable(
                 name: "Consumo");
