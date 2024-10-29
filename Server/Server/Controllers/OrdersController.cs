@@ -325,6 +325,58 @@ namespace Server.Controllers
             return "ok";
         }
 
+        public class CheckInventoryDTO
+        {
+            public int IdProduct { get; set; }
+            public int Quantity { get; set; }
+        }
+
+
+        [HttpPost]
+        [Route("checkInventory")]
+        public async Task<IActionResult> CheckInventory(CheckInventoryDTO data)
+        {
+            // Obtener el producto de la base de datos
+            var product = await _context.Productos
+                .Include(p => p.Ingredientes) // Asegurarse de incluir los ingredientes en caso de ser necesario
+                .FirstOrDefaultAsync(p => p.Id == data.IdProduct);
+
+            if (product == null)
+            {
+                return NotFound($"El producto con ID {data.IdProduct} no existe.");
+            }
+
+            // Verificar si el producto es especial o no
+            string result;
+            if (IsSpecialProduct(data.IdProduct))
+            {
+                result = await CheckCakeInventory(product, data.Quantity);
+            }
+            else
+            {
+                result = await CheckIngredientsInventory(product, data.Quantity);
+            }
+
+            // Retornar la respuesta según el resultado del inventario
+            if (result == "ok")
+            {
+                return Ok("Inventario disponible.");
+            }
+            else
+            {
+                return BadRequest(result); // Mensaje de error detallado sobre el inventario insuficiente
+            }
+        }
+
+
+
+
+
+
+
+
+
+
         private async Task<string> CheckIngredientsInventory(Producto product, int quantity)
         {
             foreach (var ingredient in product.Ingredientes)

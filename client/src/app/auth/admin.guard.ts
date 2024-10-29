@@ -13,6 +13,8 @@ export class AdminGuard implements CanActivate {
   canActivate(): boolean {
     const userData = this.userService.userData();
     const role = userData.role;
+    if(!role) this.router.navigate(['/']);
+
     console.log('role', role);
   
     const NotAllowedRoles = ['Cliente'];

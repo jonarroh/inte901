@@ -17,13 +17,3 @@ self.addEventListener('push', (e) => {
   );
 });
 
-// Manejar el clic en la notificación
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close(); // Cerrar la notificación
-  const notificationData = event.notification.data;
-
-  // Abrir la URL asociada
-  event.waitUntil(
-    clients.openWindow(notificationData.url)
-  );
-});

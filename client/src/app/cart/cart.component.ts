@@ -31,6 +31,7 @@ import { MoneyComponent } from '~/components/money/money.component';
 import { CheckoutService } from '../checkout/checkout.service';
 import { th } from 'date-fns/locale';
 import { toast } from 'ngx-sonner';
+import { PushService } from '../push/push.service';
 
 
 @Component({
@@ -69,29 +70,13 @@ export class CartComponent {
   isOpen = this.cartService.openCart;
   isLoaded = signal(false);
 
-   @ViewChild(BrnSheetTriggerDirective) sheetTrigger!: BrnSheetTriggerDirective; 
-
-  
-    openSheet(): void {
-      this.sheetTrigger.open();
-    }
-
-
   get total(): number {
     return this.items().reduce((acc, item) => acc + item.precio * item.quantity, 0);
   }
 
-  
-  constructor(private cartService: CartService, private checkService: CheckoutService) {
-    effect(() => {
-      this.cartService.openCart();
-
-      if (this.isOpen()) {
-        this.openSheet();
-      }
-
-  })
+  constructor(private cartService: CartService, private pushService: PushService, private checkService: CheckoutService) {
   }
+
 
 
   increment(id: number): void {
@@ -155,4 +140,14 @@ export class CartComponent {
   trackById(index: number, item: ProductoWithQuantity): number {
     return item.id;
   }
+
+  /*updateCart(newCart: ProductoWithQuantity[]): void {
+    const cartData = {
+        value: newCart,
+        timestamp: Date.now() // Guardamos el tiempo actual
+    };
+    localStorage.setItem('cart', JSON.stringify(cartData));
+    this.cartSignal.set(newCart); // Actualiza la señal de carrito en tu aplicación Angular
+}*/
+
 }

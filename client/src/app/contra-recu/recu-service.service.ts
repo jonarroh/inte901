@@ -9,11 +9,11 @@ import { ContraseñaNueva } from '~/lib/types';
 export class RecuServiceService {
 
   private apiUrl = 'http://localhost:3000/password/create';
-  private api2Url = 'http://localhost:5275/api/Users/forceChangePassword';
+  private api2Url = 'http://localhost:3000/password/change';
   constructor(private http: HttpClient) { }
 
-  sendCode( email:string, id:number): Observable<any>{
-    const body = { email,id}
+  sendCode( email:string): Observable<any>{
+    const body = { email}
     return this.http.post(this.apiUrl, body);
   }
 
