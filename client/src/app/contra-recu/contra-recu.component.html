@@ -12,7 +12,7 @@
           height="140"
         />
       
-        <form >
+        <form *ngIf="showFirstForm()" >
           <label class="text-start w-full max-w-lg mb-2">
             Email
             <input 
@@ -41,13 +41,14 @@
           </button>
       </form>
       
-      <!--<form *ngIf="showSecondFrom">
+      <form *ngIf="showSecondForm()">
       
         <label class="text-start w-full max-w-lg mb-2">
           Codigo de verificación
           <input placeholder="codigo"
+          name="codigoVer"
           class="w-full p-2 border border-gray-300 rounded mt-2"
-hlmInput
+          hlmInput
             ngModel
             [formField]="formModel2.controls.codigoVer"/>
         </label>
@@ -63,6 +64,7 @@ hlmInput
         <label class="text-start w-full max-w-lg mb-2">
           Contraseña nueva
         <input placeholder="contraseña nueva"
+        name="newPassword"
         class="w-full p-2 border border-gray-300 rounded mt-2"
 hlmInput
         ngModel
@@ -77,6 +79,7 @@ hlmInput
       
         <label class="text-start w-full max-w-lg mb-2">
         <input placeholder="confirmar contraseña"
+        name="confirmPassword"
         class="w-full p-2 border border-gray-300 rounded mt-2"
 hlmInput
         ngModel
@@ -96,7 +99,7 @@ hlmInput
       
         >Cambiar contraseña</button>
       
-      </form>-->
+      </form>
       
       </div>
       </section>

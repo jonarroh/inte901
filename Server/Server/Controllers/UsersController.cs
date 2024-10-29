@@ -13,6 +13,7 @@ using System.Text;
 using Server.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Server.Models;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace Server.Controllers
 {
@@ -122,7 +123,48 @@ namespace Server.Controllers
             return Ok(usersDTO);
         }
 
-       
+
+        
+
+
+        [HttpPost("getId")]
+        public async Task<ActionResult<UserDTO>> GetUserById([FromBody] String email)
+        {
+
+            var user = await _context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+
+            if (user == null || user.Estatus != "Activo")
+            {
+                return NotFound();
+            }
+
+            var userDTO = new UserDTO
+            {
+                Id = user.Id,
+                Name = user.Name,
+                LastName = user.LastName,
+                Email = user.Email,
+                Role = user.Role,
+                Direcciones = await _context.Direcciones
+                                            .Where(d => d.UserId == user.Id && d.Estatus == "Activo")
+                                            .ToListAsync(),
+                CreditCards = await _context.CreditCard
+                                                .Where(c => c.UserId == user.Id && c.Estatus == "Activo")
+                                                .Select(c => new CreditCard
+                                                {
+                                                    Id = c.Id,
+                                                    CardHolderName = c.CardHolderName,
+                                                    CardNumber = c.CardNumber,
+                                                    ExpiryDate = c.ExpiryDate,
+                                                    UserId = c.UserId,
+                                                    Estatus = c.Estatus,
+                                                    CVV = c.CVV
+                                                }).ToListAsync()
+            };
+
+            return userDTO;
+        }
+
 
         // GET: api/Users/5
         [HttpGet("{id}")]

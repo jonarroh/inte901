@@ -7,6 +7,7 @@ import { ContraseñaNueva } from '~/lib/types';
 import { RecuServiceService } from './recu-service.service';
 import { toast } from 'ngx-sonner';
 import { RightSeccionComponent } from '../login/right-seccion/right-seccion.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-contra-recu',
@@ -16,15 +17,17 @@ import { RightSeccionComponent } from '../login/right-seccion/right-seccion.comp
     SignalInputDirective,
     HlmButtonDirective,
     HlmInputDirective,
-    RightSeccionComponent
+    RightSeccionComponent,
+    CommonModule
   ],
   templateUrl: './contra-recu.component.html',
   styleUrl: './contra-recu.component.css'
 })
 export class ContraRecuComponent {
   
-  showFirstForm = true;
-  showSecondFrom = false;
+  showFirstForm = signal(true);
+  showSecondForm = signal(false);
+  
 
 
   disabled = signal(false);
@@ -85,43 +88,50 @@ export class ContraRecuComponent {
       this.codeService.sendCode(emailValue)
       .subscribe({
         next: ()=>{
+          localStorage.setItem('email', emailValue);
           this.formModel.reset();
           this.disabled1.set(false);
+          this.showFirstForm.set(false);  // Ocultar el primer formulario
+          this.showSecondForm.set(true); 
+          toast.success('Código enviado correctamente, por favor revisa tu correo');
+          
           console.log("Muy bien");
         },
         error:(err)=>{
           toast.error(err)
-          toast.error('Error al enviar código: ' + err.message);
+          toast.error('Error al enviar código: vuelva a intentarlo');
         },
 
     });
   }  
   } 
 
-  onSavePass(){
+  onSavePass() {
+  const emailFromLocalStorage = localStorage.getItem('email');
+  const ContraseñaDTO: ContraseñaNueva = {
+    email: emailFromLocalStorage || '',
+    newPassword: this.formModel2.controls.password.controls.confirmPassword.value(),
+    code: this.formModel2.controls.codigoVer.value(),
+  };
+  console.log("ContraseñaDTO", ContraseñaDTO);
 
-    const ContraseñaDTO: ContraseñaNueva ={
-      userId : Number(this.formModel.controls.email.value()),
-      newPassword : this.formModel2.controls.password.controls.confirmPassword.value(),
-      code : this.formModel2.controls.codigoVer.value(),
-    };
-
-    if(this.formModel2.valid()){
-      this.codeService.savePass(ContraseñaDTO)
+  if (this.formModel2.valid()) {
+    console.log("entro antes del muy bien");
+    this.codeService.savePass(ContraseñaDTO)
       .subscribe({
-        complete: ()=>{
+        complete: () => {
           console.log("Muy bien");
+          toast.success('Contraseña actualizada correctamente');
         },
-        error:(err)=>{
-          toast.error(err)
+        error: (err) => {
+          // Aquí intentamos acceder al mensaje de error
+          const errorMessage = err.error?.message || 'Error desconocido';
+          toast.error('Error al actualizar contraseña: ' + errorMessage);
         },
-
-      })
-    }
-
-
-
+      });
   }
+}
+
 
 
 
