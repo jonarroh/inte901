@@ -9,7 +9,7 @@ import { ContraseñaNueva } from '~/lib/types';
 export class RecuServiceService {
 
   private apiUrl = 'http://localhost:3000/password/create';
-  private api2Url = 'http://localhost:5275/api/Users/forceChangePassword';
+  private api2Url = 'http://localhost:3000/password/change';
   constructor(private http: HttpClient) { }
 
   sendCode( email:string): Observable<any>{

@@ -8,6 +8,7 @@ import { RecuServiceService } from './recu-service.service';
 import { toast } from 'ngx-sonner';
 import { RightSeccionComponent } from '../login/right-seccion/right-seccion.component';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-contra-recu',
@@ -33,7 +34,7 @@ export class ContraRecuComponent {
   disabled = signal(false);
   disabled1 = signal(false);
 
-  constructor (private codeService:RecuServiceService){}
+  constructor (private codeService:RecuServiceService, private router:Router){}
 
 
   protected formModel = createFormGroup({
@@ -107,6 +108,7 @@ export class ContraRecuComponent {
   } 
 
   onSavePass() {
+  this.disabled.set(true);
   const emailFromLocalStorage = localStorage.getItem('email');
   const ContraseñaDTO: ContraseñaNueva = {
     email: emailFromLocalStorage || '',
@@ -120,8 +122,10 @@ export class ContraRecuComponent {
     this.codeService.savePass(ContraseñaDTO)
       .subscribe({
         complete: () => {
+        this.disabled.set(false);
           console.log("Muy bien");
           toast.success('Contraseña actualizada correctamente');
+          this.router.navigate(['/login']);
         },
         error: (err) => {
           // Aquí intentamos acceder al mensaje de error
