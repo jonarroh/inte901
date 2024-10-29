@@ -7,6 +7,8 @@ import { ContraseñaNueva } from '~/lib/types';
 import { RecuServiceService } from './recu-service.service';
 import { toast } from 'ngx-sonner';
 import { RightSeccionComponent } from '../login/right-seccion/right-seccion.component';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-contra-recu',
@@ -16,36 +18,33 @@ import { RightSeccionComponent } from '../login/right-seccion/right-seccion.comp
     SignalInputDirective,
     HlmButtonDirective,
     HlmInputDirective,
-    RightSeccionComponent
+    RightSeccionComponent,
+    CommonModule
   ],
   templateUrl: './contra-recu.component.html',
   styleUrl: './contra-recu.component.css'
 })
 export class ContraRecuComponent {
+  
+  showFirstForm = signal(true);
+  showSecondForm = signal(false);
+  
+
 
   disabled = signal(false);
   disabled1 = signal(false);
 
-  constructor (private codeService:RecuServiceService){}
+  constructor (private codeService:RecuServiceService, private router:Router){}
 
 
   protected formModel = createFormGroup({
     email: createFormField('',{
       validators: [
-        {
-          validator: V.required(),
-          message: 'El codigo de verificación es requerido',
-          
-        },
-        {
-          validator: V.maxLength(8),
-          message: 'El codigo debe de ser de 8 caracteres',
-
-        }
-      ]
-    }),
-    id: createFormField('',{
-      
+       {
+        validator: V.required(),
+        message: "El correo es requerido"
+       }
+      ],
     })
   });
 
@@ -56,10 +55,6 @@ export class ContraRecuComponent {
         {
           validator: V.required(),
           message: 'El codigo es requerido',
-        },
-        {
-          validator: V.maxLength(8),
-          message: 'El codigo debe de ser de 8 caracteres',
         }
       ]
     }),
@@ -85,47 +80,62 @@ export class ContraRecuComponent {
   })});
 
   onSendCode(){
+    const emailValue = this.formModel.controls.email.value();
+    console.log("correo"+emailValue);
+    console.log("si llego aqui");
     if(this.formModel.valid()){
+      console.log("paso el if");
       this.disabled1.set(true);
-      this.codeService.sendCode(this.formModel.controls.email.value(), Number(this.formModel.controls.id.value()))
+      this.codeService.sendCode(emailValue)
       .subscribe({
-        complete: ()=>{
+        next: ()=>{
+          localStorage.setItem('email', emailValue);
           this.formModel.reset();
           this.disabled1.set(false);
+          this.showFirstForm.set(false);  // Ocultar el primer formulario
+          this.showSecondForm.set(true); 
+          toast.success('Código enviado correctamente, por favor revisa tu correo');
+          
           console.log("Muy bien");
         },
         error:(err)=>{
           toast.error(err)
+          toast.error('Error al enviar código: vuelva a intentarlo');
         },
 
     });
   }  
   } 
 
-  onSavePass(){
+  onSavePass() {
+  this.disabled.set(true);
+  const emailFromLocalStorage = localStorage.getItem('email');
+  const ContraseñaDTO: ContraseñaNueva = {
+    email: emailFromLocalStorage || '',
+    newPassword: this.formModel2.controls.password.controls.confirmPassword.value(),
+    code: this.formModel2.controls.codigoVer.value(),
+  };
+  console.log("ContraseñaDTO", ContraseñaDTO);
 
-    const ContraseñaDTO: ContraseñaNueva ={
-      userId : Number(this.formModel.controls.id.value()),
-      newPassword : this.formModel2.controls.password.controls.confirmPassword.value(),
-      code : this.formModel2.controls.codigoVer.value(),
-    };
-
-    if(this.formModel2.valid()){
-      this.codeService.savePass(ContraseñaDTO)
+  if (this.formModel2.valid()) {
+    console.log("entro antes del muy bien");
+    this.codeService.savePass(ContraseñaDTO)
       .subscribe({
-        complete: ()=>{
+        complete: () => {
+        this.disabled.set(false);
           console.log("Muy bien");
+          toast.success('Contraseña actualizada correctamente');
+          this.router.navigate(['/login']);
         },
-        error:(err)=>{
-          toast.error(err)
+        error: (err) => {
+          // Aquí intentamos acceder al mensaje de error
+          const errorMessage = err.error?.message || 'Error desconocido';
+          toast.error('Error al actualizar contraseña: ' + errorMessage);
         },
-
-      })
-    }
-
-
-
+      });
   }
+}
+
 
 
 

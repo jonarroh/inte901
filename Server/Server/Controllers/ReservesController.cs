@@ -28,7 +28,7 @@ namespace Server.Controllers
         {
             var ReservacionesActivas = await _context.Reservas
                 .Include(r => r.DetailReserva)
-                .Include(r => r.Usuario) 
+                .Include(r => r.Usuario)
                 .ToListAsync();
 
             return Ok(ReservacionesActivas);
@@ -70,6 +70,7 @@ namespace Server.Controllers
 
             return Ok(reservas);
         }
+
         [HttpPost]
         public async Task<ActionResult<Reserva>> PostReserva([FromBody] ReservaDTO reservaDTO)
         {
@@ -92,20 +93,40 @@ namespace Server.Controllers
                 return BadRequest("Espacio does not exist.");
             }
 
+            // Verificar conflictos de horario en reservas "Pendiente" en el mismo espacio
+            var existingReservations = await _context.DetailReservas
+                .Where(dr => dr.idEspacio == reservaDTO.detailReserva.idEspacio
+                            && dr.fecha == reservaDTO.detailReserva.fecha)
+                .Join(_context.Reservas.Where(r => r.estatus == "Pendiente"),
+                      dr => dr.idDetailReser,
+                      r => r.idDetailReser,
+                      (dr, r) => dr)
+                .ToListAsync();
+
+            foreach (var existingDetail in existingReservations)
+            {
+                if (TimeSpan.TryParse(existingDetail.horaInicio, out var existingStartTime) &&
+                    TimeSpan.TryParse(existingDetail.horaFin, out var existingEndTime) &&
+                    TimeSpan.TryParse(reservaDTO.detailReserva.horaInicio, out var newStartTime) &&
+                    TimeSpan.TryParse(reservaDTO.detailReserva.horaFin, out var newEndTime))
+                {
+                    // Verificar que el nuevo horario no se superponga con el existente
+                    if (newStartTime < existingEndTime && newEndTime > existingStartTime)
+                    {
+                        return Conflict("El horario seleccionado ya está ocupado para este espacio.");
+                    }
+                }
+                else
+                {
+                    return BadRequest("Formato de hora no válido.");
+                }
+            }
+
+
+            // Verificación de tarjeta de crédito (si existe)
             if (reservaDTO.creditCard != null)
             {
-                if (reservaDTO == null)
-                {
-                    return BadRequest("ReservaDTO is null.");
-                }
-
-                if (reservaDTO.detailReserva == null)
-                {
-                    return BadRequest("El detalle de la reserva no puede ser nulo");
-                }
-
                 var espacio = _context.Espacios.Find(reservaDTO.detailReserva.idEspacio);
-
                 decimal amountPlace = (decimal)espacio.precio;
 
                 if (amountPlace == 0)
@@ -114,7 +135,6 @@ namespace Server.Controllers
                 }
 
                 var result = _creditCardService.canPay(reservaDTO.creditCard, amountPlace);
-                Console.WriteLine(result);
                 if (result != "La tarjeta es válida")
                 {
                     return BadRequest(result);
@@ -127,7 +147,7 @@ namespace Server.Controllers
                 reservaDTO.estatus = "Pendiente";
             }
 
-            // Crear el detalle de la reserva
+            // Crear y guardar el detalle de la reserva
             var detailReserva = new DetailReserva
             {
                 fecha = reservaDTO.detailReserva.fecha,
@@ -135,12 +155,10 @@ namespace Server.Controllers
                 horaFin = reservaDTO.detailReserva.horaFin,
                 idEspacio = reservaDTO.detailReserva.idEspacio
             };
-
-            // Añadir el detalle de la reserva al contexto y guardar
             _context.DetailReservas.Add(detailReserva);
             await _context.SaveChangesAsync();
 
-            // Crear la reserva
+            // Crear y guardar la reserva
             var reserva = new Reserva
             {
                 idDetailReser = detailReserva.idDetailReser,
@@ -149,41 +167,31 @@ namespace Server.Controllers
                 DetailReserva = detailReserva,
                 Usuario = clienteExists
             };
-
-            // Añadir la reserva al contexto y guardar
             _context.Reservas.Add(reserva);
             await _context.SaveChangesAsync();
 
-
-
+            // Generación del código QR
             using (HttpClient client = new HttpClient())
             {
                 var data = new Dictionary<string, string?>
-            {
-                { "id", reserva.idReserva.ToString() },
-                { "ticket", "0"},
-            };
+        {
+            { "id", reserva.idReserva.ToString() },
+            { "ticket", "0" }
+        };
 
                 var content = new FormUrlEncodedContent(data);
-
-                Console.WriteLine($"Se genero el QR, {data["id"]}, {data["ticket"]}");
-
                 HttpResponseMessage response = await client.PostAsync("http://localhost:5000/generate_qr_reservation", content);
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine(response.Content);
-                }
-                else
-                {
-                    Console.WriteLine(response.Content);
                     return NotFound($"Error con el QR, status: {response.StatusCode}");
                 }
             }
 
-
             return CreatedAtAction("GetReserva", new { id = reserva.idReserva }, reserva);
         }
+    
+
 
 
 

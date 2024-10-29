@@ -6,40 +6,34 @@
       <div class="flex flex-col justify-center items-center h-full space-y-4 px-8">
 
         <img
-  src="http://127.0.0.1:5000/static/logo.webp"
-  alt="logo"
-  width="140"
-  height="140"
-/>
+          src="http://127.0.0.1:5000/static/logo.webp"
+          alt="logo"
+          width="140"
+          height="140"
+        />
       
-        <form>
+        <form *ngIf="showFirstForm()" >
           <label class="text-start w-full max-w-lg mb-2">
             Email
             <input 
             class="w-full p-2 border border-gray-300 rounded mt-2"
               hlmInput
+              name="email"
               placeholder="email" 
               type="email" 
               ngModel
-              [formField]="formModel.controls.email"/>
+              [formField]="formModel.controls.email"
+              />
           </label>
           @if (formModel.controls.email.touched()){
             @if(formModel.controls.email.hasError('required')){
-              <div class="text-red-500 text-sm">El codigo es requerido</div>
-            } @else if (formModel.controls.email.hasError('maxLength')){
-              <div class="text-red-500 text-sm">
-                El codigo debe de ser de 8 caracteres
-              </div>
-            }
+              <div class="text-red-500 text-sm">El correo es requerido</div>
+            }       
           }  
       
-            
-          <input placeholder="id" type="number"
-            ngModel
-            [formField]="formModel.controls.id"/>
             <button
               hlmBtn
-              class="w-80 h-10 bg-secondary text-white rounded-md mt-4"
+              class="w-80 h-10 bg-secondary text-white rounded-md mt-4 hover:bg-secondary"
                 [disabled]="disabled1()"
                 (click)="onSendCode()"
             >
@@ -47,13 +41,14 @@
           </button>
       </form>
       
-      <form>
+      <form *ngIf="showSecondForm()">
       
         <label class="text-start w-full max-w-lg mb-2">
           Codigo de verificación
           <input placeholder="codigo"
+          name="codigoVer"
           class="w-full p-2 border border-gray-300 rounded mt-2"
-hlmInput
+          hlmInput
             ngModel
             [formField]="formModel2.controls.codigoVer"/>
         </label>
@@ -69,6 +64,7 @@ hlmInput
         <label class="text-start w-full max-w-lg mb-2">
           Contraseña nueva
         <input placeholder="contraseña nueva"
+        name="newPassword"
         class="w-full p-2 border border-gray-300 rounded mt-2"
 hlmInput
         ngModel
@@ -83,6 +79,7 @@ hlmInput
       
         <label class="text-start w-full max-w-lg mb-2">
         <input placeholder="confirmar contraseña"
+        name="confirmPassword"
         class="w-full p-2 border border-gray-300 rounded mt-2"
 hlmInput
         ngModel
@@ -96,7 +93,7 @@ hlmInput
         }
         <button
         hlmBtn
-        class="bg-secondary text-white rounded-md  flex justify-center items-center hover:bg-yellow-700 transition-colors duration-300"
+        class="bg-secondary text-white rounded-md  flex justify-center items-center hover:bg-secondary"
         [disabled]="disabled()"
         (click)="onSavePass()"
       

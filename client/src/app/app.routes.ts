@@ -69,7 +69,8 @@ export const routes: Routes = [
   },
   {
     path: 'recover',
-    component: ContraRecuComponent
+    component: ContraRecuComponent,
+    canActivate: [AuthGuard]
 
   },
   {
