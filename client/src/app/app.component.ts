@@ -83,7 +83,7 @@ export class AppComponent  {
         }
       });
 
-      const lastUpdate = localStorage.getItem('cartlastupdate');
+    const lastUpdate = localStorage.getItem('cartlastupdate');
     if (lastUpdate) {
       const lastUpdateDate = new Date(parseInt(lastUpdate, 10));
       console.log('Última actualización del carrito:', lastUpdateDate);
