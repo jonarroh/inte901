@@ -48,7 +48,7 @@ export interface MateriaPrima {
 }
 
 export interface ContraseñaNueva {
-  userId: number;
+  email: string;
   newPassword: string;
   code: string;
 }

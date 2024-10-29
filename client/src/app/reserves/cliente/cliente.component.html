@@ -4,6 +4,17 @@
   <!-- Mostrar errores -->
   <div *ngIf="error" class="text-red-500">{{ error }}</div>
 
+  <div class="flex items-center mb-4 space-x-4">
+    <!-- Buscador -->
+    <input
+      type="text"
+      placeholder="Buscar órdenes..."
+      
+      class="p-2 border border-gray-300 rounded-lg w-80"
+    />
+    </div>
+
+
   <!-- Lista de reservas -->
   <div *ngIf="orders.length > 0" class="space-y-6">
     <div 
