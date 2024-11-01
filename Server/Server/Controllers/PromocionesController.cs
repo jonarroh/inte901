@@ -57,31 +57,57 @@ namespace Server.Controllers
                     return BadRequest("Faltan campos por llenar");
                 }
 
-                var promocion = new Promociones
+                var usuario = await _context.Users.FindAsync(data.UserId);
+
+                if (usuario == null)
                 {
-                    Nombre = data.Nombre,
-                    Descripcion = data.Descripcion,
-                    FechaInicio = data.FechaInicio,
-                    FechaFin = data.FechaFin,
-                    Productos = data.Productos,
-                    Descuento = data.Descuento,
-                    Estado = data.Estado,
-                    BadgePromoId = data.BadgePromoId,
-                    LimiteCanje = data.LimiteCanje,
-                    CreatedAt = DateTime.Now.ToString(),
-                    UpdatedAt = DateTime.Now.ToString(),
-                    DeletedAt = ""
-                };
+                    return BadRequest("No se encontro el usuario");
+                }
 
-                await _context.Promociones.AddAsync(promocion);
+                string connectionString;
+                if (usuario.Role == "Admin")
+                {
+                    connectionString = "AdminUser";
+                }
+                else
+                {
+                    connectionString = "ClientUser";
+                }
 
-                await _context.SaveChangesAsync();
+                var optionsBuilder = new DbContextOptionsBuilder<Context>();
+                optionsBuilder.UseSqlServer(connectionString);
 
-                return Ok(200);
+                using (var context = new Context(optionsBuilder.Options))
+                {
+                    // Aquí puedes realizar operaciones con el contexto configurado
+                    return Ok($"Conectado como {usuario.Role} a la base de datos");
+                }
+
+                // var promocion = new Promociones
+                // {
+                //     Nombre = data.Nombre,
+                //     Descripcion = data.Descripcion,
+                //     FechaInicio = data.FechaInicio,
+                //     FechaFin = data.FechaFin,
+                //     Productos = data.Productos,
+                //     Descuento = data.Descuento,
+                //     Estado = data.Estado,
+                //     BadgePromoId = data.BadgePromoId,
+                //     LimiteCanje = data.LimiteCanje,
+                //     CreatedAt = DateTime.Now.ToString(),
+                //     UpdatedAt = DateTime.Now.ToString(),
+                //     DeletedAt = ""
+                // };
+
+                // await _context.Promociones.AddAsync(promocion);
+
+                // await _context.SaveChangesAsync();
+
+                // return Ok(200);
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message);
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
         }
@@ -143,6 +169,59 @@ namespace Server.Controllers
                 await _context.SaveChangesAsync();
 
                 return Ok(200);
+            }
+            catch (Exception ex)
+            {
+                //Console.WriteLine(ex.Message);
+                return NotFound("Se produjo un error en el servidor, contacte a soporte");
+            }
+        }
+
+        [HttpDelete]
+        [Route("hardDeletePromocion/{id},{userId}")]
+        public async Task<IActionResult> HardDeletePromocion(int id, int userId)
+        {
+            try
+            {
+                var promocion = await _context.Promociones.FindAsync(id);
+
+                if (promocion == null)
+                {
+                    return BadRequest("No se encontro la promocion");
+                }
+
+                var usuario = await _context.Users.FindAsync(userId);
+
+                if (usuario == null)
+                {
+                    return BadRequest("No se encontro el usuario");
+                }
+
+                string connectionString;
+
+                if (usuario.Role == "Admin")
+                {
+                    connectionString = "AdminUser";
+                }
+                else
+                {
+                    connectionString = "ClientUser";
+                }
+
+                var optionsBuilder = new DbContextOptionsBuilder<Context>();
+                optionsBuilder.UseSqlServer(connectionString);
+
+                using (var context = new Context(optionsBuilder.Options))
+                {
+                    // Aquí puedes realizar operaciones con el contexto configurado
+                    _context.Promociones.Remove(promocion);
+
+                    await _context.SaveChangesAsync();
+                    return Ok($"Conectado como {usuario.Role} a la base de datos");
+                }
+
+
+                //return Ok(200);
             }
             catch (Exception ex)
             {
