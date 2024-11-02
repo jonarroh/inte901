@@ -2,14 +2,18 @@ import { Component, signal } from '@angular/core';
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import { FormsModule } from '@angular/forms';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
-import { SignalInputDirective, V, createFormField, createFormGroup } from 'ng-signal-forms';
+import {
+  SignalInputDirective,
+  V,
+  createFormField,
+  createFormGroup,
+} from 'ng-signal-forms';
 import { RegisterService } from '../register.service';
 import { Router } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { es } from 'date-fns/locale';
 import { User } from '~/lib/types';
 import { toast } from 'ngx-sonner';
-
 
 @Component({
   selector: 'FormComponent',
@@ -18,24 +22,20 @@ import { toast } from 'ngx-sonner';
     HlmInputDirective,
     FormsModule,
     SignalInputDirective,
-    LucideAngularModule
-
+    LucideAngularModule,
   ],
-  providers: [
-    RegisterService,
-    Router],
+  providers: [RegisterService, Router],
   templateUrl: './form.component.html',
-  styleUrl: './form.component.css'
+  styleUrl: './form.component.css',
 })
 export class FormComponent {
-
-  constructor(private  registerServe : RegisterService, private router : Router){}  // 
+  constructor(private registerServe: RegisterService, private router: Router) {} //
 
   disabled = signal(false);
 
   protected formModel = createFormGroup({
-    name: createFormField('',{
-      validators:[
+    name: createFormField('', {
+      validators: [
         {
           validator: V.required(),
           message: 'El nombre es requerido',
@@ -43,7 +43,7 @@ export class FormComponent {
         {
           validator: V.maxLength(80),
           message: 'El nombre debe tener menos de 80 caracteres',
-        }
+        },
       ],
     }),
     lastname: createFormField('', {
@@ -55,7 +55,7 @@ export class FormComponent {
         {
           validator: V.maxLength(100),
           message: 'Los apellidos deben tener menos de 100 caracteres',
-        }
+        },
       ],
     }),
     email: createFormField('', {
@@ -67,7 +67,7 @@ export class FormComponent {
         {
           validator: V.maxLength(50),
           message: 'El correo debe tener menos de 50 caracteres',
-        }
+        },
       ],
     }),
     password: createFormField('', {
@@ -92,7 +92,7 @@ export class FormComponent {
     }),
   });
 
-  register(){
+  register() {
     console.log('Register');
     console.log(this.formModel.value());
     console.log(this.formModel.valid());
@@ -102,51 +102,48 @@ export class FormComponent {
     //si la fecha de nacimiento es invalida mostrar un mensaje de error con toast
     const today = new Date();
     const dob = new Date(this.formModel.controls.dob.value());
-    if(dob > today){
-      toast.error('La fecha de nacimiento no puede ser mayor a la fecha actual');
+    if (dob > today) {
+      toast.error(
+        'La fecha de nacimiento no puede ser mayor a la fecha actual'
+      );
       this.disabled.set(false);
       return;
     }
-    
-    const user : User = {
-      creditCards:[],
+
+    const user: User = {
+      creditCards: [],
       direcciones: [],
-      estatus: "Activo",
+      estatus: 'Activo',
       email: this.formModel.controls.email.value(),
       id: 0,
       lastName: this.formModel.controls.lastname.value(),
       name: this.formModel.controls.name.value(),
       password: this.formModel.controls.password.value(),
-      role: "Cliente",
-      token: "",
-
-    }
+      role: 'Cliente',
+      token: '',
+    };
 
     console.log(user);
 
-    if(this.formModel.valid()){
-
+    if (this.formModel.valid()) {
       this.registerServe.registerUser(user).subscribe({
-        next: (response) =>{
+        next: (response) => {
           console.log(response);
           console.log('Usuario registrado correctamente');
           toast.success('Usuario registrado correctamente');
 
           this.router.navigate(['/login']);
         },
-        error : (error)=>{
-          toast.error('Error al registrar el usuario');
+        error: (error) => {
+          const errorMessage = error?.error || 'Error al registrar el usuario';
+          toast.error(errorMessage);
           this.disabled.set(false); // para que no le pueda dar al boton de clic
-          console.error(error)
+          console.error(error);
         },
-        complete: () =>{
+        complete: () => {
           this.disabled.set(false);
-        }
-      })
-
+        },
+      });
     }
-
-    
   }
-
 }

@@ -306,6 +306,15 @@ namespace Server.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
+            string filePath = Path.Combine("lib", "worst_passwords.txt");
+
+            HashSet<string> insecurePasswords = new HashSet<string>(await System.IO.File.ReadAllLinesAsync(filePath));
+
+            if (insecurePasswords.Contains(user.Password))
+            {
+                return BadRequest("La contraseña proporcionada es demasiado común. Por favor, elige una contraseña más segura.");
+            }
+
             user.Password = StringToSha256(user.Password);
             user.Estatus = "Activo";
             _context.Users.Add(user);
