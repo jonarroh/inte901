@@ -1,38 +1,78 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { BrnCommandImports } from '@spartan-ng/ui-command-brain';
+import { HlmCommandImports } from '@spartan-ng/ui-command-helm';
+import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
+import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
+import {
+  BrnPopoverComponent,
+  BrnPopoverContentDirective,
+  BrnPopoverTriggerDirective,
+} from '@spartan-ng/ui-popover-brain';
+import { HlmPopoverContentDirective } from '@spartan-ng/ui-popover-helm';
+import { NgForOf } from '@angular/common';
+import { provideIcons } from '@ng-icons/core';
+import { lucideChevronsUpDown, lucideCheck, lucideSearch } from '@ng-icons/lucide';
 
-
-import { HlmCarouselComponent, HlmCarouselContentComponent,HlmCarouselItemComponent,HlmCarouselNextComponent,HlmCarouselPreviousComponent } from '@spartan-ng/ui-carousel-helm';
-import { SignalRService } from '../orden/signal-rorder.service';
-import { CommonModule } from '@angular/common';
-
+type Framework = { label: string; value: string };
 
 @Component({
   selector: 'app-test',
   standalone: true,
   imports: [
-    CommonModule,
-    HlmCarouselComponent, HlmCarouselContentComponent,HlmCarouselItemComponent,HlmCarouselNextComponent,HlmCarouselPreviousComponent 
+    BrnCommandImports,
+    HlmCommandImports,
+    HlmIconComponent,
+    HlmButtonDirective,
+    BrnPopoverComponent,
+    BrnPopoverTriggerDirective,
+    HlmPopoverContentDirective,
+    BrnPopoverContentDirective,
+    NgForOf,
   ],
-  providers: [SignalRService],
+  providers: [provideIcons({ lucideChevronsUpDown, lucideSearch, lucideCheck })],
   templateUrl: './test.component.html',
   styleUrl: './test.component.css'
 })
 export class TestComponent {
-  updates: string[] = [];
+  public frameworks = [
+    {
+      label: 'AnalogJs',
+      value: 'analogjs',
+    },
+    {
+      label: 'Angular',
+      value: 'angular',
+    },
+    {
+      label: 'Vue',
+      value: 'vue',
+    },
+    {
+      label: 'Nuxt',
+      value: 'nuxt',
+    },
+    {
+      label: 'React',
+      value: 'react',
+    },
+    {
+      label: 'NextJs',
+      value: 'nextjs',
+    },
+  ];
+  public currentFramework = signal<Framework | undefined>(undefined);
+  public state = signal<'closed' | 'open'>('closed');
 
-  constructor(private signalRService: SignalRService) {}
+  stateChanged(state: 'open' | 'closed') {
+    this.state.set(state);
+  }
 
-  ngOnInit(): void {
-    this.signalRService.hubConnection.on('ReceiveOrderUpdate', (message: string) => {
-      this.updates.push(message);
-      const changeId = message.split(':')[0];
-      const status = message.split(':')[1];
-
-      //en esta partes vas a poder manejar el mensaje recibido
-      //por ejemplo, tienes que ver si el changeId es igual a un id de orden que tengas cargada en tu componente
-      //y si lo es, actualizas el estado de la orden con el status recibido
-      
-
-    });
+  commandSelected(framework: Framework) {
+    this.state.set('closed');
+    if (this.currentFramework()?.value === framework.value) {
+      this.currentFramework.set(undefined);
+    } else {
+      this.currentFramework.set(framework);
+    }
   }
 }
