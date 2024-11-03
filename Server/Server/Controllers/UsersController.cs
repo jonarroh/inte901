@@ -14,6 +14,8 @@ using Server.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Server.Models;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Newtonsoft.Json;
+using Azure.Core;
 
 namespace Server.Controllers
 {
@@ -304,14 +306,49 @@ namespace Server.Controllers
 
         // POST: api/Users
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<User>> PostUser([FromBody] UserCaptchaDTO userCaptchaDTO)
         {
-            user.Password = StringToSha256(user.Password);
-            user.Estatus = "Activo";
-            _context.Users.Add(user);
+            if (!string.IsNullOrEmpty(userCaptchaDTO.CaptchaToken))
+            {
+
+                string captchaToken = userCaptchaDTO.CaptchaToken;
+                User user = userCaptchaDTO.User;
+
+                // Verificación de reCAPTCHA
+                var secretKey = "6LeMsXMqAAAAAAlCAtsRy_mhaQP0HzuL2h4srz8t";
+                var client = new HttpClient();
+                var response = await client.PostAsync(
+                    $"https://www.google.com/recaptcha/api/siteverify?secret={secretKey}&response={captchaToken}",
+                    null
+                );
+                var json = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<dynamic>(json);
+
+                if (result.success != true)
+                {
+                    return BadRequest("ReCAPTCHA no verificado. Intente nuevamente.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No se verificó el reCAPTCHA debido a la falta de conexión.");
+            }
+
+            string filePath = Path.Combine("lib", "worst_passwords.txt");
+
+            HashSet<string> insecurePasswords = new HashSet<string>(await System.IO.File.ReadAllLinesAsync(filePath));
+
+            if (insecurePasswords.Contains(userCaptchaDTO.User.Password))
+            {
+                return BadRequest("La contraseña proporcionada es demasiado común. Por favor, elige una contraseña más segura.");
+            }
+
+            userCaptchaDTO.User.Password = StringToSha256(userCaptchaDTO.User.Password);
+            userCaptchaDTO.User.Estatus = "Activo";
+            _context.Users.Add(userCaptchaDTO.User);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            return CreatedAtAction("GetUser", new { id = userCaptchaDTO.User.Id }, userCaptchaDTO.User);
         }
 
         // DELETE: api/Users/5

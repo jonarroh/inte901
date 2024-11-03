@@ -41,6 +41,7 @@
 
             [MaxLength(100)]
             public string? Token { get; set; }
+            public DateTime? LastSession { get; set; }
 
             // Propiedad para rastrear los intentos fallidos
             public DateTime? LastFailedLoginAttempt { get; set; }
@@ -50,7 +51,6 @@
 
             // Navigation property for the related addresses
             public ICollection<Direcciones> Direcciones { get; set; }
-
             public ICollection<CreditCard> CreditCards { get; set; }
         }
 

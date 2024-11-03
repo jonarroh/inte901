@@ -10,7 +10,8 @@ export class RegisterService {
 
   constructor(private http: HttpClient) {}
 
-  registerUser(usuario: User) {
-    return this.http.post<User>(this.baseURL, usuario);
+  registerUser(usuario: User, captchaToken: string) {
+    const payload = { user: usuario, captchaToken };
+    return this.http.post<User>(this.baseURL, payload);
   }
 }

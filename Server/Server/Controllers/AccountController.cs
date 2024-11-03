@@ -26,7 +26,7 @@
             if (loginRequest == null)
             {
                 return BadRequest(new { message = "Invalid login request" });
-            }
+            }      
 
             string email = loginRequest.Email ?? throw new ArgumentNullException(nameof(loginRequest.Email));
             string password = loginRequest.Password ?? throw new ArgumentNullException(nameof(loginRequest.Password));
@@ -69,6 +69,17 @@
             user.LastFailedLoginAttempt = null;
             user.IsBlockedUntil = null;
 
+            // Obtener la última sesión antes de actualizarla
+            DateTime? previousLastSession = user.LastSession;
+
+            if (previousLastSession.HasValue)
+            {
+                previousLastSession = TimeZoneInfo.ConvertTimeFromUtc(previousLastSession.Value, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+            }
+
+            // Registrar la última sesión
+            user.LastSession = DateTime.UtcNow;
+
             // Crear el token
             string token = _tokenService.CreateToken(email, user.Role, user.Id);
 
@@ -77,7 +88,7 @@
 
             _context.SaveChanges();
 
-            return Ok(new { jwtToken = token, id = user.Id });
+            return Ok(new { jwtToken = token, id = user.Id, lastSession = previousLastSession });
         }
 
         public static string StringToSha256(string str)

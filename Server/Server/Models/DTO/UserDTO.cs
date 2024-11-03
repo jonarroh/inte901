@@ -1,4 +1,6 @@
-﻿namespace Server.Models.DTO
+﻿using Server.Models.Usuario.Server.Models.Usuario;
+
+namespace Server.Models.DTO
 {
     public class UserDTO
     {
@@ -14,6 +16,12 @@
         public ICollection<Direcciones>? Direcciones { get; set; }
 
         public ICollection<CreditCard>? CreditCards { get; set; }
+    }
+
+    public class UserCaptchaDTO()
+    {
+        public string CaptchaToken { get; set; }
+        public User User { get; set; }
     }
 
 

@@ -1,135 +1,137 @@
-<section class="bg-primary text-black text-center w-full h-screen">
-    <div class="flex flex-col justify-center items-center h-full space-y-4 px-8">
-      <img
-        src="http://127.0.0.1:5000/static/logo.webp"
-        alt="logo"
-        width="140"
-        height="140"
+<section
+  class="bg-primary text-black text-center w-full h-screen overflow-y-auto"
+>
+  <div class="flex flex-col justify-center items-center h-full space-y-4 px-8">
+    <img
+      src="http://127.0.0.1:5000/static/logo.webp"
+      alt="logo"
+      width="80"
+      height="80"
+    />
+    <label class="text-start w-full max-w-lg mb-2">
+      Nombre
+      <input
+        class="w-full p-2 border border-gray-300 rounded mt-2"
+        hlmInput
+        type="text"
+        placeholder="Nombre"
+        ngModel
+        [formField]="formModel.controls.name"
       />
-      <label class="text-start w-full max-w-lg mb-2">
-        Nombre
-        <input
-          class="w-full p-2 border border-gray-300 rounded mt-2"
-          hlmInput
-          type="text"
-          placeholder="Nombre"
-          ngModel
-          [formField]="formModel.controls.name"          
-        />
-      </label>
-      @if (formModel.controls.name.touched()) { @if
-        (formModel.controls.name.hasError('required')) {
-        <div class="text-red-500 text-sm">El nombre es requerido</div>
-        } @else if (formModel.controls.name.hasError('maxLength')) {
-        <div class="text-red-500 text-sm">
-          El nombre debe tener menos de 50 caracteres
-        </div>
-        } @else if (formModel.controls.name.hasError('text')) {
-        <div class="text-red-500 text-sm">El nombre no es válido</div>
-        } }
-  
-      <label class="text-start w-full max-w-lg mb-2">
-        Apellidos
-        <input
-          class="w-full p-2 border border-gray-300 rounded mt-2"
-          hlmInput
-          type="text"
-          placeholder="Apellidos"
-          ngModel
-          [formField]="formModel.controls.lastname"   
-        />
-      </label>
-      @if (formModel.controls.lastname.touched()) { @if
-        (formModel.controls.lastname.hasError('required')) {
-        <div class="text-red-500 text-sm">Los apellidos son requeridos</div>
-        } @else if (formModel.controls.lastname.hasError('maxLength')) {
-        <div class="text-red-500 text-sm">
-            Los apellidos deben tener menos de 100 caracteres
-        </div>
-        } @else if (formModel.controls.lastname.hasError('text')) {
-        <div class="text-red-500 text-sm">Los apellidos no son validos</div>
-        } }
-
-
-      <label class="text-start w-full max-w-lg mb-2">
-        Correo
-        <input
-          class="w-full p-2 border border-gray-300 rounded mt-2"
-          hlmInput
-          type="email"
-          placeholder="Correo"
-          ngModel
-          [formField]="formModel.controls.email"   
-        />
-      </label>
-      @if (formModel.controls.email.touched()) { @if
-        (formModel.controls.email.hasError('required')) {
-        <div class="text-red-500 text-sm">El correo electrónico es requerido</div>
-        } @else if (formModel.controls.email.hasError('maxLength')) {
-        <div class="text-red-500 text-sm">
-          El correo electrónico debe tener menos de 50 caracteres
-        </div>
-        } @else if (formModel.controls.email.hasError('email')) {
-        <div class="text-red-500 text-sm">El correo electrónico no es válido</div>
-        } }
-  
-      <label class="text-start w-full max-w-lg mb-2">
-        Contraseña
-        <input
-          class="w-full p-2 border border-gray-300 rounded mt-2"
-          hlmInput
-          type="password"
-          placeholder="Contraseña"
-          ngModel
-          [formField]="formModel.controls.password"   
-        />
-      </label>
-      @if (formModel.controls.password.touched()) { 
-        @if(formModel.controls.password.hasError('required')) {
-      <div class="text-red-500 text-sm">La contraseña es requerida</div>
-      } 
-       @else if (formModel.controls.password.hasError('maxLength')) {
-      <div class="text-red-500 text-sm">
-        La contraseña debe tener menos de 50 caracteres
-      </div>
-      } }
-  
-      <label class="text-start w-full max-w-lg mb-2">
-        Fecha de nacimiento
-        <input
-          class="w-full p-2 border border-gray-300 rounded mt-2"
-          hlmInput
-          type="date"
-          placeholder="Fecha de nacimiento"
-          ngModel
-          [formField]="formModel.controls.dob"   
-        />
-      </label>
-      @if (formModel.controls.dob.touched()) { 
-        @if(formModel.controls.dob.hasError('required')) {
-      <div class="text-red-500 text-sm">La fecha de nacimiento es requerida</div>
-      } }
-  
-      <div>
-        @if(disabled()){
-          <button
-          class="w-80 h-10 bg-secondary text-white rounded-md mt-4 flex justify-center items-center"
-          
-        >
-          <lucide-icon name="loader-circle"
-          class="animate-spin"
-          ></lucide-icon>
-        
-        </button>
-        } @else {
-        <button
-          class="w-80 h-10 bg-secondary text-white rounded-md mt-4"
-          (click)="register()"
-          >
-          Registrarse
-        </button>
-        }
-  
-      </div>
+    </label>
+    @if (formModel.controls.name.touched()) { @if
+    (formModel.controls.name.hasError('required')) {
+    <div class="text-red-500 text-sm">El nombre es requerido</div>
+    } @else if (formModel.controls.name.hasError('maxLength')) {
+    <div class="text-red-500 text-sm">
+      El nombre debe tener menos de 50 caracteres
     </div>
-  </section>
+    } @else if (formModel.controls.name.hasError('text')) {
+    <div class="text-red-500 text-sm">El nombre no es válido</div>
+    } }
+
+    <label class="text-start w-full max-w-lg mb-2">
+      Apellidos
+      <input
+        class="w-full p-2 border border-gray-300 rounded mt-2"
+        hlmInput
+        type="text"
+        placeholder="Apellidos"
+        ngModel
+        [formField]="formModel.controls.lastname"
+      />
+    </label>
+    @if (formModel.controls.lastname.touched()) { @if
+    (formModel.controls.lastname.hasError('required')) {
+    <div class="text-red-500 text-sm">Los apellidos son requeridos</div>
+    } @else if (formModel.controls.lastname.hasError('maxLength')) {
+    <div class="text-red-500 text-sm">
+      Los apellidos deben tener menos de 100 caracteres
+    </div>
+    } @else if (formModel.controls.lastname.hasError('text')) {
+    <div class="text-red-500 text-sm">Los apellidos no son validos</div>
+    } }
+
+    <label class="text-start w-full max-w-lg mb-2">
+      Correo
+      <input
+        class="w-full p-2 border border-gray-300 rounded mt-2"
+        hlmInput
+        type="email"
+        placeholder="Correo"
+        ngModel
+        [formField]="formModel.controls.email"
+      />
+    </label>
+    @if (formModel.controls.email.touched()) { @if
+    (formModel.controls.email.hasError('required')) {
+    <div class="text-red-500 text-sm">El correo electrónico es requerido</div>
+    } @else if (formModel.controls.email.hasError('maxLength')) {
+    <div class="text-red-500 text-sm">
+      El correo electrónico debe tener menos de 50 caracteres
+    </div>
+    } @else if (formModel.controls.email.hasError('email')) {
+    <div class="text-red-500 text-sm">El correo electrónico no es válido</div>
+    } }
+
+    <label class="text-start w-full max-w-lg mb-2">
+      Contraseña
+      <input
+        class="w-full p-2 border border-gray-300 rounded mt-2"
+        hlmInput
+        type="password"
+        placeholder="Contraseña"
+        ngModel
+        [formField]="formModel.controls.password"
+      />
+    </label>
+    @if (formModel.controls.password.touched()) {
+    @if(formModel.controls.password.hasError('required')) {
+    <div class="text-red-500 text-sm">La contraseña es requerida</div>
+    } @else if (formModel.controls.password.hasError('maxLength')) {
+    <div class="text-red-500 text-sm">
+      La contraseña debe tener menos de 50 caracteres
+    </div>
+    } }
+
+    <label class="text-start w-full max-w-lg mb-2">
+      Fecha de nacimiento
+      <input
+        class="w-full p-2 border border-gray-300 rounded mt-2"
+        hlmInput
+        type="date"
+        placeholder="Fecha de nacimiento"
+        ngModel
+        [formField]="formModel.controls.dob"
+      />
+    </label>
+    @if (formModel.controls.dob.touched()) {
+    @if(formModel.controls.dob.hasError('required')) {
+    <div class="text-red-500 text-sm">La fecha de nacimiento es requerida</div>
+    } }
+
+    <div *ngIf="isOnline">
+      <re-captcha
+        siteKey="6LeMsXMqAAAAALfX754Glk1hqsgemJAD9v7J7SjO"
+        (resolved)="onCaptchaResolved($event || '')"
+      ></re-captcha>
+    </div>
+
+    <div>
+      @if(disabled()){
+      <button
+        class="w-80 h-10 bg-secondary text-white rounded-md flex justify-center items-center"
+      >
+        <lucide-icon name="loader-circle" class="animate-spin"></lucide-icon>
+      </button>
+      } @else {
+      <button
+        class="w-80 h-10 bg-secondary text-white rounded-md"
+        (click)="register()"
+      >
+        Registrarse
+      </button>
+      }
+    </div>
+  </div>
+</section>
