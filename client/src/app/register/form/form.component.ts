@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
 import { FormsModule } from '@angular/forms';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
@@ -14,6 +14,8 @@ import { LucideAngularModule } from 'lucide-angular';
 import { es } from 'date-fns/locale';
 import { User } from '~/lib/types';
 import { toast } from 'ngx-sonner';
+import { RecaptchaModule } from 'ng-recaptcha';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'FormComponent',
@@ -23,13 +25,33 @@ import { toast } from 'ngx-sonner';
     FormsModule,
     SignalInputDirective,
     LucideAngularModule,
+    RecaptchaModule,
+    CommonModule,
   ],
   providers: [RegisterService, Router],
   templateUrl: './form.component.html',
   styleUrl: './form.component.css',
 })
-export class FormComponent {
+export class FormComponent implements OnInit {
+  isOnline: boolean = true;
+  captchaToken: string = '';
+
+  ngOnInit() {
+    this.checkInternetConnection();
+    window.addEventListener('online', this.checkInternetConnection.bind(this));
+    window.addEventListener('offline', this.checkInternetConnection.bind(this));
+  }
+
   constructor(private registerServe: RegisterService, private router: Router) {} //
+
+  checkInternetConnection() {
+    this.isOnline = navigator.onLine;
+  }
+
+  onCaptchaResolved(captchaResponse: string) {
+    this.captchaToken = captchaResponse;
+    console.log(`Captcha token: ${captchaResponse}`);
+  }
 
   disabled = signal(false);
 
@@ -100,6 +122,71 @@ export class FormComponent {
 
     this.disabled.set(true);
     //si la fecha de nacimiento es invalida mostrar un mensaje de error con toast
+
+    // Verificar si se requiere reCAPTCHA y no está completo
+    if (this.isOnline && !this.captchaToken) {
+      toast.error('Por favor, complete el reCAPTCHA antes de registrarse.');
+      this.disabled.set(false);
+      return;
+    }
+
+    // Verificar si se requiere reCAPTCHA y no está completo
+    if (navigator.onLine && !this.captchaToken) {
+      toast.error('Por favor, complete el reCAPTCHA antes de registrarse.');
+      this.disabled.set(false);
+      return;
+    }
+
+    this.finalizeRegistration(this.captchaToken);
+
+    /*const today = new Date();
+    const dob = new Date(this.formModel.controls.dob.value());
+    if (dob > today) {
+      toast.error(
+        'La fecha de nacimiento no puede ser mayor a la fecha actual'
+      );
+      this.disabled.set(false);
+      return;
+    }
+
+    const user: User = {
+      creditCards: [],
+      direcciones: [],
+      estatus: 'Activo',
+      email: this.formModel.controls.email.value(),
+      id: 0,
+      lastName: this.formModel.controls.lastname.value(),
+      name: this.formModel.controls.name.value(),
+      password: this.formModel.controls.password.value(),
+      role: 'Cliente',
+      token: '',
+    };
+
+    console.log(user);
+
+    if (this.formModel.valid()) {
+      this.registerServe.registerUser(user, this.captchaToken).subscribe({
+        next: (response) => {
+          console.log(response);
+          console.log('Usuario registrado correctamente');
+          toast.success('Usuario registrado correctamente');
+
+          this.router.navigate(['/login']);
+        },
+        error: (error) => {
+          const errorMessage = error?.error || 'Error al registrar el usuario';
+          toast.error(errorMessage);
+          this.disabled.set(false); // para que no le pueda dar al boton de clic
+          console.error(error);
+        },
+        complete: () => {
+          this.disabled.set(false);
+        },
+      });
+    }*/
+  }
+
+  finalizeRegistration(captchaToken: string) {
     const today = new Date();
     const dob = new Date(this.formModel.controls.dob.value());
     if (dob > today) {
@@ -126,18 +213,17 @@ export class FormComponent {
     console.log(user);
 
     if (this.formModel.valid()) {
-      this.registerServe.registerUser(user).subscribe({
+      this.registerServe.registerUser(user, captchaToken).subscribe({
         next: (response) => {
           console.log(response);
           console.log('Usuario registrado correctamente');
           toast.success('Usuario registrado correctamente');
-
           this.router.navigate(['/login']);
         },
         error: (error) => {
           const errorMessage = error?.error || 'Error al registrar el usuario';
           toast.error(errorMessage);
-          this.disabled.set(false); // para que no le pueda dar al boton de clic
+          this.disabled.set(false);
           console.error(error);
         },
         complete: () => {

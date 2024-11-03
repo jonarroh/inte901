@@ -50,6 +50,7 @@
     "embla-carousel-angular": "^14.0.0",
     "i": "^0.3.7",
     "lucide-angular": "^0.396.0",
+    "ng-recaptcha": "^13.2.1",
     "ng-signal-forms": "^1.12.0",
     "ng2-charts": "^6.0.1",
     "ngx-scrollbar": "^13.0.1",
