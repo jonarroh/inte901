@@ -78,6 +78,14 @@ namespace Server.Controllers
 
             return Ok(userDTO);
         }
+        
+        [HttpGet]
+        [Route("getEmails")]
+        public async Task<ActionResult<IEnumerable<string>>> GetEmails()
+        {
+            var emails = await _context.Users.Where(u => u.Estatus == "Activo").Select(u => u.Email).ToListAsync();
+            return emails;
+        }
 
         // GET: api/Users
         [HttpGet]
