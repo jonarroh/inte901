@@ -11,32 +11,6 @@ namespace Server
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                // Assuming you have a way to determine the user type, e.g., from a service or context
-                var userType = GetUserTypeFromContext(); // This method should be implemented to get the user type
-
-                if (userType == "Admin")
-                {
-                    optionsBuilder.UseSqlServer("AdminUser");
-                }
-                else
-                {
-                    optionsBuilder.UseSqlServer("ClientUser");
-                }
-            }
-        }
-
-        private string GetUserTypeFromContext()
-        {
-            // Implementa la lógica para obtener el tipo de usuario desde el contexto o servicio
-            // Por ejemplo, podrías obtenerlo desde HttpContext en una aplicación ASP.NET Core
-            var httpContextAccessor = new HttpContextAccessor();
-            return httpContextAccessor.HttpContext.User.IsInRole("Admin") ? "Admin" : "Client";
-        }
-
         public DbSet<User> Users { get; set; }
         public DbSet<Direcciones> Direcciones { get; set; }
         public DbSet<Ingrediente> Ingredientes { get; set; }
@@ -58,6 +32,7 @@ namespace Server
         public DbSet<Promociones> Promociones { get; set; }
         public DbSet<DetailConsumo> DetailConsumo { get; set; } = default!;
         public DbSet<Chat> Chats { get; set; }
+        public DbSet<Logging> Logging { get; set; }
 
     }
 }
