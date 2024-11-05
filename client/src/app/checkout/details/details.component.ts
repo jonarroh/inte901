@@ -7,6 +7,7 @@ import { toast } from 'ngx-sonner';
 import { Router, RouterModule } from '@angular/router';
 import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.component';
 import { MoneyComponent } from '~/components/money/money.component';
+import { UserService } from '~/app/home/services/user.service';
 
 @Component({
   selector: 'app-details',
@@ -22,7 +23,7 @@ import { MoneyComponent } from '~/components/money/money.component';
 })
 export class DetailsComponent {
 
-    constructor(private checkoutService: CheckoutService,private cartService: CartService, private router : Router) {
+    constructor(private checkoutService: CheckoutService,private cartService: CartService, private router : Router, private userSerice: UserService) {
       console.log(this.order());
       console.log("llego al constructor");
     }
@@ -37,6 +38,19 @@ export class DetailsComponent {
 
     getSubtotal() {
       return this.products().reduce((acc, product) => acc + product.precio, 0);
+    }
+
+    addPuntos(cantidad: number = 0){
+      this.userSerice.addPoints(cantidad * 20 ).subscribe({
+        next: (res) => {
+          console.log(res);
+          toast.success('Puntos añadidos con éxito');
+        },
+        error: (err) => {
+          console.log(err);
+          toast.error('Error al añadir los puntos '+ JSON.stringify(err.error));
+        }
+      });
     }
   
     getTotal() {
@@ -82,6 +96,7 @@ export class DetailsComponent {
       //hacer la orden
       this.checkoutService.postOrder(this.checkoutService.orderSignal()).subscribe({
         complete: () => {
+          
           this.router.navigate(['orders']);
         },
         error: (err) => {
@@ -91,6 +106,7 @@ export class DetailsComponent {
         next: (res) => {
           console.log(res);
           toast.success('Orden realizada con éxito');
+          this.addPuntos(this.cartService.cartSignal().length);
           this.cartService.clearCart();
           this.checkoutService.isOrderToStore.set(false);
           this.checkoutService.isPaidWithCard.set(false);

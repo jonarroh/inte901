@@ -4,7 +4,14 @@
       <a routerLink="/products" class="cursor-pointer text-2xl font-bold text-white">
         Heaven 
       </a>
+
+      @if (isLogged()) {
+        <p>
+          {{puntos()}} puntos
+        </p>
+      }
     </span>
+
   </div>
   
   <div class="col-span-0 md:col-span-1">

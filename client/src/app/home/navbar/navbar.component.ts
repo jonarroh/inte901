@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { HlmInputDirective, HlmInputModule } from '~/components/ui-input-helm/src';
 import { IconComponent } from '../icon/icon.component';
@@ -14,6 +14,7 @@ import { forkJoin } from 'rxjs';
 import { PlaceServiceService } from '~/app/place/place-service.service';
 import { ReserveComponent } from '../reserve/reserve.component';
 import { SearchComponent } from '../search/search.component';
+import { UserService } from '../services/user.service';
 
 export interface SearchItem {
   id: string;
@@ -49,8 +50,23 @@ export class NavbarComponent {
   searchTerm = '';
   currentFilter = 'Todo';
 
-  constructor(private productosService: ProductosService, private router: Router, private espaciosService: PlaceServiceService) {
+  puntos = signal(0);
+
+
+  constructor(private productosService: ProductosService, private router: Router, private espaciosService: PlaceServiceService, private userService: UserService) {
     this.loadData();
+    this.userService.getPoints().subscribe({
+      next: (points) => {
+        
+        // @ts-ignore
+        console.log("points", points.points);
+        // @ts-ignore
+        this.puntos.set(points.points);
+      },
+      error: (error) => {
+        console.error('Error al cargar los puntos', error);
+      }
+    });
   }
 
   private loadData() {
