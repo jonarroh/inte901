@@ -12,5 +12,6 @@
         public int Productos { get; set; }
         public int BadgePromoId { get; set; }
         public int LimiteCanje { get; set; }
+        public int UserId { get; set; }
     }
 }

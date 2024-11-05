@@ -41,7 +41,7 @@ namespace Server.Controllers
         {
             try
             {
-                var orders = await _context.Orders.ToListAsync();
+                var orders = await _context.Orders.OrderByDescending(o => o.OrderDate).ToListAsync();
 
                 if (orders == null || orders.Count == 0)
                 {
@@ -64,7 +64,7 @@ namespace Server.Controllers
         {
             try
             {
-                var orders = await _context.Orders.Where(o => o.IsDeliver == true).ToListAsync();
+                var orders = await _context.Orders.Where(o => o.IsDeliver == true).OrderByDescending(o => o.OrderDate).ToListAsync();
 
                 foreach (var order in orders)
                 {
@@ -383,6 +383,12 @@ namespace Server.Controllers
             {
                 var ingredientInventory = await _context.InventarioMPs.FirstOrDefaultAsync(i => i.Id == ingredient.Id);
 
+                // Verificar si la materia prima está caducada
+                if (ingredientInventory.Caducidad < DateTime.Now)
+                {
+                    return $"La materia prima {ingredient.MateriaPrima.Material} está caducada";
+                }
+
                 // Convertir float? a decimal para la comparación
                 if (ingredientInventory == null || (ingredientInventory.Cantidad.HasValue ? (decimal)ingredientInventory.Cantidad.Value : 0m) < (decimal)(ingredient.Cantidad * quantity))
                 {
@@ -485,8 +491,6 @@ namespace Server.Controllers
                     return BadRequest("Campos incompletos, es necesario completar todos los datos.");
                 }
 
-                //Console.WriteLine(JsonConvert.SerializeObject(ordertdo));
-
                 Random rnd = new Random();
                 int ticket;
                 bool ticketExists;
@@ -515,7 +519,6 @@ namespace Server.Controllers
                 if (ordertdo.CreditCard != null)
                 {
                     var result = _creditCardService.canPay(ordertdo.CreditCard, (decimal)orden.Total);
-                    //Console.WriteLine(result);
                     if (result != "La tarjeta es válida")
                     {
                         return BadRequest(result);
@@ -639,7 +642,6 @@ namespace Server.Controllers
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.Message);
                 return NotFound("Se produjo un error en el servidor, contacte a soporte");
             }
         }

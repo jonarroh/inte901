@@ -29,7 +29,8 @@
     margin: 20px 0;
     padding: 15px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-left: 4px solid #4CAF50; /* Indica visualmente un color distintivo para promociones */
+    border-left: 4px solid #4CAF50;
+    /* Indica visualmente un color distintivo para promociones */
   }
 
   .promo-card:hover {
@@ -62,9 +63,15 @@
     margin-top: 10px;
     font-size: 16px;
     font-weight: bold;
-    color: #4CAF50; /* Color del descuento */
+    color: #4CAF50;
+    /* Color del descuento */
   }
 
+  .scrollable-content {
+    max-height: 400px;
+    /* Adjust the height as needed */
+    overflow-y: auto;
+  }
 </style>
 <hlm-sheet side="right" class="bg-white">
   <button id="edit-profile" variant="warning" brnSheetTrigger hlmBtn class="tab-button">
@@ -74,7 +81,7 @@
     <hlm-sheet-header>
       <h3 hlmSheetTitle>Promociones disponibles</h3>
     </hlm-sheet-header>
-    <div *ngFor="let promo of promociones" class="promo-card">
+    <div *ngFor="let promo of promociones" class="promo-card scrollable-content">
       <div class="promo-card-header">
         <h4>{{ promo.nombre }}</h4>
       </div>
@@ -86,4 +93,3 @@
     </div>
   </hlm-sheet-content>
 </hlm-sheet>
-

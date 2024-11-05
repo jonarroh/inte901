@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using Server.lib;
+    using Server.Models;
     using System.Security.Cryptography;
     using System.Text;
 
@@ -85,6 +86,14 @@
 
             // Almacenar el token en las cookies
             Response.Cookies.Append("token", token, new CookieOptions { HttpOnly = true, Secure = true });
+
+            var log = new Logging();
+
+            log.IdUser = user.Id;
+            log.Date = DateTime.Now;
+            log.Rol = user.Role;
+
+            _context.Add(log);
 
             _context.SaveChanges();
 
