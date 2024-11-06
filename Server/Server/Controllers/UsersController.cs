@@ -78,7 +78,7 @@ namespace Server.Controllers
 
             return Ok(userDTO);
         }
-        
+
         [HttpGet]
         [Route("getEmails")]
         public async Task<ActionResult<IEnumerable<string>>> GetEmails()
@@ -133,8 +133,74 @@ namespace Server.Controllers
             return Ok(usersDTO);
         }
 
+        [HttpPost("moreActivity")]
+        public async Task<ActionResult<IEnumerable<string>>> GetEmailsMoreActivity()
+        {
+            // Obtiene la lista de actividades agrupadas por usuario
+            var groupedActivity = await _context.Logging
+                .GroupBy(log => log.IdUser)
+                .Select(g => new { IdUser = g.Key, ActivityCount = g.Count() })
+                .ToListAsync();
 
-        
+            // Encuentra la cantidad máxima de actividad
+            var maxActivityCount = groupedActivity.Max(g => g.ActivityCount);
+
+            // Obtiene los IdUser de los usuarios que tienen la cantidad máxima de actividad
+            var mostActiveUserIds = groupedActivity
+                .Where(g => g.ActivityCount == maxActivityCount)
+                .Select(g => g.IdUser)
+                .ToList();
+
+            // Busca los correos electrónicos de estos usuarios
+            var emails = await _context.Users
+                .Where(u => mostActiveUserIds.Contains(u.Id))
+                .Select(u => u.Email)
+                .ToListAsync();
+
+            if (emails == null || !emails.Any())
+            {
+                return NotFound("No se encontraron usuarios con actividad.");
+            }
+
+            return Ok(emails);
+        }
+
+        // Endpoint para obtener los correos de los usuarios con menos actividad
+        [HttpPost("lessActivity")]
+        public async Task<ActionResult<IEnumerable<string>>> GetEmailsLessActivity()
+        {
+            // Obtiene la lista de actividades agrupadas por usuario
+            var groupedActivity = await _context.Logging
+                .GroupBy(log => log.IdUser)
+                .Select(g => new { IdUser = g.Key, ActivityCount = g.Count() })
+                .ToListAsync();
+
+            // Encuentra la cantidad mínima de actividad
+            var minActivityCount = groupedActivity.Min(g => g.ActivityCount);
+
+            // Obtiene los IdUser de los usuarios que tienen la cantidad mínima de actividad
+            var leastActiveUserIds = groupedActivity
+                .Where(g => g.ActivityCount == minActivityCount)
+                .Select(g => g.IdUser)
+                .ToList();
+
+            // Busca los correos electrónicos de estos usuarios
+            var emails = await _context.Users
+                .Where(u => leastActiveUserIds.Contains(u.Id))
+                .Select(u => u.Email)
+                .ToListAsync();
+
+            if (emails == null || !emails.Any())
+            {
+                return NotFound("No se encontraron usuarios con actividad.");
+            }
+
+            return Ok(emails);
+        }
+
+
+
+
 
 
         [HttpPost("getId")]

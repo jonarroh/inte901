@@ -117,6 +117,7 @@
             return Ok(new { message = "Logged out successfully" });
         }
 
+
         [HttpGet("NotFoundMessage")]
         public IActionResult NotFoundMessage(string message)
         {
