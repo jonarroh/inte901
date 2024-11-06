@@ -28,6 +28,7 @@ export class UserService {
   );
 
   userData = signal(this.loadUserDataFromLocalStorage() || defaultUser);
+  
 
   constructor(private http: HttpClient) {
     window.addEventListener('storage', this.syncUserDataAcrossTabs.bind(this));
@@ -42,6 +43,22 @@ export class UserService {
         : defaultUser;
       this.userData.set(newUserData);
     }
+  }
+
+  pointsURl = 'http://localhost:3000/badge/user/poinst'
+  addUrl = 'http://localhost:3000/badge/poinst'
+
+  getPoints(){
+    return this.http.post(this.pointsURl,{
+      userId : Number(localStorage.getItem("userId"))
+    });
+  }
+
+  addPoints(points: number){
+    return this.http.post(this.addUrl,{
+      userId : Number(localStorage.getItem("userId")),
+      points : points
+    });
   }
 
   private loadUserDataFromLocalStorage(): User | null {
