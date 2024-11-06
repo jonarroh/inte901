@@ -26,14 +26,18 @@ namespace Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ingrediente>>> GetIngredientes()
         {
-            return await _context.Ingredientes.ToListAsync();
+            return await _context.Ingredientes
+                .Where(i => i.Estatus != 0) // Filtrar registros con Estatus != 0
+                .ToListAsync();
         }
 
         // GET: api/Ingrediente/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Ingrediente>> GetIngrediente(int id)
         {
-            var ingrediente = await _context.Ingredientes.FindAsync(id);
+            var ingrediente = await _context.Ingredientes
+                .Where(i => i.Id == id && i.Estatus != 0) // Filtrar registros con Estatus != 0
+                .FirstOrDefaultAsync();
 
             if (ingrediente == null)
             {
@@ -42,6 +46,23 @@ namespace Server.Controllers
 
             return ingrediente;
         }
+
+        // GET: api/Ingrediente/ByProducto/{productoId}
+        [HttpGet("ByProducto/{productoId}")]
+        public async Task<ActionResult<IEnumerable<Ingrediente>>> GetIngredientesByProducto(int productoId)
+        {
+            var ingredientes = await _context.Ingredientes
+                .Where(i => i.IdProducto == productoId && i.Estatus != 0) // Filtrar registros con Estatus != 0
+                .ToListAsync();
+
+            if (!ingredientes.Any())
+            {
+                return NotFound();
+            }
+
+            return ingredientes;
+        }
+
 
         // PUT: api/Ingrediente/5
         [HttpPut("{id}")]
