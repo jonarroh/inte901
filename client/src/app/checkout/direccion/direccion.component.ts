@@ -15,8 +15,26 @@ import { UserService } from '~/app/home/services/user.service';
 import { Address, CreditCard } from '~/lib/types';
 import { CheckoutService } from '../checkout.service';
 import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.component';
-
-
+import {
+  BrnSheetContentDirective,
+  BrnSheetTriggerDirective
+} from '@spartan-ng/ui-sheet-brain';
+import {
+  HlmSheetComponent,
+  HlmSheetContentComponent,
+  HlmSheetDescriptionDirective,
+  HlmSheetFooterComponent,
+  HlmSheetHeaderComponent,
+  HlmSheetTitleDirective
+} from '@spartan-ng/ui-sheet-helm';
+import {
+  createFormField,
+  createFormGroup,
+  SignalInputDirective,
+  V,
+} from 'ng-signal-forms';
+import { FormsModule } from '@angular/forms';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-direccion',
@@ -31,8 +49,18 @@ import { BreadcrumbComponent } from '~/components/breadcrumb/breadcrumb.componen
     HlmIconComponent,
     RouterModule,
     LucideAngularModule,
-    BreadcrumbComponent
-  ],
+    BreadcrumbComponent,
+    HlmSheetFooterComponent,
+    HlmSheetHeaderComponent,
+    HlmSheetComponent,
+    HlmSheetContentComponent,
+    HlmSheetTitleDirective,
+    HlmSheetDescriptionDirective,
+    BrnSheetContentDirective,
+    BrnSheetTriggerDirective,
+    FormsModule,
+    SignalInputDirective
+],
   templateUrl: './direccion.component.html',
   styleUrl: './direccion.component.css'
 })
@@ -42,6 +70,110 @@ export class DireccionComponent {
   constructor(private userService: UserService,private CheackoutService: CheckoutService,private router: Router) {
     console.log('user', this.userService.userData);
   }
+
+  onCreatedAddress() {
+
+    console.log(this.formModel.valid());
+
+    if(this.formModel.valid()) {
+      const add = {
+        calle: this.formModel.controls.calle.value(),
+        ciudad: this.formModel.controls.ciudad.value(),
+        codigoPostal: this.formModel.controls.codigoPostal.value(),
+        colonia: this.formModel.controls.colonia.value(),
+        numeroExterior: Number(this.formModel.controls.numeroExterior.value()),
+        estado: 'Guanajuato',
+        id: 0,
+        pais: 'México',
+        estatus: 'Activo',
+        userId: Number(localStorage.getItem('userId'))
+      } satisfies Address;
+      console.log('Address', add);
+      this.onClearForm();
+      this.CheackoutService.createAddress(add).subscribe({
+        next: () => {
+          console.log('Address edited');
+          this.userService.syncUserData();
+          toast.success('Dirección creada correctamente');
+        },
+        error: (error) => {
+          console.error('Error al editar la dirección', error);
+          toast.error('Error al crear la dirección');
+        }
+      });
+    }
+  }
+  protected formModel = createFormGroup({
+    calle: createFormField('', {
+      validators: [
+        {
+          validator: V.required(),
+          message: 'La calle es requerida',
+        },
+        {
+          validator: V.maxLength(50),
+          message: 'La calle debe tener menos de 50 caracteres',
+        }
+      ],
+    }),
+    ciudad: createFormField('', {
+      validators: [
+        {
+          validator: V.required(),
+          message: 'La ciudad es requerida',
+        },
+        {
+          validator: V.maxLength(50),
+          message: 'La ciudad debe tener menos de 50 caracteres',
+        }
+      ],
+    }),
+    codigoPostal: createFormField('', {
+      validators: [
+        {
+          validator: V.required(),
+          message: 'El código postal es requerido',
+        },
+        {
+          validator: V.maxLength(6),
+          message: 'El código postal debe tener menos de 6 caracteres',
+        },
+        {
+          validator: V.pattern(/^\d+$/),
+          message: 'El código postal debe ser un número',
+        }
+      ],
+    }),
+    colonia: createFormField('', {
+      validators: [
+        {
+          validator: V.required(),
+          message: 'La colonia es requerida',
+        },
+        {
+          validator: V.maxLength(50),
+          message: 'La colonia debe tener menos de 50 caracteres',
+        }
+      ],
+    }),
+    numeroExterior: createFormField('', {
+      validators: [
+        {
+          validator: V.required(),
+          message: 'El número exterior es requerido',
+        },
+        {
+          validator: V.maxLength(10),
+          message: 'El número exterior debe tener menos de 10 caracteres',
+        }
+      ],
+    }),
+
+  })
+  onClearForm() {
+    this.formModel.reset();
+  }
+  
 
   user = this.userService.userData;
 

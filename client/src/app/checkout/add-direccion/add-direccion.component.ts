@@ -76,7 +76,8 @@ type Estados = { label: string; value: string }
     HlmAlertDialogOverlayDirective,
     HlmAlertDialogTitleDirective,
     RouterModule,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    
     
 ],
   templateUrl: './add-direccion.component.html',
