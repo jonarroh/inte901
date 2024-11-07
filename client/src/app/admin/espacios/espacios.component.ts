@@ -52,6 +52,7 @@ export class EspaciosComponent {
   isLoading = signal(false);
   public state = signal<'closed' | 'open'>('closed');
   public states = signal<'closed' | 'open'>('closed');
+  
   private espacioId: number | null = null;
   espacios = signal<EspacioDTO[]>([]);
   selectedFile: File | null = null;
@@ -212,6 +213,14 @@ export class EspaciosComponent {
         this.formModel.reset();
         this.selectedFile = null;
         this.refreshSubject.next();
+        this.espacioService.getPlaces().subscribe({
+          next: (spaces) => {
+            this.espacios.set(spaces);
+          },
+          error: (error) => {
+            console.error('Error al obtener los espacios', error);
+          }
+        });
       },
       error: (error) => {
         console.error('Error al crear el espacio', error);
@@ -284,6 +293,7 @@ export class EspaciosComponent {
             toast.success('Espacio creado correctamente');
             this.formModel.reset();
             this.selectedFile = null;
+            this.refreshSubject.next();
             this.state.set('closed');
             this.resetForm();
           },

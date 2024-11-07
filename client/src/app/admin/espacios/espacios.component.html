@@ -6,19 +6,21 @@
   <div class="flex-1 flex justify-center">
     <h1 class="text-5xl font-bold mt-1 mb-2 text-black">Espacios</h1>
   </div>
-  <div class="flex justify-end my-5 me-5 pr-5">
+  <div class="flex flex-row justify-between items-center my-5 px-5">
     <div>
       <hlm-dialog [state]="state()">
+      <div class="flex flex-row">
         <button id="add-space" brnDialogTrigger hlmBtn (click)="onAdd()">Agregar Espacio</button>
-        <div>
+      
           <input
-      hlmInput
-      class="w-full md:w-80"
-      placeholder="Buscar por nombre"
-      [ngModel]="_nameFilter()"
-      (ngModelChange)="updateFilter($event)"
-    />
+            hlmInput
+            class="w-full md:w-80"
+            placeholder="Buscar por nombre"
+            [ngModel]="_nameFilter()"
+            (ngModelChange)="updateFilter($event)"
+          />
         </div>
+        
        <form  (submit)="onSubmit()">
           <hlm-dialog-content class="sm:max-w-[425px]" *brnDialogContent="let ctx">
             <hlm-dialog-header>
@@ -129,7 +131,7 @@
             </div>
             <hlm-dialog-footer>
               @if(isEditing()) {
-                <button hlmBtn variant="outline" (click)="onCancel()">dddddddddd</button>
+                <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
                 <button hlmBtn type="submit"
                 (click)="onSubmit()"
                 >Guardar</button>
@@ -137,6 +139,7 @@
                 <button hlmBtn variant="outline" (click)="onCancel()">Cancelar</button>
                 <button hlmBtn
                 (click)="onSubmit()"
+                [(disabled)]="isLoading"
                 >Crear</button>
               }
             </hlm-dialog-footer>
