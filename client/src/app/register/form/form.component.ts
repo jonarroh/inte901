@@ -138,52 +138,6 @@ export class FormComponent implements OnInit {
     }
 
     this.finalizeRegistration(this.captchaToken);
-
-    /*const today = new Date();
-    const dob = new Date(this.formModel.controls.dob.value());
-    if (dob > today) {
-      toast.error(
-        'La fecha de nacimiento no puede ser mayor a la fecha actual'
-      );
-      this.disabled.set(false);
-      return;
-    }
-
-    const user: User = {
-      creditCards: [],
-      direcciones: [],
-      estatus: 'Activo',
-      email: this.formModel.controls.email.value(),
-      id: 0,
-      lastName: this.formModel.controls.lastname.value(),
-      name: this.formModel.controls.name.value(),
-      password: this.formModel.controls.password.value(),
-      role: 'Cliente',
-      token: '',
-    };
-
-    console.log(user);
-
-    if (this.formModel.valid()) {
-      this.registerServe.registerUser(user, this.captchaToken).subscribe({
-        next: (response) => {
-          console.log(response);
-          console.log('Usuario registrado correctamente');
-          toast.success('Usuario registrado correctamente');
-
-          this.router.navigate(['/login']);
-        },
-        error: (error) => {
-          const errorMessage = error?.error || 'Error al registrar el usuario';
-          toast.error(errorMessage);
-          this.disabled.set(false); // para que no le pueda dar al boton de clic
-          console.error(error);
-        },
-        complete: () => {
-          this.disabled.set(false);
-        },
-      });
-    }*/
   }
 
   finalizeRegistration(captchaToken: string) {
