@@ -24,6 +24,7 @@ namespace Server.Controllers
 
         // GET: api/Consumo
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Consumo>>> GetConsumo()
         {
 
@@ -65,6 +66,7 @@ namespace Server.Controllers
             return consumos;
         }
         [HttpPost("{idConsumo}/addDetails")]
+        [Authorize]
         public async Task<ActionResult> AddDetailsToConsumo(int idConsumo, List<DetailConsumoDTO> detailConsumoDTOs)
         {
             // Buscar el consumo existente
@@ -96,6 +98,7 @@ namespace Server.Controllers
 
         // GET: api/Consumo/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Consumo>> GetConsumo(int id)
         {
             var consumo = await _context.Consumo.FindAsync(id);
@@ -111,6 +114,7 @@ namespace Server.Controllers
         // PUT: api/Consumo/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutConsumo(int id, consumoDTO consumo)
         {
             if (id != consumo.Id)
@@ -159,6 +163,7 @@ namespace Server.Controllers
         // POST: api/Consumo
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Consumo>> PostConsumo(consumoDTO consumoDto)
         {
             // Crear y asignar las propiedades del objeto Consumo
@@ -205,6 +210,7 @@ namespace Server.Controllers
 
         // DELETE: api/Consumo/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteConsumo(int id)
         {
             var consumo = await _context.Consumo.FindAsync(id);

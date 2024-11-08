@@ -20,7 +20,7 @@ using Azure.Core;
 namespace Server.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class UsersController : ControllerBase
     {

@@ -24,6 +24,7 @@ namespace Server.Controllers
 
         // GET: api/Chats
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<Chat>>> GetChats()
         {
             return await _context.Chats.ToListAsync();
@@ -31,6 +32,7 @@ namespace Server.Controllers
 
         // GET: api/Chats/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Chat>> GetChat(int? id)
         {
             var chat = await _context.Chats.FindAsync(id);
@@ -47,6 +49,7 @@ namespace Server.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         // PUT: api/Chats/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutChat(int? id, ChatDTO chatDTO)
         {
             if (id != chatDTO.Id)
@@ -90,6 +93,7 @@ namespace Server.Controllers
 
         // POST: api/Chats
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Chat>> PostChat(ChatDTO chatDTO)
         {
             // Map ChatDTO to Chat entity
@@ -111,6 +115,7 @@ namespace Server.Controllers
 
         // DELETE: api/Chats/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteChat(int? id)
         {
             var chat = await _context.Chats.FindAsync(id);

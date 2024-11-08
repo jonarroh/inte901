@@ -16,6 +16,7 @@ using Server.Models.Usuario.Server.Models.Usuario;
 namespace Server.Controllers
 {
 	[Route("api/[controller]")]
+	[Authorize]
 	[ApiController]
 	public class PurchasesController : ControllerBase
 	{
