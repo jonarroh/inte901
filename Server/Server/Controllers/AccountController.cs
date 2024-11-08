@@ -110,12 +110,10 @@
             // Almacenar el token en las cookies
             Response.Cookies.Append("token", token, new CookieOptions { HttpOnly = true, Secure = true });
 
-            var log = new Logging
-            {
-                IdUser = user.Id,
-                Date = DateTime.Now,
-                Rol = user.Role
-            };
+            var log = new Logging();
+            log.IdUser = user.Id;
+            log.Date = DateTime.Now;
+            log.Rol = user.Role;
 
             _context.Add(log);
             _context.SaveChanges();
