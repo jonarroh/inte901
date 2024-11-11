@@ -29,6 +29,7 @@ namespace Server.Controllers
             var ReservacionesActivas = await _context.Reservas
                 .Include(r => r.DetailReserva)
                 .Include(r => r.Usuario)
+                .OrderByDescending(r => r.DetailReserva.fecha) // Asumiendo que el campo se llama FechaReserva
                 .ToListAsync();
 
             return Ok(ReservacionesActivas);
