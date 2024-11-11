@@ -40,12 +40,122 @@
         </span>
        
       }
-      <a class=" text-center text-blue-500 cursor-pointer flex items-center space-x-2"
-      routerLink="/edit/payment"
-      >
-        <lucide-angular name="plus"></lucide-angular>
+
+      <div>
+        <hlm-sheet>
+          <div class="grid grid-cols-2 gap-2">
+            <button id="bottom" class=" text-center text-blue-500 cursor-pointer flex items-center space-x-2" brnSheetTrigger side="bottom" hlmBtn>
+              <lucide-angular name="plus"></lucide-angular>
         Agregar tarjeta
-      </a>
+            </button>
+          </div>
+          <hlm-sheet-content *brnSheetContent="let ctx">
+            <hlm-sheet-header>
+              <h3 hlmSheetTitle>Agregar tarjeta</h3>
+              <p hlmSheetDescription>Completa los campos para agregar una nueva tarjeta</p>
+            </hlm-sheet-header>
+            <form class="bg-white w-full max-w-3xl mx-auto px-6 py-8  rounded-md flex flex-col justify-center items-center">
+              <div class="w-full ">
+                <label class="text-neutral-800 font-bold text-sm mb-2 block">Número de tarjeta:</label>
+                <input
+                maxlength="16"
+                ngModel
+                  [ngModelOptions]="{standalone: true}"
+                  [formField]="form.controls.cardNumber"
+                  placeholder="XXXX XXXX XXXX XXXX"
+                type="text" class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4" />
+                <div class="flex gap-x-2 mb-4 items-center">
+                  <div class="flex-1">
+                    <label class="text-neutral-800 font-bold text-sm mb-2 block">Expiración:</label>
+                    <input 
+                    ngModel
+                    maxlength="5"
+                  [ngModelOptions]="{standalone: true}"
+                  [formField]="form.controls.expiryDate"
+                  placeholder="MM/YY"
+                  (keypress)="putSlahInExpiryDate()"
+                    type="text" class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4" />
+                  </div>
+                  <div class="flex-1">
+                    <label class="text-neutral-800 font-bold text-sm mb-2 block">CCV:</label>
+                    <input 
+                    ngModel
+                    maxlength="3"
+                    placeholder="XXX"
+                    (focus)="flipCard(true)"
+                  (blur)="flipCard(false)"
+                  [ngModelOptions]="{standalone: true}"
+                  [formField]="form.controls.cvv"
+                    type="text" class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4" />
+                  </div>
+                </div>
+              
+                <label class="text-neutral-800 font-bold text-sm mb-2 block">Titular de la tarjeta:</label>
+                <input 
+                ngModel
+                placeholder="Nombre del titular"
+                  [ngModelOptions]="{standalone: true}"
+                  [formField]="form.controls.cardHolderName"
+                type="text" class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" 
+                
+                />
+              </div>
+              <div class="w-1/2 flex justify-end mt-4 ">
+                <div class="w-full h-56"
+                 style="perspective: 1000px">
+                  <div class="crediCard relative cursor-pointer transition-transform duration-500" style="transform-style: preserve-3d"
+                  [class.hold]="isFlipped()"
+                  >
+                    <div class="w-full m-auto rounded-xl  absolute" style="backface-visibility: hidden"
+                  
+                    [style.backface-visibility]="isFlipped() ? 'hidden' : 'visible'"
+                    
+                    >
+                      <img src="http://localhost:5000/static/card/front.png"
+                      class="object-cover w-full h-full" />
+                      <div class="absolute top-8 left-6 text-white font-bold text-lg">
+                        {{ form.controls.cardNumber.value() }}
+                      </div>
+                      <div class="absolute bottom-4 left-6 text-white font-bold text-lg">
+                        {{ form.controls.cardHolderName.value() }}
+                      </div>
+                      <div class="absolute bottom-6 right-8 text-white font-bold text-lg">
+                        {{ form.controls.expiryDate.value() }}
+                      </div>
+                    </div>
+                    <div class="w-full m-auto rounded-xl shadow-2xl absolute" style="backface-visibility: hidden; transform: rotateY(180deg)"
+                    
+                    >
+                      <img src="http://localhost:5000/static/card/back.jpg"
+                      class="relative object-cover w-full h-full rounded-xl" />
+                      <div class="w-full absolute top-8">
+                        <div  class="px-8 mt-14">
+                          <p id="imageCCVNumber" class="text-black flex items-center pl-4 pr-2  w-14 ml-auto">
+                            {{ form.controls.cvv.value() }}
+                          </p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-full flex justify-between mt-4 items-center">
+                <button hlmBtn (click)="onSave()"
+                
+                >
+                   Guardar tarjeta
+                </button>
+                  <button hlmBtn
+                  (click)="onClearForm()"
+                  variant="destructive"
+                  >Cancelar</button>
+             
+              </div>
+              </form>
+          </hlm-sheet-content>
+        </hlm-sheet>
+      </div>
     </div>
 
     <!-- Recoger en tienda -->

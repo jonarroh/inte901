@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { GeolocationService } from './services/geolocation.service';
 import { LoggerService as Logger } from '~/logging/logging.service';
 import { PushService } from './push/push.service';
+import { CartService } from './cart/cart.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -39,6 +40,7 @@ export class AppComponent  {
   constructor(
     private signalRService: SignalRService,
     private orderderService: PedidosUserServiceService,
+    private cartService: CartService,
     private geolocationService: GeolocationService,
     private pushService: PushService
   ) {
@@ -83,7 +85,13 @@ export class AppComponent  {
         }
       });
 
+
+    const cart = this.cartService.cartSignal();
+    if(cart.length > 0){
     const lastUpdate = localStorage.getItem('cartlastupdate');
+
+
+
     if (lastUpdate) {
       const lastUpdateDate = new Date(parseInt(lastUpdate, 10));
       console.log('Última actualización del carrito:', lastUpdateDate);
@@ -101,6 +109,7 @@ export class AppComponent  {
       }
     }
   }
+}
 
   
   

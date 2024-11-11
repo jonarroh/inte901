@@ -183,14 +183,40 @@ export class EstatusComponent implements OnInit {
 
   filteredOrders(): ReservaDTO[] {
     return this.orders.filter(order => {
-      const matchesStatus = this.selectedFilter === '' || order.estatus === this.selectedFilter;
+      // Función auxiliar para formatear la fecha ISO a formato MM/DD/YY
+      const formatDate = (isoDate: string): string => {
+        const date = new Date(isoDate);
+        const month = (date.getMonth() + 1).toString();
+        const day = date.getDate().toString();
+        const year = date.getFullYear().toString().slice(-2);
+        return `${month}/${day}/${year}`;
+      };
+  
+      // Función auxiliar para obtener la fecha en ambos formatos
+      const getDateFormats = (isoDate: string): string[] => {
+        const standardFormat = formatDate(isoDate);
+        return [
+          isoDate,                    // Formato original: 2024-08-22T00:00:00
+          standardFormat,             // Formato MM/DD/YY: 8/22/24
+          standardFormat.replace(/\b(\d)\b/g, '0$1')  // Formato con ceros: 08/22/24
+        ];
+      };
+  
+      const matchesStatus = 
+        this.selectedFilter === '' || order.estatus === this.selectedFilter;
+  
+      // Obtener la fecha en diferentes formatos
+      const datesToSearch = getDateFormats(order.detailReserva.fecha.toString());
+      
+      // Buscar en los detalles y en todos los formatos de fecha
       const matchesSearchTerm =
         order.detailReserva.toString().includes(this.searchTerm) ||
-        order.detailReserva.idEspacio.toString().includes(this.searchTerm);
-
+        datesToSearch.some(dateFormat => dateFormat.includes(this.searchTerm));
+  
       return matchesStatus && matchesSearchTerm;
     });
   }
+
 
   getStatusColor(status: string, step: number): string {
     const statusColors = {
@@ -229,6 +255,42 @@ export class EstatusComponent implements OnInit {
           })
         });
       }
+    });
+  }
+
+  filteredReservas(): ReservaDTO[] {
+    return this.orders.filter(order => {
+      // Función auxiliar para formatear la fecha ISO a formato MM/DD/YY
+      const formatDate = (isoDate: string): string => {
+        const date = new Date(isoDate);
+        const month = (date.getMonth() + 1).toString();
+        const day = date.getDate().toString();
+        const year = date.getFullYear().toString().slice(-2);
+        return `${month}/${day}/${year}`;
+      };
+  
+      // Función auxiliar para obtener la fecha en ambos formatos
+      const getDateFormats = (isoDate: string): string[] => {
+        const standardFormat = formatDate(isoDate);
+        return [
+          isoDate,                    // Formato original: 2024-08-22T00:00:00
+          standardFormat,             // Formato MM/DD/YY: 8/22/24
+          standardFormat.replace(/\b(\d)\b/g, '0$1')  // Formato con ceros: 08/22/24
+        ];
+      };
+  
+      const matchesStatus = 
+        this.selectedFilter === '' || order.estatus === this.selectedFilter;
+  
+      // Obtener la fecha en diferentes formatos
+      const datesToSearch = getDateFormats(order.detailReserva.fecha.toString());
+      
+      // Buscar en los detalles y en todos los formatos de fecha
+      const matchesSearchTerm =
+        order.detailReserva.toString().includes(this.searchTerm) ||
+        datesToSearch.some(dateFormat => dateFormat.includes(this.searchTerm));
+  
+      return matchesStatus && matchesSearchTerm;
     });
   }
 

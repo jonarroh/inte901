@@ -36,12 +36,142 @@
         </span>
       
       }
-      <a class=" text-center text-blue-500 cursor-pointer flex items-center space-x-2"
-      routerLink="/edit/address"
-      >
-        <lucide-angular name="plus"></lucide-angular>
+      <div>
+        <hlm-sheet>
+          <div class="grid grid-cols-2 gap-2">
+            <button id="bottom"  class=" text-center text-blue-500 cursor-pointer flex items-center space-x-2" brnSheetTrigger side="bottom">
+              <lucide-angular name="plus"></lucide-angular>
         Agregar dirección
-      </a>
+            </button>
+          </div>
+          <hlm-sheet-content *brnSheetContent="let ctx">
+            <hlm-sheet-header>
+              <h3 hlmSheetTitle>Agregar dirección</h3>
+              <p hlmSheetDescription>Completa los campos para agregar una nueva dirección</p>
+            </hlm-sheet-header>
+            <form class="grid grid-cols-2 gap-4">
+              <div class=" col-span-2">
+                <label
+                class="block text-sm font-medium text-gray-700"
+                >Calle</label>
+                <input
+                  type="text"
+                  hlmInput
+                  ngModel
+                  class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4"
+                  [ngModelOptions]="{standalone: true}"
+                  [formField]="formModel.controls.calle"
+                />
+                @if (formModel.controls.calle.touched()) {
+                  @if (formModel.controls.calle.hasError('required')) {
+                    <div class="text-red-500 text-sm">El correo electrónico es requerido</div>
+                  } @else if (formModel.controls.calle.hasError('maxLength')) {
+                    <div class="text-red-500 text-sm">El correo electrónico debe tener menos de 50 caracteres</div>
+                  } @else if (formModel.controls.calle.hasError('email')) {
+                    <div class="text-red-500 text-sm">El correo electrónico no es válido</div>
+                  }
+                }
+              </div>
+              <div>
+                <label
+                class="block text-sm font-medium text-gray-700"
+                >Colonia</label>
+                <input
+                  type="text"
+                  hlmInput
+                  ngModel
+                  [ngModelOptions]="{standalone: true}"
+                  [formField]="formModel.controls.colonia"
+                  class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4" 
+                />
+                @if (formModel.controls.colonia.touched()) {
+                  @if (formModel.controls.colonia.hasError('required')) {
+                    <div class="text-red-500 text-sm">La colonia es requerida</div>
+                  } @else if (formModel.controls.colonia.hasError('maxLength')) {
+                    <div class="text-red-500 text-sm">La colonia debe tener menos de 50 caracteres</div>
+                  }
+                }
+              </div>
+              <div>
+                <label>Ciudad</label>
+                <input
+                  type="text"
+                  hlmInput
+                  ngModel
+                  [ngModelOptions]="{standalone: true}"
+                  [formField]="formModel.controls.ciudad"
+                  class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4" 
+                />
+                @if (formModel.controls.ciudad.touched()) {
+                  @if (formModel.controls.ciudad.hasError('required')) {
+                    <div class="text-red-500 text-sm">La ciudad es requerida</div>
+                  } @else if (formModel.controls.ciudad.hasError('maxLength')) {
+                    <div class="text-red-500 text-sm">La ciudad debe tener menos de 50 caracteres</div>
+                  }
+                }
+              </div>
+              <div>
+                <label>
+                  Número exterior
+                </label>
+                <input
+                  type="text"
+                  hlmInput
+                  ngModel
+                  [ngModelOptions]="{standalone: true}"
+                  [formField]="formModel.controls.numeroExterior"
+                  class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4" />
+                @if (formModel.controls.numeroExterior.touched()) {
+                  @if (formModel.controls.numeroExterior.hasError('required')) {
+                    <div class="text-red-500 text-sm">El número exterior es requerido</div>
+                  } @else if (formModel.controls.numeroExterior.hasError('maxLength')) {
+                    <div class="text-red-500 text-sm">El número exterior debe tener menos de 10 caracteres</div>
+                  }
+                }
+              </div>
+              <div>
+                <label>Código postal</label>
+                <input
+                  type="text"
+                  hlmInput
+                  ngModel
+                  [ngModelOptions]="{standalone: true}"
+                  [formField]="formModel.controls.codigoPostal"
+                  class="flex h-10 w-full rounded-md border-2 px-4 py-1.5 text-lg ring-offset-background focus-visible:outline-none focus-visible:border-purple-600 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mb-4" />
+                @if (formModel.controls.codigoPostal.touched()) {
+                  @if (formModel.controls.codigoPostal.hasError('required')) {
+                    <div class="text-red-500 text-sm">El código postal es requerido</div>
+                  } @else if (formModel.controls.codigoPostal.hasError('maxLength')) {
+                    <div class="text-red-500 text-sm">El código postal debe tener menos de 10 caracteres</div>
+                  }
+                }
+              </div>
+              
+             
+              <div class="col-span-2">
+               <div class="flex justify-between">
+                
+                  <button hlmBtn
+                  variant="primary"
+                  (click)="onCreatedAddress()"
+                  >Agregar dirección</button>
+                 
+      
+                
+                  
+               </div>
+              </div>
+            </form>
+            <hlm-sheet-footer>
+              <button hlmBtn
+                  variant="destructive"
+                  class="text-white"
+                  (click)="onClearForm()"
+                  >Cancelar</button>
+            </hlm-sheet-footer>
+          </hlm-sheet-content>
+        </hlm-sheet>
+      </div>
     </div>
 
     <!-- Recoger en tienda -->

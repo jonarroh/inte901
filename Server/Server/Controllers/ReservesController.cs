@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 namespace Server.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class ReservesController : ControllerBase
     {

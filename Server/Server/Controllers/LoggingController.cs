@@ -5,6 +5,7 @@ using Server.Models.DTO;
 namespace Server.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
 
     public class LoggingController : Controller

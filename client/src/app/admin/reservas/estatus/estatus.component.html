@@ -1,7 +1,32 @@
 <div class="container mx-auto max-h-screen overflow-y-auto w-full p-4">
+  
+ 
+
+  
   <div class="flex-1 flex justify-center">
     <h1 class="text-5xl font-bold mt-1 mb-6 text-secondary">Reservas</h1>
-  </div>
+  </div> <div class="flex items-center mb-4 space-x-4">
+    <!-- Buscador -->
+    <input
+      type="text"
+      placeholder="Buscar órdenes..."
+      [(ngModel)]="searchTerm"
+      class="p-2 border border-gray-300 rounded-lg w-80"
+    />
+
+    <select
+      [(ngModel)]="selectedFilter"
+      class="p-2 border border-gray-300 rounded-lg"
+      >
+      <option value="">Todos</option>
+      <option value="Pagado">Pagado</option>
+      <option value="Finalizada">Finalizada</option>
+      <option value="Cancelado">Cancelado</option>
+    
+    </select>
+    </div>
+
+
   <!-- Mostrar errores -->
   <div *ngIf="error" class="text-red-500">{{ error }}</div>
 

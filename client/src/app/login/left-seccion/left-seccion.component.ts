@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import {
@@ -23,6 +23,8 @@ import { toast } from 'ngx-sonner';
 import { Usuario } from '~/app/admin/compras/interface/usuario';
 import { GeolocationService } from '~/app/services/geolocation.service';
 import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { RecaptchaModule } from 'ng-recaptcha';
 @Component({
   selector: 'left-seccion',
   standalone: true,
@@ -34,11 +36,16 @@ import { HttpClient } from '@angular/common/http';
     FormsModule,
     SignalInputDirective,
     RouterModule,
+    CommonModule,
+    RecaptchaModule,
   ],
   providers: [AuthService, Router, UserService, GeolocationService],
   templateUrl: './left-seccion.component.html',
 })
-export class LeftSeccionComponent {
+export class LeftSeccionComponent implements OnInit {
+  isOnline: boolean = true;
+  captchaToken: string = '';
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -46,6 +53,21 @@ export class LeftSeccionComponent {
     private geoService: GeolocationService,
     private http: HttpClient
   ) {}
+
+  ngOnInit() {
+    this.checkInternetConnection();
+    window.addEventListener('online', this.checkInternetConnection.bind(this));
+    window.addEventListener('offline', this.checkInternetConnection.bind(this));
+  }
+
+  checkInternetConnection() {
+    this.isOnline = navigator.onLine;
+  }
+
+  onCaptchaResolved(captchaResponse: string) {
+    this.captchaToken = captchaResponse;
+    console.log(`Captcha token: ${captchaResponse}`);
+  }
 
   disabled = signal(false);
   res = signal<ResponseLogin | null>(null);
@@ -83,12 +105,22 @@ export class LeftSeccionComponent {
     console.log(this.formModel.valid());
     console.log(this.formModel.errors());
 
-    if (this.formModel.valid()) {
-      // Cambiado a verificar si el formulario es válido
-      this.disabled.set(true);
-      console.log(this.formModel.value());
+    // Verificar si se requiere reCAPTCHA y no está completo
+    if (this.isOnline && !this.captchaToken) {
+      toast.error('Por favor, complete el reCAPTCHA antes de iniciar sesión.');
+      this.disabled.set(false);
+      return;
+    }
 
-      this.authService.login(this.formModel.value()).subscribe({
+    if (this.formModel.valid()) {
+      this.disabled.set(true);
+
+      const loginData = {
+        ...this.formModel.value(),
+        captchaToken: this.captchaToken,
+      };
+
+      this.authService.login(loginData).subscribe({
         next: (response) => {
           if (response.lastSession) {
             const lastSessionLocal = new Date(
@@ -99,7 +131,7 @@ export class LeftSeccionComponent {
             );
           }
 
-          //eliminar la ubicación actual
+          // Eliminar la ubicación actual y los datos de autenticación previos
           this.geoService.deleteLocation(this.geoService.getAnonymousToken());
           localStorage.removeItem('anonymousToken');
 
@@ -112,11 +144,7 @@ export class LeftSeccionComponent {
               this.userService.saveUserData(user).then(() => {
                 console.log('Usuario guardado');
 
-                console.log('role:', user.role);
-
                 this.geoService.getCurrentPosition().then((position) => {
-                  console.log('Posición actual:', position);
-                  console.log('token:', localStorage.getItem('token'));
                   if (position) {
                     const deviceInfo = this.geoService.getDeviceName();
                     if (this.geoService.isLogged()) {

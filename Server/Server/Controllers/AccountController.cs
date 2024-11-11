@@ -1,6 +1,7 @@
 ﻿namespace Server.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using Newtonsoft.Json;
     using Server.lib;
     using Server.Models;
     using System.Security.Cryptography;
@@ -22,12 +23,34 @@
 
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginRequest loginRequest)
+        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
             if (loginRequest == null)
             {
                 return BadRequest(new { message = "Invalid login request" });
-            }      
+            }
+
+            // Validar el captcha
+            if (!string.IsNullOrEmpty(loginRequest.CaptchaToken))
+            {
+                var secretKey = "6LeMsXMqAAAAAAlCAtsRy_mhaQP0HzuL2h4srz8t";
+                using var client = new HttpClient();
+                var response = await client.PostAsync(
+                    $"https://www.google.com/recaptcha/api/siteverify?secret={secretKey}&response={loginRequest.CaptchaToken}",
+                    null
+                );
+                var json = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<dynamic>(json);
+
+                if (result.success != true)
+                {
+                    return BadRequest(new { message = "Captcha inválido o no completado" });
+                }
+            }
+            else
+            {
+                Console.WriteLine("No se verificó el reCAPTCHA debido a la falta de conexión.");
+            }
 
             string email = loginRequest.Email ?? throw new ArgumentNullException(nameof(loginRequest.Email));
             string password = loginRequest.Password ?? throw new ArgumentNullException(nameof(loginRequest.Password));
@@ -88,17 +111,16 @@
             Response.Cookies.Append("token", token, new CookieOptions { HttpOnly = true, Secure = true });
 
             var log = new Logging();
-
             log.IdUser = user.Id;
             log.Date = DateTime.Now;
             log.Rol = user.Role;
 
             _context.Add(log);
-
             _context.SaveChanges();
 
             return Ok(new { jwtToken = token, id = user.Id, lastSession = previousLastSession });
         }
+
 
         public static string StringToSha256(string str)
         {
@@ -131,6 +153,7 @@
     {
         public string? Email { get; set; } 
         public string? Password { get; set; }
+        public string CaptchaToken { get; set; }
 
     }
 
