@@ -14,4 +14,7 @@ export class PromocionesService {
 
   getPromociones = () =>
     this.http.get<PromocionesDTO[]>(`${this.apiURL}/allPromociones`)
+
+  // getPromociones = (idBadge: number) =>
+  //   this.http.get<PromocionesDTO[]>(`${this.apiURL}/allPromociones/${idBadge}`);
 }

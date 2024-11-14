@@ -39,6 +39,7 @@ export class PromocionesComponent {
   productosServe = inject(ProductosService);
   promo$: Observable<PromocionesDTO[]>;
   promociones: PromocionesDTO[] = [];
+  idUser = localStorage.getItem('idUser');
 
   constructor(){
     this.promo$ = this.promocionServe.getPromociones();

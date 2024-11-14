@@ -19,12 +19,12 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("allPromociones")]
-        public async Task<IActionResult> GetAllPromociones()
+        [Route("allPromociones/{IdBadge}")]
+        public async Task<IActionResult> GetAllPromociones(int IdBadge)
         {
             try
             {
-                var promos = await _context.Promociones.Where(p => p.Estado == 1).ToListAsync();
+                var promos = await _context.Promociones.Where(p => p.Estado == 1).Where(p => p.BadgePromoId == IdBadge).ToListAsync();
 
                 if (promos == null || promos.Count == 0)
                 {
