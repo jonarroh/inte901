@@ -40,6 +40,7 @@ export class PromocionesComponent {
   promo$: Observable<PromocionesDTO[]>;
   promociones: PromocionesDTO[] = [];
   idUser = localStorage.getItem('idUser');
+  idBadge = 0;
 
   constructor(){
     this.promo$ = this.promocionServe.getPromociones();
@@ -56,6 +57,8 @@ export class PromocionesComponent {
     });
 
     this.cargarPromociones();
+
+    
   }
 
   isSheetOpen = false;
