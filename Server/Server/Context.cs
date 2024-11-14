@@ -33,6 +33,6 @@ namespace Server
         public DbSet<DetailConsumo> DetailConsumo { get; set; } = default!;
         public DbSet<Chat> Chats { get; set; }
         public DbSet<Logging> Logging { get; set; }
-
-    }
+        public DbSet<PromocionesPersonalizadas> PromocionesPersonalizadas { get; set; }
+	}
 }
