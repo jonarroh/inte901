@@ -64,46 +64,27 @@ namespace Server.Controllers
                     return BadRequest("No se encontro el usuario");
                 }
 
-                string connectionString;
-                if (usuario.Role == "Admin")
-                {
-                    connectionString = "AdminUser";
-                }
-                else
-                {
-                    connectionString = "ClientUser";
-                }
+                 var promocion = new Promociones
+                 {
+                     Nombre = data.Nombre,
+                     Descripcion = data.Descripcion,
+                     FechaInicio = data.FechaInicio,
+                     FechaFin = data.FechaFin,
+                     Productos = data.Productos,
+                     Descuento = data.Descuento,
+                     Estado = data.Estado,
+                     BadgePromoId = data.BadgePromoId,
+                     LimiteCanje = data.LimiteCanje,
+                     CreatedAt = DateTime.Now.ToString(),
+                     UpdatedAt = DateTime.Now.ToString(),
+                     DeletedAt = ""
+                 };
 
-                var optionsBuilder = new DbContextOptionsBuilder<Context>();
-                optionsBuilder.UseSqlServer(connectionString);
+                await _context.Promociones.AddAsync(promocion);
 
-                using (var context = new Context(optionsBuilder.Options))
-                {
-                    // Aquí puedes realizar operaciones con el contexto configurado
-                    return Ok($"Conectado como {usuario.Role} a la base de datos");
-                }
+                await _context.SaveChangesAsync();
 
-                // var promocion = new Promociones
-                // {
-                //     Nombre = data.Nombre,
-                //     Descripcion = data.Descripcion,
-                //     FechaInicio = data.FechaInicio,
-                //     FechaFin = data.FechaFin,
-                //     Productos = data.Productos,
-                //     Descuento = data.Descuento,
-                //     Estado = data.Estado,
-                //     BadgePromoId = data.BadgePromoId,
-                //     LimiteCanje = data.LimiteCanje,
-                //     CreatedAt = DateTime.Now.ToString(),
-                //     UpdatedAt = DateTime.Now.ToString(),
-                //     DeletedAt = ""
-                // };
-
-                // await _context.Promociones.AddAsync(promocion);
-
-                // await _context.SaveChangesAsync();
-
-                // return Ok(200);
+                return Ok(200);
             }
             catch (Exception ex)
             {
