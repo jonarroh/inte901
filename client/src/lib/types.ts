@@ -254,3 +254,14 @@ export interface PromocionesDTO {
   badgePromoId: number;
   limiteCanje: number;
 }
+
+export interface BadgeUser{
+  user_badges: object;
+  badges: Badges;
+  id: number;
+}
+
+export interface Badges {
+  id: number;
+  name: string;
+}

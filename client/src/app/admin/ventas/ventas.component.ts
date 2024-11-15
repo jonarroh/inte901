@@ -49,7 +49,8 @@ type Status = { label: string; value: string };
 @Component({
   selector: 'app-ventas',
   standalone: true,
-  imports: [BrnCommandImports,
+  imports: [
+    // BrnCommandImports,
     NavComponent,
     HlmDialogComponent,
     HlmDialogContentComponent,
