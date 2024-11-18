@@ -22,7 +22,7 @@ namespace Server.Models
         [Required]
         public string Tipo { get; set; }
 
-        [Required]
+        //[Required]
         public int? CantidadXReceta { get; set; }
 
         [Required]

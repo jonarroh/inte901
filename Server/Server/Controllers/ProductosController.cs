@@ -31,7 +31,9 @@ namespace Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Producto>>> GetProductos()
         {
-            var productos = await _context.Productos.ToListAsync();
+            var productos = await _context.Productos
+        .Where(p => p.Estatus != 0)
+        .ToListAsync();
 
             foreach (var producto in productos)
             {
@@ -47,14 +49,15 @@ namespace Server.Controllers
                 producto.Ingredientes = ingredientes;
             }
 
-            return await _context.Productos.ToListAsync();
+            return productos;
         }
 
         // GET: api/Producto/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Producto>> GetProducto(int id)
         {
-            var producto = await _context.Productos.FindAsync(id);
+            var producto = await _context.Productos.Where(p => p.Id == id && p.Estatus != 0)
+    .FirstOrDefaultAsync();
 
             if (producto == null)
             {
@@ -102,7 +105,7 @@ namespace Server.Controllers
             producto.Estatus = productoDTO.Estatus;
             producto.Tipo = productoDTO.Tipo;
             producto.Temperatura = productoDTO.Temperatura;
-            producto.CantidadXReceta = productoDTO.CantidadXReceta;
+            //producto.CantidadXReceta = productoDTO.CantidadXReceta;
             producto.CreatedAt = productoDTO.CreatedAt ?? producto.CreatedAt;
 
             _context.Entry(producto).State = EntityState.Modified;
@@ -149,7 +152,7 @@ namespace Server.Controllers
                 Descripcion = productoDTO.Descripcion,
                 Estatus = productoDTO.Estatus,
                 Tipo = productoDTO.Tipo,
-                CantidadXReceta = productoDTO.CantidadXReceta,
+                //CantidadXReceta = productoDTO.CantidadXReceta,
                 Temperatura = productoDTO.Temperatura,
                 CreatedAt = productoDTO.CreatedAt ?? DateTime.Now
             };
@@ -224,7 +227,7 @@ namespace Server.Controllers
                     Descripcion = productoDTO.Descripcion,
                     Estatus = productoDTO.Estatus,
                     Tipo = productoDTO.Tipo,
-                    CantidadXReceta = productoDTO.CantidadXReceta,
+                    //CantidadXReceta = productoDTO.CantidadXReceta,
                     Temperatura = productoDTO.Temperatura,
                     CreatedAt = productoDTO.CreatedAt ?? DateTime.Now
                 };
