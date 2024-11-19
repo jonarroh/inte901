@@ -249,10 +249,13 @@ export interface PromocionesDTO {
   fechaInicio: string;
   fechaFin: string;
   descuento: number;
-  estatus: number;
+  estado: number;
   productos: string;
+  nombreProducto: string;
   badgePromoId: number;
   limiteCanje: number;
+  motivo: string;
+  tipo: string;
 }
 
 export interface BadgeUser{
@@ -264,4 +267,36 @@ export interface BadgeUser{
 export interface Badges {
   id: number;
   name: string;
+}
+
+export interface PromocionesPersonalizadasDTO{
+  id: number;
+  nombre: string;
+  descripcion: string;
+  fechaInicio: string;
+  fechaFin: string;
+  descuento: number;
+  estatus: number;
+  productoId: string;
+  nombreProducto: string;
+  badgePromoId: number;
+  limiteCanje: number;
+  motivo: string;
+  tipo: string;
+}
+
+export interface PromocionesCombinadas{
+  id: number;
+  nombre: string;
+  descripcion: string;
+  fechaInicio: string;
+  fechaFin: string;
+  descuento: number;
+  estatus: number;
+  productos: string;
+  nombreProducto: string;
+  badgePromoId: number;
+  limiteCanje: number;
+  motivo: string;
+  tipo: string;
 }
