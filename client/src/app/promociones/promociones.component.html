@@ -72,24 +72,62 @@
     /* Adjust the height as needed */
     overflow-y: auto;
   }
+
+  .general-promo {
+    border-left: 5px solid blue;
+    background-color: #f0f8ff;
+  }
+
+  .personalized-promo {
+    border-left: 5px solid green;
+    background-color: #f5fff0;
+  }
+
+  .btn-comprar {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-comprar:hover {
+    background-color: #0056b3;
+  }
+
+
 </style>
 <hlm-sheet side="right" class="bg-white">
-  <button id="edit-profile" variant="warning" brnSheetTrigger hlmBtn class="tab-button">
+  <button id="edit-profile" variant="warning" brnSheetTrigger hlmBtn
+    class="tab-button">
     <span class="icon">&lt;</span>
   </button>
   <hlm-sheet-content *brnSheetContent="let ctx">
     <hlm-sheet-header>
       <h3 hlmSheetTitle>Promociones disponibles</h3>
     </hlm-sheet-header>
-    <div *ngFor="let promo of promociones" class="promo-card scrollable-content">
+    <div *ngFor="let promo of promosCombinadas"
+      class="promo-card scrollable-content"
+      [ngClass]="{'general-promo': promo.tipo === 'General', 'personalized-promo': promo.tipo === 'Personalizada'}">
+      @if (promosCombinadas.length == 0) {
+      <p>No hay promociones disponibles</p>
+      }
+
       <div class="promo-card-header">
         <h4>{{ promo.nombre }}</h4>
       </div>
+
       <div class="promo-card-body">
         <p>{{ promo.descripcion }}</p>
-        <p>{{ promo.productos }}</p>
+        <p>{{ promo.nombreProducto }}</p>
         <p><strong>Descuento:</strong> ${{ promo.descuento }}.00 MXN</p>
+        <button class="btn-comprar"
+          (click)="comprarPromo(promo)">Comprar</button>
       </div>
+
     </div>
+
   </hlm-sheet-content>
 </hlm-sheet>
