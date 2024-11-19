@@ -102,7 +102,11 @@ export class AppComponent  {
       console.info(timeSinceLastUpdate >= oneMinute ? 'Ya pasó un minuto' : 'Faltan minutos');
 
       if (timeSinceLastUpdate >= oneMinute) {
-        setTimeout(() => this.sendPushNotification(), 5000);
+
+        setTimeout(() => {
+          this.sendPushNotification()
+          localStorage.setItem('cartlastupdate', Date.now().toString());
+        }, 5000);
       } else {
         const remainingTime = oneMinute - timeSinceLastUpdate;
         setTimeout(() => this.sendPushNotification(), remainingTime);

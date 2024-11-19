@@ -71,12 +71,16 @@ export class CartComponent {
   isLoaded = signal(false);
 
   get total(): number {
-    return this.items().reduce((acc, item) => acc + item.precio * item.quantity, 0);
+    return this.items().reduce((acc, item) => acc + (item.precio * item.quantity) - (item.discount ?? 0), 0);
   }
 
   constructor(private cartService: CartService, private pushService: PushService, private checkService: CheckoutService) {
   }
 
+
+  hasDiscount(item: ProductoWithQuantity): boolean {
+    return item.discount !== undefined;
+  }
 
 
   increment(id: number): void {

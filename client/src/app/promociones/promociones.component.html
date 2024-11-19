@@ -108,12 +108,10 @@
     <hlm-sheet-header>
       <h3 hlmSheetTitle>Promociones disponibles</h3>
     </hlm-sheet-header>
-    <div *ngFor="let promo of promosCombinadas"
+    <div *ngFor="let promo of promociones"
       class="promo-card scrollable-content"
       [ngClass]="{'general-promo': promo.tipo === 'General', 'personalized-promo': promo.tipo === 'Personalizada'}">
-      @if (promosCombinadas.length == 0) {
-      <p>No hay promociones disponibles</p>
-      }
+      
 
       <div class="promo-card-header">
         <h4>{{ promo.nombre }}</h4>
@@ -122,9 +120,9 @@
       <div class="promo-card-body">
         <p>{{ promo.descripcion }}</p>
         <p>{{ promo.nombreProducto }}</p>
-        <p><strong>Descuento:</strong> ${{ promo.descuento }}.00 MXN</p>
+        <p><app-money [amount]="promo.descuento"></app-money></p>
         <button class="btn-comprar"
-          (click)="comprarPromo(promo)">Comprar</button>
+          (click)="comprarPromo(promo)">Agregar descuento</button>
       </div>
 
     </div>

@@ -166,6 +166,7 @@ export interface DetailOrder {
   dateOrder: string;
   ingredients: string;
   status: string;
+  discount? : number;
 }
 
 
@@ -250,7 +251,7 @@ export interface PromocionesDTO {
   fechaFin: string;
   descuento: number;
   estado: number;
-  productos: string;
+  productos: Producto;
   nombreProducto: string;
   badgePromoId: number;
   limiteCanje: number;

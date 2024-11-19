@@ -3,8 +3,8 @@ import { Producto } from '~/lib/types';
 
 export interface ProductoWithQuantity extends Producto {
   quantity: number;
+  discount?: number;
 }
-
 @Injectable({
   providedIn: 'root'
 })
@@ -13,8 +13,9 @@ export class CartService {
   private storageKey = 'shoppingCart';
 
   cartSignal = signal<ProductoWithQuantity[]>(this.loadCartFromLocalStorage());
+
   total = computed(() => {
-    return this.cartSignal().reduce((acc, item) => acc + item.precio * item.quantity, 0);
+    return this.cartSignal().reduce((acc, item) => acc + (item.precio * item.quantity) - (item.discount ?? 0), 0);
   });
 
 
@@ -28,10 +29,16 @@ export class CartService {
     if (event.key === this.storageKey) {
       this.cartSignal.set(JSON.parse(event.newValue || '[]'));
     }
+    
   }
+
+ 
 
   private loadCartFromLocalStorage(): ProductoWithQuantity[] {
     return JSON.parse(localStorage.getItem(this.storageKey) || '[]');
+  }
+  private loadDiscountsFromLocalStorage(): number[] {
+    return JSON.parse(localStorage.getItem('discounts') || '[]');
   }
 
   private saveCartToLocalStorage(items: ProductoWithQuantity[]): void {
