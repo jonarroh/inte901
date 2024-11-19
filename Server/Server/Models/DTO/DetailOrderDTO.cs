@@ -6,6 +6,7 @@
         public int IdProduct { get; set; }
         public int IdOrder { get; set; }
         public int Quantity { get; set; }
+        public decimal Discount { get; set; }
         public decimal PriceSingle { get; set; }
         public DateTime DateOrder { get; set; }
         public string Ingredients { get; set; }
