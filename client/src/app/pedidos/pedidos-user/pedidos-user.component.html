@@ -127,7 +127,12 @@
             <p class="text-gray-700">
               Precio unitario: <app-money [amount]="detail.priceSingle"></app-money>
             </p>
-            <p class="mb-3 text-gray-700">Total: <app-money [amount]=" detail.quantity * detail.priceSingle"></app-money></p>
+            @if (detail.discount) {
+              <p class="text-gray-700">
+                Precio con descuento: <app-money [amount]="detail.priceSingle - detail.discount"></app-money>
+              </p>
+            }
+            <p class="mb-3 text-gray-700">Total: <app-money [amount]=" (detail.quantity * detail.priceSingle) - (detail.discount ?? 0)"></app-money></p>
           </div>
         </li>
       </ul>

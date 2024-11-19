@@ -15,6 +15,8 @@ import { da } from 'date-fns/locale';
 import { Router } from '@angular/router';
 import { CheckoutService } from '../checkout/checkout.service';
 import { CartService } from '../cart/cart.service';
+import { MoneyComponent } from '~/components/money/money.component';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-promociones',
@@ -33,7 +35,8 @@ import { CartService } from '../cart/cart.service';
     HlmIconComponent,
     HlmLabelDirective,
     CommonModule,
-    NgForOf
+    NgForOf,
+    MoneyComponent
   ],
   templateUrl: './promociones.component.html',
   styleUrl: './promociones.component.css'
@@ -44,17 +47,21 @@ export class PromocionesComponent implements OnInit {
   productosServe = inject(ProductosService);
 
   userId = localStorage.getItem('userId');
-  promociones: PromocionesDTO[] = [];
+  promociones: any[] = [];
   promosPersonalizadas: PromocionesPersonalizadasDTO[] = [];
   promosCombinadas: PromocionesCombinadas[] = [];
   isSheetOpen = false;
 
   constructor(private router: Router, private cartService: CartService,
-    private checkoutService: CheckoutService) { }
+    private checkoutService: CheckoutService) {
+   
+     }
 
-  ngOnInit() {
-    this.loadCombinedPromotions();
-  }
+   ngOnInit() {
+    this.loadPromotions();
+
+  //   this.loadCombinedPromotions();
+   }
 
   toggleSheet() {
     this.isSheetOpen = !this.isSheetOpen;
@@ -69,37 +76,37 @@ export class PromocionesComponent implements OnInit {
   }
 
 
-  comprarPromo(promo: any) {
-    console.log('Promoción seleccionada:', promo);
-    
-    const promoData = {
-      id: promo.id,
-      tipo: promo.tipo,
-      productos: promo.productos
-    };
-    localStorage.setItem('promoData', JSON.stringify(promoData));
+  comprarPromo(promo: PromocionesDTO) {
+    this.cartService.addItem({
+      cantidadXReceta: promo.productos.cantidadXReceta,
+      descripcion: promo.productos.descripcion,
+      id: promo.productos.id,
+      nombre: promo.productos.nombre,
+      createdAt: promo.productos.createdAt,
+      estatus: promo.productos.estatus,
+      ingredientes: promo.productos.ingredientes,
+      precio: promo.productos.precio,
+      inventarioPostres: promo.productos.inventarioPostres,
+      quantity: 1,
+      tipo: promo.productos.tipo,
+      discount: promo.descuento,
+    })
+    //TODO: cerrar modal
 
-    this.router.navigate(['/checkout/address']);
+    toast.success('Producto agregado al carrito');
+
+
   }
 
   private loadPromotions() {
-    if (!this.userId) {
-      console.error('No se encontró userId en localStorage');
-      return;
-    }
-
-    this.promocionServe.getBadgeId(Number(this.userId))
+    
+    this.promocionServe.getBadgeId(0)
       .pipe(
         // Obtener el primer badge y su id
-        map(badges => badges.length > 0 ? badges[0].badges.id : 0),
-        tap(idBadge => {
-          if (idBadge === 0) {
-            console.warn('No se encontraron badges para el usuario');
-          }
-        }),
+        
         // Obtener promociones con el id del badge
-        switchMap(idBadge =>
-          this.promocionServe.getPromociones(idBadge).pipe(
+        switchMap((idBadge) =>
+          this.promocionServe.getPromociones(1).pipe(
             catchError(error => {
               console.error('Error al cargar promociones', error);
               return of([]); // Retornar un arreglo vacío en caso de error
@@ -113,7 +120,7 @@ export class PromocionesComponent implements OnInit {
               this.productosServe.getProducto(Number(promo.productos)).pipe(
                 map(producto => ({
                   ...promo,
-                  productos: producto.nombre,
+                  productos: producto,
                 }))
               )
             )
@@ -122,6 +129,7 @@ export class PromocionesComponent implements OnInit {
       )
       .subscribe({
         next: promociones => {
+          console.log('Promociones:', promociones);
           this.promociones = promociones;
         },
         error: error => {
@@ -130,136 +138,136 @@ export class PromocionesComponent implements OnInit {
       });
   }
 
-  private loadPersonalPromotions() {
-    if (!this.userId) {
-      console.error('No se encontró userId en localStorage');
-      return;
-    }
+  // private loadPersonalPromotions() {
+  //   if (!this.userId) {
+  //     console.error('No se encontró userId en localStorage');
+  //     return;
+  //   }
 
-    this.promocionServe.getBadgeId(Number(this.userId))
-      .pipe(
-        map(badges => badges.length > 0 ? badges[0].badges.id : 0),
-        tap(idBadge => {
-          if (idBadge === 0) {
-            console.warn('No se encontraron badges para el usuario');
-          }
-        }),
-        switchMap(idBadge =>
-          this.promocionServe.getPromosPersonalizadas(idBadge).pipe(
-            catchError(error => {
-              console.error('Error al cargar promociones personalizadas', error);
-              return of([]);
-            })
-          )
-        )
-      )
-      .subscribe({
-        next: promosPersonalizadas => {
-          this.promosPersonalizadas = promosPersonalizadas;
-        },
-        error: error => {
-          console.error('Error en el flujo de datos', error);
-        },
-      });
-  }
+  //   this.promocionServe.getBadgeId(Number(this.userId))
+  //     .pipe(
+  //       map(badges => badges.length > 0 ? badges[0].badges.id : 0),
+  //       tap(idBadge => {
+  //         if (idBadge === 0) {
+  //           console.warn('No se encontraron badges para el usuario');
+  //         }
+  //       }),
+  //       switchMap(idBadge =>
+  //         this.promocionServe.getPromosPersonalizadas(idBadge).pipe(
+  //           catchError(error => {
+  //             console.error('Error al cargar promociones personalizadas', error);
+  //             return of([]);
+  //           })
+  //         )
+  //       )
+  //     )
+  //     .subscribe({
+  //       next: promosPersonalizadas => {
+  //         this.promosPersonalizadas = promosPersonalizadas;
+  //       },
+  //       error: error => {
+  //         console.error('Error en el flujo de datos', error);
+  //       },
+  //     });
+  // }
 
-  private loadCombinedPromotions() {
-    if (!this.userId) {
-      console.error('No se encontró userId en localStorage');
-      return;
-    }
+  // private loadCombinedPromotions() {
+  //   if (!this.userId) {
+  //     console.error('No se encontró userId en localStorage');
+  //     return;
+  //   }
 
-    this.promocionServe.getBadgeId(Number(this.userId))
-      .pipe(
-        map(badges => badges.length > 0 ? badges[0].badges.id : 0),
-        tap(idBadge => {
-          if (idBadge === 0) {
-            console.warn('No se encontraron badges para el usuario');
-          }
-        }),
-        switchMap(idBadge =>
-          forkJoin({
-            promociones: this.promocionServe.getPromociones(idBadge).pipe(
-              catchError(error => {
-                console.error('Error al cargar promociones', error);
-                return of([]);
-              })
-            ),
-            promosPersonalizadas: this.promocionServe.getPromosPersonalizadas(idBadge).pipe(
-              catchError(error => {
-                console.error('Error al cargar promociones personalizadas', error);
-                return of([]);
-              })
-            )
-          })
-        ),
-        switchMap(({ promociones, promosPersonalizadas }) =>
-          forkJoin({
-            promociones: forkJoin(
-              promociones.map(promo =>
-                this.productosServe.getProducto(Number(promo.productos)).pipe(
-                  map(producto => ({
-                    ...promo,
-                    nombreProducto: producto.nombre, // Asigna el nombre del producto
-                  }))
-                )
-              )
-            ),
-            promosPersonalizadas: forkJoin(
-              promosPersonalizadas.map(promoPersonalizada =>
-                this.productosServe.getProducto(Number(promoPersonalizada.productoId)).pipe(
-                  map(producto => ({
-                    ...promoPersonalizada,
-                    nombreProducto: producto.nombre, // Asigna el nombre del producto
-                  }))
-                )
-              )
-            )
-          }) // Add closing parenthesis here
-        )
-      )
-      .subscribe({
-        next: ({ promociones, promosPersonalizadas }) => {
-          this.promociones = promociones;
-          this.promosPersonalizadas = promosPersonalizadas;
+  //   this.promocionServe.getBadgeId(Number(this.userId))
+  //     .pipe(
+  //       map(badges => badges.length > 0 ? badges[0].badges.id : 0),
+  //       tap(idBadge => {
+  //         if (idBadge === 0) {
+  //           console.warn('No se encontraron badges para el usuario');
+  //         }
+  //       }),
+  //       switchMap(idBadge =>
+  //         forkJoin({
+  //           promociones: this.promocionServe.getPromociones(idBadge).pipe(
+  //             catchError(error => {
+  //               console.error('Error al cargar promociones', error);
+  //               return of([]);
+  //             })
+  //           ),
+  //           promosPersonalizadas: this.promocionServe.getPromosPersonalizadas(idBadge).pipe(
+  //             catchError(error => {
+  //               console.error('Error al cargar promociones personalizadas', error);
+  //               return of([]);
+  //             })
+  //           )
+  //         })
+  //       ),
+  //       switchMap(({ promociones, promosPersonalizadas }) =>
+  //         forkJoin({
+  //           promociones: forkJoin(
+  //             promociones.map(promo =>
+  //               this.productosServe.getProducto(Number(promo.productos)).pipe(
+  //                 map(producto => ({
+  //                   ...promo,
+  //                   nombreProducto: producto.nombre, // Asigna el nombre del producto
+  //                 }))
+  //               )
+  //             )
+  //           ),
+  //           promosPersonalizadas: forkJoin(
+  //             promosPersonalizadas.map(promoPersonalizada =>
+  //               this.productosServe.getProducto(Number(promoPersonalizada.productoId)).pipe(
+  //                 map(producto => ({
+  //                   ...promoPersonalizada,
+  //                   nombreProducto: producto.nombre, // Asigna el nombre del producto
+  //                 }))
+  //               )
+  //             )
+  //           )
+  //         }) // Add closing parenthesis here
+  //       )
+  //     )
+  //     .subscribe({
+  //       next: ({ promociones, promosPersonalizadas }) => {
+  //         this.promociones = promociones;
+  //         this.promosPersonalizadas = promosPersonalizadas;
 
-          // Combinar promociones y promociones personalizadas
-          this.promosCombinadas = promociones.map(promo => ({
-            id: promo.id,
-            nombre: promo.nombre,
-            descripcion: promo.descripcion,
-            fechaInicio: promo.fechaInicio,
-            fechaFin: promo.fechaFin,
-            descuento: promo.descuento,
-            estatus: promo.estado,
-            productos: promo.productos,
-            badgePromoId: promo.badgePromoId,
-            limiteCanje: promo.limiteCanje,
-            tipo: 'General',
-            motivo: '',
-            nombreProducto: promo.nombreProducto,
-          })).concat(promosPersonalizadas.map(promoPersonalizada => ({
-            id: promoPersonalizada.id,
-            nombre: promoPersonalizada.nombre,
-            descripcion: promoPersonalizada.descripcion,
-            fechaInicio: promoPersonalizada.fechaInicio,
-            fechaFin: promoPersonalizada.fechaFin,
-            descuento: promoPersonalizada.descuento,
-            estatus: promoPersonalizada.estatus,
-            productos: promoPersonalizada.productoId,
-            badgePromoId: promoPersonalizada.badgePromoId,
-            limiteCanje: promoPersonalizada.limiteCanje,
-            tipo: 'Personalizada',
-            motivo: promoPersonalizada.motivo,
-            nombreProducto: promoPersonalizada.nombreProducto,
-          })));
+  //         // Combinar promociones y promociones personalizadas
+  //         this.promosCombinadas = promociones.map(promo => ({
+  //           id: promo.id,
+  //           nombre: promo.nombre,
+  //           descripcion: promo.descripcion,
+  //           fechaInicio: promo.fechaInicio,
+  //           fechaFin: promo.fechaFin,
+  //           descuento: promo.descuento,
+  //           estatus: promo.estado,
+  //           productos: promo.productos,
+  //           badgePromoId: promo.badgePromoId,
+  //           limiteCanje: promo.limiteCanje,
+  //           tipo: 'General',
+  //           motivo: '',
+  //           nombreProducto: promo.nombreProducto,
+  //         })).concat(promosPersonalizadas.map(promoPersonalizada => ({
+  //           id: promoPersonalizada.id,
+  //           nombre: promoPersonalizada.nombre,
+  //           descripcion: promoPersonalizada.descripcion,
+  //           fechaInicio: promoPersonalizada.fechaInicio,
+  //           fechaFin: promoPersonalizada.fechaFin,
+  //           descuento: promoPersonalizada.descuento,
+  //           estatus: promoPersonalizada.estatus,
+  //           productos: promoPersonalizada.productoId,
+  //           badgePromoId: promoPersonalizada.badgePromoId,
+  //           limiteCanje: promoPersonalizada.limiteCanje,
+  //           tipo: 'Personalizada',
+  //           motivo: promoPersonalizada.motivo,
+  //           nombreProducto: promoPersonalizada.nombreProducto,
+  //         })));
 
-          console.log('Promociones combinadas:', this.promosCombinadas);
-        },
-        error: error => {
-          console.error('Error en el flujo de datos', error);
-        },
-      });
+  //         console.log('Promociones combinadas:', this.promosCombinadas);
+  //       },
+  //       error: error => {
+  //         console.error('Error en el flujo de datos', error);
+  //       },
+  //     });
 
-  }
+  // }
 }

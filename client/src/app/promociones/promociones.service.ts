@@ -19,7 +19,11 @@ export class PromocionesService {
   }
 
   getPromociones(idBadge: number): Observable<PromocionesDTO[]> {
-    return this.http.get<PromocionesDTO[]>(`${this.apiURL}/allPromociones/${idBadge}`);
+    return this.http.get<PromocionesDTO[]>(`${this.apiURL}/Promos`);
+  }
+
+  updatePromocion(idPromo: number, promocion: PromocionesDTO): Observable<PromocionesDTO> {
+    return this.http.put<PromocionesDTO>(`${this.apiURL}/updatePromocion/${idPromo}`, promocion);
   }
 
   getPromosPersonalizadas(idBadge: number): Observable<PromocionesPersonalizadasDTO[]> {
