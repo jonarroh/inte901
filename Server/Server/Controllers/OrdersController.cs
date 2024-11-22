@@ -20,7 +20,7 @@ using Server.Models.DTO;
 namespace Server.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class OrdersController : ControllerBase
     {
@@ -368,14 +368,6 @@ namespace Server.Controllers
                 return BadRequest(result); // Mensaje de error detallado sobre el inventario insuficiente
             }
         }
-
-
-
-
-
-
-
-
 
 
         private async Task<string> CheckIngredientsInventory(Producto product, int quantity)
@@ -896,5 +888,87 @@ namespace Server.Controllers
         {
             return _context.Orders.Any(e => e.Id == id);
         }
+
+
+        [HttpPost]
+        [Route("getBestSellers/{date}")]
+        public async Task<IActionResult> GetBestSellers(string date)
+        {
+            try
+            {
+                // Determinar el rango de fechas según la entrada
+                var (startDate, endDate) = GetDateRange(date);
+                if (startDate == null || endDate == null)
+                {
+                    return BadRequest("Rango de fechas inválido.");
+                }
+
+                // Obtener órdenes en el rango de fechas
+                var orders = await _context.Orders
+                    .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate && o.IsDeliver == false)
+                    .Include(o => o.DetailOrders) // Incluir detalles de productos
+                                                  //.ThenInclude(od => od.Product) // Incluir información del producto
+                    .ToListAsync();
+
+                var ordersDeliver = await _context.Orders
+                    .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate && o.IsDeliver == true)
+                    .Include(o => o.DetailOrders) // Incluir detalles de productos
+                                                  //.ThenInclude(od => od.Product) // Incluir información del producto
+                    .ToListAsync();
+
+                return Ok("");
+
+
+                // Agrupar productos y calcular las cantidades vendidas
+                //var bestSellers = orders
+                //    .SelectMany(o => o.DetailOrders)
+                //    .GroupBy(od => od.Product)
+                //    .Select(g => new
+                //    {
+                //        Product = g.Key,
+                //        TotalSold = g.Sum(od => od.Quantity)
+                //    })
+                //    .OrderByDescending(p => p.TotalSold)
+                //    .ToList();
+
+                //return Ok(bestSellers);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Se produjo un error en el servidor, contacte a soporte.");
+            }
+        }
+
+        // Método para calcular el rango de fechas
+        private (DateTime?, DateTime?) GetDateRange(string date)
+        {
+            DateTime today = DateTime.UtcNow.Date;
+
+            return date.ToLower() switch
+            {
+                "today" => (today, today),
+                "yesterday" => (today.AddDays(-1), today.AddDays(-1)),
+                "lastweek" => (today.AddDays(-7), today),
+                "lastmonth" => (today.AddMonths(-1), today),
+                "lastyear" => (today.AddYears(-1), today),
+                _ => (null, null)
+            };
+        }
+        //var detailOrders = await _context.DetailOrders.ToListAsync();
+        //var products = await _context.Productos.ToListAsync();
+
+        //var bestSellers = new List<Producto>();
+
+        //foreach (var product in products)
+        //{
+        //    var quantity = detailOrders.Where(d => d.IdProduct == product.Id).Sum(d => d.Quantity);
+        //    product.CantidadXReceta = quantity;
+        //    bestSellers.Add(product);
+        //}
+
+        //bestSellers = bestSellers.OrderByDescending(p => p.CantidadXReceta).ToList();
+
+        //return Ok(bestSellers);
     }
 }
