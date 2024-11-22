@@ -37,7 +37,7 @@ export class DetailsComponent {
   
 
     getSubtotal() {
-      return this.products().reduce((acc, product) => acc + product.precio, 0);
+      return this.products().reduce((acc, product) => acc + (product.precio - (product.discount ?? 0)), 0);
     }
 
     addPuntos(cantidad: number = 0){
@@ -84,6 +84,7 @@ export class DetailsComponent {
             priceSingle: product.precio,
             dateOrder: new Date().toISOString(),
             status: 'Ordenado',
+            discount: product.discount,
             
 
           })),

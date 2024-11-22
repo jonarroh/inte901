@@ -39,17 +39,14 @@
         [formField]="formModel.controls.password"
       />
     </label>
-    @if (formModel.controls.password.touched()) { 
-      @if(formModel.controls.password.hasError('required')) {
+    @if (formModel.controls.password.touched()) {
+    @if(formModel.controls.password.hasError('required')) {
     <div class="text-red-500 text-sm">La contraseña es requerida</div>
-    } 
-     @else if (formModel.controls.password.hasError('maxLength')) {
+    } @else if (formModel.controls.password.hasError('maxLength')) {
     <div class="text-red-500 text-sm">
       La contraseña debe tener menos de 50 caracteres
     </div>
-    } }
-
-    @if (res()?.message){
+    } } @if (res()?.message){
     <div class="text-red-500 text-sm">{{ res()?.message }}</div>
     }
 
@@ -64,27 +61,28 @@
 
     <div>
       @if(disabled()){
-        <button
+      <button
         class="w-80 h-10 bg-secondary text-white rounded-md mt-4 flex justify-center items-center"
-        
       >
-        <lucide-icon name="loader-circle"
-        class="animate-spin"
-        ></lucide-icon>
-      
+        <lucide-icon name="loader-circle" class="animate-spin"></lucide-icon>
       </button>
       } @else {
       <button
         class="w-80 h-10 bg-secondary text-white rounded-md mt-4"
         (click)="login()"
-        >
+      >
         Iniciar sesión
       </button>
       }
-
-      
-
     </div>
+
+    <div *ngIf="isOnline">
+      <re-captcha
+        siteKey="6LeMsXMqAAAAALfX754Glk1hqsgemJAD9v7J7SjO"
+        (resolved)="onCaptchaResolved($event || '')"
+      ></re-captcha>
+    </div>
+
     <span>
       ¿No tienes una cuenta?
       <a

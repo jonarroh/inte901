@@ -1,26 +1,65 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { InventarioMPService } from './service/inventario-mp.service';
-import { BehaviorSubject, combineLatest, combineLatestWith, map, Observable, of } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  combineLatestWith,
+  map,
+  Observable,
+  of,
+} from 'rxjs';
 import { InventarioMP } from './interface/inventarioMP';
 import { FormsModule, NgForm } from '@angular/forms';
-import { HlmDialogComponent, HlmDialogContentComponent, HlmDialogDescriptionDirective, HlmDialogFooterComponent, HlmDialogHeaderComponent, HlmDialogTitleDirective } from '~/components/ui-dialog-helm/src';
+import {
+  HlmDialogComponent,
+  HlmDialogContentComponent,
+  HlmDialogDescriptionDirective,
+  HlmDialogFooterComponent,
+  HlmDialogHeaderComponent,
+  HlmDialogTitleDirective,
+} from '~/components/ui-dialog-helm/src';
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { BrnDialogContentDirective, BrnDialogTriggerDirective } from '@spartan-ng/ui-dialog-brain';
+import {
+  BrnDialogContentDirective,
+  BrnDialogTriggerDirective,
+} from '@spartan-ng/ui-dialog-brain';
 import { HlmButtonDirective } from '~/components/ui-button-helm/src';
 import { HlmInputDirective } from '~/components/ui-input-helm/src';
-import { BrnTableModule, PaginatorState, useBrnColumnManager } from '@spartan-ng/ui-table-brain';
+import {
+  BrnTableModule,
+  PaginatorState,
+  useBrnColumnManager,
+} from '@spartan-ng/ui-table-brain';
 import { HlmTableModule } from '@spartan-ng/ui-table-helm';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
 import { provideIcons } from '@ng-icons/core';
 import { lucideMoreHorizontal } from '@ng-icons/lucide';
 import { HlmIconComponent } from '~/components/ui-icon-helm/src';
-import { HlmSelectContentDirective, HlmSelectOptionComponent, HlmSelectTriggerComponent, HlmSelectValueDirective } from '~/components/ui-select-helm/src';
+import {
+  HlmSelectContentDirective,
+  HlmSelectOptionComponent,
+  HlmSelectTriggerComponent,
+  HlmSelectValueDirective,
+} from '~/components/ui-select-helm/src';
 import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
 import { MateriasPrimasService } from '../materias-primas/service/materias-primas.service';
 import { MateriaPrima } from '../materias-primas/interface/materias-primas';
-import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
-import { HlmAlertDialogActionButtonDirective, HlmAlertDialogCancelButtonDirective, HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogOverlayDirective, HlmAlertDialogTitleDirective } from '~/components/ui-alertdialog-helm/src';
+import {
+  BrnAlertDialogContentDirective,
+  BrnAlertDialogTriggerDirective,
+} from '@spartan-ng/ui-alertdialog-brain';
+import {
+  HlmAlertDialogActionButtonDirective,
+  HlmAlertDialogCancelButtonDirective,
+  HlmAlertDialogComponent,
+  HlmAlertDialogContentComponent,
+  HlmAlertDialogDescriptionDirective,
+  HlmAlertDialogFooterComponent,
+  HlmAlertDialogHeaderComponent,
+  HlmAlertDialogOverlayDirective,
+  HlmAlertDialogTitleDirective,
+} from '~/components/ui-alertdialog-helm/src';
 import { LucideAngularModule } from 'lucide-angular';
 import { toast } from 'ngx-sonner';
 
@@ -67,7 +106,7 @@ export interface InventarioMPExtended extends InventarioMP {
     HlmAlertDialogCancelButtonDirective,
     HlmAlertDialogActionButtonDirective,
     HlmAlertDialogContentComponent,
-    LucideAngularModule
+    LucideAngularModule,
   ],
   templateUrl: './inventario-mp.component.html',
   styleUrls: ['./inventario-mp.component.css'],
@@ -117,23 +156,30 @@ export class InventarioMPComponent {
 
     this.inventariosMPSource$ = this.inventarioService.getInventarioMP().pipe(
       map((inventariosMP: InventarioMPExtended[]) => {
-        return inventariosMP.map((inventario) => {
-          const materiaPrima = this.materiasPrimas.find(mp => mp.id === inventario.idMateriaPrima);
-          return {
-            ...inventario,
-            material: materiaPrima ? materiaPrima.material : 'N/A'
-          };
-        }).filter((inventario) => inventario.estatus === 1);
+        return inventariosMP
+          .map((inventario) => {
+            const materiaPrima = this.materiasPrimas.find(
+              (mp) => mp.id === inventario.idMateriaPrima
+            );
+            return {
+              ...inventario,
+              material: materiaPrima ? materiaPrima.material : 'N/A',
+            };
+          })
+          .filter((inventario) => inventario.estatus === 1);
       })
     );
 
-    this.inventariosMP$ = combineLatest([this.inventariosMPSource$, this.filter$]).pipe(
+    this.inventariosMP$ = combineLatest([
+      this.inventariosMPSource$,
+      this.filter$,
+    ]).pipe(
       map(([inventariosMP, filterValue]) =>
-        inventariosMP.filter(inventario =>
+        inventariosMP.filter((inventario) =>
           inventario.material?.toLowerCase().includes(filterValue)
         )
       ),
-      map(filteredInventariosMP => {
+      map((filteredInventariosMP) => {
         this._totalElements.set(filteredInventariosMP.length);
         const start = this._displayedIndices().start;
         const end = this._displayedIndices().end + 1;
@@ -143,26 +189,31 @@ export class InventarioMPComponent {
   }
 
   private _updatePaginatedData() {
-    this.inventariosMPSource$.pipe(
-      combineLatestWith(this.filter$),
-      map(([inventariosMP, filterValue]) => {
-        const filteredInventariosMP = inventariosMP.filter(inventario =>
-          inventario.material?.toLowerCase().includes(filterValue)
-        );
+    this.inventariosMPSource$
+      .pipe(
+        combineLatestWith(this.filter$),
+        map(([inventariosMP, filterValue]) => {
+          const filteredInventariosMP = inventariosMP.filter((inventario) =>
+            inventario.material?.toLowerCase().includes(filterValue)
+          );
 
-        const start = this._displayedIndices().start;
-        const end = this._displayedIndices().end + 1;
+          const start = this._displayedIndices().start;
+          const end = this._displayedIndices().end + 1;
 
-        this._totalElements.set(filteredInventariosMP.length);
+          this._totalElements.set(filteredInventariosMP.length);
 
-        return filteredInventariosMP.slice(start, end);
-      })
-    ).subscribe(paginatedInventariosMP => {
-      this.inventariosMP$ = of(paginatedInventariosMP);
-    });
+          return filteredInventariosMP.slice(start, end);
+        })
+      )
+      .subscribe((paginatedInventariosMP) => {
+        this.inventariosMP$ = of(paginatedInventariosMP);
+      });
   }
 
-  protected readonly _onStateChange = ({ startIndex, endIndex }: PaginatorState) => {
+  protected readonly _onStateChange = ({
+    startIndex,
+    endIndex,
+  }: PaginatorState) => {
     this._displayedIndices.set({ start: startIndex, end: endIndex });
     this._updatePaginatedData();
   };
@@ -194,28 +245,30 @@ export class InventarioMPComponent {
       //   this.inventarioMP = {}; // Reiniciar el objeto inventario
       //   this.refreshInventarioMP();
       // });
-      this.inventarioService.registrarInventarioMP(this.inventarioMP).subscribe({
-        next: (response) => {
-          console.log('Inventario registrado:', response);
-          form.resetForm();
-          this.inventarioMP = {}; // Reiniciar el objeto inventario
-          toast.success('Inventario registrado exitosamente', {
-            duration: 1200,
-            onAutoClose: ((toast => {
-              location.reload();
-            }))
-          });
-        },
-        error: (error) => {
-          console.error('Error al registrar el inventario:', error);
-          toast.error('Error al registrar el inventario',{
-            duration: 1200,
-            onAutoClose: ((toast) => {
-              location.reload();
-            })
-          });
-        }
-      });
+      this.inventarioService
+        .registrarInventarioMP(this.inventarioMP)
+        .subscribe({
+          next: (response) => {
+            console.log('Inventario registrado:', response);
+            form.resetForm();
+            this.inventarioMP = {}; // Reiniciar el objeto inventario
+            toast.success('Inventario registrado exitosamente', {
+              duration: 1200,
+              onAutoClose: (toast) => {
+                location.reload();
+              },
+            });
+          },
+          error: (error) => {
+            console.error('Error al registrar el inventario:', error);
+            toast.error('Error al registrar el inventario', {
+              duration: 1200,
+              onAutoClose: (toast) => {
+                location.reload();
+              },
+            });
+          },
+        });
     }
   }
 
@@ -228,29 +281,31 @@ export class InventarioMPComponent {
       //   this.editMode = false;
       //   this.refreshInventarioMP();
       // });
-      this.inventarioService.editarInventarioMP(this.inventarioMP.id!, this.inventarioMP).subscribe({
-        next: (response) => {
-          console.log('Inventario actualizado:', response);
-          form.resetForm();
-          this.inventarioMP = {}; // Reiniciar el objeto inventario
-          this.editMode = false;
-          toast.success('Inventario actualizado exitosamente', {
-            duration: 1200,
-            onAutoClose: ((toast) => {
-              location.reload();
-            })
-          });
-        },
-        error: (error) => {
-          console.error('Error al actualizar el inventario:', error);
-          toast.error('Error al actualizar el inventario',{
-            duration: 1200,
-            onAutoClose: ((toast) => {
-              location.reload();
-            })
-          });
-        }
-      });
+      this.inventarioService
+        .editarInventarioMP(this.inventarioMP.id!, this.inventarioMP)
+        .subscribe({
+          next: (response) => {
+            console.log('Inventario actualizado:', response);
+            form.resetForm();
+            this.inventarioMP = {}; // Reiniciar el objeto inventario
+            this.editMode = false;
+            toast.success('Inventario actualizado exitosamente', {
+              duration: 1200,
+              onAutoClose: (toast) => {
+                location.reload();
+              },
+            });
+          },
+          error: (error) => {
+            console.error('Error al actualizar el inventario:', error);
+            toast.error('Error al actualizar el inventario', {
+              duration: 1200,
+              onAutoClose: (toast) => {
+                location.reload();
+              },
+            });
+          },
+        });
     }
   }
 
@@ -277,20 +332,20 @@ export class InventarioMPComponent {
         console.log('Inventario eliminado');
         toast.success('Inventario eliminado exitosamente', {
           duration: 1200,
-          onAutoClose: ((toast) => {
+          onAutoClose: (toast) => {
             location.reload();
-          })
+          },
         });
       },
       error: (error) => {
         console.error('Error al eliminar el inventario:', error);
-        toast.error('Error al eliminar el inventario',{
+        toast.error('Error al eliminar el inventario', {
           duration: 1200,
-          onAutoClose: ((toast) => {
+          onAutoClose: (toast) => {
             location.reload();
-          })
+          },
         });
-      }
+      },
     });
   }
 }

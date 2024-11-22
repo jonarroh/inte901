@@ -144,6 +144,8 @@ export class EditUserComponent {
   }
 
   onSaveData() {
+console.log(`isDesabled: ${this.disabled()}`);
+
     const UserEditDTO: UserEditDTO = {
       actualPassword: this.formModel.controls.password.controls.actualPassword.value(),
       email: this.formModel.controls.email.value(),

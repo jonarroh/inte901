@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.lib;
 using Server.Models;
 using Server.Models.DTO;
+using Microsoft.AspNetCore.SignalR;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Server.Hubs;
 
 namespace Server.Controllers
 {
@@ -17,10 +20,13 @@ namespace Server.Controllers
         private readonly Context _context;
         private readonly CreditCardService _creditCardService;
 
-        public ReservesController(Context context, CreditCardService creditService)
+        private IHubContext<ReservesHub> _hubContext;
+
+        public ReservesController(Context context, CreditCardService creditService, IHubContext<ReservesHub> hubContext)
         {
             _context = context;
             _creditCardService = creditService;
+            _hubContext = hubContext;
         }
 
         // GET: api/Reserves
@@ -30,6 +36,7 @@ namespace Server.Controllers
             var ReservacionesActivas = await _context.Reservas
                 .Include(r => r.DetailReserva)
                 .Include(r => r.Usuario)
+                .OrderByDescending(r => r.DetailReserva.fecha) // Asumiendo que el campo se llama FechaReserva
                 .ToListAsync();
 
             return Ok(ReservacionesActivas);
@@ -271,7 +278,10 @@ namespace Server.Controllers
 
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            var message = $"{reserva.idReserva}:{estatus},{reserva.idCliente}";
+            await _hubContext.Clients.All.SendAsync("ReceiveReserveUpdate", message);
+
+            return Ok(reserva);
         }
 
 

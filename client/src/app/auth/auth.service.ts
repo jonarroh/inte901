@@ -9,7 +9,10 @@ import { GeolocationService } from '../services/geolocation.service';
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient, private geoService: GeolocationService) {}
+  constructor(
+    private http: HttpClient,
+    private geoService: GeolocationService
+  ) {}
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('token');
@@ -18,11 +21,13 @@ export class AuthService {
   login({
     username,
     password,
+    captchaToken,
   }: {
     username: string;
     password: string;
+    captchaToken: string;
   }): Observable<any> {
-    const body = { email: username, password, role: 'admin' };
+    const body = { email: username, password, role: 'admin', captchaToken };
     return this.http.post(ENDPOINTS.login, body).pipe(
       tap((res: any) => {
         if (res && res.jwtToken) {
@@ -37,7 +42,7 @@ export class AuthService {
   }
 
   private apiUrl = 'http://localhost:3000/location';
-  logout(){
+  logout() {
     let token = localStorage.getItem('token') ?? '';
     from(this.http.delete(`${this.apiUrl}/${token}`)).subscribe({
       next: () => {
@@ -47,8 +52,7 @@ export class AuthService {
       },
       error: (error: any) => {
         console.error('Error al cerrar sesión', error);
-      }
+      },
     });
-
   }
 }
