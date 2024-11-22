@@ -31,7 +31,14 @@
     <div *ngFor="let product of products()" class="flex items-center space-x-4 mb-4">
       <img [src]="getImageUrl(product.id)" alt="{{ product.nombre }}" class="w-16 h-16 object-cover rounded-lg shadow-md" />
       <div>
-        <p class="text-lg font-medium">{{ product.nombre }} - <app-money [amount]="product.precio"></app-money> x {{ product.quantity }}
+        <p class="text-lg font-medium">{{ product.nombre }} - 
+          @if (product.discount) {
+            <app-money [amount]="product.precio - product.discount"></app-money> 
+          } @else {
+            <app-money [amount]="product.precio"></app-money> 
+          }
+          
+          x {{ product.quantity }}
 
         </p>
         <p class="text-sm text-gray-600">{{ product.descripcion }}</p>

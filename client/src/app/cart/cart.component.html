@@ -33,11 +33,13 @@
           </div>
           <span>{{item.quantity}}</span>
           <span>
-            <app-money [amount]="item.precio * item.quantity"></app-money>
+            <app-money [amount]="(item.precio * item.quantity) - (item.discount ?? 0)"></app-money>
           </span>
           
           <hlm-dialog [state]="'closed'">
-            <button class="text-black px-4 py-2 rounded hover:bg-gray-200" brnDialogTrigger hlmBtn>
+            <button class="text-black px-4 py-2 rounded hover:bg-gray-200" brnDialogTrigger hlmBtn
+            [disabled]="hasDiscount(item)"
+            >
               <lucide-icon name="ellipsis"></lucide-icon>
             </button>
             <hlm-dialog-content *brnDialogContent="let ctx" class="bg-white">
