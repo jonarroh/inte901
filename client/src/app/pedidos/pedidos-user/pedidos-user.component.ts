@@ -172,17 +172,24 @@ export class PedidosUserComponent implements OnInit {
     const order = this.orders.find((o) => o.id === orderId);
     if (order) {
       const productIds = order.detailOrders.map((detail) => detail.idProduct);
-      this.pedidoStateService.setOrderId(orderId); // Asegúrate de que este método exista en el servicio
+  
+      this.pedidoStateService.setOrderId(orderId);
       this.pedidoStateService.setProductIds(productIds);
       this.pedidoStateService.setOrderStatus(order.status);
-
-      // Guardar los datos en localStorage
-      localStorage.setItem('productIds', JSON.stringify(productIds));
-      localStorage.setItem('orderStatus', order.status);
-
-      this.router.navigate(['/estatus', orderId]);
+  
+      console.log({
+        newOrderId: orderId,
+        newProductIds: productIds,
+        newOrderStatus: order.status,
+      });
+  
+      // Asegúrate de que las señales estén listas antes de redirigir
+      Promise.resolve().then(() => {
+        this.router.navigate(['/estatus']);
+      });
     }
   }
+  
 
   // Método para obtener el color del botón según el estado y el índice
   getStatusColor(status: string, step: number): string {

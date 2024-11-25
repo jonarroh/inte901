@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, effect, OnInit } from '@angular/core';
 import { PedidoStateService } from '../pedido-state.service';
 
 @Component({
@@ -8,17 +7,20 @@ import { PedidoStateService } from '../pedido-state.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './process-state.component.html',
-  styleUrl: './process-state.component.css'
+  styleUrls: ['./process-state.component.css']
 })
 export class ProcessStateComponent implements OnInit {
-
   status: string | null = null;
 
-  constructor(private pedidoStateService: PedidoStateService) {}
+  constructor(private pedidoStateService: PedidoStateService) {
+    effect(() => {
+      this.status = localStorage.getItem('orderStatus');
+      console.log('Received order status in ProcessStateComponent:', this.status);
+    });
+  }
 
   ngOnInit(): void {
-    this.pedidoStateService.getOrderStatus().subscribe(status => {
-      this.status = status;
-    });
+    // Efecto para reaccionar a los cambios en la señal `orderStatus`
+    
   }
 }

@@ -101,41 +101,49 @@
         </div>
       </div>
       <ul class="space-y-4">
-        <li
-          *ngFor="let detail of order.detailOrders"
-          class="flex items-center space-x-4"
-        >
-          <div
-            class="w-24 h-24 bg-gray-200 rounded-lg flex-shrink-0"
-            *ngIf="productos[detail.idProduct]"
+        <ng-container *ngFor="let detail of order.detailOrders">
+          <li
+            class="flex items-center space-x-4"
+            *ngIf="productos[detail.idProduct] && detail.quantity > 0 && detail.priceSingle"
           >
-            <img
-              [src]="
-                'http://localhost:5000/static/productos/' +
-                detail.idProduct +
-                '.webp'
-              "
-              alt=""
-              class="w-full h-full object-cover rounded-lg"
-            />
-          </div>
-          <div class="flex flex-col justify-around">
-            <h4 class="text-lg font-medium text-gray-900">
-              {{ productos[detail.idProduct].nombre || "Desconocido" }}
-            </h4>
-            <p class="text-gray-500">Cantidad: {{ detail.quantity }}</p>
-            <p class="text-gray-700">
-              Precio unitario: <app-money [amount]="detail.priceSingle"></app-money>
-            </p>
-            @if (detail.discount) {
+            <div class="w-24 h-24 bg-gray-200 rounded-lg flex-shrink-0">
+              <img
+                [src]="
+                  'http://localhost:5000/static/productos/' +
+                  detail.idProduct +
+                  '.webp'
+                "
+                alt=""
+                class="w-full h-full object-cover rounded-lg"
+              />
+            </div>
+            <div class="flex flex-col justify-around">
+              <h4 class="text-lg font-medium text-gray-900">
+                {{ productos[detail.idProduct].nombre }}
+              </h4>
+              <p class="text-gray-500">Cantidad: {{ detail.quantity }}</p>
               <p class="text-gray-700">
-                Precio con descuento: <app-money [amount]="detail.priceSingle - detail.discount"></app-money>
+                Precio unitario:
+                <app-money [amount]="detail.priceSingle"></app-money>
               </p>
-            }
-            <p class="mb-3 text-gray-700">Total: <app-money [amount]=" (detail.quantity * detail.priceSingle) - (detail.discount ?? 0)"></app-money></p>
-          </div>
-        </li>
+              <p class="text-gray-700" *ngIf="detail.discount">
+                Precio con descuento:
+                <app-money
+                  [amount]="detail.priceSingle - detail.discount"
+                ></app-money>
+              </p>
+              <p class="mb-3 text-gray-700">
+                Total:
+                <app-money
+                  [amount]="(detail.quantity * detail.priceSingle) - (detail.discount ?? 0)"
+                ></app-money>
+              </p>
+            </div>
+          </li>
+        </ng-container>
       </ul>
+      
+      
     </div>
   </div>
 

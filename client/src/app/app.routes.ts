@@ -171,15 +171,15 @@ export const routes: Routes = [
     },
   },
   {
-    path: 'estatus/:id',
-    canActivate: [AuthenticatedGuard],
-    component: PedidoStateComponent,
-  },
-  {
     path: 'estatus',
     canActivate: [AuthenticatedGuard],
     component: PedidoStateComponent,
   },
+  // {
+  //   path: 'estatus',
+  //   canActivate: [AuthenticatedGuard],
+  //   component: PedidoStateComponent,
+  // },
   {
     path: 'products/:id',
     component: ProductDetailComponent,
