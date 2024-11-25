@@ -5,6 +5,9 @@ import { ProcessStateComponent } from './process-state/process-state.component';
 import { ProductsListComponent } from './products-list/products-list.component';
 import { ActivatedRoute } from '@angular/router';
 import { PedidoStateService } from './pedido-state.service';
+import { OrdenServiceService } from '~/app/orden/orden-service.service';
+import { ProductoService } from '~/app/admin/productos/service/producto.service';
+import { PedidosUserServiceService } from '../pedidos-user/pedidos-user-service.service';
 
 @Component({
   selector: 'app-pedido-state',
@@ -22,7 +25,7 @@ export class PedidoStateComponent implements OnInit{
   productIds: number[] = [];
   orderStatus: string | null = null;
 
-  constructor(private pedidoStateService: PedidoStateService) {}
+  constructor(private pedidoStateService: PedidoStateService, private orderService : PedidosUserServiceService) {}
 
   ngOnInit(): void {
     this.pedidoStateService.getOrderStatus().subscribe(status => {
@@ -32,6 +35,12 @@ export class PedidoStateComponent implements OnInit{
         localStorage.setItem('orderStatus', status);
       }
     });
+
+    // this.orderService.getOrdersByUser(Number(localStorage.getItem("userId"))).subscribe(pedidito => {
+    //   console.log(pedidito);
+    //   const ids=[]
+    //   pedidito.forEach(p => ids.push(p.detailOrders.))
+    // })
 
     this.pedidoStateService.getProductIds().subscribe(ids => {
       this.productIds = ids;

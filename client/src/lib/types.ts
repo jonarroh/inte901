@@ -268,6 +268,7 @@ export interface BadgeUser{
 export interface Badges {
   id: number;
   name: string;
+  pointsRequired: number;
 }
 
 export interface PromocionesPersonalizadasDTO{

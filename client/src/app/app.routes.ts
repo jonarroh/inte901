@@ -40,6 +40,7 @@ import { EstatusComponent } from './admin/reservas/estatus/estatus.component';
 import { ClienteComponent } from './reserves/cliente/cliente.component';
 import { CanPayGuard } from './auth/canPay.guard';
 import { ContraRecuComponent } from './contra-recu/contra-recu.component';
+import { RewadsComponent } from './rewads/rewads.component';
 
 export const routes: Routes = [
   {
@@ -54,6 +55,22 @@ export const routes: Routes = [
   {
     path: '',
     component: LandingPageComponent,
+  },
+  {
+    path: 'rewads',
+    component: RewadsComponent,
+    data: {
+      breadcrumb: [
+        {
+          label: 'Productos',
+          route: '/products',
+        },
+        {
+          label: 'Rewards',
+          route: '/orders',
+        },
+      ],
+    },
   },
   {
     path: 'products',

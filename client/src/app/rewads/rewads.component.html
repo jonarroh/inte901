@@ -1,0 +1,37 @@
+<home-navbar></home-navbar>
+
+<div>
+  <h4 class="title">Insignias - {{highestBadgeName()}}, sigue comprando más para avanzar de nivel</h4>
+  <div class="card-container">
+    <div *ngFor="let badge of userBadges()" class="card">
+      <img
+        [src]="'http://localhost:5000/static/productos/' + badge.badges.id + '.webp'" 
+        [class.grayscale]="isBadgeLocked(badge.id)"
+        [alt]="badge.badges"
+        style="background-color: #A6754C;"> 
+    </div>
+  </div>
+</div>
+
+<div style="margin-bottom: 50px;">
+  <h4 class="title">Ofertas - Disfruta de tus ofertas de insignias exclusivas</h4>
+  <div class="card-container">
+    <div *ngFor="let badge of promosBadges()" class="card">
+      <!-- Imagen del producto -->
+      <div class="card-image">
+        <img
+          [src]="'http://localhost:5000/static/productos/' + badge.id + '.webp'"
+          [class.grayscale]="isBadgeLocked(badge.id)"
+          [alt]="badge.nombre"
+        />
+      </div>
+
+      <!-- Contenido debajo de la imagen -->
+      <div class="card-content">
+        <h3 class="badge-name">{{badge.nombre}}</h3>
+        <button class="add-to-cart" (click)="irProCarrito(badge)">Añadir al carrito</button>
+      </div>
+    </div>
+  </div>
+</div>
+
