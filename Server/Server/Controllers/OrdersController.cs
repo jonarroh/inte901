@@ -602,7 +602,8 @@ namespace Server.Controllers
                         DateOrder = DateTime.Now,
                         Ingredients = d.Ingredients,
                         Status = "Ordenado",
-                        HeavenCoins = d.HeavenCoins
+                        HeavenCoins = d.HeavenCoins,
+                        discount = d.Discount
                     };
 
                     orden.DetailOrders?.Add(detail);

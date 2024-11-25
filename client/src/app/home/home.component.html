@@ -32,6 +32,23 @@
       </a>
     </div>
   </div>
+
+  <div class="p-4 bg-gray-100 rounded-lg mx-14">
+    <h2 class="text-lg font-semibold ms-4">Recomendaciones:</h2>
+
+    <div class="flex overflow-x-auto space-x-4">
+      <div *ngFor="let producto of topProductos" class="min-w-[200px]">
+        <card-product
+          [id]="producto.id"
+          [title]="producto.nombre"
+          [price]="producto.precio"
+          [category]="producto.tipo"
+          [description]="producto.descripcion"
+        ></card-product>
+      </div>
+    </div>
+  </div>
+
   <div
     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4"
   >

@@ -21,6 +21,10 @@ export class ProductosService {
     return this.http.get<Producto>(`${this.endpoint}/${id}`);
   }
 
+  getTopSellingProductos(): Observable<Producto[]> {
+    return this.http.get<Producto[]>(`${this.endpoint}/TopSelling`);
+  }
+
   addProducto(producto: Producto): boolean {
     try {
       this.http.post<Producto>(this.endpoint, producto);

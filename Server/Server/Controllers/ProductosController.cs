@@ -82,6 +82,44 @@ namespace Server.Controllers
             return producto;
         }
 
+        // GET: api/Productos/TopSelling
+        [HttpGet("TopSelling")]
+        public async Task<ActionResult<IEnumerable<Producto>>> GetTopSellingProducts()
+        {
+            // Agrupamos por IdProduct y contamos cuántas veces aparece
+            var topSellingProductIds = await _context.DetailOrders
+                .GroupBy(d => d.IdProduct)
+                .Select(group => new
+                {
+                    IdProduct = group.Key,
+                    TotalSold = group.Count()
+                })
+                .OrderByDescending(g => g.TotalSold) // Ordenamos de mayor a menor
+                .Take(4) // Tomamos los 4 primeros
+                .ToListAsync();
+
+            // Obtenemos los productos correspondientes
+            var topProducts = await _context.Productos
+                .Where(p => topSellingProductIds.Select(t => t.IdProduct).Contains(p.Id))
+                .ToListAsync();
+
+            // Opcional: si necesitas los detalles adicionales como Ingredientes
+            foreach (var producto in topProducts)
+            {
+                var ingredientes = await _context.Ingredientes
+                    .Where(i => i.IdProducto == producto.Id)
+                    .ToListAsync();
+
+                foreach (var ingrediente in ingredientes)
+                {
+                    ingrediente.MateriaPrima = await _context.MateriasPrimas.FindAsync(ingrediente.IdMateriaPrima);
+                }
+
+                producto.Ingredientes = ingredientes;
+            }
+
+            return Ok(topProducts);
+        }
 
 
         // PUT: api/Producto/5

@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
 import { ChatbotComponent } from '~/components/chatbot/chatbot.component';
 import { PromocionesComponent } from '../promociones/promociones.component';
 import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -22,15 +23,20 @@ import { HttpClient } from '@angular/common/http';
     RouterModule,
     ChatbotComponent,
     PromocionesComponent,
+    CommonModule,
   ],
   providers: [ProductosService],
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
   protected productos: Producto[] = [];
+  protected topProductos: Producto[] = [];
   isLoading = signal(true);
 
-  constructor(private productService: ProductosService,private http: HttpClient) {}
+  constructor(
+    private productService: ProductosService,
+    private http: HttpClient
+  ) {}
 
   ngOnInit() {
     this.productService.getProductos().subscribe({
@@ -43,6 +49,15 @@ export class HomeComponent implements OnInit {
       },
       next: (productos) => {
         this.productos = productos;
+      },
+    });
+
+    this.productService.getTopSellingProductos().subscribe({
+      next: (topProductos) => {
+        this.topProductos = topProductos;
+      },
+      error: (error) => {
+        console.error('Error al cargar los productos más vendidos', error);
       },
     });
   }
