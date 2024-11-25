@@ -20,7 +20,7 @@ using Server.Models.DTO;
 namespace Server.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class OrdersController : ControllerBase
     {
@@ -368,14 +368,6 @@ namespace Server.Controllers
                 return BadRequest(result); // Mensaje de error detallado sobre el inventario insuficiente
             }
         }
-
-
-
-
-
-
-
-
 
 
         private async Task<string> CheckIngredientsInventory(Producto product, int quantity)
@@ -897,5 +889,63 @@ namespace Server.Controllers
         {
             return _context.Orders.Any(e => e.Id == id);
         }
-    }
+
+
+		[HttpPost]
+		[Route("getBestSellers/{date}")]
+		public async Task<IActionResult> GetBestSellers(string date)
+		{
+			try
+			{
+				// Determinar el rango de fechas según la entrada
+				var (startDate, endDate) = GetDateRange(date);
+				if (startDate == null || endDate == null)
+				{
+					return BadRequest("Rango de fechas inválido.");
+				}
+
+				// Contar órdenes no entregadas
+				var allOrdersNoDeliver = await _context.Orders
+					.Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate && o.IsDeliver == false)
+					.CountAsync();
+
+				// Contar órdenes entregadas
+				var allOrdersDeliver = await _context.Orders
+					.Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate && o.IsDeliver == true)
+					.CountAsync();
+
+				// Formatear el resultado
+				var result = new
+				{
+					OrdersDeliver = allOrdersDeliver,
+					OrdersNoDeliver = allOrdersNoDeliver
+				};
+				Console.WriteLine(JsonConvert.SerializeObject(result.GetType()));
+
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return StatusCode(500);
+			}
+		}
+
+		// Método para calcular el rango de fechas
+		private (DateTime?, DateTime?) GetDateRange(string date)
+		{
+			DateTime today = DateTime.UtcNow.Date;
+
+			return date.ToLower() switch
+			{
+				"today" => (today, today),
+				"yesterday" => (today.AddDays(-1), today.AddDays(-1)),
+				"lastweek" => (today.AddDays(-7), today),
+				"lastmonth" => (today.AddMonths(-1), today),
+				"lastyear" => (today.AddYears(-1), today),
+				_ => (null, null) // Valor por defecto si no coincide con los casos
+			};
+		}
+
+	}
 }
