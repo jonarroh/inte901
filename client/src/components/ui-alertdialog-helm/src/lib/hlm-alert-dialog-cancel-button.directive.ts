@@ -18,6 +18,6 @@ export class HlmAlertDialogCancelButtonDirective {
 	protected readonly _computedClass = computed(() => hlm('mt-2 sm:mt-0 text-white', this.userClass()));
 
 	constructor() {
-		this._hlmBtn.variant = 'warning';
+		this._hlmBtn.variant = 'destructive';
 	}
 }

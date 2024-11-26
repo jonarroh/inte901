@@ -15,6 +15,6 @@ export class HlmAlertDialogActionButtonDirective {
 	protected readonly _computedClass = computed(() => hlm('mt-2 sm:mt-0 text-white', this.userClass()));
 
 	constructor() {
-		this._hlmBtn.variant = 'destructive';
+		this._hlmBtn.variant = 'warning';
 	}
 }
