@@ -237,7 +237,7 @@
   <button class="hidden" hlmBtn variant="admin" brnDialogTrigger id="detail-show">
     Detalle
   </button>
-  <hlm-dialog-content class="min-w-[800px] w-full bg-white" *brnDialogContent="let ctx">
+  <hlm-dialog-content class="min-w-[800px] w-full bg-slate-400" *brnDialogContent="let ctx">
     <hlm-dialog-header>
       <h3 hlmDialogTitle>Detalle de la orden</h3>
     </hlm-dialog-header>
@@ -282,39 +282,39 @@
   </hlm-dialog-content>
 </hlm-dialog>
 
-<hlm-alert-dialog class="bg-white" (closed)="resetCombo()">
+<hlm-alert-dialog class="bg-slate-400" (closed)="resetCombo()">
   <button id="edit-status" class="hidden" variant="admin" brnAlertDialogTrigger hlmBtn>Cambiar status</button>
   <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
-    <hlm-alert-dialog-header>
-      <h3 class="text-white" hlmAlertDialogTitle>Actualizar Estatus de la orden</h3>
-      <p class="text-white" hlmAlertDialogDescription>
+    <hlm-alert-dialog-header style="color: black !important;">
+      <h3 class="text-black">Actualizar Estatus de la orden</h3>
+      <p class="text-black">
         Al cambiar el estatus de la orden, no se podrá revertir.
         ¿Estás seguro de cambiar el estatus de la orden?
       </p>
     </hlm-alert-dialog-header>
     <hlm-alert-dialog-footer>
       <button hlmAlertDialogCancel (click)="ctx.close()" variant="destructive" class="text-white">Cancelar</button>
-      <button hlmAlertDialogAction (click)="updateStatus()" variant="ghost" class="text-black">Actualizar</button>
+      <button hlmAlertDialogAction (click)="updateStatus()" variant="ghost" class="text-white">Actualizar</button>
     </hlm-alert-dialog-footer>
   </hlm-alert-dialog-content>
 </hlm-alert-dialog>
 
-<hlm-alert-dialog class="bg-white">
+<hlm-alert-dialog class="bg-slate-400">
   <button id="edit-status-producto" class="hidden" variant="success" brnAlertDialogTrigger hlmBtn>
     Cambiar estatus
   </button>
   <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
-    <hlm-alert-dialog-header>
-      <h3 hlmAlertDialogTitle>
+    <hlm-alert-dialog-header style="color: black !important;">
+      <h3 class="text-black">
         Actualizar estatus del producto
       </h3>
-      <p hlmAlertDialogDescription>
+      <p class="text-black">
         Al cambiar el estatus del producto, no se podrá revertir.
         ¿Estás seguro de cambiar el estatus del producto?
       </p>
     </hlm-alert-dialog-header>
     <hlm-alert-dialog-footer>
-      <button hlmAlertDialogCancel (click)="ctx.close()" variant="destructive">Cancelar</button>
+      <button hlmAlertDialogCancel (click)="ctx.close()" variant="destructive" class="text-white">Cancelar</button>
       <button hlmAlertDialogAction (click)="updateStatusProducto()" variant="success">Actualizar</button>
     </hlm-alert-dialog-footer>
   </hlm-alert-dialog-content>
