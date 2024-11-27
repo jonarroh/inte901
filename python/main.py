@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, send_file, url_for
 from PIL import Image
 import os
 from io import BytesIO
+from ollama import chat, ChatResponse
 
 from flask_cors import CORS
 from controller.models import models
@@ -47,6 +48,36 @@ def convert_images():
 
 
     return jsonify({'message': 'Images have been converted to .webp format.', 'converted_images': converted_images},)
+
+
+# Define the route for sending a message to the chatbot
+@app.route('/send-message', methods=['POST'])
+def send_message():
+    # Get the user message from the request JSON payload
+    user_message = request.json.get('userMessage')
+
+    if not user_message:
+        return jsonify({'error': 'User message is required'}), 400
+
+    # Make the request to the chat model using the ollama library
+    response: ChatResponse = chat(
+        model='coffe_chat',  # Replace with the actual model name if needed
+        messages=[
+            {'role': 'user', 'content': user_message}
+        ],
+        stream=False
+    )
+
+    # Extract the content of the response
+    response_content = response.message.content
+
+    # Return the response in the format expected by the Angular app
+    return jsonify({
+        'message': {
+            'content': response_content
+        }
+    })
+
 
 
 @app.route('/clipProduct', methods=['POST', 'GET'])
