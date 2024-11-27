@@ -86,6 +86,14 @@ namespace Server.Controllers
 					return BadRequest("No se encontro el usuario");
 				}
 
+				// Transforma la cantidad del descuento a un porcentaje
+				var desc = data.Descuento / 100;
+
+				// obtener el producto
+				var producto = await _context.Productos.FindAsync(data.Productos);
+
+				var nuevoPrecio = producto.Precio - (producto.Precio * desc);
+
 				var promocion = new Promociones
 				{
 					Nombre = data.Nombre,
@@ -93,7 +101,7 @@ namespace Server.Controllers
 					FechaInicio = data.FechaInicio,
 					FechaFin = data.FechaFin,
 					Productos = data.Productos,
-					Descuento = data.Descuento,
+					Descuento = (decimal)nuevoPrecio,
 					Estado = data.Estado,
 					BadgePromoId = data.BadgePromoId,
 					LimiteCanje = data.LimiteCanje,
