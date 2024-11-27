@@ -16,7 +16,7 @@
         public string Descripcion { get; set; }
         public string FechaInicio { get; set; }
         public string FechaFin { get; set; }
-        public int Descuento { get; set; }
+        public decimal Descuento { get; set; }
         public int Estado { get; set; }
         public int Productos { get; set; }
         public int BadgePromoId { get; set; }
