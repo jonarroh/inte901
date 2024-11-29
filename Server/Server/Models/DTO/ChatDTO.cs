@@ -11,5 +11,7 @@ namespace Server.Models.DTO
         public string? Rol { get; set; }
         public DateTime? Fecha { get; set; }
         public string? ConversacionId { get; set; }
+        public string? NombreCompleto { get; set; }
+        public string? Email { get; set; }
     }
 }
