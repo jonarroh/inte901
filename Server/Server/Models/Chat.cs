@@ -11,7 +11,7 @@ namespace Server.Models
         public int? Id { get; set; }
         [Required]
         public int? IdUsuario { get; set; }
-        [ForeignKey("UserId")]
+        [ForeignKey("IdUsuario")]
         public User? User { get; set; }
         [Required]
         public string? Mensaje { get; set; }

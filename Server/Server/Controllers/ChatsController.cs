@@ -25,15 +25,33 @@ namespace Server.Controllers
 
         // GET: api/Chats
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<Chat>>> GetChats()
         {
-            return await _context.Chats.ToListAsync();
+            var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            var chats = await _context.Chats
+        .Include(c => c.User) // Cargar la relación del usuario
+        .Select(c => new ChatDTO
+        {
+            Id = c.Id,
+            IdUsuario = c.IdUsuario,
+            Mensaje = c.Mensaje,
+            Rol = c.Rol,
+            Fecha = c.Fecha.HasValue
+            ? TimeZoneInfo.ConvertTimeFromUtc(c.Fecha.Value, timeZone)
+            : (DateTime?)null,
+            ConversacionId = c.ConversacionId,
+            NombreCompleto = c.User != null ? $"{c.User.Name} {c.User.LastName}" : null,
+            Email = c.User.Email
+        })
+        .ToListAsync();
+
+            return Ok(chats);
         }
 
         // GET: api/Chats/5
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<Chat>> GetChat(int? id)
         {
             var chat = await _context.Chats.FindAsync(id);
@@ -94,7 +112,7 @@ namespace Server.Controllers
 
         // POST: api/Chats
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<Chat>> PostChat(ChatDTO chatDTO)
         {
             // Map ChatDTO to Chat entity
