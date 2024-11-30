@@ -8,7 +8,7 @@ import { Producto } from '~/lib/types';
 })
 export class ReportService {
   private apiUrl = 'http://191.101.1.86:5000/';
-  private apiServer = 'hhttps://191.101.1.86:7268/api/';
+  private apiServer = 'http://191.101.1.86:5275/api/';
 
   private productos: Producto[] = [];
 
