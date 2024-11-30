@@ -12,8 +12,24 @@ using Server;
 namespace Server.Migrations
 {
     [DbContext(typeof(Context))]
+<<<<<<< HEAD
+<<<<<<<< HEAD:Server/Server/Migrations/20241105185433_asd.Designer.cs
     [Migration("20241105185433_asd")]
     partial class asd
+========
+=======
+>>>>>>> a7644f8 (inicio rama prod)
+<<<<<<<< HEAD:Server/Server/Migrations/20241026001807_InitialMigrate.Designer.cs
+    [Migration("20241026001807_InitialMigrate")]
+    partial class InitialMigrate
+========
+    [Migration("20241105185433_asd")]
+    partial class asd
+>>>>>>>> 61657e83e4d1329591f4c7aab737860cee100543:Server/Server/Migrations/20241105185433_asd.Designer.cs
+<<<<<<< HEAD
+>>>>>>>> a7644f8 (inicio rama prod):Server/Server/Migrations/20241026001807_InitialMigrate.Designer.cs
+=======
+>>>>>>> a7644f8 (inicio rama prod)
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

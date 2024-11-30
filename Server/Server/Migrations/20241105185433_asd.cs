@@ -6,7 +6,21 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Server.Migrations
 {
     /// <inheritdoc />
+<<<<<<< HEAD
+<<<<<<<< HEAD:Server/Server/Migrations/20241105185433_asd.cs
     public partial class asd : Migration
+========
+=======
+>>>>>>> a7644f8 (inicio rama prod)
+<<<<<<<< HEAD:Server/Server/Migrations/20241026001807_InitialMigrate.cs
+    public partial class InitialMigrate : Migration
+========
+    public partial class asd : Migration
+>>>>>>>> 61657e83e4d1329591f4c7aab737860cee100543:Server/Server/Migrations/20241105185433_asd.cs
+<<<<<<< HEAD
+>>>>>>>> a7644f8 (inicio rama prod):Server/Server/Migrations/20241026001807_InitialMigrate.cs
+=======
+>>>>>>> a7644f8 (inicio rama prod)
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -173,7 +187,20 @@ namespace Server.Migrations
                     AttemptsToBlock = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Token = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+<<<<<<< HEAD
+<<<<<<<< HEAD:Server/Server/Migrations/20241105185433_asd.cs
                     LastSession = table.Column<DateTime>(type: "datetime2", nullable: true),
+========
+=======
+>>>>>>> a7644f8 (inicio rama prod)
+<<<<<<<< HEAD:Server/Server/Migrations/20241026001807_InitialMigrate.cs
+========
+                    LastSession = table.Column<DateTime>(type: "datetime2", nullable: true),
+>>>>>>>> 61657e83e4d1329591f4c7aab737860cee100543:Server/Server/Migrations/20241105185433_asd.cs
+<<<<<<< HEAD
+>>>>>>>> a7644f8 (inicio rama prod):Server/Server/Migrations/20241026001807_InitialMigrate.cs
+=======
+>>>>>>> a7644f8 (inicio rama prod)
                     LastFailedLoginAttempt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsBlockedUntil = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
