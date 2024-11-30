@@ -29,7 +29,7 @@
       <div *ngFor="let item of items(); trackBy: trackById" class="w-full p-2 border-b border-gray-200">
         <div class="flex justify-between items-center">
           <div class="flex items-center space-x-2">
-            <img [src]="'http://localhost:5000/static/productos/' + item.id + '.webp'" alt="imagen" class="w-16 h-16 object-cover rounded-sm">
+            <img [src]="'http://191.101.1.86:5000/static/productos/' + item.id + '.webp'" alt="imagen" class="w-16 h-16 object-cover rounded-sm">
           </div>
           <span>{{item.quantity}}</span>
           <span>

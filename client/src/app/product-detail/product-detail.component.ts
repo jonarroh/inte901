@@ -47,8 +47,8 @@ export class ProductDetailComponent implements OnInit {
   productoId: string | null = null;
   isLoading = signal(true);
   product: Producto = this.getEmptyProduct();
-  img = computed(() => `http://localhost:5000/static/productos/grande/${this.productoId}.webp`);
-  fallbackUrl = 'http://localhost:5000/static/productos/fallback.webp';
+  img = computed(() => `http://191.101.1.86:5000/static/productos/grande/${this.productoId}.webp`);
+  fallbackUrl = 'http://191.101.1.86:5000/static/productos/fallback.webp';
 
   constructor(private route: ActivatedRoute, 
               private productoService: ProductosService,

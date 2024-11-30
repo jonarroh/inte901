@@ -188,7 +188,7 @@ namespace Server.Controllers
         };
 
                 var content = new FormUrlEncodedContent(data);
-                HttpResponseMessage response = await client.PostAsync("http://localhost:5000/generate_qr_reservation", content);
+                HttpResponseMessage response = await client.PostAsync("http://191.101.1.86:5000/generate_qr_reservation", content);
 
                 if (!response.IsSuccessStatusCode)
                 {

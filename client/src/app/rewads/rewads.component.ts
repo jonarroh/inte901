@@ -16,7 +16,7 @@ import { toast } from 'ngx-sonner';
 })
 export class RewadsComponent {
 
-  private apiUrl = 'https://localhost:7268/api/Productos';
+  private apiUrl = 'http://191.101.1.86:5275/api/Productos';
 
   userId = localStorage.getItem('userId');
   

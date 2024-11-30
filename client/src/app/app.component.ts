@@ -32,7 +32,7 @@ export class AppComponent  {
     this.pushService.pushMessage({
       title: 'Recordatorio',
       message: '¡No olvides tu carrito!',
-      url: 'http://localhost:4200/checkout/address' // URL actualizada
+      url: 'http://191.101.1.86:4200/checkout/address' // URL actualizada
     });
   }
 

@@ -160,7 +160,7 @@ export class EspaciosComponent {
   
 
   getImagenUrl(id: number): string {
-      return `http://localhost:5000/static/places/${id}.webp`;
+      return `http://191.101.1.86:5000/static/places/${id}.webp`;
   }
   
   onFileSelected(event: Event): void {

@@ -18,7 +18,7 @@ export class SignalRService {
 
   constructor(private pushService: PushService) {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl('http://localhost:5275/orderHub', {
+      .withUrl('http://191.101.1.86:5275/orderHub', {
         // Configura las opciones del cliente SignalR
         transport: 1, // Establece el transporte, WebSockets en este caso
         withCredentials: true, // Permite el uso de credenciales si es necesario
@@ -62,7 +62,7 @@ export class SignalRService {
     this.pushService.pushMessage({
       title: `Tu orden ha sido actualizada`,
       message: `La orden ${idPedido} ha sido actualizada a ${estatus}`,
-      url: `http://localhost:4200/estatus/${idPedido}`
+      url: `http://191.101.1.86:4200/estatus/${idPedido}`
     });
   }
     }

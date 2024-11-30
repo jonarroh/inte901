@@ -8,8 +8,8 @@ import { ContraseñaNueva } from '~/lib/types';
 })
 export class RecuServiceService {
 
-  private apiUrl = 'http://localhost:3000/password/create';
-  private api2Url = 'http://localhost:3000/password/change';
+  private apiUrl = 'http://191.101.1.86:3000/password/create';
+  private api2Url = 'http://191.101.1.86:3000/password/change';
   constructor(private http: HttpClient) { }
 
   sendCode( email:string): Observable<any>{

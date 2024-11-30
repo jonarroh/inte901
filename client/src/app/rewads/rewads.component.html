@@ -5,7 +5,7 @@
   <div class="card-container">
     <div *ngFor="let badge of userBadges()" class="card">
       <img
-        [src]="'http://localhost:5000/static/productos/' + badge.badges.id + '.webp'" 
+        [src]="'http://191.101.1.86:5000/static/productos/' + badge.badges.id + '.webp'" 
         [class.grayscale]="isBadgeLocked(badge.id)"
         [alt]="badge.badges"
         style="background-color: #A6754C;"> 
@@ -20,7 +20,7 @@
       <!-- Imagen del producto -->
       <div class="card-image">
         <img
-          [src]="'http://localhost:5000/static/productos/' + badge.id + '.webp'"
+          [src]="'http://191.101.1.86:5000/static/productos/' + badge.id + '.webp'"
           [class.grayscale]="isBadgeLocked(badge.id)"
           [alt]="badge.nombre"
         />

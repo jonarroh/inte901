@@ -7,7 +7,7 @@ import { Order } from '~/lib/types';
   providedIn: 'root',
 })
 export class PedidosUserServiceService {
-  private apiUrl = 'https://localhost:7268/api/Orders';
+  private apiUrl = 'http://191.101.1.86:5275/api/Orders';
 
   constructor(private http: HttpClient) {}
 

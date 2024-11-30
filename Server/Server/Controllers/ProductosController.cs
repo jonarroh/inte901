@@ -227,7 +227,7 @@ namespace Server.Controllers
             fileContent.Headers.ContentType = new MediaTypeHeaderValue(imagen.ContentType);
             content.Add(fileContent, "file", imagen.FileName);
 
-            var response = await client.PostAsync("http://localhost:5000/productos/upload", content);
+            var response = await client.PostAsync("http://191.101.1.86:5000/productos/upload", content);
             return response;
         }
 

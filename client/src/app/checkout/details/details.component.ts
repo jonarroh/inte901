@@ -57,7 +57,7 @@ export class DetailsComponent {
       return this.getSubtotal();
     }
     getImageUrl(productId: number): string {
-      return `http://localhost:5000/static/productos/${productId}.webp`;
+      return `http://191.101.1.86:5000/static/productos/${productId}.webp`;
     }
 
     getIdClient() {

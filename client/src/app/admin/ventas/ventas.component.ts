@@ -194,8 +194,8 @@ export class VentasComponent {
 
   trackByOrderId: TrackByFunction<Order> = (index, order) => order.id;
 
-  fallbackUrl = 'http://localhost:5000/static/productos/fallback.webp';
-  imageUrl = computed(() => `http://localhost:5000/static/productos/${this.id()}.webp`);
+  fallbackUrl = 'http://191.101.1.86:5000/static/productos/fallback.webp';
+  imageUrl = computed(() => `http://191.101.1.86:5000/static/productos/${this.id()}.webp`);
   idorderstatus: number = 0;
   id = input.required<number>();
   public cantidades: { [id: number]: number | null } = {};

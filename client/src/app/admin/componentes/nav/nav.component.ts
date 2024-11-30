@@ -35,10 +35,11 @@ export class NavComponent {
     return parseInt(userId);
   }
 
-  private apiUrl = 'http://localhost:3000/location';
+  private apiUrl = 'http://191.101.1.86:3000/location';
   logout(){
     let token = localStorage.getItem('token') ?? '';
-    from(this.http.delete(`${this.apiUrl}/${token}`)).subscribe({
+    // from(this.http.delete(`${this.apiUrl}/${token}`)).subscribe({
+    from(this.http.delete(`http:191.101.1.86:4200/${token}`)).subscribe({
       next: () => {
       },
       error: (error: any) => {

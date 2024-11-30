@@ -15,7 +15,7 @@ export class PromocionesService {
   constructor(private http: HttpClient) { }
 
   getBadgeId(idUser: number): Observable<BadgeUser[]> {
-    return this.http.get<BadgeUser[]>(`http://localhost:3000/badge/user/${idUser}`);
+    return this.http.get<BadgeUser[]>(`http://191.101.1.86:3000/badge/user/${idUser}`);
   }
 
   getPromociones(idBadge: number): Observable<PromocionesDTO[]> {

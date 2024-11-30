@@ -65,7 +65,7 @@ export class ProductosComponent {
   filteredProductos$: Observable<Producto[]>;
 
 
-  fallbackUrl = 'http://localhost:5000/static/productos/fallback.webp';
+  fallbackUrl = 'http://191.101.1.86:5000/static/productos/fallback.webp';
 
   constructor() {
     this.productos$ = this.productoService.getProductos().pipe(
@@ -100,7 +100,7 @@ export class ProductosComponent {
 
 
   getImagenUrl(id: number): string {
-    return `http://localhost:5000/static/productos/${id}.webp`;
+    return `http://191.101.1.86:5000/static/productos/${id}.webp`;
   }
 
   onFileChange(event: any) {

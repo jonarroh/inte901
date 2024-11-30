@@ -7,7 +7,7 @@ import { Reserva, ReservaDTO } from '~/lib/types';
   providedIn: 'root',
 })
 export class ReservaSerService {
-  private apiUrl = 'http://localhost:5275/api/Reserves'; // URL base de la API
+  private apiUrl = 'http://191.101.1.86:5275/api/Reserves'; // URL base de la API
 
   constructor(private http: HttpClient) {}
 

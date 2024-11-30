@@ -7,7 +7,7 @@ import { Injectable } from "@angular/core";
 })
 export class GeolocationService {
   private ws: WebSocket | null = null; 
-  public apiUrl = 'http://localhost:3000/location';
+  public apiUrl = 'http://191.101.1.86:3000/location';
   public location: LocationDTO | null = null;
 
   constructor(private http: HttpClient) {
@@ -15,7 +15,7 @@ export class GeolocationService {
   }
 
   private connectWebSocket(): void {
-    this.ws = new WebSocket('ws://localhost:3000/ws');
+    this.ws = new WebSocket('ws://191.101.1.86:3000/ws');
 
     this.ws.onopen = () => {
       console.log('Conexión WebSocket abierta');

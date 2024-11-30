@@ -24,7 +24,7 @@ export class UserService {
   userId = localStorage.getItem('userId') ?? null;
 
   imgUrl = signal<string | null>(
-    `http://localhost:5000/static/users/${this.userId}.webp`
+    `http://191.101.1.86:5000/static/users/${this.userId}.webp`
   );
 
   userData = signal(this.loadUserDataFromLocalStorage() || defaultUser);
@@ -34,7 +34,7 @@ export class UserService {
     window.addEventListener('storage', this.syncUserDataAcrossTabs.bind(this));
   }
 
-  endpoint = 'http://localhost:5275/api/Users';
+  endpoint = 'http://191.101.1.86:5275/api/Users';
 
   private syncUserDataAcrossTabs(event: StorageEvent): void {
     if (event.key === this.storageKey) {
@@ -45,8 +45,8 @@ export class UserService {
     }
   }
 
-  pointsURl = 'http://localhost:3000/badge/user/poinst'
-  addUrl = 'http://localhost:3000/badge/poinst'
+  pointsURl = 'http://191.101.1.86:3000/badge/user/poinst'
+  addUrl = 'http://191.101.1.86:3000/badge/poinst'
 
   getPoints(){
     return this.http.post(this.pointsURl,{
