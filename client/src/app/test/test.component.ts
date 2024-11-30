@@ -19,7 +19,7 @@ type Framework = { label: string; value: string };
   selector: 'app-test',
   standalone: true,
   imports: [
-    BrnCommandImports,
+    //BrnCommandImports,
     HlmCommandImports,
     HlmIconComponent,
     HlmButtonDirective,
