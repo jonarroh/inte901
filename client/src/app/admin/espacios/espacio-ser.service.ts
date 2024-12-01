@@ -7,7 +7,7 @@ import { Espacio, EspacioDTO } from '~/lib/types';
   providedIn: 'root',
 })
 export class EspacioSerService {
-  private apiUrl = 'http://localhost:5275/api/Espacios';
+  private apiUrl = 'http://191.101.1.86:5275/api/Espacios';
 
   constructor(private http: HttpClient) {}
 

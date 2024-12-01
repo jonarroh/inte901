@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class PlaceServiceService {
-  private apiUrl = 'http://localhost:5275/api/Espacios';
+  private apiUrl = 'http://191.101.1.86:5275/api/Espacios';
 
   constructor(private http: HttpClient) {}
 

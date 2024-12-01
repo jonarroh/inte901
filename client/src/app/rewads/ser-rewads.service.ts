@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class SerRewadsService {
 
-  private baseUrl = 'http://localhost:3000/badge/user/';
-  private promoUrl = 'https://localhost:7268/api/PromocionesPersonalizadas/allPromocionesPersonalizadas/';
+  private baseUrl = 'http://191.101.1.86:3000/badge/user/';
+  private promoUrl = 'http://191.101.1.86:5275/api/PromocionesPersonalizadas/allPromocionesPersonalizadas/';
 
   constructor(private http: HttpClient) {}
 

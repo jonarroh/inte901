@@ -6,7 +6,7 @@ import { User } from './interfaces/type';
   providedIn: 'root',
 })
 export class RegisterService {
-  baseURL = 'http://localhost:5275/api/Users';
+  baseURL = 'http://191.101.1.86:5275/api/Users';
 
   constructor(private http: HttpClient) {}
 

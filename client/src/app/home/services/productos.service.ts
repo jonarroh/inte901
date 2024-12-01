@@ -9,7 +9,7 @@ import { Producto, TipoProducto } from '~/lib/types';
 export class ProductosService {
   constructor(private http: HttpClient) {}
 
-  endpoint = 'https://localhost:7268/api/Productos';
+  endpoint = 'http://191.101.1.86:5275/api/Productos';
 
   private productos: Producto[] = [];
 

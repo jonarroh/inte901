@@ -66,9 +66,9 @@ export class CheckoutService {
     });
   }
 
-  url = 'http://localhost:5275/api/Orders';
-  urlAddress = 'http://localhost:5275/api/Direcciones';
-  urlCard = 'http://localhost:5275/api/CreditCards';
+  url = 'http://191.101.1.86:5275/api/Orders';
+  urlAddress = 'http://191.101.1.86:5275/api/Direcciones';
+  urlCard = 'http://191.101.1.86:5275/api/CreditCards';
 
   orderSignal = signal<Order>(this.loadOrderFromLocalStorage());
   isOrderToStore = signal<boolean>(false);

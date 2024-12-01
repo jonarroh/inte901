@@ -99,7 +99,7 @@ namespace Server.Controllers
 						content.Add(new ByteArrayContent(fileBytes), "imagen", file.FileName);
 					}
 
-					var response = await client.PostAsync("http://localhost:5000/places/upload", content);
+					var response = await client.PostAsync("http://191.101.1.86:5000/places/upload", content);
 					return response;
 				}
 			}

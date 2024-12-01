@@ -34,7 +34,7 @@
       <ul class="py-2">
         <li *ngFor="let item of filteredItems">
           <button (click)="navigateTo(item)" class="flex items-center px-4 py-2 hover:bg-gray-100 w-full">
-            <img [src]="'http://localhost:5000/static/' + (item.tipo === 'Reservacion' ? 'places/' : 'productos/') + item.id + '.webp'" alt="{{item.descripcion}}" class="w-10 h-10 object-cover mr-2">
+            <img [src]="'http://191.101.1.86:5000/static/' + (item.tipo === 'Reservacion' ? 'places/' : 'productos/') + item.id + '.webp'" alt="{{item.descripcion}}" class="w-10 h-10 object-cover mr-2">
             <span>{{item.nombre}}</span>
           </button>
         </li>
@@ -78,7 +78,7 @@
       <ul class="py-2">
         <li *ngFor="let item of filteredItems">
           <button (click)="navigateTo(item)" class="flex items-center px-4 py-2 hover:bg-gray-100 w-full">
-            <img [src]="'http://localhost:5000/static/' + (item.tipo === 'Reservacion' ? 'places/' : 'productos/') + item.id + '.webp'" alt="{{item.descripcion}}" class="w-10 h-10 object-cover mr-2">
+            <img [src]="'http://191.101.1.86:5000/static/' + (item.tipo === 'Reservacion' ? 'places/' : 'productos/') + item.id + '.webp'" alt="{{item.descripcion}}" class="w-10 h-10 object-cover mr-2">
             <span>{{item.nombre}}</span>
           </button>
         </li>

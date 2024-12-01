@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class PushService {
 
    PUBLIC_KEY = "BF49Q8-umWIiw5RL2l5LH3uBEtjc1-2wDyZVAgxQERcKecJeKzjktrjQSIDwwYk3PitG2kBrRBXjT5AAaoO5PK0"
-   URL = "http://localhost:3000/web/subscribe"
+   URL = "http://191.101.1.86:3000/web/subscribe"
 
   constructor() {
     console.log("Service Push");
@@ -43,7 +43,7 @@ export class PushService {
   }
 
   pushMessage = async({title, message,url}: {title: string, message: string, url: string}) => {
-    await fetch('http://localhost:3000/web/push', {
+    await fetch('http://191.101.1.86:3000/web/push', {
       method: 'POST',
       body: JSON.stringify({title, message,url}),
       headers: {

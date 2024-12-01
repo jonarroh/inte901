@@ -35,10 +35,10 @@ export class DescriptionPlaceComponent implements OnInit {
       this.placeService.getPlaceById(Number(id)).subscribe(data => {
         this.espacio = data;
         this.images = [
-          `http://localhost:5000/static/places/${id}.webp`, // Imagen dinámica basada en el ID del espacio
-          'http://localhost:5000/static/places/op2.webp',
-          'http://localhost:5000/static/places/op3.webp',
-          'http://localhost:5000/static/places/op4.webp'
+          `http://191.101.1.86:5000/static/places/${id}.webp`, // Imagen dinámica basada en el ID del espacio
+          'http://191.101.1.86:5000/static/places/op2.webp',
+          'http://191.101.1.86:5000/static/places/op3.webp',
+          'http://191.101.1.86:5000/static/places/op4.webp'
         ];
       });
     }

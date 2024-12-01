@@ -41,7 +41,7 @@ export class AuthService {
     );
   }
 
-  private apiUrl = 'http://localhost:3000/location';
+  private apiUrl = 'http://191.101.1.86:3000/location';
   logout() {
     let token = localStorage.getItem('token') ?? '';
     from(this.http.delete(`${this.apiUrl}/${token}`)).subscribe({

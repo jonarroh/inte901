@@ -25,8 +25,8 @@ export class CardProductComponent {
   
 
 
-  fallbackUrl = 'http://localhost:5000/static/productos/fallback.webp';
-  imageUrl = computed(() => `http://localhost:5000/static/productos/${this.id()}.webp`);
+  fallbackUrl = 'http://191.101.1.86:5000/static/productos/fallback.webp';
+  imageUrl = computed(() => `http://191.101.1.86:5000/static/productos/${this.id()}.webp`);
 
 
   title = input.required<string>();
